@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module ETSource; describe Dataset, :fixures do
+module ETSource; describe Dataset, :fixtures do
   describe "#new" do
     it "sets key" do
       dataset = Dataset.new(key: :nl)
