@@ -19,7 +19,7 @@ namespace :import do
     nodes = YAML.load_file($from_dir.join('topology/export.graph'))
     nodes = nodes.with_indifferent_access
 
-    Dir.glob('datasets/nl/graph/**.yml').each do |file|
+    Dir.glob($from_dir.join('datasets/nl/graph/**.yml')).each do |file|
       YAML.load_file(file).each do |key, properties|
         nodes[key].merge!(properties) if nodes[key]
       end
