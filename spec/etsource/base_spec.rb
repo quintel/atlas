@@ -25,78 +25,28 @@ module ETSource ; describe ETSource do
       ETSource.with_data_dir('/tmp') { example.run }
     end
 
-    context 'given nil' do
-      let(:result) do
-        ETSource.data_dir = nil
-      end
-
-      it 'raises an error' do
-        expect { result }.to raise_error(ETSourceError, /is not absolute/)
-      end
-
-      it 'does not change the path' do
-        expect { result rescue nil }.to_not change { ETSource.data_dir }
-      end
+    it 'sets the path, given an absolute string' do
+      expect { ETSource.data_dir = '/tmp/data' }.
+        to change { ETSource.data_dir }.
+        to(Pathname.new('/tmp/data'))
     end
 
-    context 'given a relative string' do
-      let(:result) do
-        ETSource.data_dir = 'nope/this/is/wrong'
-      end
-
-      it 'raises an error' do
-        expect { result }.to raise_error(ETSourceError, /is not absolute/)
-      end
-
-      it 'does not change the path' do
-        expect { result rescue nil }.to_not change { ETSource.data_dir }
-      end
+    it 'sets the path, given an absolute pathname' do
+      expect { ETSource.data_dir = Pathname.new('/tmp/data') }.
+        to change { ETSource.data_dir }.
+        to(Pathname.new('/tmp/data'))
     end
 
-    context 'given an absolute string' do
-      let(:result) do
-        ETSource.data_dir = '/tmp/etsource'
-      end
-
-      it 'does not raise an error' do
-        expect { result }.to_not raise_error
-      end
-
-      it 'sets the path' do
-        expect { result }.
-          to change { ETSource.data_dir }.
-          to(Pathname.new('/tmp/etsource'))
-      end
+    it 'sets the path, given a relative string' do
+      expect { ETSource.data_dir = 'data' }.
+        to change { ETSource.data_dir }.
+        to(ETSource.root.join('data'))
     end
 
-    context 'given a relative pathname' do
-      let(:result) do
-        ETSource.data_dir = Pathname.new('nope/this/is/wrong') 
-      end
-
-      it 'raises an error' do
-        expect { result }.to raise_error(ETSourceError, /is not absolute/)
-      end
-
-      it 'does not change the path' do
-        expect { result rescue nil }.to_not change { ETSource.data_dir }
-      end
-    end
-
-    context 'given an absolute pathname' do
-      let(:result) do
-        ETSource.data_dir = Pathname.new('/tmp/etsource')
-      end
-
-      it 'does not raise an error' do
-        expect { result }.to_not raise_error
-      end
-
-      it 'sets the path' do
-        expect { result }.
-          to change { ETSource.data_dir }.
-          to(Pathname.new('/tmp/etsource'))
-      end
+    it 'sets the path, given a relative pathname' do
+      expect { ETSource.data_dir = Pathname.new('data') }.
+        to change { ETSource.data_dir }.
+        to(ETSource.root.join('data'))
     end
   end # data_dir=
 

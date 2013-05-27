@@ -22,13 +22,13 @@ module ETSource
   #
   # Returns the path provided.
   def self.data_dir=(path)
-    pn_path = path.is_a?(Pathname) ? path : Pathname.new(path.to_s)
+    path = path.is_a?(Pathname) ? path : Pathname.new(path.to_s)
 
-    unless pn_path.absolute?
-      raise ETSourceError.new("#{ path.inspect } is not absolute")
+    if path.relative?
+      path = ETSource.root.join(path)
     end
 
-    @data_dir = pn_path
+    @data_dir = path
   end
 
   # Public: Wrap around a block of code to work with a temporarily altered
