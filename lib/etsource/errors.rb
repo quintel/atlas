@@ -3,6 +3,7 @@ module ETSource
   # Error class which serves as a base for all errors which occur in ETSource.
   class ETSourceError < RuntimeError
     def initialize(*args) ; super(make_message(*args)) ; end
+    def make_message(msg) ; msg ; end
   end
 
   # Superclass for errors which occur when calculating the Rubel attributes.
