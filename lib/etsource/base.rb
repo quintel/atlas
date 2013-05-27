@@ -13,6 +13,24 @@ module ETSource
     @data_dir ||= root.join('data')
   end
 
+  # Public: Sets the path to the direction in which the ETSource data files
+  # reside.
+  #
+  # When using ETSource in an application, the +data_dir+ should be set *once*
+  # using the path to the real ETSource data. If you need to temporarily alter
+  # the +data_dir+ (for example, in tests), use +with_data_dir+ instead.
+  #
+  # Returns the path provided.
+  def self.data_dir=(path)
+    pn_path = path.is_a?(Pathname) ? path : Pathname.new(path.to_s)
+
+    unless pn_path.absolute?
+      raise ETSourceError.new("#{ path.inspect } is not absolute")
+    end
+
+    @data_dir = pn_path
+  end
+
   # Public: Wrap around a block of code to work with a temporarily altered
   # +data_dir+ setting.
   #
@@ -20,11 +38,11 @@ module ETSource
   #
   # Returns the result of your block.
   def self.with_data_dir(directory)
-    previous  = data_dir
-    @data_dir = Pathname.new(directory)
+    previous      = data_dir
+    self.data_dir = directory
 
     yield
   ensure
-    @data_dir = previous
+    self.data_dir = previous
   end
 end # ETSource
