@@ -37,7 +37,11 @@ module ETSource
     "not valid: #{ document.errors.to_a.join(", ") }"
   end
 
-  DuplicateKeyError = error_class do |key|
+  InvalidKeyError = error_class do |key|
+    "Invalid key entered: #{ key.inspect }"
+  end
+
+  DuplicateKeyError = error_class(InvalidKeyError) do |key|
     "Duplicate key found: #{ key }"
   end
 
@@ -48,10 +52,6 @@ module ETSource
   IllegalDirectoryError = error_class do |path, directory|
     "The given path #{ path.to_s.inspect } does not appear to be a " \
     "subdirectory of #{ directory.to_s.inspect }"
-  end
-
-  InvalidKeyError = error_class do |key|
-    "Invalid key entered: #{ key.inspect }"
   end
 
   NoPathOrKeyError = error_class(InvalidKeyError) do |klass|
