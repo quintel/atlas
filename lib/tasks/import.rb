@@ -1,8 +1,22 @@
+# Contains tasks used to convert the old-style ETSource files into the new
+# shiny ActiveDocuments. In order to complete the import, the tasks need to
+# know the path to the root ETSource directory, and to the directory in which
+# to write the ActiveDocuments. This is done using Rake arguments:
+#
+#   rake import[../etsource,../etdata]
+#
+# Note that the arguments must not contain spaces. If you need to use spaces,
+# wrap the full rake task name in quotes:
+#
+#   rake 'import[../My ETSource Repo,../My ETData Repo]'
+#
+# If the paths provided are not absolute, they are assumed to be relative to
+# the ETLib root.
 namespace :import do
   # Returns a hash where each key is the name of the sector, and the value is
   # an array containing all the nodes in that sector.
   def nodes_by_sector
-    nodes = YAML.load_file(ETSource.root.join('topology/export.graph'))
+    nodes = YAML.load_file($from_dir.join('topology/export.graph'))
     nodes = nodes.with_indifferent_access
 
     Dir.glob('datasets/nl/graph/**.yml').each do |file|
@@ -59,6 +73,21 @@ namespace :import do
     end
   end
 
+  # Figures out a path given by the user, and ensures that the directory
+  # specified exists.
+  #
+  # Returns a Pathname.
+  def dir(path)
+    path = Pathname.new(path)
+    path = ETSource.root.join(path) if path.relative?
+
+    unless path.directory?
+      raise "No directory found at #{ path.to_s }"
+    end
+
+    path
+  end
+
   # Used to nicely format the progress of an import.
   #
   # Create a new Import run with a message indicating the "type of thing"
@@ -104,13 +133,16 @@ namespace :import do
   # --------------------------------------------------------------------------
 
   # Loads ETSource.
-  task :setup do
+  task :setup, [:from, :to] do |_, args|
     $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/..'))
 
     require 'fileutils'
     require 'etsource'
     require 'term/ansicolor'
     require 'active_support/core_ext/hash/indifferent_access'
+
+    $from_dir         = dir(args.from)
+    ETSource.data_dir = dir(args.to)
   end # task :setup
 
   desc <<-DESC
@@ -122,7 +154,7 @@ namespace :import do
     This starts by *deleting* everything in data/nodes on the assumption that
     there are no hand-made changes.
   DESC
-  task nodes: :setup do
+  task :nodes, [:to, :from] => [:setup] do |_, args|
     include ETSource
 
     # Wipe out *everything* in the nodes directory; rather than simply
@@ -171,7 +203,7 @@ namespace :import do
     This starts by *deleting* everything in data/edges on the assumption that
     there are no hand-made changes.
   DESC
-  task edges: :setup do
+  task :edges, [:from, :to] => [:setup] do |_, args|
     include ETSource
 
     # Wipe out *everything* in the edges directory; rather than simply
@@ -234,4 +266,4 @@ namespace :import do
 end # namespace :import
 
 desc 'Import edges and nodes from the old format to ActiveDocument'
-task import: ['import:all']
+task :import, [:from, :to] => ['import:all']
