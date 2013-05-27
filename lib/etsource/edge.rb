@@ -1,4 +1,16 @@
 module ETSource
+  # Edges connect two Nodes so that energy may flow from one to another. Each
+  # edge has a carrier, which determines the type of energy flowing (e.g. gas,
+  # coal, electricity, etc).
+  #
+  # The filename format for edges is:
+  #
+  #   CONSUMER-SUPPLIER@CARRIER
+  #
+  # For example:
+  #
+  #   coal_power_plant-coal_mine@coal
+  #   house-coal_power_plant@electricity
   class Edge
     include ActiveDocument
 
