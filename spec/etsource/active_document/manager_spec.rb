@@ -1,4 +1,4 @@
-require 'etsource/active_document_spec'
+require 'spec_helper'
 
 module ETSource::ActiveDocument
   describe Manager, :fixtures do
