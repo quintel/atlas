@@ -28,7 +28,10 @@ module ETSource
       path = ETSource.root.join(path)
     end
 
-    @data_dir = path
+    if path != @data_dir
+      @data_dir = path
+      ActiveDocument::Manager.clear_all!
+    end
   end
 
   # Public: Wrap around a block of code to work with a temporarily altered

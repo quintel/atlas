@@ -11,9 +11,6 @@ module ETSource
         #
         # Returns a String.
         attr_reader :subdirectory
-
-        private_class_method :load_directory
-        private_class_method :load_from_file
       end
 
       # Public: The absolute path to the document.
@@ -92,22 +89,11 @@ module ETSource
       def save(validate = true)
         return false if validate && ! valid?
 
-        # Ensure the directory exists.
-        FileUtils.mkdir_p(path.dirname)
-
-        path.open('w') do |file|
-          file.write(file_contents)
-          file.write("\n") unless file_contents[-1] == "\n"
-        end
-
-        # If the document has been renamed, delete the old file.
         if @last_saved_file_path != path && @last_saved_file_path.file?
-          @last_saved_file_path.delete
+          manager.delete_path(@last_saved_file_path)
         end
 
-        @last_saved_file_path = path
-
-        true
+        manager.write(self)
       end
 
       # Public: Saves the document to a file on disk.
@@ -130,10 +116,9 @@ module ETSource
       private
       #######
 
-      # Return the file_contents for this object, which is a parsed
-      # version.
-      def file_contents
-        ETSource::HashToTextParser.new(to_hash).to_text
+      # Internal: The thing.
+      def manager
+        self.class.manager
       end
 
       # ----------------------------------------------------------------------
@@ -147,46 +132,11 @@ module ETSource
           ETSource.data_dir.join(self::DIRECTORY)
         end
 
-        # Internal: Loads the contents of the document directory, creating
-        # a document instance for each file found.
+        # Internal: The Manager used to fetch the documents from disk.
         #
-        # DEBT: now all objects always get totally read and created. We can
-        # optimize this by just loading the keys, until we need more.
-        #
-        # Returns an array of documents.
-        def load_directory
-          items = []
-          path  = self.directory.join("**/*.#{ self::FILE_SUFFIX }")
-
-          Dir.glob(path) { |path| items << load_from_file(path) }
-          items
-        end
-
-        # Internal: Given a +path+ to a document file, reads the file contents
-        # creating a new instance containing the data.
-        #
-        # path - Path to the file.
-        #
-        # Returns an ActiveDocument.
-        def load_from_file(path)
-          path           = Pathname.new(path)
-          parsed_content = ETSource::TextToHashParser.new(path.read).to_hash
-          relative_path  = path.relative_path_from(directory)
-          without_ext    = relative_path.basename.sub_ext('')
-
-          if without_ext.to_s.include?('.')
-            subclass = without_ext.to_s.split('.').last
-            klass = "ETSource::#{subclass.to_s.classify}".constantize
-          elsif subclassed_document?
-            # If the current class is not the top-most model (e.g. Node), then
-            # filenames without an explicit subclass should use the top-most
-            # class, and not the current one.
-            klass = topmost_document_class
-          else
-            klass = self
-          end
-
-          klass.new(parsed_content.merge(path: relative_path.to_s))
+        # Returns an ETSource::IO::Manager.
+        def manager
+          @manager ||= Manager.new(topmost_document_class)
         end
       end # ClassMethods
 

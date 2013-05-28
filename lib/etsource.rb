@@ -22,8 +22,10 @@ require_relative 'etsource/active_document/persistence'
 require_relative 'etsource/active_document/finders'
 require_relative 'etsource/active_document/naming'
 require_relative 'etsource/active_document/subclassing'
+require_relative 'etsource/active_document/manager'
 require_relative 'etsource/active_document'
 require_relative 'etsource/collection'
+
 
 require_relative 'etsource/edge'
 require_relative 'etsource/input'

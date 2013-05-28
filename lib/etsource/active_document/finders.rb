@@ -9,9 +9,9 @@ module ETSource
         # Returns an array containing all the documents.
         def all
           if superclass.ancestors.include?(ActiveDocument)
-            load_directory.select { |model| model.is_a?(self) }
+            manager.all.select { |model| model.is_a?(self) }
           else
-            load_directory
+            manager.all
           end
         end
 
@@ -21,8 +21,15 @@ module ETSource
         #
         # Returns an ActiveDocument, or nil if no such document exists.
         def find(key)
-          all.detect { |i| i.key == key.to_sym } ||
+          document = manager.get(key)
+
+          # Prevent finding a node which is a member of the superclass, but
+          # not this subclass, e.g. FinalDemandNode.find('not_an_fd_node')
+          if document.nil? || ! document.is_a?(self)
             raise(DocumentNotFoundError.new(key, self))
+          end
+
+          document
         end
       end # ClassMethods
 

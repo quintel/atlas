@@ -342,24 +342,6 @@ describe SomeDocument, :fixtures do
     end # given "two/three"
   end # ns=
 
-  describe "file_contents" do
-
-    context 'when nothing changed' do
-      it "should be the same as the original" do
-        expect(some_document.send(:file_contents)).to eq(
-          ETSource.root.join('spec/fixtures/active_document/foo.suffix').read)
-      end
-    end
-
-    context 'when something has changed' do
-      it "should not be the same as the original" do
-        some_document.unit = "Mtonne"
-        expect(some_document.send(:file_contents)).to_not eq(
-          ETSource.root.join('spec/fixtures/active_document/foo.suffix').read)
-      end
-    end
-  end
-
   describe "path" do
     it "should change when the key has changed" do
       some_document.key = :total_co2_emitted
@@ -387,24 +369,19 @@ describe SomeDocument, :fixtures do
   end
 
   describe "save!" do
-
     context 'new file' do
-
       it 'writes to disk' do
         some_document = SomeDocument.new(key: 'the_king_of_pop')
         expect(some_document.save!).to be_true
       end
-
     end
 
     context 'when nothing changed' do
-
       it "does not write to disk" do
         cache = some_document.path.read
         some_document.save!
         expect(cache).to eq(some_document.path.read)
       end
-
     end
 
     context 'when validation fails' do
@@ -425,7 +402,6 @@ describe SomeDocument, :fixtures do
     end
 
     context 'when the key changed' do
-
       it "should delete the old file" do
         old_path = some_document.path
         some_document.key = "foo2"
@@ -444,6 +420,18 @@ describe SomeDocument, :fixtures do
         document.key = 'no'
 
         expect { document.save! }.to_not raise_error
+      end
+
+      it 'no longer finds the old document' do
+        some_document.update_attributes!(key: :foo2)
+
+        expect { SomeDocument.find(:foo) }.
+          to raise_error(ETSource::DocumentNotFoundError)
+      end
+
+      it 'finds the new document' do
+        some_document.update_attributes!(key: :foo2)
+        expect(SomeDocument.find(:foo2)).to eq(some_document)
       end
 
       context 'when another object with that key already exists' do
