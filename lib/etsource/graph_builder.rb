@@ -30,9 +30,8 @@ module ETSource
     #
     # Returns a GraphBuilder.
     def initialize(sector = nil)
-      @nodes    = Collection.new(Node.all.select(&filter(sector)))
-      @carriers = Collection.new(Carrier.all)
-      @graph    = Turbine::Graph.new
+      @nodes = Collection.new(Node.all.select(&filter(sector)))
+      @graph = Turbine::Graph.new
 
       edges = if sector
         Edge.all.select do |edge|
@@ -64,7 +63,7 @@ module ETSource
     # Returns nothing.
     def establish_edges!
       @edges.sort_by(&:key).each do |edge|
-        self.class.establish_edge(edge, @graph, @nodes, @carriers)
+        self.class.establish_edge(edge, @graph, @nodes)
       end
     end
 
@@ -74,12 +73,12 @@ module ETSource
     # edge - An Edge (ActiveDocument) instance.
     #
     # Returns the Turbine::Edge which was created.
-    def self.establish_edge(edge, graph, nodes, carriers)
+    def self.establish_edge(edge, graph, nodes)
       parent  = nodes.find(edge.supplier)
       child   = nodes.find(edge.consumer)
 
       props   = { type: edge.type, reversed: edge.reversed?, model: edge }
-      carrier = carriers.find(edge.carrier)
+      carrier = Carrier.find(edge.carrier)
 
       graph.node(parent.key).connect_to(
         graph.node(child.key), carrier.key, props)

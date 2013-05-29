@@ -91,10 +91,9 @@ module ETSource
     end # .build
 
     describe '.establish_edge' do
-      let(:node)     { Node.new(key: :key) }
-      let(:parent)   { Node.new(key: :parent) }
-      let(:nodes)    { Collection.new([node, parent]) }
-      let(:carriers) { Collection.new(Carrier.all) }
+      let(:node)   { Node.new(key: :key) }
+      let(:parent) { Node.new(key: :parent) }
+      let(:nodes)  { Collection.new([node, parent]) }
 
       let!(:graph)    { Turbine::Graph.new }
       let!(:t_node)   { graph.add(Turbine::Node.new(:key, model: node)) }
@@ -102,7 +101,7 @@ module ETSource
 
       before do
         link_data.each do |link|
-          GraphBuilder.establish_edge(link, graph, nodes, carriers)
+          GraphBuilder.establish_edge(link, graph, nodes)
         end
       end
 
@@ -202,7 +201,7 @@ module ETSource
           link = Edge.new(key: 'key-nope@coal', type: :share)
 
           expect do
-            GraphBuilder.establish_edge(link, graph, nodes, carriers)
+            GraphBuilder.establish_edge(link, graph, nodes)
           end.to raise_error(ETSource::DocumentNotFoundError)
         end
       end # with an invalid link type
@@ -215,7 +214,7 @@ module ETSource
           link = Edge.new(key: 'key-parent@iid', type: :share)
 
           expect do
-            GraphBuilder.establish_edge(link, graph, nodes, carriers)
+            GraphBuilder.establish_edge(link, graph, nodes)
           end.to raise_error(ETSource::DocumentNotFoundError)
         end
       end # with a non-existent carrier
