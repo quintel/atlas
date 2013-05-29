@@ -1,36 +1,34 @@
-# Tome - Object Mapper for ETSource Data
+# Tome — Object Mapper for ETSource Data
 
-The Energy `T`ransition `O`bject `M`app`e`r. Okay, that's a bit of a
+The Energy **T**ransition **O**bject **M**app<b>e</b>r. Okay, that's a bit of a
 stretch, so just think of it as an archive of all the data used by the Energy
 Transition Model. Nodes, edges, slots, source data, presets; everything but
 the kitchen sink.
 
-## Build Status
-
-### Master:
 ![Master branch](https://semaphoreapp.com/api/v1/projects/63d00abb0b002bb34bdbe9602aee85a2a0d42f56/25174/badge.png)
 
-# Console / Object Mapper
+### Console / Object Mapper
 
-You can load the objects through the console
+You can load the objects through the console: `rake console`
 
-    rake console
+For example, get information about a Gquery:
 
-E.g. get a Gquery:
-
-    pry(main)> Tome::Gquery.all.last
-    => <Tome::Gquery: share_of_transport_in_final_demand>
+```ruby
+query = Tome::Gquery.all.last
+# => <Tome::Gquery: share_of_transport_in_final_demand>
+```
 
 Then you can change stuff:
 
-    pry(main)> gquery.unit = "number"
-    => "number"
-    pry(main)> gquery.save!
-    => true
+```ruby
+query.unit = "number"
+# => "number"
+query.save!
+# => true
+```
 
-Then you have saved the new unit to disk.
-
-This way you can easily mass-update any properties for gqueries, inputs etc.
+Then you have saved the new unit to disk. This way you can easily mass-update
+any properties for gqueries, inputs etc.
 
 For example, if you want to append an exclamation mark to each input key:
 
@@ -41,71 +39,58 @@ Tome::Input.all.each do |input|
 end
 ```
 
-# Folder structure
+### Rules and best practices
 
-## data
+Try to make one commit for each batch of changes you make to the files,
+related to one issue.  For example, if a query is changed, try to alter all
+queries and inputs related to the query in a single commit.
 
-The `data` folder is the previsioned new folder where all the data is stored.
-Currently, it contains the `gueries` and `inputs`, that are used by the
-Object Mapper.
-
-### data/gqueries
-
-### models
-
-The model folders contains other models. Mostly for illustration, documentation
-and testing purposes. These models can be run and tested using the etengine
-command line interface. For instance, models/minimal contains the minimal set
-of files and content for a simple two-converter graph. To illustrate the
-behaviour of flex-max links see the `models/flex_max folder`.
-
-## scripts
-
-The folder 'scripts' contains the scripts used to alter the
-names and contents of the queries.  The folder `change_reports` within
-'scripts' contains the changes made in the queries, one for each of the query
-groups.
-
-# Rules and best practices
-
-Try to make one commit for each batch of changes you make to the files, related
-to one issue.  For example, if a query is changed, try to alter all queries and
-inputs related to the query in a single commit.
-
-# Using the console (under construction)
+### Using the console (under construction)
 
 If you want to update gqueries or inputs, run:
 
-    $ (bundle exec) rake console
+```sh
+$ (bundle exec) rake console
+```
 
 or when you prefer pry:
 
-    $ (bundle exec) rake pry
+```sh
+$ (bundle exec) rake pry
+```
 
 Then you can e.g. start changing queries, minimal values, etc.:
 
-    $ input = Tome:Input.find(agriculture_electricity_demand)
-    $ input.min_value = 1
-    $ input.save!
-      => will save this in the appropiate file
-    $ input.key += "!"
-    $ input.save!
-      => will rename the file
+```ruby
+input = Tome:Input.find(agriculture_electricity_demand)
+input.min_value = 1
+
+# Save the input in an appropriate file.
+input.save!
+
+input.key += "!"
+
+# Saving with an updated key, will rename the file.
+input.save!
+```
 
 You can list the current collection of rake tasks available:
 
-    $ rake -vT
+```sh
+$ rake -vT
+```
 
 Add rake tasks to the `lib/tasks` directory if you want to mass update
 gqueries or inputs.
 
-
-# Updating from the InputExcel guide
+### Updating from the InputExcel guide
 
 Uploading Zip files. You have to copy the zip file to the etsource directory
 and enter the following command in your terminal:
 
-    $ cd your-etsource-directory $ ruby scripts/xls2yml/xls2yml.rb
+```sh
+$ cd your-etsource-directory $ ruby scripts/xls2yml/xls2yml.rb
+```
 
 If you changed anything converter keys, naming, structure, in general to the
 topology, you have to export all countries. If you only update a country
@@ -116,7 +101,7 @@ After this you can commit your changes.
 Adding or updating carriers, you have to do in
 etsource/datasets/.../carriers.yml.
 
-## Datasets
+### Datasets
 
 A dataset is the collection of all _data buckets_ within a _section_. Look at
 it as one big _data bucket_. A dataset is virtual, and not commited to Github.
@@ -124,7 +109,7 @@ The merging of all buckets happens during runtime. There are three independent
 levels: default, country and wizard datasets. Each can overwrite values of the
 former.
 
-### Default Dataset (datasets/_defaults)
+#### Default Dataset (datasets/_defaults)
 
 Contains all the values that are a) the same for every country or b) should be
 treated as default/start values. Values here are overwritten in the country
@@ -132,19 +117,14 @@ dataset. That means we can put the data that sometimes changes in a _default
 dataset_ and overwrite it in the _country dataset_ when it does actually
 change.
 
-### Country Dataset (datasets/:area_code)
+#### Country Dataset (datasets/:area_code)
 
 The precise name would be area(-specific) dataset (area can be a country 'nl',
 or a region 'nl-drenthe'). But country dataset is a clear enough and
 human-friendly name and is easy on the lips.
 
-### Overwriting Rules
+#### Overwriting Rules
 
     # _defaults/area.yml ...  :area_data: :co2_price: 0.002 :has_fce: false
-
-    # nl/area.yml ...  :area_data: :number_of_households: 100_000 :has_fce:
-true
-
-    # => {:area_data: {:co2_price: 0.002, :number_of_households: 100_000,
-:has_fce: true }}
-
+    # nl/area.yml ...  :area_data: :number_of_households: 100_000 :has_fce: true
+    # => {:area_data: {:co2_price: 0.002, :number_of_households: 100_000, :has_fce: true }}
