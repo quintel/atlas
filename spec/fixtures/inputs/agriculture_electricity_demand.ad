@@ -1,0 +1,11 @@
+- id = 220
+- share_group = 
+- max_value = 5.0
+- min_value = -5.0
+- start_value = 0.0
+- factor = 100.0
+- unit = %
+- update_period = future
+- default_unit = %y
+
+UPDATE(V(agriculture_useful_demand_electricity), preset_demand, USER_INPUT())
