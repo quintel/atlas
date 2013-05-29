@@ -1,6 +1,6 @@
 # Tome - Object Mapper for ETSource Data
 
-The Energy **T**ransition **O**bject **M**app**e**er. Okay, that's a bit of a
+The Energy `T`ransition `O`bject `M`app`e`r. Okay, that's a bit of a
 stretch, so just think of it as an archive of all the data used by the Energy
 Transition Model. Nodes, edges, slots, source data, presets; everything but
 the kitchen sink.
