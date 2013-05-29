@@ -115,7 +115,13 @@ namespace :import do
         @printed = true
       end
 
-      yield
+      document = yield
+      document.save(false)
+
+      unless document.valid?
+        raise InvalidDocumentError.new(document)
+      end
+
       print Term::ANSIColor.green { '.' }
     rescue RuntimeError => ex
       print Term::ANSIColor.red { '!' }
@@ -188,9 +194,7 @@ namespace :import do
           data[:query] = queries[key.to_sym] if queries.key?(key.to_sym)
           data[:path]  = "#{ sector }/#{ key }"
 
-          node = klass.new(data).tap { |n| n.save(false) }
-
-          raise InvalidDocumentError.new(node) unless node.valid?
+          klass.new(data)
         end
       end
     end
@@ -254,9 +258,7 @@ namespace :import do
             props[:query] = queries[key.to_sym] if queries.key?(key.to_sym)
           end
 
-          edge = Edge.new(props).tap { |e| e.save(false) }
-
-          raise InvalidDocumentError.new(edge) unless edge.valid?
+          Edge.new(props)
         end
       end
     end # nodes_by_sector.each
@@ -285,8 +287,9 @@ namespace :import do
       runner.item do
         relative = path.relative_path_from(original_dir)
         hash     = YAML.load_file(path)
+        doc_path = relative.to_s.gsub(/\.yml$/, '')
 
-        Preset.new(hash.merge(path: relative.to_s.gsub(/\.yml$/, ''))).save!
+        Preset.new(hash.merge(path: doc_path))
       end
     end
 
