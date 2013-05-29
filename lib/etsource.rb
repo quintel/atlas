@@ -26,7 +26,6 @@ require_relative 'etsource/active_document/manager'
 require_relative 'etsource/active_document'
 require_relative 'etsource/collection'
 
-
 require_relative 'etsource/edge'
 require_relative 'etsource/input'
 require_relative 'etsource/gquery'
@@ -37,6 +36,7 @@ require_relative 'etsource/share_data'
 require_relative 'etsource/slot'
 require_relative 'etsource/graph_builder'
 require_relative 'etsource/runner'
+require_relative 'etsource/preset'
 
 require_relative 'etsource/node'
 require_relative 'etsource/node/converter'

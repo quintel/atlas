@@ -125,8 +125,7 @@ namespace :import do
     # Prints out error messages, if there were any.
     def finish
       puts '' ; puts ''
-      @errors.each { |error| puts error.message }
-      puts '' if @errors.any?
+      @errors.each { |error| puts error.message ; puts }
     end
   end # ImportRun
 
@@ -144,6 +143,8 @@ namespace :import do
     $from_dir         = dir(args.from)
     ETSource.data_dir = dir(args.to)
   end # task :setup
+
+  # --------------------------------------------------------------------------
 
   desc <<-DESC
     Import nodes from the old format to ActiveDocument.
@@ -196,6 +197,8 @@ namespace :import do
 
     runner.finish
   end # task :nodes
+
+  # --------------------------------------------------------------------------
 
   desc <<-DESC
     Import edges from the old format to ActiveDocument.
@@ -261,7 +264,38 @@ namespace :import do
     runner.finish
   end # task :edges
 
-  task all: ['import:nodes', 'import:edges'] do
+  # --------------------------------------------------------------------------
+
+  desc <<-DESC
+    Import edges from the old format to ActiveDocument.
+
+    This starts by *deleting* everything in data/edges on the assumption that
+    there are no hand-made changes.
+  DESC
+  task :presets, [:from, :to] => [:setup] do |_, args|
+    include ETSource
+
+    # Wipe out *everything* in the presets directory.
+    FileUtils.rm_rf(Preset.directory)
+
+    original_dir = $from_dir.join('presets')
+    runner       = ImportRun.new('presets')
+
+    Pathname.glob(original_dir.join('**/*.yml')) do |path|
+      runner.item do
+        relative = path.relative_path_from(original_dir)
+        hash     = YAML.load_file(path)
+
+        Preset.new(hash.merge(path: relative.to_s.gsub(/\.yml$/, ''))).save!
+      end
+    end
+
+    runner.finish
+  end # :presets
+
+  # --------------------------------------------------------------------------
+
+  task all: ['import:nodes', 'import:edges', 'import:presets'] do
   end # task :all
 end # namespace :import
 
