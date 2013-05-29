@@ -39,7 +39,12 @@ module ETSource
     #######
 
     def comment_block
-      "# #{@comments.gsub("\n", "\n# ")}" if @comments
+      return nil unless @comments
+
+      @comments.lines.to_a.map do |line|
+        stripped = line.rstrip
+        line.strip.length > 0 ? "# #{ stripped }" : '#'
+      end.join("\n")
     end
 
     def query_block
