@@ -41,6 +41,8 @@ module ETSource
     def initialize(dataset, sector = nil)
       @dataset = dataset
       @sector  = sector
+
+      ETSource.load_library('refinery')
     end
 
     # Public: Calculates the graph.

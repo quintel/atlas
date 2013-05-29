@@ -7,10 +7,6 @@ require 'active_model'
 require 'rubel'
 require 'turbine'
 require 'virtus'
-require 'bundler'
-
-Bundler.setup
-require 'refinery'
 
 require_relative 'etsource/base'
 require_relative 'etsource/parser/hash_to_text_parser'

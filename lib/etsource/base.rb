@@ -48,4 +48,22 @@ module ETSource
   ensure
     self.data_dir = previous
   end
+
+  # Internal: Loads an optional Gem dependency. Used to limit what ETSource
+  # loads in production environments.
+  #
+  # name - The name of the library to load.
+  #
+  # Returns nothing.
+  def self.load_library(name)
+    unless defined?(::Bundler)
+      require 'bundler'
+      Bundler.setup(:default)
+    end
+
+    require name
+  rescue LoadError => ex
+    raise LoadError.new("#{ ex.message }. This is an optional dependency " \
+                        "which is not available in production.")
+  end
 end # ETSource
