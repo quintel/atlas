@@ -3,7 +3,8 @@ require 'yaml'
 
 require 'support/coverage' if ENV['COVERAGE']
 
-require_relative '../lib/etsource.rb'
+ENV['TOME_ENV'] = 'test'
+require_relative '../lib/tome'
 
 require 'support/fixtures'
 require 'support/some_document'
@@ -31,5 +32,5 @@ RSpec.configure do |config|
 
   # Use a (safe) copy of spec/fixtures as the data-source when the "fixtures"
   # metadata is set on a spec group or example.
-  config.include ETSource::Spec::Fixtures, fixtures: true
+  config.include Tome::Spec::Fixtures, fixtures: true
 end

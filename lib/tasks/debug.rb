@@ -11,9 +11,9 @@ namespace :debug do
   desc 'Output before and after diagrams of the transport subgraph.'
   task :transport do
     $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/..'))
-    require 'etsource'
+    require 'tome'
 
-    runner = ETSource::Runner.new(ETSource::Dataset.find(:nl), :transport)
+    runner = Tome::Runner.new(Tome::Dataset.find(:nl), :transport)
     exception = nil
 
     puts 'Setting up graph structure... '
@@ -23,7 +23,7 @@ namespace :debug do
 
     silence_stream(STDOUT) do
       Refinery::Diagram::InitialValues.new(runner.refinery_graph).
-        draw_to(ETSource.root.join('tmp').join('before.png'))
+        draw_to(Tome.root.join('tmp').join('before.png'))
     end
 
     puts 'output to tmp/before.png'
@@ -38,7 +38,7 @@ namespace :debug do
     end
 
     Refinery::Diagram::Calculable.new(runner.refinery_graph).
-      draw_to(ETSource.root.join('tmp').join('after.png'))
+      draw_to(Tome.root.join('tmp').join('after.png'))
 
     puts 'output to tmp/after.png'
 

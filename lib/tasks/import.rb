@@ -31,8 +31,8 @@ namespace :import do
   # Given a node key and its data, determines which subclass of Node should
   # be used.
   def node_subclass(key, data)
-    return ETSource::FinalDemandNode if key.to_s.match(/final_demand/)
-    return ETSource::DemandNode      if key.to_s.match(/demand/)
+    return Tome::FinalDemandNode if key.to_s.match(/final_demand/)
+    return Tome::DemandNode      if key.to_s.match(/demand/)
 
     out_slots, in_slots = data['slots'].partition { |s| s.match(/^\(/) }
     in_slots.map!  { |slot| match = slot.match(/\((.*)\)/) ; match[1] }
@@ -41,9 +41,9 @@ namespace :import do
     if ((in_slots - ['loss']) - (out_slots - ['loss'])).any?
       # A node is a converter if it outputs energy in a different carrier than
       # it received; the exception being loss which we ignore.
-      ETSource::Converter
+      Tome::Converter
     else
-      ETSource::Node
+      Tome::Node
     end
   end
 
@@ -53,7 +53,7 @@ namespace :import do
     @queries ||= begin
       queries = {}
 
-      Pathname.glob(ETSource.data_dir.join('import/**/*.csv')).each do |path|
+      Pathname.glob(Tome.data_dir.join('import/**/*.csv')).each do |path|
         data = CSV.table(path).select do |row|
           row[:status].nil? || row[:status] == 'necessary'
         end
@@ -62,7 +62,7 @@ namespace :import do
           if row[:converter_key]
             key = row[:converter_key].to_sym
           else
-            key = ETSource::Edge.key(row[:from], row[:to], row[:carrier])
+            key = Tome::Edge.key(row[:from], row[:to], row[:carrier])
           end
 
           queries[key] = row[:query]
@@ -79,7 +79,7 @@ namespace :import do
   # Returns a Pathname.
   def dir(path)
     path = Pathname.new(path)
-    path = ETSource.root.join(path) if path.relative?
+    path = Tome.root.join(path) if path.relative?
 
     unless path.directory?
       raise "No directory found at #{ path.to_s }"
@@ -137,17 +137,17 @@ namespace :import do
 
   # --------------------------------------------------------------------------
 
-  # Loads ETSource.
+  # Loads Tome.
   task :setup, [:from, :to] do |_, args|
     $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/..'))
 
     require 'fileutils'
-    require 'etsource'
+    require 'tome'
     require 'term/ansicolor'
     require 'active_support/core_ext/hash/indifferent_access'
 
-    $from_dir         = dir(args.from)
-    ETSource.data_dir = dir(args.to)
+    $from_dir     = dir(args.from)
+    Tome.data_dir = dir(args.to)
   end # task :setup
 
   # --------------------------------------------------------------------------
@@ -162,12 +162,12 @@ namespace :import do
     there are no hand-made changes.
   DESC
   task :nodes, [:to, :from] => [:setup] do |_, args|
-    include ETSource
+    include Tome
 
     # Wipe out *everything* in the nodes directory; rather than simply
     # overwriting existing files, since some may have new naming conventions
     # since the previous import.
-    FileUtils.rm_rf(ETSource::Node.directory)
+    FileUtils.rm_rf(Tome::Node.directory)
 
     runner = ImportRun.new('nodes')
 
@@ -211,7 +211,7 @@ namespace :import do
     there are no hand-made changes.
   DESC
   task :edges, [:from, :to] => [:setup] do |_, args|
-    include ETSource
+    include Tome
 
     # Wipe out *everything* in the edges directory; rather than simply
     # overwriting existing files, since some may have new naming conventions
@@ -275,7 +275,7 @@ namespace :import do
     there are no hand-made changes.
   DESC
   task :presets, [:from, :to] => [:setup] do |_, args|
-    include ETSource
+    include Tome
 
     # Wipe out *everything* in the presets directory.
     FileUtils.rm_rf(Preset.directory)

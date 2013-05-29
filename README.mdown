@@ -1,4 +1,9 @@
-# ETSource
+# Tome - Object Mapper for ETSource Data
+
+The Energy **T**ransition **O**bject **M**app**e**er. Okay, that's a bit of a
+stretch, so just think of it as an archive of all the data used by the Energy
+Transition Model. Nodes, edges, slots, source data, presets; everything but
+the kitchen sink.
 
 ## Build Status
 
@@ -13,8 +18,8 @@ You can load the objects through the console
 
 E.g. get a Gquery:
 
-    pry(main)> ETSource::Gquery.all.last
-    => <ETSource::Gquery: share_of_transport_in_final_demand>
+    pry(main)> Tome::Gquery.all.last
+    => <Tome::Gquery: share_of_transport_in_final_demand>
 
 Then you can change stuff:
 
@@ -30,7 +35,7 @@ This way you can easily mass-update any properties for gqueries, inputs etc.
 For example, if you want to append an exclamation mark to each input key:
 
 ```ruby
-ETSource::Input.all.each do |input|
+Tome::Input.all.each do |input|
   input.key = input.key + "!"
   input.save!
 end
@@ -79,7 +84,7 @@ or when you prefer pry:
 
 Then you can e.g. start changing queries, minimal values, etc.:
 
-    $ input = ETSource:Input.find(agriculture_electricity_demand)
+    $ input = Tome:Input.find(agriculture_electricity_demand)
     $ input.min_value = 1
     $ input.save!
       => will save this in the appropiate file

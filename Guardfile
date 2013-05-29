@@ -2,13 +2,13 @@
 
 guard 'rspec' do
   # library
-  watch('lib/etsource.rb')           { "spec" }
-  watch(%r{^lib/etsource/(.+)\.rb$}) { "spec" }
+  watch('lib/tome.rb')           { "spec" }
+  watch(%r{^lib/tome/(.+)\.rb$}) { "spec" }
 
   # specs
-  watch('spec/spec_helper.rb')       { "spec" }
+  watch('spec/spec_helper.rb')   { "spec" }
   watch(%r{^spec/.+_spec\.rb$})
 
   # fixtures
-  watch(%r{^spec/fixtures/(.+)})     { "spec" }
+  watch(%r{^spec/fixtures/(.+)}) { "spec" }
 end

@@ -1,4 +1,4 @@
-module ETSource
+module Tome
   class SomeDocument
     include ActiveDocument
 
@@ -19,4 +19,4 @@ module ETSource
 
   class FinalDocument < OtherDocument
   end
-end # ETSource
+end # Tome

@@ -1,6 +1,6 @@
-# Object Mapper for ETSource
+# Tome - Object Mapper for ETSource Data
 
-The object mapper for ETSource is designed to:
+An object mapper for ETSource data. Tome is designed to:
 
 1. Provide a common way to (mass) manipulate objects in ETSource
 2. Run validations
@@ -11,7 +11,7 @@ The object mapper for ETSource is designed to:
 E.g. when you would like to update all the percentage units for gqueries:
 
 ```Ruby
-Gquery.all.each do |gquery|
+Tome::Gquery.all.each do |gquery|
   gquery.unit = "percentage" if gquery.unit == "%"
   gquery.save!
 end
@@ -26,7 +26,7 @@ When you are updating/manipulating an object, you can (or must) run validations.
 When an object is invalid, you can ask the object which 'parts' are invalid.
 
 ```Ruby
-gquery = ETSource::Gquery.find(:co2_emissions_total)
+gquery = Tome::Gquery.find(:co2_emissions_total)
 gquery.unit = nil
 
 gquery.save!
@@ -41,7 +41,7 @@ Validation can run at three levels:
 1. We can have a **Continuous Integration server** checking whether all objects
    are valid.
 2. You will not be able to save an object through the ORM when it is invalid.
-3. ETengine import of ETSource date will only proceed when all objects are
+3. ETengine import of ETSource data will only proceed when all objects are
    valid.
 
 ## Easier import for data from ETSource
@@ -54,8 +54,8 @@ for ETEngine.
 Dataset will be a pivotal role in querying information, e.g:
 
 ```Ruby
-dataset = ETSource::Dataset.load(:nl)
-=> <ETSource::EnergyBalance CSV :nl>
+dataset = Tome::Dataset.load(:nl)
+=> <Tome::EnergyBalance CSV :nl>
 ```
 
 ```Ruby
@@ -74,14 +74,14 @@ dataset.node(:foo).preset_demand
 or:
 
 ```Ruby
-ETSource::Node.load(:foo).preset_demand(Dataset.load(:nl))
+Tome::Node.load(:foo).preset_demand(Dataset.load(:nl))
 => 330.21 #PJ
 ```
 
 Of course you can loop through all the datasets, e.g. for comparing stuff:
 
 ```Ruby
-ETSource::Dataset.all.map do |dataset|
+Tome::Dataset.all.map do |dataset|
   dataset.node(:foo).preset_demand
 end
 => [2983.32, 3219,03]
