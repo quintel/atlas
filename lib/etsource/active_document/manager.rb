@@ -52,7 +52,12 @@ module ETSource
       #
       # Returns an array of ActiveDocuments.
       def all
-        lookup_map.keys.map { |key| get(key) }
+        unless @all_loaded
+          @all = lookup_map.keys.map { |key| get(key) }
+          @all_loaded = true
+        end
+
+        @all
       end
 
       # Public: A human-readable version of the Manager.
@@ -75,6 +80,10 @@ module ETSource
         # Ensure the directory exists.
         FileUtils.mkdir_p(path.dirname)
 
+        unless path.file?
+          @all.push(document)
+        end
+
         path.open('w') do |file|
           file.write(content)
           file.write("\n") unless content[-1] == "\n"
@@ -91,9 +100,11 @@ module ETSource
       #
       # Returns nothing.
       def delete_path(path)
-        path.delete
-
         old_key = key_from_path(path)
+
+        @all.delete(get(old_key))
+
+        path.delete
 
         lookup_map.delete(old_key)
         @documents.delete(old_key)
@@ -104,8 +115,10 @@ module ETSource
       #
       # Returns nothing.
       def clear!
-        @documents  = {}
-        @lookup_map = nil
+        @documents    = {}
+        @lookup_map   = nil
+        @all_loaded = false
+        @all          = []
       end
 
       # Internal: When a new manager is created, it is registered with the

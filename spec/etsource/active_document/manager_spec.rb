@@ -60,6 +60,58 @@ module ETSource::ActiveDocument
           to change { manager.get(:something) }.
           from(nil).to(document)
       end
+
+      it 'is returned when calling "all"' do
+        expect { result }.
+          to change { manager.all.include?(document) }.
+          from(false).to(true)
+      end
+    end # when creating a new document
+
+    describe 'when renaming a document' do
+      let!(:document) do
+        SomeDocument.new(key: 'something').tap do |doc|
+          doc.save!
+          doc.key = :updated
+        end
+      end
+
+      let(:manager) { SomeDocument.manager }
+      let(:result)  { document.save! }
+
+      it 'creates the new file' do
+        new_path = SomeDocument.directory.join('updated.suffix')
+
+        expect { result }.
+          to change { new_path.file? }.
+          from(false).to(true)
+      end
+
+      it 'deletes the old file' do
+        old_path = SomeDocument.directory.join('something.suffix')
+
+        expect { result }.
+          to change { old_path.file? }.
+          from(true).to(false)
+      end
+
+      it 'is no longer reachable at the old key' do
+        expect { result }.
+          to change { manager.get(:something) }.
+          from(document).to(nil)
+      end
+
+      it 'is reachable at the new key' do
+        expect { result }.
+          to change { manager.get(:updated) }.
+          from(nil).to(document)
+      end
+
+      it 'is returned when calling "all"' do
+        expect { result }.
+          to_not change { manager.all.include?(document) }.
+          from(true)
+      end
     end # when creating a new document
 
     describe 'when deleting a file' do
@@ -78,6 +130,12 @@ module ETSource::ActiveDocument
           to change { manager.get(:original) }.
           from(document).to(nil)
       end
+
+      it 'is no longer returned when calling "all"' do
+        expect { result }.
+          to change { manager.all.include?(document) }.
+          from(true).to(false)
+      end
     end # when deleting a file
 
     describe 'when deleting a file path' do
@@ -95,6 +153,12 @@ module ETSource::ActiveDocument
         expect { result }.
           to change { manager.get(:original) }.
           from(document).to(nil)
+      end
+
+      it 'is no longer returned when calling "all"' do
+        expect { result }.
+          to change { manager.all.include?(document) }.
+          from(true).to(false)
       end
     end # when deleting a file path
   end # Manager
