@@ -11,6 +11,8 @@ module Tome
     attribute :in_slots,             Set[String]
     attribute :out_slots,            Set[String]
 
+    attribute :query,                String
+
     alias_method :sector,  :ns
     alias_method :sector=, :ns=
 
