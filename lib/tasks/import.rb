@@ -158,7 +158,7 @@ namespace :import do
     Tome.data_dir = dir(args.to)
   end # task :setup
 
-  task all: ['import:nodes', 'import:edges', 'import:presets']
+  task all: [:carriers, :nodes, :edges, :presets]
 end # namespace :import
 
 desc 'Import edges and nodes from the old format to ActiveDocument'
