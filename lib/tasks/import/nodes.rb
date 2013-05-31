@@ -8,7 +8,7 @@ namespace :import do
     This starts by *deleting* everything in data/nodes on the assumption that
     there are no hand-made changes.
   DESC
-  task :nodes, [:to, :from] => [:setup] do |_, args|
+  task :nodes, [:from, :to] => [:setup] do |_, args|
     include Tome
 
     # Wipe out *everything* in the nodes directory; rather than simply
