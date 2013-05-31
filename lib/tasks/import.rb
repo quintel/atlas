@@ -146,6 +146,14 @@ namespace :import do
     require 'term/ansicolor'
     require 'active_support/core_ext/hash/indifferent_access'
 
+    if args.from.nil?
+      raise "You did not specify a 'from' directory!"
+    end
+
+    if args.to.nil?
+      raise "You did not specify a 'to' directory!"
+    end
+
     $from_dir     = dir(args.from)
     Tome.data_dir = dir(args.to)
   end # task :setup
