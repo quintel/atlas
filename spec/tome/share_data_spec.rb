@@ -25,7 +25,7 @@ module Tome
         let(:data) { ShareData.new(Dataset.new(key: :no), :cars) }
 
         it 'raises UnknownShareDataError' do
-          expect { data }.to raise_error(UnknownShareDataError)
+          expect { data }.to raise_error
         end
 
         it 'mentions the area name' do
@@ -40,8 +40,8 @@ module Tome
       context 'when an invalid share data file' do
         let(:data) { ShareData.new(Dataset.find(:nl), :nope) }
 
-        it 'raises UnknownShareDataError' do
-          expect { data }.to raise_error(UnknownShareDataError)
+        it 'raises an error' do
+          expect { data }.to raise_error
         end
 
         it 'mentions the area name' do
@@ -66,7 +66,7 @@ module Tome
       context 'when the attribute does not exist' do
         it 'raises an UnknownShareAttributeError' do
           expect { data.get(:nope) }.
-            to raise_error(UnknownShareAttributeError)
+            to raise_error(UnknownCSVRowError)
         end
       end
     end # get

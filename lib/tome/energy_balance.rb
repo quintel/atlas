@@ -6,8 +6,7 @@ module Tome
   #
   # Currently, it is presumed that the EnergyBalance values are provided
   # in ktoe, the standard of the IEA.
-  class EnergyBalance
-
+  class EnergyBalance < CSVDocument
     DIRECTORY =     'energy_balances'
     ORIGINAL_UNIT = :tj
 
@@ -16,17 +15,18 @@ module Tome
     def initialize(key = :nl, unit = :pj)
       @key  = key
       @unit = unit
+
+      super(Tome.data_dir.join("#{ self.class::DIRECTORY}/#{ key }.csv"))
     end
 
     # Loads a stored energy balance
     def self.find(key, year = nil)
-      raise InvalidKeyError.new(key) unless key
-      new(key)
+      key ? new(key) : raise(InvalidKeyError.new(key))
     end
 
     # Returns the energy balance item in the correct unit
     def get(use, carrier)
-      convert_to_unit(get_cell(use, carrier))
+      convert_to_unit(super(use, carrier))
     end
 
     # basicly the same as get, but then in one big string, separates by comma
@@ -40,33 +40,10 @@ module Tome
     private
     #######
 
-    # Returns the value from the EnergyBalance table
-    # @return [Float]
-    def get_cell(use, carrier)
-      normalized_carrier = normalize_key(carrier)
-
-      row = get_row(use).find do |key, *|
-        normalize_key(key) == normalized_carrier
-      end
-
-      row && row.last || raise(UnknownCarrierError.new(carrier, key))
-    end
-
-    # Get a row from the CSV file
-    # Returns a CSV::Row object
-    def get_row(use)
-      normalized_use = normalize_key(use)
-
-      table.find { |row| normalize_key(row[0]) == normalized_use } ||
-        raise(UnknownUseError.new(use, key))
-    end
-
-    # Load the whole table
-    # Returns a CSV object
-    def table
-      CSV.table("#{Tome.data_dir}/#{self.class::DIRECTORY}/#{key}.csv")
-    end
-
+    # Internal: Given a value extracted from the CSV file, converts it to the
+    # unit used by the EnergyBalance instance.
+    #
+    # Returns a numeric, warning if the given value was not also numeric.
     def convert_to_unit(value)
       if value.is_a?(Numeric)
         EnergyUnit.new(value, ORIGINAL_UNIT).to_unit(unit)
@@ -75,19 +52,5 @@ module Tome
         0.0
       end
     end
-
-    # Internal: Converts the given key to a format which removes all special
-    # characters.
-    #
-    # Returns a Symbol.
-    def normalize_key(key)
-      key.to_s.downcase.strip.
-        gsub(/\s+/, '_').
-        gsub(/[^a-zA-Z0-9_]+/, '').
-        gsub(/_+/, '_').
-        gsub(/_$/, '').
-        to_sym
-    end
-
-  end # Dataset
+  end # EnergyBalance
 end # Tome

@@ -62,10 +62,6 @@ module Tome
     "Invalid unit requested: #{ unit.inspect }"
   end
 
-  UnknownUseError = error_class do |use, area|
-    "Unknown use #{ use.inspect } for #{ area.inspect }"
-  end
-
   UnknownShareDataError = error_class do |path|
     "No share data file exists at #{ path.to_s.inspect }"
   end
@@ -85,10 +81,6 @@ module Tome
   end
 
   # Graph Structure / Topology Errors ----------------------------------------
-
-  UnknownCarrierError = error_class do |carrier, area|
-    "Unknown carrier #{ carrier.inspect } for #{ area.inspect }"
-  end
 
   InvalidLinkError = error_class do |link|
     "#{ link.inspect } is not a valid link"
@@ -123,6 +115,16 @@ module Tome
 
   NonNumericQueryError = error_class(CalculationError) do |result|
     "Non-numeric query result: #{ result.inspect }"
+  end
+
+  # CSV Document Errors ------------------------------------------------------
+
+  UnknownCSVRowError = error_class do |document, row|
+    "No row called #{ row.inspect } in #{ document.path }"
+  end
+
+  UnknownCSVCellError = error_class do |document, column|
+    "No column called #{ column.inspect } in #{ document.path }"
   end
 
 end # Tome

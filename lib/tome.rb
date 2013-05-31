@@ -14,6 +14,8 @@ require_relative 'tome/parser/text_to_hash_parser'
 require_relative 'tome/errors'
 require_relative 'tome/energy_unit'
 
+require_relative 'tome/csv_document'
+
 require_relative 'tome/active_document/persistence'
 require_relative 'tome/active_document/finders'
 require_relative 'tome/active_document/naming'
