@@ -121,4 +121,8 @@ module Tome
     "Could not find edge '#{ keys.first } -#{ keys[1] }-> #{ keys.last }'"
   end
 
+  NonNumericQueryError = error_class(CalculationError) do |result|
+    "Non-numeric query result: #{ result.inspect }"
+  end
+
 end # Tome

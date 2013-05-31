@@ -116,7 +116,11 @@ module Tome
     end
 
     def query(string)
-      runtime.execute(string)
+      unless (result = runtime.execute(string)).is_a?(Numeric)
+        raise NonNumericQueryError.new(result)
+      end
+
+      result
     rescue RuntimeError => ex
       ex.message.gsub!(/$/, " (executing: #{ string.inspect })")
       raise ex
