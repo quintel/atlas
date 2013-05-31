@@ -9,11 +9,23 @@ namespace :debug do
   end
 
   desc 'Output before and after diagrams of the transport subgraph.'
-  task :transport do
+  task :subgraph, [:data_dir, :sector] do |_, args|
+    if args.data_dir.nil?
+      raise "You need to supply the path to ETSource data; "\
+            "e.g. rake debug:subgraph[../etsource/data,transport]"
+    end
+
+    if args.sector.nil?
+      raise "You need to supply a sector name; "\
+            "e.g. rake debug:subgraph[../etsource/data,transport]"
+    end
+
     $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/..'))
     require 'tome'
 
-    runner = Tome::Runner.new(Tome::Dataset.find(:nl), :transport)
+    Tome.data_dir = args.data_dir
+
+    runner = Tome::Runner.new(Tome::Dataset.find(:nl), args.sector.to_sym)
     exception = nil
 
     puts 'Setting up graph structure... '
