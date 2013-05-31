@@ -53,7 +53,7 @@ namespace :import do
     @queries ||= begin
       queries = {}
 
-      Pathname.glob(Tome.data_dir.join('import/**/*.csv')).each do |path|
+      Pathname.glob($from_dir.join('data/import/**/*.csv')).each do |path|
         data = CSV.table(path).select do |row|
           row[:status].nil? || row[:status] == 'necessary'
         end
