@@ -62,14 +62,6 @@ module Tome
     "Invalid unit requested: #{ unit.inspect }"
   end
 
-  UnknownShareDataError = error_class do |path|
-    "No share data file exists at #{ path.to_s.inspect }"
-  end
-
-  UnknownShareAttributeError = error_class do |key, file_key|
-    "Unknown share data row #{ key.inspect } in share data #{ file_key }"
-  end
-
   NonMatchingNodesError = error_class(InvalidKeyError) do |node, path, attrs|
     "Cannot specify different #{ node } node in the key and attributes: " \
     "got #{ path.to_s.inspect } and #{ attrs.to_s.inspect }"

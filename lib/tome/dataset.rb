@@ -77,16 +77,19 @@ module Tome
       @energy_balance ||= EnergyBalance.find(area)
     end
 
-    # Public: Retrieves the ShareData for the file whose name matches +key+.
+    # Public: Retrieves the share data for the file whose name matches +key+.
     #
     # key - The name of the shares file to load.
     #
-    # Returns a ShareData.
+    # For example:
+    #   dataset.shares(:trucks).get(:gasoline) # => 0.4
+    #
+    # Returns a CSVDocument::OneDimensional.
     def shares(key)
       key = key.to_sym
 
-      @shares      ||= Hash.new
-      @shares[key] ||= ShareData.new(self, key)
+      (@shares ||= Hash.new)[key] ||=
+        CSVDocument::OneDimensional.new(path.join("shares/#{ key }.csv"))
     end
 
     # Public: Path to the directory in which the dataset specific data is

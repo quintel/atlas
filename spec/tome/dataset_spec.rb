@@ -49,17 +49,16 @@ module Tome; describe Dataset, :fixtures do
     let(:dataset) { Dataset.find(:nl) }
     let(:shares)  { dataset.shares(:electricity) }
 
-    it 'returns a ShareData for the correct area' do
-      expect(shares.dataset).to eql(dataset)
+    it 'returns a CSV document' do
+      expect(shares).to be_a(CSVDocument)
     end
 
-    it 'returns a ShareData for the correct file key' do
-      expect(shares.file_key).to eql(:electricity)
+    it 'sets the file path' do
+      expect(shares.path.to_s).to end_with('nl/shares/electricity.csv')
     end
 
-    it 'raises UnknownShareDataError when no shares data exists' do
-      expect { Dataset.find(:nl).shares(:nope) }.
-        to raise_error(UnknownShareDataError)
+    it 'raises an error when no shares data exists' do
+      expect { Dataset.find(:nl).shares(:nope) }.to raise_error(Errno::ENOENT)
     end
   end # shares
 end ; end
