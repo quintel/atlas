@@ -22,6 +22,14 @@ module Tome
       expect { CSVDocument.new('no') }.to raise_error(/no such file/i)
     end
 
+    it 'raises when a header cell contains no value' do
+      path = Tome.data_dir.join('blank.csv')
+      path.open('w') { |f| f.puts(",yes\nyes,1") }
+
+      expect { CSVDocument.new(path.to_s) }.
+        to raise_error(BlankCSVHeaderError)
+    end
+
     describe '#get' do
       it 'fetches values identified by row and column' do
         expect(doc.get('yes', 'no')).to eq(0)

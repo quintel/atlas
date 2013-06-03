@@ -119,4 +119,9 @@ module Tome
     "No column called #{ column.inspect } in #{ document.path }"
   end
 
+  BlankCSVHeaderError = error_class do |path|
+    "#{ path } contains a cell in the header row which has no value. All " \
+    "of the cells in the first row must contain a non-blank value."
+  end
+
 end # Tome

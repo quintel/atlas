@@ -11,6 +11,12 @@ module Tome
     def initialize(path)
       @path  = Pathname.new(path)
       @table = CSV.table(@path.to_s)
+    rescue NoMethodError => ex
+      if ex.message.match(/undefined method `encode'/)
+        raise BlankCSVHeaderError.new(path)
+      end
+
+      raise ex
     end
 
     # Public: Retrieves the value of a cell identified by its row and column.
