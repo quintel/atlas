@@ -61,4 +61,27 @@ module Tome; describe Dataset, :fixtures do
       expect { Dataset.find(:nl).shares(:nope) }.to raise_error(Errno::ENOENT)
     end
   end # shares
+
+  describe '#chps' do
+    let(:dataset) { Dataset.find(:nl) }
+    let(:chps)    { dataset.chps }
+
+    it 'returns a CSV document' do
+      expect(chps).to be_a(CSVDocument)
+    end
+
+    it 'sets the file path' do
+      expect(chps.path.to_s).to end_with('nl/chp.csv')
+    end
+
+    it 'raises an error when no shares data exists' do
+      dataset.chps.path.delete
+
+      # We need to clear the Manager cache to force a new dataset instance
+      # to be created.
+      Dataset.manager.clear!
+
+      expect { Dataset.find(:nl).chps }.to raise_error(Errno::ENOENT)
+    end
+  end # shares
 end ; end

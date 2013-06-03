@@ -92,6 +92,17 @@ module Tome
         CSVDocument::OneDimensional.new(path.join("shares/#{ key }.csv"))
     end
 
+    # Public: Retrieves data about CHPs for the datasets region. Expects to
+    # load a file at datasets/AREA/chp.csv.
+    #
+    # For example:
+    #   dataset.chps.get(:agriculture_chp_engine_biogas) # => 4194.5
+    #
+    # Returns a CSVDocument::OneDimensional.
+    def chps
+      @chps ||= CSVDocument::OneDimensional.new(path.join("chp.csv"))
+    end
+
     # Public: Path to the directory in which the dataset specific data is
     # stored.
     #
