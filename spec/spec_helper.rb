@@ -1,5 +1,6 @@
 require 'fileutils'
 require 'yaml'
+require 'tmpdir'
 
 require 'support/coverage' if ENV['COVERAGE']
 
