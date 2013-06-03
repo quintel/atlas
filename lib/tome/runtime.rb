@@ -58,6 +58,19 @@ module Tome
       dataset.shares(file_key).get(attribute)
     end
 
+    # Public: Retrieves a pre-set demand for a CHP node from the chp.csv file.
+    #
+    # node_key - The key of the node whose demand is to be retrieved.
+    #
+    # For example, retrieving the demand of a node with the key "agri_chp".
+    #
+    #   CHP(:agri_chp)
+    #
+    # Returns a numeric.
+    def CHP(node_key)
+      dataset.chps.get(node_key)
+    end
+
     # Public: Given keys to look up a node or edge, retrieves the demand
     # attribute of the object.
     #
