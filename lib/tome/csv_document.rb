@@ -2,6 +2,24 @@ module Tome
   class CSVDocument
     attr_reader :path
 
+    # Unfortunately, the CSV library provides us with no means to set the
+    # header converter at runtime; it has to be added globally.
+    CSV::HeaderConverters[:tome] = ->(key) do
+      case key
+        when nil
+          raise(InvalidKeyError.new(key))
+        when Integer
+          key
+        else
+          key.to_s.downcase.strip.
+            gsub(/\s+/, '_').
+            gsub(/[^a-zA-Z0-9_]+/, '').
+            gsub(/_+/, '_').
+            gsub(/_$/, '').
+            to_sym
+      end
+    end
+
     # Public: Creates a new CSV document instance which will read data from a
     # CSV file on disk. Document are read-only.
     #
@@ -10,13 +28,9 @@ module Tome
     # Returns a CSVDocument.
     def initialize(path)
       @path  = Pathname.new(path)
-      @table = CSV.table(@path.to_s)
-    rescue NoMethodError => ex
-      if ex.message.match(/undefined method `encode'/)
-        raise BlankCSVHeaderError.new(path)
-      end
-
-      raise ex
+      @table = CSV.table(@path.to_s, header_converters: [:tome])
+    rescue InvalidKeyError
+      raise BlankCSVHeaderError.new(path)
     end
 
     # Public: Retrieves the value of a cell identified by its row and column.
@@ -57,15 +71,7 @@ module Tome
     #
     # Returns a Symbol.
     def normalize_key(key)
-      return nil if key.nil?
-      return key if key.is_a?(Integer)
-
-      key.to_s.downcase.strip.
-        gsub(/\s+/, '_').
-        gsub(/[^a-zA-Z0-9_]+/, '').
-        gsub(/_+/, '_').
-        gsub(/_$/, '').
-        to_sym
+      CSV::HeaderConverters[:tome].call(key)
     end
   end # CSVDocument
 
