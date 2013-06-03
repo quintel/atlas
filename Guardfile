@@ -3,7 +3,7 @@
 guard 'rspec' do
   # library
   watch('lib/tome.rb')           { "spec" }
-  watch(%r{^lib/tome/(.+)\.rb$}) { "spec" }
+  watch(%r{^lib/tome/(.+)\.rb$}) { |m| "spec/tome/#{m[1]}_spec.rb" }
 
   # specs
   watch('spec/spec_helper.rb')   { "spec" }
