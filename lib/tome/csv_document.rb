@@ -52,6 +52,7 @@ module Tome
     # Returns a Symbol.
     def normalize_key(key)
       return nil if key.nil?
+      return key if key.is_a?(Integer)
 
       key.to_s.downcase.strip.
         gsub(/\s+/, '_').
@@ -61,4 +62,18 @@ module Tome
         to_sym
     end
   end # CSVDocument
+
+  # A special cast of CSVDocument where the file contains only two columns;
+  # one with a "key" for the row, and one with a value. The name of the
+  # headers is not important.
+  class CSVDocument::OneDimensional < CSVDocument
+    # Public: Retrieves the value of a cell identified by its row.
+    #
+    # row - The unique row name.
+    #
+    # Returns the cell contents as a number if possible, a string otherwise.
+    def get(row)
+      cell(normalize_key(row), 1)
+    end
+  end # CSVDocument::OneDimensional
 end # Tome

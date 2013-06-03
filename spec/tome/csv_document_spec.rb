@@ -63,5 +63,31 @@ module Tome
         expect { doc.get('yes', 'nope') }.to raise_error(UnknownCSVCellError)
       end
     end # get
-  end # CSVDocucmnet
+  end # CSVDocument
+
+  describe CSVDocument::OneDimensional, :fixtures do
+    let(:doc) do
+      path = Tome.data_dir.join('carriers.csv')
+
+      path.open('w') do |f|
+        f.puts(<<-EOF.lines.map(&:strip).join("\n"))
+          carrier,share,elec
+          gas,0.3,no
+          electricity,0.7,yes
+        EOF
+      end
+
+      CSVDocument::OneDimensional.new(path.to_s)
+    end
+
+    describe '#get' do
+      it 'returns the value of a valid row key' do
+        expect(doc.get(:gas)).to eq(0.3)
+      end
+
+      it 'does not get the value of a header row' do
+        expect { doc.get(:carrier) }.to raise_error(UnknownCSVRowError)
+      end
+    end # get
+  end # CSVDocument::OneDimensional
 end # Tome
