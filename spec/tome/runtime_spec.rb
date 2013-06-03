@@ -44,6 +44,11 @@ module Tome
       it 'executes SHARE functions' do
         expect(runtime.execute("SHARE(cars, gasoline)")).to eq(0.1)
       end
+
+      it 'raises an error if the CHP data is missing' do
+        expect { runtime.execute('SHARE(cars, nope)') }.
+          to raise_error(UnknownCSVRowError)
+      end
     end
 
     context 'CHP' do
