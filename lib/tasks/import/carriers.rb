@@ -33,6 +33,6 @@ namespace :import do
 
     runner.finish
 
-    Rake::Task['validate:carriers'].invoke
+    Rake::Task['validate:carriers'].invoke(args.to)
   end # :carriers
 end # :import

@@ -48,6 +48,6 @@ namespace :import do
 
     runner.finish
 
-    Rake::Task['validate:nodes'].invoke
+    Rake::Task['validate:nodes'].invoke(args.to)
   end # task :nodes
 end # namespace :import

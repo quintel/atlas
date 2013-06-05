@@ -60,6 +60,6 @@ namespace :import do
 
     runner.finish
 
-    Rake::Task['validate:edges'].invoke
+    Rake::Task['validate:edges'].invoke(args.to)
   end # task :edges
 end # namespace :import
