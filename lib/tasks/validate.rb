@@ -1,4 +1,5 @@
 namespace :validate do
+
   # Given an ActiveDocument class, runs the validations on all of the
   # documents and reports the success or failure thereof.
   class ValidationRunner
@@ -12,16 +13,20 @@ namespace :validate do
     def run
       failures = []
 
-      @classes.each do |klass|
-        each_document(klass) do |document|
-          if document.valid?
-            print Term::ANSIColor.green { '.' }
-          else
-            print Term::ANSIColor.red { 'F' }
-            failures.push(document)
-          end
+      Tome::Term::Reporter.report(
+        'Running validation', passed: :green, failed: :red
+      ) do |reporter|
+        @classes.each do |klass|
+          each_document(klass) do |document|
+            if document.valid?
+              reporter.inc(:passed)
+            else
+              reporter.inc(:failed)
+              failures.push(document)
+            end
 
-          yield document if block_given?
+            yield document if block_given?
+          end
         end
       end
 

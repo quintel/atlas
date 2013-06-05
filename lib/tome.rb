@@ -42,3 +42,5 @@ require_relative 'tome/node/final_demand_node'
 require_relative 'tome/node/stat_node'
 
 require_relative 'tome/runtime'
+
+require_relative 'tome/term/reporter'
