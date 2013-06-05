@@ -32,5 +32,7 @@ namespace :import do
     end
 
     runner.finish
+
+    Rake::Task['validate:carriers'].invoke
   end # :carriers
 end # :import

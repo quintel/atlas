@@ -59,5 +59,7 @@ namespace :import do
     end # nodes_by_sector.each
 
     runner.finish
+
+    Rake::Task['validate:edges'].invoke
   end # task :edges
 end # namespace :import

@@ -101,36 +101,29 @@ namespace :import do
   # the failures at the end (when you call +finish+).
   class ImportRun
     def initialize(message)
-      @message = message
-      @errors  = []
-      @printed = false
+      @message  = message
+      @errors   = []
+
+      @reporter = Tome::Term::Reporter.new(
+        "Importing #{ message }", imported: :green, failed: :red)
     end
 
     # Wrap each single imported item in this method, to record the success or
     # failure.
     def item
-      unless @printed
-        # Print the initial message if this is the first item to be imported.
-        print "Processing #{ @message }: "
-        @printed = true
+      begin
+        yield.save(false)
+      rescue RuntimeError => ex
+        @reporter.inc(:failed)
+        @errors.push(ex)
+      else
+        @reporter.inc(:imported)
       end
-
-      document = yield
-      document.save(false)
-
-      unless document.valid?
-        raise InvalidDocumentError.new(document)
-      end
-
-      print Term::ANSIColor.green { '.' }
-    rescue RuntimeError => ex
-      print Term::ANSIColor.red { '!' }
-      @errors.push(ex)
     end
 
     # Prints out error messages, if there were any.
     def finish
-      puts '' ; puts ''
+      puts ''
       @errors.each { |error| puts error.message ; puts }
     end
   end # ImportRun

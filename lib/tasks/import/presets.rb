@@ -25,5 +25,7 @@ namespace :import do
     end
 
     runner.finish
+
+    Rake::Task['validate:presets'].invoke
   end # :presets
 end # :import
