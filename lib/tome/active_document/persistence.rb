@@ -136,7 +136,11 @@ module Tome
         #
         # Returns an Tome::ActiveDocument::Manager.
         def manager
-          @manager ||= Manager.new(topmost_document_class)
+          if subclassed_document?
+            topmost_document_class.manager
+          else
+            @manager ||= Manager.new(self)
+          end
         end
       end # ClassMethods
 

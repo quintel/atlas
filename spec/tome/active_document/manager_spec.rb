@@ -2,7 +2,8 @@ require 'spec_helper'
 
 module Tome::ActiveDocument
   describe Manager, :fixtures do
-    SomeDocument = Tome::SomeDocument
+    SomeDocument  = Tome::SomeDocument
+    FinalDocument = Tome::FinalDocument
 
     let(:manager) { SomeDocument.manager }
 
@@ -67,6 +68,24 @@ module Tome::ActiveDocument
           from(false).to(true)
       end
     end # when creating a new document
+
+    describe 'when creating a subclassed document' do
+      let!(:document) { FinalDocument.new(key: 'something') }
+      let(:manager)   { FinalDocument.manager }
+      let(:result)    { manager.write(document) }
+
+      it 'adds the document ot the topmost class manager' do
+        expect { result }.
+          to change { SomeDocument.manager.all.include?(document) }.
+          from(false).to(true)
+      end
+
+      it 'can be retrieved by the subclass' do
+        expect { result }.
+          to change { manager.all.include?(document) }.
+          from(false).to(true)
+      end
+    end # when creating a subclassed document
 
     describe 'when renaming a document' do
       let!(:document) do
