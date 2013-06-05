@@ -53,11 +53,18 @@ module Tome
       # Returns an array of ActiveDocuments.
       def all
         unless @all_loaded
-          @all = lookup_map.keys.map { |key| get(key) }
+          @all = keys.map { |key| get(key) }
           @all_loaded = true
         end
 
         @all
+      end
+
+      # Public: An array containing the keys of all the documents.
+      #
+      # Returns an array of symbols.
+      def keys
+        lookup_map.keys
       end
 
       # Public: A human-readable version of the Manager.
