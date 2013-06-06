@@ -47,11 +47,23 @@ module Tome
     validates :direction, presence: true, inclusion: { in: [:in, :out] }
     validates :carrier,   presence: true
 
+    # Public: Given the +node+ key, +direction+, and +carrier+, returns the
+    # key which would be assigned to a Slot with those attributes.
+    #
+    # node      - The node key.
+    # direction - The direction of the slot; :in or :out.
+    # carrier   - The name of the carrier.
+    #
+    # Returns a Symbol.
+    def self.key(node, direction, carrier)
+      :"#{ node }#{ direction == :in ? '+' : '-' }@#{ carrier }"
+    end
+
     # Public: The unique key used to identify the document.
     #
     # Returns a Symbol.
     def key
-      :"#{ node }#{ in? ? '+' : '-' }@#{ carrier }"
+      self.class.key(node, direction, carrier)
     end
 
     # Public: Is the direction of this Slot +:in+?
