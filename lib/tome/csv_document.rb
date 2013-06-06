@@ -26,9 +26,9 @@ module Tome
     # path - Path to the CSV file.
     #
     # Returns a CSVDocument.
-    def initialize(path)
+    def initialize(path, csv_opts = { header_converters: [:tome] })
       @path  = Pathname.new(path)
-      @table = CSV.table(@path.to_s, header_converters: [:tome])
+      @table = CSV.table(@path.to_s, csv_opts)
     rescue InvalidKeyError
       raise BlankCSVHeaderError.new(path)
     end
