@@ -5,7 +5,7 @@ module Tome
   # the Rubel-based attributes, triggers the Refinery calculations, and
   # returns to results to you.
   class Runner
-    attr_reader :dataset, :sector
+    attr_reader :dataset, :graph
 
     # Creates a Refinery catalyst which, given the initial Refinery graph,
     # will set the share values for any slots where a share is explicitly
@@ -38,9 +38,9 @@ module Tome
     # Public: Creates a new Runner.
     #
     # Returns a Runner.
-    def initialize(dataset, sector = nil)
+    def initialize(dataset, graph)
       @dataset = dataset
-      @sector  = sector
+      @graph   = graph
 
       Tome.load_library('refinery')
     end
@@ -56,14 +56,6 @@ module Tome
         Refinery::Catalyst::Calculators,
         Refinery::Catalyst::Validation
       ).run(refinery_graph)
-    end
-
-    # Public: The Turbine::Graph which represents the structure of the graph
-    # as defined in the source files.
-    #
-    # Returns a Turbine::Graph.
-    def graph
-      @graph ||= GraphBuilder.build(sector)
     end
 
     # Public: Returns the Refinery graph which the Runner uses to calculate

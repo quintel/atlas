@@ -2,7 +2,9 @@ require 'spec_helper'
 
 module Tome
   describe Runner, :fixtures do
-    let(:runner) { Runner.new(Dataset.find(:nl), :simple_graph) }
+    let(:runner) do
+      Runner.new(Dataset.find(:nl), GraphBuilder.build(:simple_graph))
+    end
 
     it 'exposes a graph' do
       expect(runner.graph).to be_a(Turbine::Graph)
@@ -18,11 +20,6 @@ module Tome
 
     it 'provides access to the original dataset' do
       expect(runner.dataset).to be_an(Tome::Dataset)
-    end
-
-    it 'accepts sector as an option' do
-      runner = Runner.new(Dataset.find(:nl), :households)
-      expect(runner.sector).to eq :households
     end
 
     describe '#calculate' do
