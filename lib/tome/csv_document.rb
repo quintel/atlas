@@ -2,9 +2,9 @@ module Tome
   class CSVDocument
     attr_reader :path
 
-    # Unfortunately, the CSV library provides us with no means to set the
-    # header converter at runtime; it has to be added globally.
-    CSV::HeaderConverters[:tome] = ->(key) do
+    # A lambda which converts strings to a consistent format for keys in
+    # CSV files.
+    KEY_NORMALIZER = ->(key) do
       case key
         when nil
           raise(InvalidKeyError.new(key))
@@ -26,9 +26,9 @@ module Tome
     # path - Path to the CSV file.
     #
     # Returns a CSVDocument.
-    def initialize(path, csv_opts = { header_converters: [:tome] })
+    def initialize(path, normalizer = KEY_NORMALIZER)
       @path  = Pathname.new(path)
-      @table = CSV.table(@path.to_s, csv_opts)
+      @table = CSV.table(@path.to_s, header_converters: [normalizer])
     rescue InvalidKeyError
       raise BlankCSVHeaderError.new(path)
     end
@@ -71,11 +71,11 @@ module Tome
     #
     # Returns a Symbol.
     def normalize_key(key)
-      CSV::HeaderConverters[:tome].call(key)
+      KEY_NORMALIZER.call(key)
     end
   end # CSVDocument
 
-  # A special cast of CSVDocument where the file contains only two columns;
+  # A special case of CSVDocument where the file contains only two columns;
   # one with a "key" for the row, and one with a value. The name of the
   # headers is not important.
   class CSVDocument::OneDimensional < CSVDocument
@@ -88,4 +88,13 @@ module Tome
       cell(normalize_key(row), 1)
     end
   end # CSVDocument::OneDimensional
+
+  # A CSVDocument which reads CSV files which are output by the Exporter. Each
+  # left-hand column is a node, edge, or slot key whose value needs to be
+  # preserved without removing special characters.
+  class CSVDocument::Production < CSVDocument
+    def initialize(path)
+      super(path, ->(value) { value.to_sym })
+    end
+  end # CSVDocument::Production
 end # Tome

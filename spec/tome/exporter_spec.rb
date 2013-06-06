@@ -31,9 +31,17 @@ module Tome
     # Result and Output
     let!(:result)  { Exporter.new(graph).export_to(Tome.data_dir.join('o')) }
 
-    let(:edges)    { CSVDocument.new(Tome.data_dir.join('o/edges.csv'), {}) }
-    let(:nodes)    { CSVDocument.new(Tome.data_dir.join('o/nodes.csv'), {}) }
-    let(:slots)    { CSVDocument.new(Tome.data_dir.join('o/slots.csv'), {}) }
+    let(:edges) do
+      CSVDocument::Production.new(Tome.data_dir.join('o/edges.csv'))
+    end
+
+    let(:nodes) do
+      CSVDocument::Production.new(Tome.data_dir.join('o/nodes.csv'))
+    end
+
+    let(:slots) do
+      CSVDocument::Production.new(Tome.data_dir.join('o/slots.csv'))
+    end
 
     # ------------------------------------------------------------------------
 
