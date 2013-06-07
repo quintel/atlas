@@ -104,21 +104,22 @@ namespace :import do
       @message  = message
       @errors   = []
 
-      @reporter = Tome::Term::Reporter.new(
-        "Importing #{ message }", imported: :green, failed: :red)
+      @reporter = Tome::Term::Reporter.new("Importing #{ message }",
+        imported: :green, failed: :red, skipped: :yellow)
     end
 
     # Wrap each single imported item in this method, to record the success or
     # failure.
     def item
-      begin
-        yield.save(false)
-      rescue RuntimeError => ex
-        @reporter.inc(:failed)
-        @errors.push(ex)
-      else
+      if thing = yield
+        thing.save(false)
         @reporter.inc(:imported)
+      else
+        @reporter.inc(:skipped)
       end
+    rescue RuntimeError => ex
+      @reporter.inc(:failed)
+      @errors.push(ex)
     end
 
     # Prints out error messages, if there were any.
