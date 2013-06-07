@@ -21,8 +21,16 @@ module Tome
     SetSlotShares = ->(perform) do
       ->(refinery) do
         Slot.all.each do |model|
-          node = refinery.node(model.node)
-          slot = node.slots.public_send(model.direction, model.carrier)
+          node = refinery.node(model.node) || next
+          coll = node.slots.public_send(model.direction)
+
+          if coll.include?(model.carrier)
+            slot = coll.get(model.carrier)
+          else
+            # Loss slots frequently have no edges, so they won't have been
+            # auto-created by Refinery.
+            slot = coll.add(model.carrier)
+          end
 
           if model.query
             slot.set(:share, perform.call(model.query))
