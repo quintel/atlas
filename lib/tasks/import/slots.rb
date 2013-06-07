@@ -9,13 +9,13 @@ namespace :import do
     key, data = string.split(': ', 2)
     data = (data.nil? ? {} : eval(data)).with_indifferent_access 
 
-    ad_key = if match = IN_SLOT_RE.match(key)
+    data[:key] = if match = IN_SLOT_RE.match(key)
       Tome::Slot.key(match[:node], :in, match[:carrier])
     elsif match = OUT_SLOT_RE.match(key)
       Tome::Slot.key(match[:node], :out, match[:carrier])
     end
 
-    data[:path] = "#{ ad_key.to_s.split('_', 2).first }/#{ ad_key }"
+    data[:path] = "#{ data[:key].to_s.split('_', 2).first }/#{ data[:key] }"
 
     return [key, data]
   end
@@ -71,6 +71,7 @@ namespace :import do
   def all_slot_defaults?(attributes)
     without_path = attributes.dup
     without_path.delete(:path)
+    without_path.delete(:key)
 
     without_path.all? do |key, value|
       value.nil? || SLOT_DEFAULTS[key.to_sym] == value
@@ -93,13 +94,32 @@ namespace :import do
     # Wipe out *everything* in the nodes directory; rather than simply
     # overwriting existing files, since some may have new naming conventions
     # since the previous import.
-    FileUtils.rm_rf(Tome::Slot.directory)
+    # FileUtils.rm_rf(Tome::Slot.directory)
 
     runner = ImportRun.new('slots')
+    slots  = nl_slots.values
 
-    nl_slots.each do |key, data|
-      runner.item { all_slot_defaults?(data) ? false : Slot.new(data) }
+    # We need to select all the slots whose values differ from the defaults.
+    skip, use = slots.partition { |data| all_slot_defaults?(data) }
+
+    # Now we make a list of all nodes which had a slot added, so that we can
+    # add *all* of the slots for the side (in or out) of that node.
+    used_sides = use.map do |data|
+      data[:key].to_s.split('@').first
+    end.uniq
+
+    skip.each do |data|
+      if used_sides.include?(data[:key].to_s.split('@').first)
+        use.push(data)
+      end
     end
+
+    use.each do |data|
+      runner.item { Slot.new(data) }
+    end
+
+    # Show how many were skipped.
+    (slots.length - use.length).times { runner.item { false } }
 
     runner.finish
 
