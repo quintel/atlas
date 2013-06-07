@@ -47,7 +47,6 @@ module Tome
     validates :node,      presence: true
     validates :direction, presence: true, inclusion: { in: [:in, :out] }
     validates :carrier,   presence: true
-    validates :type,      inclusion: { in: [nil, :loss, :carrier_efficient] }
 
     # Public: Given the +node+ key, +direction+, and +carrier+, returns the
     # key which would be assigned to a Slot with those attributes.

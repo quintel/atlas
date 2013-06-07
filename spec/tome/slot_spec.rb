@@ -10,8 +10,6 @@ module Tome
       it { should validate_presence_of(:carrier) }
 
       it { should ensure_inclusion_of(:direction).in_array([:in, :out]) }
-      it { should ensure_inclusion_of(:type).in_array([nil, :loss,
-                                                       :carrier_efficient]) }
     end # validation
 
     describe 'Creating a input slot' do

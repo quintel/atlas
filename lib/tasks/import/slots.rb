@@ -94,7 +94,7 @@ namespace :import do
     # Wipe out *everything* in the nodes directory; rather than simply
     # overwriting existing files, since some may have new naming conventions
     # since the previous import.
-    # FileUtils.rm_rf(Tome::Slot.directory)
+    FileUtils.rm_rf(Tome::Slot.directory)
 
     runner = ImportRun.new('slots')
     slots  = nl_slots.values
@@ -115,7 +115,13 @@ namespace :import do
     end
 
     use.each do |data|
-      runner.item { Slot.new(data) }
+      runner.item do
+        case data.delete(:type)
+          when :loss              then Slot::Loss.new(data)
+          when :carrier_efficient then Slot::CarrierEfficient.new(data)
+          else                         Slot.new(data)
+        end
+      end
     end
 
     # Show how many were skipped.
