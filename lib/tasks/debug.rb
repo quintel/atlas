@@ -48,6 +48,9 @@ namespace :debug do
     rescue Refinery::IncalculableGraphError => ex
       print '(incalculable graph) '
       exception = ex
+    rescue Refinery::FailedValidationError => ex
+      print '(failed validation) '
+      exception = ex
     end
 
     Refinery::Diagram::Calculable.new(runner.refinery_graph).
