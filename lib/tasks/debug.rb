@@ -25,7 +25,8 @@ namespace :debug do
 
     Tome.data_dir = args.data_dir
 
-    runner = Tome::Runner.new(Tome::Dataset.find(:nl), args.sector.to_sym)
+    graph  = Tome::GraphBuilder.build(args.sector.to_sym)
+    runner = Tome::Runner.new(Tome::Dataset.find(:nl), graph)
     exception = nil
 
     puts 'Setting up graph structure... '
