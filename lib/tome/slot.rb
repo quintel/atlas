@@ -23,7 +23,7 @@ module Tome
 
     # What proportion of the total energy flow in or out of the node is
     # through this slot?
-    attribute :share, Float
+    attribute :share, Float, default: 1.0
 
     # Public: The key of the node to which the slot beings.
     #
@@ -42,10 +42,12 @@ module Tome
     attr_accessor :carrier
 
     attribute :query, String
+    attribute :type,  Symbol
 
     validates :node,      presence: true
     validates :direction, presence: true, inclusion: { in: [:in, :out] }
     validates :carrier,   presence: true
+    validates :type,      inclusion: { in: [nil, :loss, :carrier_efficient] }
 
     # Public: Given the +node+ key, +direction+, and +carrier+, returns the
     # key which would be assigned to a Slot with those attributes.
