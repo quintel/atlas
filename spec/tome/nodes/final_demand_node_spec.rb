@@ -2,23 +2,23 @@ require 'spec_helper'
 
 module Tome
 
-describe Node::FinalDemandNode, :fixtures do
+describe Node::FinalDemand, :fixtures do
   let(:node) { Node.find('fd') }
 
   describe '#all' do
     it "finds existing stuff" do
-      expect(Node::FinalDemandNode.all).to have_at_least(1).nodes
+      expect(Node::FinalDemand.all).to have_at_least(1).nodes
     end
 
     it 'removes the subclass from the key' do
-      expect(Node::FinalDemandNode.find('fd').key.to_s).
+      expect(Node::FinalDemand.find('fd').key.to_s).
         to_not include('.final_demand_node')
     end
   end
 
   describe '#find' do
     it "finds the fixture" do
-      expect(Node::FinalDemandNode.find('fd')).to_not be_nil
+      expect(Node::FinalDemand.find('fd')).to_not be_nil
     end
   end
 
@@ -42,6 +42,6 @@ describe Node::FinalDemandNode, :fixtures do
 
   end
 
-end #describe FinalDemandNode 
+end # FinalDemand
 
-end #module
+end # module

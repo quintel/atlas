@@ -39,9 +39,9 @@ require_relative 'tome/preset'
 
 require_relative 'tome/node'
 require_relative 'tome/node/converter'
-require_relative 'tome/node/demand_node'
-require_relative 'tome/node/final_demand_node'
-require_relative 'tome/node/stat_node'
+require_relative 'tome/node/demand'
+require_relative 'tome/node/final_demand'
+require_relative 'tome/node/stat'
 
 require_relative 'tome/runtime'
 require_relative 'tome/exporter'

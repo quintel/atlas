@@ -31,8 +31,8 @@ namespace :import do
   # Given a node key and its data, determines which subclass of Node should
   # be used.
   def node_subclass(key, data)
-    return Tome::FinalDemandNode if key.to_s.match(/final_demand/)
-    return Tome::DemandNode      if key.to_s.match(/demand/)
+    return Tome::Node::FinalDemand if key.to_s.match(/final_demand/)
+    return Tome::Node::Demand      if key.to_s.match(/demand/)
 
     out_slots, in_slots = data['slots'].partition { |s| s.match(/^\(/) }
     in_slots.map!  { |slot| match = slot.match(/\((.*)\)/) ; match[1] }
@@ -41,7 +41,7 @@ namespace :import do
     if ((in_slots - ['loss']) - (out_slots - ['loss'])).any?
       # A node is a converter if it outputs energy in a different carrier than
       # it received; the exception being loss which we ignore.
-      Tome::Converter
+      Tome::Node::Converter
     else
       Tome::Node
     end
