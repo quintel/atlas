@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:quintel/refinery.git
-  revision: c6096878d167bba8b48d77afb2ecdf8788a9a076
+  revision: 6ffd3da10160c228bb60297116a825c0a96cb76e
   specs:
     refinery (0.0.1)
       ruby-graphviz

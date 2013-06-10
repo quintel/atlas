@@ -32,14 +32,12 @@ namespace :debug do
     puts 'Setting up graph structure... '
     runner.graph
 
-    print 'Setting up Refinery graph... '
+    puts 'Setting up Refinery graph... '
 
     silence_stream(STDOUT) do
-      Refinery::Diagram::InitialValues.new(runner.refinery_graph).
-        draw_to(Tome.root.join('tmp').join('before.png'))
+      # Silence warning messages.
+      runner.refinery_graph
     end
-
-    puts 'output to tmp/before.png'
 
     print 'Performing Refinery calculations... '
 
@@ -53,10 +51,13 @@ namespace :debug do
       exception = ex
     end
 
-    Refinery::Diagram::Calculable.new(runner.refinery_graph).
-      draw_to(Tome.root.join('tmp').join('after.png'))
+    puts
 
-    puts 'output to tmp/after.png'
+    debugger_dir = Tome.root.join('tmp/debug')
+    FileUtils.mkdir_p(debugger_dir)
+
+    puts "Drawing debug info to #{ debugger_dir.to_s }"
+    Refinery::VisualDebugger.new(runner.refinery_graph).draw_to(debugger_dir)
 
     if exception
       puts
