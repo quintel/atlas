@@ -173,18 +173,22 @@ module Tome
       def load(key)
         return nil unless path = lookup_map[key]
 
-        parsed_content = Tome::TextToHashParser.new(path.read).to_hash
-        relative_path  = path.relative_path_from(@klass.directory)
-        without_ext    = relative_path.basename.sub_ext('')
+        attributes    = Tome::TextToHashParser.new(path.read).to_hash
+        relative_path = path.relative_path_from(@klass.directory)
+        without_ext   = relative_path.basename.sub_ext('')
 
         if without_ext.to_s.include?('.')
           subclass = without_ext.to_s.split('.').last
-          klass = "Tome::#{subclass.to_s.classify}".constantize
+          begin
+            klass = "#{ @klass.name }::#{subclass.to_s.classify}".constantize
+          rescue NameError => ex
+            raise Tome::NoSuchDocumentClassError.new(subclass, relative_path)
+          end
         else
           klass = @klass
         end
 
-        klass.new(parsed_content.merge(path: relative_path.to_s))
+        klass.new(attributes.merge(path: relative_path.to_s))
       end
 
       # Internal: Given a path, returns the key of the document.

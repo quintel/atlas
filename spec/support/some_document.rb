@@ -14,9 +14,9 @@ module Tome
     DIRECTORY   = 'active_document'
   end
 
-  class OtherDocument < SomeDocument
+  class SomeDocument::OtherDocument < SomeDocument
   end
 
-  class FinalDocument < OtherDocument
+  class SomeDocument::FinalDocument < SomeDocument::OtherDocument
   end
 end # Tome

@@ -3,7 +3,7 @@ require 'spec_helper'
 module Tome::ActiveDocument
   describe Manager, :fixtures do
     SomeDocument  = Tome::SomeDocument
-    FinalDocument = Tome::FinalDocument
+    FinalDocument = SomeDocument::FinalDocument
 
     let(:manager) { SomeDocument.manager }
 
@@ -22,6 +22,17 @@ module Tome::ActiveDocument
 
       it 'returns nil when given nil' do
         expect(manager.get(nil)).to_not be
+      end
+
+      context 'when the document has an illegal subclass' do
+        before do
+          File.write(SomeDocument.directory.join('a.nope.suffix'), '')
+        end
+
+        it 'raises an error' do
+          expect { manager.get('a') }.
+            to raise_error(Tome::NoSuchDocumentClassError)
+        end
       end
     end # get
 

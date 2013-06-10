@@ -111,7 +111,7 @@ describe SomeDocument, :fixtures do
     end
 
     it 'loads subclassed documents' do
-      document = OtherDocument.new(key: 'other')
+      document = SomeDocument::OtherDocument.new(key: 'other')
       document.save!
 
       expect(SomeDocument.find('other')).to be
@@ -123,9 +123,9 @@ describe SomeDocument, :fixtures do
     end
 
     it 'raises an error if the document belongs to a superclass' do
-      OtherDocument.new(key: 'other').save!
+      SomeDocument::OtherDocument.new(key: 'other').save!
 
-      expect { FinalDocument.find('other') }.
+      expect { SomeDocument::FinalDocument.find('other') }.
         to raise_error(DocumentNotFoundError)
     end
 
@@ -197,7 +197,7 @@ describe SomeDocument, :fixtures do
     end
 
     context 'when the document is a subclass' do
-      let(:doc) { FinalDocument.new(path: 'okay') }
+      let(:doc) { SomeDocument::FinalDocument.new(path: 'okay') }
       before    { doc.key = 'new' }
 
       it 'changes the document key' do
@@ -255,7 +255,7 @@ describe SomeDocument, :fixtures do
     end # with an absolute path
 
     context 'on a subclass instance' do
-      let(:document) { FinalDocument.new(key: 'abc') }
+      let(:document) { SomeDocument::FinalDocument.new(key: 'abc') }
 
       it 'retains the subclass prefix' do
         document.path = 'abc.other_document.suffix'
@@ -473,24 +473,27 @@ describe SomeDocument, :fixtures do
   describe '#all' do
     context 'on a "leaf" class' do
       it 'returns only members of that class' do
-        expect(FinalDocument.all).to have(1).document
+        expect(SomeDocument::FinalDocument.all).to have(1).document
       end
     end
 
     context 'on a "branch" class' do
       it "returns members of that class, and it's subclasses" do
-        classes = OtherDocument.all.map(&:class).uniq
+        classes = SomeDocument::OtherDocument.all.map(&:class).uniq
 
         expect(classes).to have(2).elements
 
-        expect(classes).to include(OtherDocument)
-        expect(classes).to include(FinalDocument)
+        expect(classes).to include(SomeDocument::OtherDocument)
+        expect(classes).to include(SomeDocument::FinalDocument)
       end
     end
   end # all
 
   describe 'changing the key on subclassed documents' do
-    let(:doc) { OtherDocument.new(path: 'fd.other_document.suffix') }
+    let(:doc) do
+      SomeDocument::OtherDocument.new(path: 'fd.other_document.suffix')
+    end
+
     before { doc.key = 'pd' }
 
     it 'retains the extension and subclass' do

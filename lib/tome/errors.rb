@@ -72,6 +72,11 @@ module Tome
     "#{ values.inspect }"
   end
 
+  NoSuchDocumentClassError = error_class do |subclass, path|
+    "#{ path } tried to instantiate a Tome::#{ subclass.to_s.classify }, " \
+    "but no such class exists (#{ subclass } #{ subclass.to_s } #{ subclass.classify })"
+  end
+
   # Graph Structure / Topology Errors ----------------------------------------
 
   InvalidLinkError = error_class do |link|

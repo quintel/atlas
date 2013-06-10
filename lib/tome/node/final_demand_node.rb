@@ -2,7 +2,7 @@ module Tome
 
   # FinalDemandNode has access to the EnergyBalance through the
   # energy_balance_query.
-  class FinalDemandNode < DemandNode
+  class Node::FinalDemandNode < Node::DemandNode
 
     # returns the preset demand for this node based on the outcome of the query
     # in the context of the +area_code+
