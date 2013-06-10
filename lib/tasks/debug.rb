@@ -56,6 +56,9 @@ namespace :debug do
     debugger_dir = Tome.root.join('tmp/debug')
     FileUtils.mkdir_p(debugger_dir)
 
+    text_debugger = Refinery::GraphDebugger.new(runner.refinery_graph)
+    File.write(debugger_dir.join('_debug.txt'), text_debugger.to_s)
+
     puts "Drawing debug info to #{ debugger_dir.to_s }"
     Refinery::VisualDebugger.new(runner.refinery_graph).draw_to(debugger_dir)
 
