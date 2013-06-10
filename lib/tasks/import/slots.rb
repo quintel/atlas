@@ -100,7 +100,10 @@ namespace :import do
     slots  = nl_slots.values
 
     # We need to select all the slots whose values differ from the defaults.
-    skip, use = slots.partition { |data| all_slot_defaults?(data) }
+    inputs, outputs = slots.partition { |data| data[:key].to_s.include?('+') }
+    skip, use       = outputs.partition { |data| all_slot_defaults?(data) }
+
+    skip.push(*inputs)
 
     # Now we make a list of all nodes which had a slot added, so that we can
     # add *all* of the slots for the side (in or out) of that node.
