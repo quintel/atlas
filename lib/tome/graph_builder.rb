@@ -93,7 +93,7 @@ module Tome
     def filter(sector)
       if sector
         regex = /^#{ Regexp.escape(sector.to_s) }\.?/
-        ->(el) { el.ns.match(regex) }
+        ->(el) { el.ns && el.ns.match(regex) }
       else
         ->(el) { true }
       end

@@ -87,6 +87,11 @@ module Tome
         it 'excludes subgraph bridge edges' do
           expect(graph.node(:bar).out_edges.to_a).to be_empty
         end
+
+        it 'does not includes nodes which have no sector' do
+          Node.new(key: 'abc').save!
+          expect(graph.node(:abc)).to_not be
+        end
       end # with a sector
     end # .build
 
