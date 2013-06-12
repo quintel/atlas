@@ -64,6 +64,24 @@ module Tome
         expect(graph.node(:foo).slots.out(:coal).get(:share)).to eq(0.25)
       end
 
+      context 'when a node has an efficiency attribute' do
+        it 'sets the share of slots with an efficiency' do
+          Node.new(path: 'simple_graph/abc', query: 5.0,
+                   efficiency: { gas: 0.65 }).save!
+
+          expect(graph.node(:abc).slots.out(:gas).get(:share)).to eq(0.65)
+        end
+
+        it 'does not overwrite Slot document attributes' do
+          Node.new(path: 'simple_graph/abc', query: 5.0,
+                   efficiency: { gas: 0.65 }).save!
+
+          Slot.new(key: 'abc-@gas', share: 0.4).save!
+
+          expect(graph.node(:abc).slots.out(:gas).get(:share)).to eq(0.4)
+        end
+      end
+
       it 'sets the demand of edges' do
         edge.update_attributes!(query: '5.0', sets: :demand)
 

@@ -18,11 +18,12 @@ module Tome
     #   # => #<TheRefineryCatalyst ...>
     #
     # Returns a lambda.
-    SetSlotShares = ->(perform) do
+    SetSlotSharesFromDocuments = ->(perform) do
       ->(refinery) do
         Slot.all.each do |model|
-          node = refinery.node(model.node) || next
-          coll = node.slots.public_send(model.direction)
+          node     = refinery.node(model.node) || next
+          node_doc = node.get(:model)
+          coll     = node.slots.public_send(model.direction)
 
           if coll.include?(model.carrier)
             slot = coll.get(model.carrier)
@@ -41,7 +42,29 @@ module Tome
 
         refinery
       end
-    end # SetSlotShares
+    end # SetSlotSharesFromDocuments
+
+    # Iterates through each node in the graph, converting the "efficiency"
+    # attribute, if present, to the appropriate slot shares.
+    #
+    # Shares set by SetSlotSharesFromDocuments (i.e., those which are hard-
+    # coded into the documents, or come from a Rubel calculation, are not
+    # overwritten.
+    SetSlotSharesFromEfficiency = ->(refinery) do
+      refinery.nodes.each do |node|
+        node.get(:model).efficiency.each do |carrier, share|
+          if node.slots.out.include?(carrier)
+            slot = node.slots.out.get(carrier)
+          else
+            slot = node.slots.out.add(carrier)
+          end
+
+          slot.set(:share, share) if slot.get(:share).nil?
+        end
+      end
+
+      refinery
+    end
 
     # Public: Creates a new Runner.
     #
@@ -82,7 +105,8 @@ module Tome
 
         Refinery::Reactor.new(
           Refinery::Catalyst::FromTurbine,
-          SetSlotShares.call(method(:query))
+          SetSlotSharesFromDocuments.call(method(:query)),
+          SetSlotSharesFromEfficiency
         ).run(graph)
       end
     end
