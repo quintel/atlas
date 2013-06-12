@@ -12,6 +12,7 @@ module Tome
     attribute :out_slots,            Set[String]
 
     attribute :query,                String
+    attribute :efficiency,           Hash[Symbol => Object]
 
     alias_method :sector,  :ns
     alias_method :sector=, :ns=

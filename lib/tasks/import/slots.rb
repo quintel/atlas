@@ -91,13 +91,11 @@ namespace :import do
   task :slots, [:from, :to] => [:setup] do |_, args|
     include Tome
 
-    # Wipe out *everything* in the nodes directory; rather than simply
-    # overwriting existing files, since some may have new naming conventions
-    # since the previous import.
-    FileUtils.rm_rf(Tome::Slot.directory)
-
-    runner = ImportRun.new('slots')
+    # runner = ImportRun.new('slots')
     slots  = nl_slots.values
+
+    reporter = Tome::Term::Reporter.new(
+      'Importing slots', imported: :green, skipped: :yellow)
 
     # We need to select all the slots whose values differ from the defaults.
     inputs, outputs = slots.partition { |data| data[:key].to_s.include?('+') }
@@ -117,21 +115,28 @@ namespace :import do
       end
     end
 
-    use.each do |data|
-      runner.item do
-        case data.delete(:type)
-          when :loss              then Slot::Loss.new(data)
-          when :carrier_efficient then Slot::CarrierEfficient.new(data)
-          else                         Slot.new(data)
-        end
-      end
+    grouped = use.group_by do |data|
+      data[:key].to_s.split(/[-+]@/, 2)[0].to_sym
     end
 
-    # Show how many were skipped.
-    (slots.length - use.length).times { runner.item { false } }
+    reporter.report do |reporter|
+      grouped.each do |node_key, slots|
+        efficiencies = slots.each_with_object(Hash.new) do |data, collection|
+          reporter.inc(:imported)
 
-    runner.finish
+          collection[data[:key].to_s.split('@').last] =
+            data[:type] == :loss ? :elastic : data[:share]
+        end
 
-    Rake::Task['validate:slots'].invoke(args.to)
+        node = Node.find(node_key)
+        node.efficiency = efficiencies
+        node.save(false)
+      end
+
+      # Show how many were skipped.
+      (slots.length - use.length).times { reporter.inc(:skipped) }
+    end
+
+    puts
   end # slots
 end # import
