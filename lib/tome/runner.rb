@@ -59,7 +59,9 @@ module Tome
             slot = node.slots.out.add(carrier)
           end
 
-          slot.set(:share, share) if slot.get(:share).nil?
+          if slot.get(:share).nil? && share.to_s != 'elastic'
+            slot.set(:share, share)
+          end
         end
       end
 
