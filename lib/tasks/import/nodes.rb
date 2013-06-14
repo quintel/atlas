@@ -48,6 +48,7 @@ namespace :import do
 
     runner.finish
 
+    Rake::Task['import:slots'].invoke(args.from, args.to)
     Rake::Task['validate:nodes'].invoke(args.to)
   end # task :nodes
 end # namespace :import
