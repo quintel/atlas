@@ -1,4 +1,7 @@
 # Just an example of a converter that supposedly uses 100% of the residential
 # final energy demand use for natural gas.
 
+- input.coal = 0.5
+- input.corn = 0.5
+
 EB(residential, natural_gas) * 1.00

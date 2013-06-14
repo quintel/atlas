@@ -8,11 +8,9 @@ module Tome
     attribute :has_loss,             Boolean
     attribute :energy_balance_group, String
 
-    attribute :in_slots,             Set[String]
-    attribute :out_slots,            Set[String]
-
     attribute :query,                String
-    attribute :efficiency,           Hash[Symbol => Object]
+    attribute :input,                Hash[Symbol => Object]
+    attribute :output,               Hash[Symbol => Object]
 
     alias_method :sector,  :ns
     alias_method :sector=, :ns=
@@ -43,6 +41,76 @@ module Tome
     # xls2yml script.
     attribute :electrical_efficiency_when_using_coal, Float
     attribute :electrical_efficiency_when_using_wood_pellets, Float
+
+    # ------------------------------------------------------------------------
+
+    # Public: A set containing all of the infor this node. Input slots are
+    # created by adding a key/pair of carrier/share to the node's "input"
+    # attribute.
+    #
+    # For example
+    #
+    #   node.input = { gas: 0.4 }
+    #   node.in_slots
+    #   # => [ #<Tome::Slot key="node-@gas" share=0.4> ]
+    #
+    # Returns a set containing slots.
+    def in_slots
+      @in_slots ||= Set.new(input.map do |carrier, share|
+        Slot.new(
+          node: self, carrier: carrier.to_sym,
+          share: share, direction: :in)
+      end)
+    end
+
+    # Public: A set containing all of the output slots for this node. Output
+    # slots are created by adding a key/pair of carrier/share to the node's
+    # "output" attribute.
+    #
+    # For example
+    #
+    #   node.output = { gas: 0.4 }
+    #   node.out_slots
+    #   # => [ #<Tome::Slot key="node-@gas" share=0.4> ]
+    #
+    # Returns a set containing slots.
+    def out_slots
+      @out_slots ||= Set.new(output.map do |carrier, share|
+        Slot.new(
+          node: self, carrier: carrier.to_sym,
+          share: share, direction: :out)
+      end)
+    end
+
+    # Public: Sets the input share data for the node. This controls how demand
+    # from the node is routed.
+    #
+    # For example:
+    #
+    #   # 40% of the energy which enters the node leaves as gas, 30% will
+    #   # leave as electricity. Any remaining is considered to be "loss".
+    #   node.input = { gas: 0.4, electricity: 0.3 }
+    #
+    # Returns whatever you gave.
+    def input=(inputs)
+      super
+      @in_slots = nil
+    end
+
+    # Public: Sets the output share data for the node. This controls how
+    # energy leaving the node is routed.
+    #
+    # For example:
+    #
+    #   # 40% of the energy which enters the node leaves as gas, 30% will
+    #   # leave as electricity. Any remaining is considered to be "loss".
+    #   node.output = { gas: 0.4, electricity: 0.3 }
+    #
+    # Returns whatever you gave.
+    def output=(outputs)
+      super
+      @out_slots = nil
+    end
 
   end # Node
 end # Tome

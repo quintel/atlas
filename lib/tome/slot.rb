@@ -2,51 +2,15 @@ module Tome
   # Slots aggregate multiple edges of the same carrier on a node. Nodes have
   # input slots - slots through which energy flows into the node - and output
   # slots - slots through which energy leaves.
-  #
-  # The filename format for slots is:
-  #
-  #   NODE_KEY[+-]@CARRIER
-  #
-  # The plus (+) and (-) indicate whether the slot is input or output. Plus
-  # is like *adding* energy to a node, so this represents an input slot. Minus
-  # subtracts energy from the node, so it is an output slot.
-  #
-  # For example:
-  #
-  #   foo-@gas          # An gas output slot on the "foo" node.
-  #   bar+@electricity  # An electricity input slot on the "bar" node.
   class Slot
-    include ActiveDocument
+    include Virtus
 
-    FILENAME  = /^(?<node>[\w_]+)(?<direction>[+-])@(?<carrier>[\w_]+)$/
-    DIRECTORY = 'slots'
+    KEY_FORMAT = /^(?<node>[\w_]+)(?<direction>[+-])@(?<carrier>[\w_]+)$/
 
-    # What proportion of the total energy flow in or out of the node is
-    # through this slot?
-    attribute :share, Float, default: 1.0
-
-    # Public: The key of the node to which the slot beings.
-    #
-    # Returns a Symbol.
-    attr_accessor :node
-
-    # Public: Is this a slot through which energy flow +:in+ to the node, or
-    # flows +:out+?
-    #
-    # Returns a Symbol.
-    attr_accessor :direction
-
-    # Public: The carrier key.
-    #
-    # Returns a Symbol.
-    attr_accessor :carrier
-
-    attribute :query, String
-    attribute :type,  Symbol
-
-    validates :node,      presence: true
-    validates :direction, presence: true, inclusion: { in: [:in, :out] }
-    validates :carrier,   presence: true
+    attribute :share,     Float, default: 1.0
+    attribute :node,      Tome::Node
+    attribute :direction, Symbol
+    attribute :carrier,   Symbol
 
     # Public: Given the +node+ key, +direction+, and +carrier+, returns the
     # key which would be assigned to a Slot with those attributes.
@@ -64,7 +28,7 @@ module Tome
     #
     # Returns a Symbol.
     def key
-      self.class.key(node, direction, carrier)
+      self.class.key(node.key, direction, carrier)
     end
 
     # Public: Is the direction of this Slot +:in+?
@@ -81,18 +45,20 @@ module Tome
       not in?
     end
 
-    #######
-    private
-    #######
+    # Public: Sets the share of the slot.
+    #
+    # Returns whatever you gave.
+    def share=(value)
+      super(value == :elastic ? nil : value)
+    end
 
-    # Internal: Given the name of the ActiveDocument file, without a
-    # subclass suffix or file extension, creates a hash of the attributes
+    # Internal: Given the key of a Slot, creates a hash of the attributes
     # extracted from the filename.
     #
     # Returns a hash.
-    def attributes_from_basename(name)
-      if name.nil? || ! (data = name.match(FILENAME))
-        raise InvalidKeyError.new(name)
+    def self.attributes_from_key(key)
+      if key.nil? || ! (data = key.to_s.match(KEY_FORMAT))
+        raise InvalidKeyError.new(key)
       end
 
       { node:      data[:node].to_sym,

@@ -121,7 +121,7 @@ namespace :import do
 
     reporter.report do |reporter|
       grouped.each do |node_key, slots|
-        efficiencies = slots.each_with_object(Hash.new) do |data, collection|
+        node_outputs = slots.each_with_object(Hash.new) do |data, collection|
           reporter.inc(:imported)
 
           collection[data[:key].to_s.split('@').last] =
@@ -129,7 +129,7 @@ namespace :import do
         end
 
         node = Node.find(node_key)
-        node.efficiency = efficiencies
+        node.output = node_outputs
         node.save(false)
       end
 

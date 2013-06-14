@@ -2,40 +2,34 @@ require 'spec_helper'
 
 module Tome
   describe Slot do
-    describe 'validation' do
-      subject { Slot.new(key: 'foo+@gas') }
-
-      it { should validate_presence_of(:node) }
-      it { should validate_presence_of(:direction) }
-      it { should validate_presence_of(:carrier) }
-
-      it { should ensure_inclusion_of(:direction).in_array([:in, :out]) }
-    end # validation
+    let(:node) { Node.new(key: :foo) }
 
     describe 'Creating a input slot' do
-      subject { Slot.new(key: 'foo+@gas') }
+      subject { Slot.new(node: node, direction: :in, carrier: :gas) }
 
-      its(:node) { should eql(:foo) }
+      its(:node) { should eql(node) }
       its(:direction) { should eql(:in) }
       its(:carrier) { should eql(:gas) }
       its(:key) { should eql(:'foo+@gas') }
     end # Creating an input slot
 
     describe 'Creating a output slot' do
-      subject { Slot.new(key: 'bar-@electricity') }
+      subject { Slot.new(node: node, direction: :out, carrier: :electricity) }
 
-      its(:node) { should eql(:bar) }
+      its(:node) { should eql(node) }
       its(:direction) { should eql(:out) }
       its(:carrier) { should eql(:electricity) }
-      its(:key) { should eql(:'bar-@electricity') }
+      its(:key) { should eql(:'foo-@electricity') }
     end # Creating an output slot
 
     describe 'setting the node' do
-      let(:slot) { Slot.new(key: 'foo-@gas') }
-      before { slot.node = :bar }
+      let(:slot)     { Slot.new(node: node, direction: :out, carrier: :gas) }
+      let(:new_node) { Node.new(key: :bar) }
+
+      before { slot.node = new_node }
 
       it 'sets the node' do
-        expect(slot.node).to eql(:bar)
+        expect(slot.node).to eql(new_node)
       end
 
       it 'changes the key' do
@@ -45,7 +39,7 @@ module Tome
 
     describe 'setting the direction' do
       describe 'to in' do
-        let(:slot) { Slot.new(key: 'foo-@gas') }
+        let(:slot) { Slot.new(node: node, direction: :out, carrier: :gas) }
         before { slot.direction = :in }
 
         it 'sets the direction' do
@@ -58,7 +52,7 @@ module Tome
       end # to in
 
       describe 'to out' do
-        let(:slot) { Slot.new(key: 'foo+@gas') }
+        let(:slot) { Slot.new(node: node, direction: :in, carrier: :gas) }
         before { slot.direction = :out }
 
         it 'sets the direction' do

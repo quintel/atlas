@@ -3,29 +3,223 @@ require 'spec_helper'
 module Tome
 
 describe Node, :fixtures do
-  describe '#in_slots' do
-    let(:node) { Node.new(key: 'key', in_slots: %w(in_one in_two)) }
-
-    it 'is a Set' do
-      expect(node.in_slots).to be_a(Set)
-    end
-
-    it 'contains the slots we defined' do
-      expect(node.in_slots.to_a).to eql(%w(in_one in_two))
-    end
-  end
-
   describe '#out_slots' do
-    let(:node) { Node.new(key: 'key', out_slots: %w(out_one out_two)) }
+    context 'when the node has no "output" data' do
+      let(:node) { Node.new(key: :a) }
 
-    it 'is a Set' do
-      expect(node.out_slots).to be_a(Set)
-    end
+      it 'has no output slots'
+    end # when the node has no output data
 
-    it 'contains the slots we defined' do
-      expect(node.out_slots.to_a).to eql(%w(out_one out_two))
-    end
-  end
+    context 'when the node has a single "output" pair' do
+      let(:node) { Node.new(key: :a, output: { gas: 0.4 }) }
+
+      it 'contains a single slot' do
+        expect(node.out_slots).to have(1).slots
+      end
+
+      it 'sets the slot direction' do
+        expect(node.out_slots.first.direction).to eql(:out)
+      end
+
+      it 'sets the slot node' do
+        expect(node.out_slots.first.node).to eql(node)
+      end
+
+      it 'sets the slot share' do
+        expect(node.out_slots.first.share).to eq(0.4)
+      end
+
+      it 'sets the slot carrier' do
+        expect(node.out_slots.first.carrier).to eql(:gas)
+      end
+    end # when the node has a single "output" pair
+
+    context 'when creating an "elastic" slot' do
+      let(:node) { Node.new(key: :a, output: { gas: :elastic }) }
+
+      it 'sets no share on the slot' do
+        expect(node.out_slots.first.share).to be_nil
+      end
+    end # when creating an "elastic" slot
+
+    context 'when the node has gas and oil "output" pairs' do
+      let(:node) { Node.new(key: :a, output: { gas: 0.3, oil: 0.7 }) }
+
+      it 'contains two slots' do
+        expect(node.out_slots).to have(2).slots
+      end
+
+      it 'sets the gas slot direction' do
+        expect(node.out_slots.to_a.first.direction).to eql(:out)
+      end
+
+      it 'sets the gas slot node' do
+        expect(node.out_slots.to_a.first.node).to eql(node)
+      end
+
+      it 'sets the gas slot share' do
+        expect(node.out_slots.to_a.first.share).to eq(0.3)
+      end
+
+      it 'sets the gas slot carrier' do
+        expect(node.out_slots.to_a.first.carrier).to eql(:gas)
+      end
+
+      it 'sets the oil slot direction' do
+        expect(node.out_slots.to_a.last.direction).to eql(:out)
+      end
+
+      it 'sets the oil slot node' do
+        expect(node.out_slots.to_a.last.node).to eql(node)
+      end
+
+      it 'sets the oil slot share' do
+        expect(node.out_slots.to_a.last.share).to eq(0.7)
+      end
+
+      it 'sets the oil slot carrier' do
+        expect(node.out_slots.to_a.last.carrier).to eql(:oil)
+      end
+    end # when the node has gas and oil "output" pairs
+
+    context 'when updating the "output" data' do
+      let(:node) { Node.new(key: :a, output: { gas: 0.9, elec: 0.1 }) }
+
+      before do
+        node.out_slots # Load the old slots.
+        node.output = { gas: 0.4, oil: 0.6 }
+      end
+
+      it 'retains the old slot objects which are still present' do
+        gas = node.out_slots.find { |slot| slot.carrier == :gas }
+
+        expect(gas).to be
+        expect(gas.share).to eq(0.4)
+      end
+
+      it 'removes slots which were deleted' do
+        expect(node.out_slots.find { |slot| slot.carrier == :elec }).to_not be
+      end
+
+      it 'adds slots which were added' do
+        expect(node.out_slots).to have(2).slots
+
+        new_slot = node.out_slots.to_a.last
+
+        expect(new_slot.carrier).to eql(:oil)
+        expect(new_slot.share).to eql(0.6)
+      end
+    end # when updating the "output" data
+  end # out_slots
+
+  describe '#in_slots' do
+    context 'when the node has no "input" data' do
+      let(:node) { Node.new(key: :a) }
+
+      it 'has no input slots'
+    end # when the node has no input data
+
+    context 'when the node has a single "input" pair' do
+      let(:node) { Node.new(key: :a, input: { gas: 0.4 }) }
+
+      it 'contains a single slot' do
+        expect(node.in_slots).to have(1).slots
+      end
+
+      it 'sets the slot direction' do
+        expect(node.in_slots.first.direction).to eql(:in)
+      end
+
+      it 'sets the slot node' do
+        expect(node.in_slots.first.node).to eql(node)
+      end
+
+      it 'sets the slot share' do
+        expect(node.in_slots.first.share).to eq(0.4)
+      end
+
+      it 'sets the slot carrier' do
+        expect(node.in_slots.first.carrier).to eql(:gas)
+      end
+    end # when the node has a single "input" pair
+
+    context 'when creating an "elastic" slot' do
+      let(:node) { Node.new(key: :a, input: { gas: :elastic }) }
+
+      it 'sets no share on the slot' do
+        expect(node.in_slots.first.share).to be_nil
+      end
+    end # when creating an "elastic" slot
+
+    context 'when the node has gas and oil "input" pairs' do
+      let(:node) { Node.new(key: :a, input: { gas: 0.3, oil: 0.7 }) }
+
+      it 'contains two slots' do
+        expect(node.in_slots).to have(2).slots
+      end
+
+      it 'sets the gas slot direction' do
+        expect(node.in_slots.to_a.first.direction).to eql(:in)
+      end
+
+      it 'sets the gas slot node' do
+        expect(node.in_slots.to_a.first.node).to eql(node)
+      end
+
+      it 'sets the gas slot share' do
+        expect(node.in_slots.to_a.first.share).to eq(0.3)
+      end
+
+      it 'sets the gas slot carrier' do
+        expect(node.in_slots.to_a.first.carrier).to eql(:gas)
+      end
+
+      it 'sets the oil slot direction' do
+        expect(node.in_slots.to_a.last.direction).to eql(:in)
+      end
+
+      it 'sets the oil slot node' do
+        expect(node.in_slots.to_a.last.node).to eql(node)
+      end
+
+      it 'sets the oil slot share' do
+        expect(node.in_slots.to_a.last.share).to eq(0.7)
+      end
+
+      it 'sets the oil slot carrier' do
+        expect(node.in_slots.to_a.last.carrier).to eql(:oil)
+      end
+    end # when the node has gas and oil "input" pairs
+
+    context 'when updating the "input" data' do
+      let(:node) { Node.new(key: :a, input: { gas: 0.9, elec: 0.1 }) }
+
+      before do
+        node.in_slots # Load the old slots.
+        node.input = { gas: 0.4, oil: 0.6 }
+      end
+
+      it 'retains the old slot objects which are still present' do
+        gas = node.in_slots.find { |slot| slot.carrier == :gas }
+
+        expect(gas).to be
+        expect(gas.share).to eq(0.4)
+      end
+
+      it 'removes slots which were deleted' do
+        expect(node.in_slots.find { |slot| slot.carrier == :elec }).to_not be
+      end
+
+      it 'adds slots which were added' do
+        expect(node.in_slots).to have(2).slots
+
+        new_slot = node.in_slots.to_a.last
+
+        expect(new_slot.carrier).to eql(:oil)
+        expect(new_slot.share).to eql(0.6)
+      end
+    end # when updating the "input" data
+  end # in_slots
 
   describe '#all' do
     it 'returns all the subclasses that have been defined' do

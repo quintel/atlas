@@ -1,3 +1,5 @@
 # Comment about this Converter
 
 - preset_demand = 1000
+- output.coal = 0.5
+- output.corn = 0.5

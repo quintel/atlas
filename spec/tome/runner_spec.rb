@@ -54,31 +54,12 @@ module Tome
         expect(t_edge.get(:parent_share)).to eq(0.1)
       end
 
-      it 'sets the share of slots with explicit values' do
-        Slot.new(key: 'foo-@coal', share: 0.25).save!
-        expect(graph.node(:foo).slots.out(:coal).get(:share)).to eq(0.25)
-      end
-
-      it 'sets the share of slots with a query' do
-        Slot.new(key: 'foo-@coal', query: '0.5 / 2').save!
-        expect(graph.node(:foo).slots.out(:coal).get(:share)).to eq(0.25)
-      end
-
-      context 'when a node has an efficiency attribute' do
+      context 'when a node has an output attribute' do
         it 'sets the share of slots with an efficiency' do
           Node.new(path: 'simple_graph/abc', query: 5.0,
-                   efficiency: { gas: 0.65 }).save!
+                   output: { gas: 0.65 }).save!
 
           expect(graph.node(:abc).slots.out(:gas).get(:share)).to eq(0.65)
-        end
-
-        it 'does not overwrite Slot document attributes' do
-          Node.new(path: 'simple_graph/abc', query: 5.0,
-                   efficiency: { gas: 0.65 }).save!
-
-          Slot.new(key: 'abc-@gas', share: 0.4).save!
-
-          expect(graph.node(:abc).slots.out(:gas).get(:share)).to eq(0.4)
         end
       end
 
@@ -92,15 +73,11 @@ module Tome
         ratio   = Rational('500/746')
         i_ratio = Rational('1') - ratio
 
-        shares = {
-          'bar-@corn' => ratio,
-          'bar-@coal' => i_ratio,
-          'fd+@corn'  => ratio,
-          'fd+@coal'  => i_ratio }
+        Node.find(:bar).update_attributes!(
+          output: { corn: ratio, coal: i_ratio })
 
-        shares.each do |slot_key, share|
-          Slot.find(slot_key).update_attributes!(share: share)
-        end
+        Node.find(:fd).update_attributes!(
+          input: { corn: ratio, coal: i_ratio })
 
         expect(t_edge.get(:demand)).to eq(5.0)
       end
