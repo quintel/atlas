@@ -42,6 +42,9 @@ module Tome
         # Elastic slots automatically fill whatever share isn't filled by the
         # other output slots. Commonly used for loss.
         Slot::Elastic.new(attributes)
+      elsif node.output[carrier].is_a?(Hash)
+        # Carrier efficient slot; share depends on the proportion of inputs.
+        Slot::CarrierEfficient.new(attributes)
       else
         Slot.new(attributes)
       end

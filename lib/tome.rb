@@ -42,6 +42,7 @@ require_relative 'tome/node/stat'
 
 require_relative 'tome/slot'
 require_relative 'tome/slot/elastic'
+require_relative 'tome/slot/carrier_efficient'
 
 require_relative 'tome/runtime'
 require_relative 'tome/exporter'
