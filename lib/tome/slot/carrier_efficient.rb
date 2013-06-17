@@ -52,15 +52,23 @@ module Tome
         inputs = Set.new(node.in_slots.map(&:carrier))
         effs   = Set.new(node.output[carrier].keys)
 
-        if ! inputs.subset?(effs)
+        unless inputs.subset?(effs)
           # One or more efficiencies are missing.
-          errors.add(:base, ERRORS[:efficiencies] % [
-            carrier, (inputs - effs).to_a.join(', ') ])
-        elsif ! effs.subset?(inputs)
-          # One or more input shares are missing.
-          errors.add(:base, ERRORS[:inputs] % [
-            carrier, (effs - inputs).to_a.join(', ') ])
+          errors.add(:base, error_msg(:efficiencies, inputs, effs))
         end
+
+        unless effs.subset?(inputs)
+          # One or more input shares are missing.
+          errors.add(:base, error_msg(:inputs, effs, inputs))
+        end
+      end
+
+      # Internal: Creates an error message string when validation of input
+      # shares or efficiencies fails.
+      #
+      # Returns a string.
+      def error_msg(message, keys1, keys2)
+        ERRORS[message] % [ carrier, (keys1 - keys2).to_a.join(', ') ]
       end
     end # CarrierEfficient
   end # Slot
