@@ -4,6 +4,7 @@ module Tome
   # slots - slots through which energy leaves.
   class Slot
     include Virtus
+    include ActiveModel::Validations
 
     KEY_FORMAT = /^(?<node>[\w_]+)(?<direction>[+-])@(?<carrier>[\w_]+)$/
 

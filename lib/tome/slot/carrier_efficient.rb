@@ -22,6 +22,13 @@ module Tome
     # comes from 0.4 coal input at 0.5 efficiency, and 0.6 biomass input at
     # 0.4 efficiency).
     class CarrierEfficient < Slot
+      validate :validate_data
+
+      ERRORS = {
+        inputs:       '%s slot lacks input shares for %s',
+        efficiencies: '%s slot lacks efficiency data for %s'
+      }.freeze
+
       # Public: The share of energy which leaves the node through this slot.
       # Calculated dynamically according to the share the inputs.
       #
@@ -30,6 +37,30 @@ module Tome
         node.in_slots.map do |slot|
           slot.share * node.output[carrier][slot.carrier]
         end.sum
+      end
+
+      #######
+      private
+      #######
+
+      # Internal: Asserts that the data required to perform carrier-efficiency
+      # calculations is preset.
+      #
+      # There must be an efficiency for each input carrier, and an input
+      # carrier for each efficiency.
+      def validate_data
+        inputs = Set.new(node.in_slots.map(&:carrier))
+        effs   = Set.new(node.output[carrier].keys)
+
+        if ! inputs.subset?(effs)
+          # One or more efficiencies are missing.
+          errors.add(:base, ERRORS[:efficiencies] % [
+            carrier, (inputs - effs).to_a.join(', ') ])
+        elsif ! effs.subset?(inputs)
+          # One or more input shares are missing.
+          errors.add(:base, ERRORS[:inputs] % [
+            carrier, (effs - inputs).to_a.join(', ') ])
+        end
       end
     end # CarrierEfficient
   end # Slot

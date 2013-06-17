@@ -42,6 +42,8 @@ module Tome
     attribute :electrical_efficiency_when_using_coal, Float
     attribute :electrical_efficiency_when_using_wood_pellets, Float
 
+    validate :validate_slots
+
     # ------------------------------------------------------------------------
 
     # Public: A set containing all of the infor this node. Input slots are
@@ -106,6 +108,19 @@ module Tome
     def output=(outputs)
       super
       @out_slots = nil
+    end
+
+    # Internal: Asserts the input and output slot data is in a valid format.
+    #
+    # Returns nothing.
+    def validate_slots
+      in_slots.reject(&:valid?).each do |slot|
+        slot.errors.full_messages.each { |msg| errors.add(:input, msg) }
+      end
+
+      out_slots.reject(&:valid?).each do |slot|
+        slot.errors.full_messages.each { |msg| errors.add(:output, msg) }
+      end
     end
 
   end # Node
