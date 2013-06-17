@@ -7,7 +7,6 @@ module Tome
 
     KEY_FORMAT = /^(?<node>[\w_]+)(?<direction>[+-])@(?<carrier>[\w_]+)$/
 
-    attribute :share,     Float, default: 1.0
     attribute :node,      Tome::Node
     attribute :direction, Symbol
     attribute :carrier,   Symbol
@@ -45,11 +44,13 @@ module Tome
       not in?
     end
 
-    # Public: Sets the share of the slot.
+    # Public: The proportion of energy which enters or leaves the node through
+    # this slot.
     #
-    # Returns whatever you gave.
-    def share=(value)
-      super(value == :elastic ? nil : value)
+    # Returns a numeric.
+    def share
+      share = (in? ? node.input[carrier] : node.output[carrier])
+      share == :elastic ? nil : share
     end
 
     # Internal: Given the key of a Slot, creates a hash of the attributes
