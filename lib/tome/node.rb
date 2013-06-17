@@ -56,10 +56,8 @@ module Tome
     #
     # Returns a set containing slots.
     def in_slots
-      @in_slots ||= Set.new(input.map do |carrier, share|
-        Slot.new(
-          node: self, carrier: carrier.to_sym,
-          share: share, direction: :in)
+      @in_slots ||= Set.new(input.map do |carrier, _|
+        Slot.slot_for(self, :in, carrier)
       end)
     end
 
@@ -75,10 +73,8 @@ module Tome
     #
     # Returns a set containing slots.
     def out_slots
-      @out_slots ||= Set.new(output.map do |carrier, share|
-        Slot.new(
-          node: self, carrier: carrier.to_sym,
-          share: share, direction: :out)
+      @out_slots ||= Set.new(output.map do |carrier, _|
+        Slot.slot_for(self, :out, carrier)
       end)
     end
 

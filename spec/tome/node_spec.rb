@@ -37,8 +37,8 @@ describe Node, :fixtures do
     context 'when creating an "elastic" slot' do
       let(:node) { Node.new(key: :a, output: { gas: :elastic }) }
 
-      it 'sets no share on the slot' do
-        expect(node.out_slots.first.share).to be_nil
+      it 'creates a Slot::Elastic' do
+        expect(node.out_slots.first).to be_a(Slot::Elastic)
       end
     end # when creating an "elastic" slot
 

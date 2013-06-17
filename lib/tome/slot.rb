@@ -23,6 +23,30 @@ module Tome
       :"#{ node }#{ direction == :in ? '+' : '-' }@#{ carrier }"
     end
 
+    # Public: Given a node, direction, and carrier, returns a Slot instance.
+    #
+    # This determines if a "special" slot is needed, such as a loss slot, or
+    # carrier-efficiency slot.
+    #
+    # Returns a Slot.
+    def self.slot_for(node, direction, carrier)
+      direction  = direction.to_sym
+      carrier    = carrier.to_sym
+
+      attributes = { node: node, direction: direction, carrier: carrier }
+
+      if direction == :in
+        # No special behaviour for input slots.
+        Slot.new(attributes)
+      elsif node.output[carrier] == :elastic
+        # Elastic slots automatically fill whatever share isn't filled by the
+        # other output slots. Commonly used for loss.
+        Slot::Elastic.new(attributes)
+      else
+        Slot.new(attributes)
+      end
+    end
+
     # Public: The unique key used to identify the document.
     #
     # Returns a Symbol.
