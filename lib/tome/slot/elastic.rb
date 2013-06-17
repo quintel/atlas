@@ -4,6 +4,8 @@ module Tome
     # example, if a node has two other output slots with a share of 0.2 and
     # 0.4, the elastic slot's share will be 0.4.
     class Elastic < Slot
+      validate :validate_data
+
       # Public: The share of energy which leaves the node through this slot.
       # Calculated dynamically according to the shares of the other slots.
       #
@@ -23,6 +25,15 @@ module Tome
       # Returns a collection of Slots.
       def inelastic_slots
         node.out_slots - [self]
+      end
+
+      # Internal: Asserts that the slot is the only elastic slot on the node.
+      #
+      # Returns nothing.
+      def validate_data
+        if inelastic_slots.any? { |s| s.is_a?(Slot::Elastic) }
+          errors.add(:base, 'cannot have more than one elastic slot')
+        end
       end
     end # Elastic
   end # Slot

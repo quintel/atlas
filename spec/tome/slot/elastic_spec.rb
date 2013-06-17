@@ -42,5 +42,22 @@ module Tome
         expect(slot.share).to be_zero
       end
     end # when one other output slot has a share of 1.1
+
+    context 'when the node has multiple elastic slots' do
+      before do
+        node.output = { loss: :elastic, electricity: :elastic }
+      end
+
+      it 'fails validation' do
+        expect(slot).to_not be_valid
+      end
+
+      it 'informs the user of the error' do
+        slot.valid?
+
+        expect(slot.errors.full_messages).
+          to include('cannot have more than one elastic slot')
+      end
+    end # when the node has multiple elastic slots
   end # Slot::Elastic
 end # Tome
