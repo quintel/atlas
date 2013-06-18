@@ -604,6 +604,42 @@ describe SomeDocument, :fixtures do
     end
   end # path normalization
 
+  describe '#sets' do
+    context 'when the document has no "sets" attribute' do
+      it 'is valid' do
+        document = SomeDocument.new(key: :a)
+        expect(document).to be_valid
+      end
+    end # when the document has no "sets" attribute
+
+    context 'when "sets" is blank' do
+      it 'is valid' do
+        document = SomeDocument::FinalDocument.new(key: :a)
+        expect(document).to be_valid
+      end
+    end # when "sets" is blank
+
+    context 'when "sets" is present' do
+      let(:document) { SomeDocument::FinalDocument.new(key: :a, sets: 'unit') }
+
+      it 'is valid if the named attribute is blank' do
+        document.unit = nil
+        document.valid?
+
+        expect(document.errors[:sets]).to be_empty
+      end
+
+      it 'is invalid if the named attribute has a value' do
+        document.unit = 'nope'
+        document.valid?
+
+        expect(document.errors[:unit]).
+          to include("may not have a value since it will " \
+                     "be set by a query")
+      end
+    end # when "sets" is present
+  end # sets
+
 end #describe SomeDocument
 
 end #module

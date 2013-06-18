@@ -28,6 +28,12 @@ module Tome
     # classes. This has to be a separate module so that we can ensure that
     # Virtus' +initialize+ method is added before ActiveDocument's.
     module Last
+      extend ActiveSupport::Concern
+
+      included do
+        validate :validate_sets, if: ->{ respond_to?(:sets) && ! sets.nil? }
+      end
+
       # Public: Creates a new document
       #
       # attributes - A hash of attributes to be set on the document. You must
@@ -63,6 +69,23 @@ module Tome
       def to_hash
         attributes.reject { |_, value| value.nil? }
       end
+
+      #######
+      private
+      #######
+
+      # Internal: When the document class has a "sets" method, the value of
+      # the "sets" attribute indicates which attribute has a value calculated
+      # by a query. It should therefore not have a value from the user.
+      #
+      # Returns nothing.
+      def validate_sets
+        unless public_send(sets.to_sym).nil?
+          errors.add(sets.to_sym, 'may not have a value since it will be ' \
+                                  'set by a query')
+        end
+      end
+
     end # Last
   end # ActiveDocument
 end # Tome

@@ -18,5 +18,6 @@ module Tome
   end
 
   class SomeDocument::FinalDocument < SomeDocument::OtherDocument
+    attribute :sets, String
   end
 end # Tome
