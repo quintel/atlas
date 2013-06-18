@@ -45,10 +45,9 @@ module Tome
     # temporary simplicity, I'm going to put it in a method.
     #
     # Returns the calculated Graph.
-    def calculate
+    def calculate(with = Refinery::Catalyst::Calculators)
       Refinery::Reactor.new(
-        Refinery::Catalyst::Calculators,
-        Refinery::Catalyst::Validation
+        with, Refinery::Catalyst::Validation
       ).run(refinery_graph)
     end
 

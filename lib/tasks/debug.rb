@@ -25,8 +25,13 @@ namespace :debug do
 
     Tome.data_dir = args.data_dir
 
+    debugger_dir = Tome.root.join('tmp/debug')
+    FileUtils.mkdir_p(debugger_dir)
+    debugger_dir.children.each { |child| child.delete }
+
     graph  = Tome::GraphBuilder.build(args.sector.to_sym)
     runner = Tome::Runner.new(Tome::Dataset.find(:nl), graph)
+
     exception = nil
 
     puts 'Setting up graph structure... '
@@ -42,7 +47,7 @@ namespace :debug do
     print 'Performing Refinery calculations... '
 
     begin
-      runner.calculate
+      runner.calculate(Refinery::Catalyst::VisualCalculator.new(debugger_dir))
     rescue Refinery::IncalculableGraphError => ex
       print '(incalculable graph) '
       exception = ex
@@ -53,14 +58,11 @@ namespace :debug do
 
     puts
 
-    debugger_dir = Tome.root.join('tmp/debug')
-    FileUtils.mkdir_p(debugger_dir)
-
     text_debugger = Refinery::GraphDebugger.new(runner.refinery_graph)
     File.write(debugger_dir.join('_debug.txt'), text_debugger.to_s)
 
-    puts "Drawing debug info to #{ debugger_dir.to_s }"
-    Refinery::VisualDebugger.new(runner.refinery_graph).draw_to(debugger_dir)
+    # puts "Drawing debug info to #{ debugger_dir.to_s }"
+    # Refinery::VisualDebugger.new(runner.refinery_graph).draw_to(debugger_dir)
 
     if exception
       puts
