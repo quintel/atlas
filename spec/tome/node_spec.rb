@@ -35,9 +35,13 @@ describe Node, :fixtures do
     end # when the node has a single "output" pair
 
     context 'when creating an "elastic" slot' do
-      let(:node) { Node.new(key: :a, output: { gas: :elastic }) }
+      it 'creates a Slot::Elastic when the share is :elastic' do
+        node = Node.new(key: :a, output: { gas: :elastic })
+        expect(node.out_slots.first).to be_a(Slot::Elastic)
+      end
 
-      it 'creates a Slot::Elastic' do
+      it 'creates a Slot::Elastic when the share is "elastic"' do
+        node = Node.new(key: :a, output: { gas: 'elastic' })
         expect(node.out_slots.first).to be_a(Slot::Elastic)
       end
     end # when creating an "elastic" slot

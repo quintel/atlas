@@ -39,7 +39,7 @@ module Tome
       if direction == :in
         # No special behaviour for input slots.
         Slot.new(attributes)
-      elsif node.output[carrier] == :elastic
+      elsif Slot::Elastic.elastic?(node.output[carrier])
         # Elastic slots automatically fill whatever share isn't filled by the
         # other output slots. Commonly used for loss.
         Slot::Elastic.new(attributes)
