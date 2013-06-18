@@ -80,7 +80,9 @@ module Tome
       #
       # Returns nothing.
       def validate_sets
-        unless public_send(sets.to_sym).nil?
+        attribute = sets.to_sym
+
+        if respond_to?(attribute) && ! public_send(attribute).nil?
           errors.add(sets.to_sym, 'may not have a value since it will be ' \
                                   'set by a query')
         end

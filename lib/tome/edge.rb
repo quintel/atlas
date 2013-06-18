@@ -17,6 +17,7 @@ module Tome
     DIRECTORY = 'edges'
 
     attribute :type,         Symbol
+    attribute :demand,       Float
     attribute :parent_share, Float
     attribute :child_share,  Float
     attribute :reversed,     Boolean, default: false
