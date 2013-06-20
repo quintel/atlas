@@ -19,12 +19,17 @@ module Tome
     # dir - Path to the directory in which to write the CSV files.
     #
     # Returns nothing.
-    def export_to(dir)
-      FileUtils.mkdir_p(dir)
+    def export_to(path)
+      FileUtils.mkdir_p(path.dirname)
 
-      export_nodes(data[:nodes], dir.join('nodes.csv'))
-      export_edges(data[:edges], dir.join('edges.csv'))
-      export_slots(data[:slots], dir.join('slots.csv'))
+      nodes = @graph.nodes
+      edges = nodes.map { |node| node.out_edges.to_a }.flatten
+
+      path.open('w') do |file|
+        file.write(YAML.dump(
+          nodes: nodes_hash(nodes),
+          edges: edges_hash(edges)))
+      end
 
       nil
     end
@@ -33,85 +38,47 @@ module Tome
     private
     #######
 
-    # Internal: Extracts from the graph collections containing all the nodes,
-    # edges, and slots.
-    #
-    # Returns a Hash.
-    def data
-      @data ||= { nodes:[], edges: [], slots: [] }.tap do |hash|
-        @graph.nodes.each do |node|
-          hash[:nodes].push(node)
-          hash[:edges].push(*node.out_edges.to_a)
-          hash[:slots].push(*node.slots.in.to_a)
-          hash[:slots].push(*node.slots.out.to_a)
-        end
-      end
-    end
-
     # Internal: Given an array of +nodes+, and a +path+ to which to write,
     # creates a CSV containing all of the node demands.
     #
     # Returns nothing.
-    def export_nodes(nodes, path)
-      write(nodes, path, key: ->(n) { n.key }, demand: ->(n) { n.demand })
+    def nodes_hash(nodes)
+      nodes.each_with_object({}) do |node, hash|
+        hash[node.key] = {
+          demand: node.demand.to_f,
+          slots:  slots_hash(node)
+        }
+      end
     end
 
     # Internal: Given an array of +edges+, and a +path+ to which to write,
     # creates a CSV containing all of the edge shares.
     #
     # Returns nothing.
-    def export_edges(edges, path)
-      write(edges, path, {
-        key: ->(e) { Tome::Edge.key(e.parent.key, e.child.key, e.label) },
-        child_share: ->(e) { e.child_share }
-      })
-    end
-
-    # Internal: Given an array of +slots+, and a +path+ to which to write,
-    # creates a CSV containing all of the slot shares.
-    #
-    # Returns nothing.
-    def export_slots(slots, path)
-      write(slots, path, {
-        key: ->(s) { Tome::Slot.key(s.node.key, s.direction, s.carrier) },
-        share: ->(s) { s.share }
-      })
-    end
-
-    # Internal: Formats a +value+ for storage in a CSV file.
-    #
-    # Returns a string.
-    def format(value)
-      case value
-        when nil     then ''
-        when Numeric then '%.10f' % value
-        else              value.to_s
+    def edges_hash(edges)
+      edges.each_with_object({}) do |edge, hash|
+        hash[Tome::Edge.key(edge.parent.key, edge.child.key, edge.label)] = {
+          child_share: edge.child_share.to_f
+        }
       end
     end
 
-    # Internal: Writes a +collection+ of things to a CSV at +path+, using the
-    # hash of attributes to determine the value of each column, for each
-    # element in the collection.
+    # Internal: Given a node, creates a hash with the shares of each +in+ and
+    # +out+ slot on the node.
     #
-    # For example
+    # node - The node whose slots are to be dumped to a hash.
     #
-    #   write([...], path, {
-    #     key: ->(thing) { thing.key },
-    #     id:  ->(thing) { UUID.generate(thing) }
-    #   })
-    #
-    # Returns nothing.
-    def write(collection, path, attributes)
-      procs = attributes.values.map { |getter| getter.to_proc }
+    # Returns a hash.
+    def slots_hash(node)
+      hash = { in: {}, out: {} }
 
-      body = collection.map do |element|
-        procs.map { |getter| format(getter.call(element)) }.join(',')
+      hash.each do |direction, collection|
+        node.slots.public_send(direction).each do |slot|
+          collection[slot.carrier] = slot.share.to_f
+        end
       end
 
-      path.open('w') do |file|
-        file.write("#{ attributes.keys.join(',') }\n")
-        file.write(body.join("\n"))
-      end
+      hash
     end
   end # Exporter
 end # Tome
