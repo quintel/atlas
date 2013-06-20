@@ -70,35 +70,13 @@ module Tome
     #
     # Returns an array of strings.
     def lines_from_hash(hash, prefix = nil)
-      hash.each_with_object([]) do |(key, value), collection|
-        collection.push(*lines(key, value, prefix))
-      end
-    end
-
-    # Internal: Given a key and value, formats each value to be saved into the
-    # document file.
-    #
-    # Returns an array of strings; each string a line in the document.
-    def lines(key, value, prefix)
-      case value
-      when Hash
-        lines_from_hash(value, attr_key(prefix, key))
-      when Array, Set
-        if value.any? { |value| value.is_a?(Hash) }
-          raise IllegalNestedHashError.new(value)
+      Tome::Util.flatten_dotted_hash(hash).map do |key, value|
+        if value.is_a?(Array) || value.is_a?(Set)
+          value = "[#{ value.to_a.join(', ') }]"
         end
 
-        lines(key, "[#{ value.to_a.join(", ") }]", prefix)
-      else
-        [ "- #{ attr_key(prefix, key) } = #{ value }" ]
+        "- #{ key } = #{ value }"
       end
-    end
-
-    # Internal: Determines the name to be assigned to an attribute.
-    #
-    # Returns a string.
-    def attr_key(prefix, key)
-      prefix.nil? ? key.to_s : "#{ prefix }.#{ key }"
     end
 
   end # HashToTextParser

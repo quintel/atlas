@@ -39,7 +39,7 @@ module Tome
       hash.merge!({description: @comments.strip}) unless @comments.empty?
       hash.merge!({query: @query.lstrip}) unless @query.empty?
 
-      hash.merge!(@variables)
+      hash.merge!(Tome::Util.expand_dotted_hash(@variables))
     end
 
     #######
@@ -73,35 +73,11 @@ module Tome
 
     def add_variable(variable_text)
       match_data = variable_text.match(ATTR_LINE)
-      key, value = match_data[1..2]
-
-      if key.include?('.')
-        add_hash_variable(key, value)
-      else
-        @variables[key.strip.to_sym] = cast(value)
-      end
+      @variables[match_data[1].strip] = cast(match_data[2])
     end
 
     def add_query(query_text)
       @query += query_text
-    end
-
-    def add_hash_variable(key, value)
-      split = key.split('.')
-
-      head  = split.first.to_sym
-      rest  = split[1..-1].map(&:to_sym)
-
-      hash  = @variables[head] ||= Hash.new
-
-      rest.to_enum.with_index.reduce(hash) do |parent, (segment, index)|
-        if rest[index + 1].nil?
-          # This is the final segment; set the value.
-          parent[segment] = cast(value)
-        else
-          parent[segment] ||= Hash.new
-        end
-      end
     end
 
     def cast(value)
