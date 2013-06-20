@@ -22,6 +22,7 @@ module Tome
             ref_slot = collection.add(slot.carrier)
           end
 
+          ref_slot.set(:model, slot)
           ref_slot.set(:share, slot.share)
         end
       end

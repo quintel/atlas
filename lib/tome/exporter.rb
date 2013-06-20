@@ -46,7 +46,8 @@ module Tome
       nodes.each_with_object({}) do |node, hash|
         hash[node.key] = {
           demand: node.demand.to_f,
-          slots:  slots_hash(node)
+          input:  slots_hash(node.slots.in),
+          output: slots_hash(node.slots.out)
         }
       end
     end
@@ -63,22 +64,16 @@ module Tome
       end
     end
 
-    # Internal: Given a node, creates a hash with the shares of each +in+ and
-    # +out+ slot on the node.
+    # Internal: Given a collection of slots, creates a hash with the shares of
+    # each slot.
     #
-    # node - The node whose slots are to be dumped to a hash.
+    # slots - An array containing slots.
     #
     # Returns a hash.
-    def slots_hash(node)
-      hash = { in: {}, out: {} }
-
-      hash.each do |direction, collection|
-        node.slots.public_send(direction).each do |slot|
-          collection[slot.carrier] = slot.share.to_f
-        end
+    def slots_hash(slots)
+      slots.each_with_object({}) do |slot, hash|
+        hash[slot.carrier] = slot.share.to_f
       end
-
-      hash
     end
   end # Exporter
 end # Tome

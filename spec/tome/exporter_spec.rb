@@ -41,10 +41,6 @@ module Tome
       YAML.load_file(Tome.data_dir.join('o/export.yml'))[:nodes]
     end
 
-    # let(:slots) do
-      # CSVDocument::Production.new(Tome.data_dir.join('o/slots.csv'))
-    # end
-
     # ------------------------------------------------------------------------
 
     describe 'saving a three-node, multiple carrier graph' do
@@ -73,23 +69,23 @@ module Tome
       end
 
       it 'writes [M]-@spouse share' do
-        expect(nodes[:mother][:slots][:out][:spouse]).to eq(10.0 / 25.0)
+        expect(nodes[:mother][:output][:spouse]).to eq(10.0 / 25.0)
       end
 
       it 'writes [M]-@child share' do
-        expect(nodes[:mother][:slots][:out][:child]).to eq(15.0 / 25.0)
+        expect(nodes[:mother][:output][:child]).to eq(15.0 / 25.0)
       end
 
       it 'writes [F]+@spouse share' do
-        expect(nodes[:father][:slots][:in][:spouse]).to eq(1)
+        expect(nodes[:father][:input][:spouse]).to eq(1)
       end
 
       it 'writes [F]-@child share' do
-        expect(nodes[:father][:slots][:out][:child]).to eq(1)
+        expect(nodes[:father][:output][:child]).to eq(1)
       end
 
       it 'writes [C]+@child share' do
-        expect(nodes[:child][:slots][:in][:child]).to eq(1)
+        expect(nodes[:child][:input][:child]).to eq(1)
       end
     end # saving a three-node, multiple carrier graph
 
