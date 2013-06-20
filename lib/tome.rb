@@ -13,6 +13,7 @@ require_relative 'tome/parser/hash_to_text_parser'
 require_relative 'tome/parser/text_to_hash_parser'
 require_relative 'tome/errors'
 require_relative 'tome/energy_unit'
+require_relative 'tome/util'
 
 require_relative 'tome/csv_document'
 
