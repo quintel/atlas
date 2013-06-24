@@ -22,6 +22,7 @@ require_relative 'tome/active_document/finders'
 require_relative 'tome/active_document/naming'
 require_relative 'tome/active_document/subclassing'
 require_relative 'tome/active_document/manager'
+require_relative 'tome/active_document/production_manager'
 require_relative 'tome/active_document'
 require_relative 'tome/collection'
 

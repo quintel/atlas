@@ -1,0 +1,12 @@
+---
+:nodes:
+  :foo:
+    :demand: 100.0
+    :output:
+      :coal: 0.8
+      :corn: 0.2
+:edges:
+  :bar-foo@coal:
+    :demand: 200.0
+    :parent_share: 0.3
+    :child_share: 0.4

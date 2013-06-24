@@ -7,6 +7,7 @@ module Tome
     attribute :use,                  String
     attribute :has_loss,             Boolean
     attribute :energy_balance_group, String
+    attribute :demand,               Float
 
     attribute :query,                String
     attribute :input,                Hash[Symbol => Object]

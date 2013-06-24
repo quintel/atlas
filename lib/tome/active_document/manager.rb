@@ -188,7 +188,9 @@ module Tome
           klass = @klass
         end
 
-        klass.new(attributes.merge(path: relative_path.to_s))
+        klass.new(attributes.merge(path: relative_path.to_s)).tap do |doc|
+          doc.manager = self
+        end
       end
 
       # Internal: Given a path, returns the key of the document.

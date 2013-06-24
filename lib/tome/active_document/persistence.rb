@@ -112,13 +112,21 @@ module Tome
         path.delete
       end
 
+      def manager=(manager)
+        if @manager
+          raise TomeError, "You may not change a document's manager"
+        end
+
+        @manager = manager
+      end
+
       #######
       private
       #######
 
       # Internal: The thing.
       def manager
-        self.class.manager
+        @manager || self.class.manager
       end
 
       # ----------------------------------------------------------------------

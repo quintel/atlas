@@ -61,8 +61,8 @@ namespace :debug do
     text_debugger = Refinery::GraphDebugger.new(runner.refinery_graph)
     File.write(debugger_dir.join('_debug.txt'), text_debugger.to_s)
 
-    puts "Writing static data to #{ Tome.root.join('tmp/static') }"
-    Tome::Exporter.new(runner.refinery_graph).export_to(Tome.root.join('tmp/static'))
+    puts "Writing static data to #{ Tome.root.join('tmp/static.yml') }"
+    Tome::Exporter.new(runner.refinery_graph).export_to(Tome.root.join('tmp/static.yml'))
 
     if exception
       puts
