@@ -38,7 +38,7 @@ module Tome
     #
     # Returns a string.
     def inspect
-      "#<#{ self.class.name } #{ documents.inspect }>"
+      "#<#{ self.class.name } (#{ length } x #{ document_class.name })>"
     end
 
     #######
