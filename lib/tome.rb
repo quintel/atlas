@@ -51,6 +51,8 @@ require_relative 'tome/exporter'
 
 require_relative 'tome/term/reporter'
 
+require_relative 'tome/production_mode'
+
 ActiveSupport::Inflector.inflections do |inflect|
   # Otherwise "loss".classify => "Los"
   inflect.singular 'loss', 'loss'
