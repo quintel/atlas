@@ -1,13 +1,4 @@
 namespace :debug do
-  def silence_stream(stream)
-    old_stream = stream.dup
-    stream.reopen(RbConfig::CONFIG['host_os'] =~ /mswin|mingw/ ? 'NUL:' : '/dev/null')
-    stream.sync = true
-    yield
-  ensure
-    stream.reopen(old_stream)
-  end
-
   desc 'Output before and after diagrams of the transport subgraph.'
   task :subgraph, [:data_dir, :sector] do |_, args|
     if args.data_dir.nil?
@@ -38,11 +29,7 @@ namespace :debug do
     runner.graph
 
     puts 'Setting up Refinery graph... '
-
-    silence_stream(STDOUT) do
-      # Silence warning messages.
-      runner.refinery_graph
-    end
+    runner.refinery_graph
 
     print 'Performing Refinery calculations... '
 
