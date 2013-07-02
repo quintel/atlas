@@ -41,10 +41,10 @@ module Tome
         end
 
         it 'have the correct type' do
-          expect(foo_edges.first.get(:type)).to eql(:share)
-          expect(bar_edges.first.get(:type)).to eql(:flexible)
-          expect(bar_edges.last.get(:type)).to eql(:share)
-          expect(baz_edges.first.get(:type)).to eql(:inverse_flexible)
+          expect(foo_edges.first.get(:type)).to be_nil
+          expect(bar_edges.first.get(:type)).to be_nil
+          expect(bar_edges.last.get(:type)).to be_nil
+          expect(baz_edges.first.get(:type)).to eql(:overflow)
         end
       end # edges
 
@@ -84,8 +84,9 @@ module Tome
           expect(graph.node(:foo).out_edges.to_a.length).to eql(1)
         end
 
-        it 'excludes subgraph bridge edges' do
-          expect(graph.node(:bar).out_edges.to_a).to be_empty
+        it 'includes subgraph bridge edges - to the super sink' do
+          expect(graph.node(:bar).out_edges.to_a).to_not be_empty
+          expect(graph.node(:bar).out.first.key).to eql(:SUPER_SINK)
         end
 
         it 'does not includes nodes which have no sector' do
@@ -118,8 +119,8 @@ module Tome
           expect(t_node.in_edges.to_a).to have(1).edge
         end
 
-        it 'sets the edge type to :share' do
-          expect(edge.get(:type)).to eql(:share)
+        it 'sets no edge type' do
+          expect(edge.get(:type)).to be_nil
         end
 
         it 'sets the parent to Node(:parent)' do
@@ -155,8 +156,8 @@ module Tome
           expect(edge.get(:reversed)).to be_true
         end
 
-        it 'sets the edge type to :share' do
-          expect(edge.get(:type)).to eql(:share)
+        it 'does not set an edge type' do
+          expect(edge.get(:type)).to be_nil
         end
 
         it 'adds an outgoing edge from the parent' do
@@ -186,18 +187,6 @@ module Tome
           end
         end # the corn edge
       end # with multiple links using different carriers
-
-      [ :share, :flexible, :constant,
-        :dependent, :inverse_flexible ].each do |type|
-        describe "with link.type=#{type}" do
-          let(:link_data) { [ Edge.new(key: 'key-parent@coal', type: type) ] }
-          let(:edge)      { t_node.in_edges.first }
-
-          it "sets the link type to #{type.inspect}" do
-            expect(edge.get(:type)).to eql(type)
-          end
-        end # with link_type=?
-      end # each link type
 
       context 'with a non-existent node' do
         let(:link_data) { [] }

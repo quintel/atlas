@@ -40,7 +40,7 @@ module Tome
           # the same namespace as the parent node. Because of this, testing
           # only the namespace would raise a DocumentNotFoundError when trying
           # to connect "bridge" edges which cross from one sector to another.
-          @nodes.key?(edge.supplier) && @nodes.key?(edge.consumer)
+          @nodes.key?(edge.supplier)
         end
       else
         Edge.all
@@ -53,9 +53,7 @@ module Tome
     #
     # Returns nothing.
     def build_nodes!
-      @nodes.sort_by(&:key).each do |node|
-        @graph.add(Turbine::Node.new(node.key, model: node))
-      end
+      @nodes.sort_by(&:key).each { |node| add_node(@graph, node) }
     end
 
     # Internal: Reads the source files to set up the edges between each node.
@@ -63,7 +61,21 @@ module Tome
     # Returns nothing.
     def establish_edges!
       @edges.sort_by(&:key).each do |edge|
+        unless @nodes.key?(edge.consumer)
+          add_node(@graph, Tome::Node.new(key: :SUPER_SINK))
+        end
+
         self.class.establish_edge(edge, @graph, @nodes)
+      end
+    end
+
+    # Internal: Given a +graph+ and a node +document+ adds a Node to the
+    # Turbine graph representing the document.
+    #
+    # Returns nothing.
+    def add_node(graph, document)
+      unless graph.node(document.key)
+        graph.add(Turbine::Node.new(document.key, model: document))
       end
     end
 
@@ -74,14 +86,23 @@ module Tome
     #
     # Returns the Turbine::Edge which was created.
     def self.establish_edge(edge, graph, nodes)
-      parent  = nodes.find(edge.supplier)
-      child   = nodes.find(edge.consumer)
-
-      props   = { type: edge.type, reversed: edge.reversed?, model: edge }
+      parent  = graph.node(edge.supplier)
+      child   = graph.node(edge.consumer) || graph.node(:SUPER_SINK)
       carrier = Carrier.find(edge.carrier)
 
-      graph.node(parent.key).connect_to(
-        graph.node(child.key), carrier.key, props)
+      props   = { reversed: edge.reversed?, model: edge }
+
+      if child.key == :SUPER_SINK || edge.type == :inverse_flexible
+        # Send energy to the sink only once all the other edges have had their
+        # demands set.
+        props[:type] = :overflow
+      end
+
+      if parent.nil?
+        raise DocumentNotFoundError.new(edge.supplier, Node)
+      end
+
+      parent.connect_to(child, carrier.key, props)
     end
 
     # Internal: Given a sector, returns a lambda which can be used to filter

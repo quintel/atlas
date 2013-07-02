@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:quintel/refinery.git
-  revision: 97e992037b68a4a037491a6dcfdc87cc53997361
+  revision: 92b4f9e803c87f84b205e3ee486cf3b9d60cedea
   specs:
     refinery (0.0.1)
       ruby-graphviz
@@ -53,7 +53,7 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
-    rake (10.0.4)
+    rake (10.1.0)
     rb-fsevent (0.9.3)
     rb-inotify (0.9.0)
       ffi (>= 0.5.0)
