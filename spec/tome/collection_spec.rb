@@ -26,6 +26,17 @@ module Tome
       it 'raises an error when the collection is empty'
     end # #find
 
+    describe '#fetch' do
+      it 'returns the first matching document' do
+        expect(collection.fetch(:nope, :two, :one)).to eql(node_two)
+      end
+
+      it 'raises an error when no document matches' do
+        expect { collection.fetch(:nope, :also_nope) }.
+          to raise_error(DocumentNotFoundError)
+      end
+    end # #fetch
+
     describe '#to_a' do
       it 'returns the documents as an array' do
         expect(collection.to_a).to eql(raw)

@@ -29,7 +29,13 @@ module Tome
 
   DocumentNotFoundError = error_class do |key, klass = nil|
     name = klass && klass.name.demodulize.humanize.downcase || 'document'
-    "Could not find a #{ name } with the key #{ key.inspect }"
+
+    if key.is_a?(Array)
+      "Could not find a #{ name } with one of these keys: " \
+      "#{ key[0..-2].map(&:inspect).join(', ') }, or #{ key.last.inspect }"
+    else
+      "Could not find a #{ name } with the key #{ key.inspect }"
+    end
   end
 
   InvalidDocumentError = error_class do |document|

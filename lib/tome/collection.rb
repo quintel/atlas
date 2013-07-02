@@ -16,6 +16,17 @@ module Tome
         raise(DocumentNotFoundError.new(key, document_class))
     end
 
+    # Public: Tries each of the +keys+ in turn, until a document is found
+    # which matches one.
+    #
+    # keys - One or more document keys.
+    #
+    # Returns the document from the dollection, or nil if none matched.
+    def fetch(*keys)
+      (key = keys.flatten.detect { |key| key?(key) }) && find(key) ||
+        raise(DocumentNotFoundError.new(keys, document_class))
+    end
+
     # Public: Given a +key+, returns if a document with that key is contained
     # in the collection.
     #
