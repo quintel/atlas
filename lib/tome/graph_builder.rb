@@ -90,7 +90,9 @@ module Tome
       child   = graph.node(edge.consumer) || graph.node(:SUPER_SINK)
       carrier = Carrier.find(edge.carrier)
 
-      props   = { reversed: edge.reversed?, model: edge }
+      props = edge.attributes.slice(
+        :parent_share, :child_share, :demand, :reversed
+      ).merge(model: edge)
 
       if child.key == :SUPER_SINK || edge.type == :inverse_flexible
         # Send energy to the sink only once all the other edges have had their
