@@ -121,15 +121,25 @@ namespace :import do
 
     reporter.report do |reporter|
       grouped.each do |node_key, slots|
-        node_outputs = slots.each_with_object(Hash.new) do |data, collection|
-          reporter.inc(:imported)
+        node  = Node.find(node_key)
+        slots = slots.sort_by { |s| s[:key] }
 
+        node_outputs = slots.each_with_object(Hash.new) do |data, collection|
           collection[data[:key].to_s.split('@').last] =
             data[:type] == :loss ? :elastic : data[:share]
         end
 
-        node = Node.find(node_key)
-        node.output = node_outputs
+        if node_outputs.one? && node_outputs.first.last == 1.0
+          # If the node has only a single output slot, and it has the default
+          # share of 1.0, don't bother saving anything.
+          puts ""
+          puts "SKIP: #{ node_outputs.inspect }"
+          node.output = {}
+          reporter.inc(:skipped)
+        else
+          node_outputs.length.times { reporter.inc(:imported) }
+        end
+
         node.save(false)
       end
 
