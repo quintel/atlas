@@ -1,8 +1,10 @@
 source "https://rubygems.org"
 ruby "1.9.3"
 
-group :development, :test do
-  gem 'refinery', git: 'git@github.com:quintel/refinery.git'
+gemspec
+
+group :development do
+  gem 'refinery', git: 'git@github.com:quintel/refinery.git', require: false
 end
 
 group :test do
@@ -16,5 +18,3 @@ group :test do
   # Growl notifications in Guard.
   gem 'ruby_gntp', require: false
 end
-
-gemspec

@@ -55,11 +55,7 @@ module Tome
   #
   # Returns nothing.
   def self.load_library(name)
-    unless defined?(::Bundler)
-      require 'bundler'
-      Bundler.setup((ENV['TOME_ENV'] || :development).to_sym)
-    end
-
+    Bundler.require(:development)
     require name
   rescue LoadError => ex
     raise LoadError.new("#{ ex.message }. This is an optional dependency " \

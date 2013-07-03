@@ -3,6 +3,9 @@ require 'csv'
 require 'pathname'
 require 'delegate'
 
+require 'bundler'
+Bundler.setup(:default)
+
 require 'active_model'
 require 'rubel'
 require 'turbine'

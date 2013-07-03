@@ -7,10 +7,10 @@ require 'support/coverage' if ENV['COVERAGE']
 ENV['TOME_ENV'] = 'test'
 require_relative '../lib/tome'
 
+Bundler.require(:test)
+
 require 'support/fixtures'
 require 'support/some_document'
-
-require 'shoulda-matchers'
 
 RSpec.configure do |config|
   # Use only the new "expect" syntax.
