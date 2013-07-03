@@ -42,6 +42,7 @@ require_relative 'tome/preset'
 require_relative 'tome/node'
 require_relative 'tome/node/converter'
 require_relative 'tome/node/demand'
+require_relative 'tome/node/central_producer'
 require_relative 'tome/node/final_demand'
 require_relative 'tome/node/stat'
 

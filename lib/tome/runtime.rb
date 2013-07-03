@@ -71,6 +71,16 @@ module Tome
       dataset.chps.get(node_key)
     end
 
+    # Public: Given the key of a node, retrieves the production (energy
+    # supplied) of the node from the central_producers.csv file.
+    #
+    # node_key - The key of the node whose production is to be fetched.
+    #
+    # Returns a Float.
+    def CENTRAL_PRODUCTION(node_key)
+      dataset.central_producers.get(node_key, :production)
+    end
+
     # Public: Given keys to look up a node or edge, retrieves the demand
     # attribute of the object.
     #

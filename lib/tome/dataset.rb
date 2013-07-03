@@ -103,6 +103,18 @@ module Tome
       @chps ||= CSVDocument::OneDimensional.new(path.join("chp.csv"))
     end
 
+    # Public: Retrieves demand and full load hours data for the region.
+    # Expects to load a file at datasets/AREA/central_producers.csv.
+    #
+    # For example:
+    #   dataset.chps.get(:energy_production_algae_diesel :full_load_hours)
+    #   # => 4194.5
+    #
+    # Returns a CSVDocument.
+    def central_producers
+      @producers ||= CSVDocument.new(path.join('central_producers.csv'))
+    end
+
     # Public: Path to the directory in which the dataset specific data is
     # stored.
     #

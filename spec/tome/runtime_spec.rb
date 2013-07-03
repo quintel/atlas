@@ -63,6 +63,19 @@ module Tome
       end
     end
 
+    context 'CENTRAL_PRODUCTION' do
+      it 'executes CENTRAL_PRODUCTION functions' do
+        expect(runtime.execute(
+          "CENTRAL_PRODUCTION(energy_production_algae_diesel)"
+        )).to eq(125)
+      end
+
+      it 'raises an error if the production data is missing' do
+        expect { runtime.execute('CENTRAL_PRODUCTION(nope)') }.
+          to raise_error(UnknownCSVRowError)
+      end
+    end
+
     context 'DEMAND' do
       before do
         parent.set(:demand, 50.0)
