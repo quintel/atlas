@@ -17,6 +17,7 @@ module Tome
     attribute :has_buildings,            Boolean, default: true
     attribute :has_coastline,            Boolean, default: true
     attribute :has_cold_network,         Boolean, default: false
+    attribute :has_electricity_storage,  Boolean, default: true
     attribute :has_climate,              Boolean, default: true
     attribute :has_employment,           Boolean, default: true
     attribute :has_fce,                  Boolean, default: true
