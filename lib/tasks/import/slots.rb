@@ -74,7 +74,10 @@ namespace :import do
     without_path.delete(:key)
 
     without_path.all? do |key, value|
-      value.nil? || SLOT_DEFAULTS[key.to_sym] == value
+      # The value matches the default, or ...
+      (value.nil? || SLOT_DEFAULTS[key.to_sym] == value) ||
+        # ... it's a share attribute, and has the default of 1.0.
+        (key.to_sym == :share && value == 1.0)
     end
   end
 
@@ -91,59 +94,70 @@ namespace :import do
   task :slots, [:from, :to] => [:setup] do |_, args|
     include Tome
 
-    # runner = ImportRun.new('slots')
-    slots  = nl_slots.values
+    slots    = nl_slots.values
+    required = YAML.load_file(Tome.data_dir.join('import/required_slots.yml'))
 
-    reporter = Tome::Term::Reporter.new(
-      'Importing slots', imported: :green, skipped: :yellow)
+    # We start by building two lists; one containing the slots which we
+    # definitely need to import, and one containing those we thing can be
+    # skipped.
 
-    # We need to select all the slots whose values differ from the defaults.
-    inputs, outputs = slots.partition { |data| data[:key].to_s.include?('+') }
-    skip, use       = outputs.partition { |data| all_slot_defaults?(data) }
+    use, skip = slots.partition do |data|
+      direction = data[:key].to_s.include?('-') ? :output : :input
 
-    skip.push(*inputs)
+      # We import *all* output slots whose share is not the default 1.0.
+      (direction == :output && ! all_slot_defaults?(data)) ||
+        # ... or any slot (including input slots) named in the ETSource
+        # data/import/required_inputs_slots.yml file.
+        required[direction].include?(data[:key].to_s.split(/[+-]/).first)
+    end
 
-    # Now we make a list of all nodes which had a slot added, so that we can
-    # add *all* of the slots for the side (in or out) of that node.
+    # Next, we create a list of all the nodes which need to have one or more
+    # slots defined so that we can add all the input/output slots for that
+    # node.
+
     used_sides = use.map do |data|
       data[:key].to_s.split('@').first
     end.uniq
 
     skip.each do |data|
-      if used_sides.include?(data[:key].to_s.split('@').first)
-        use.push(data)
-      end
+      use.push(data) if used_sides.include?(data[:key].to_s.split('@').first)
     end
+
+    # Before proceeding with the import, group all the slots which need to be
+    # added by the node key and slot direction so that we can save them all
+    # at once.
 
     grouped = use.group_by do |data|
-      data[:key].to_s.split(/[-+]@/, 2)[0].to_sym
+      data[:key].to_s.split('@', 2).first.to_sym
     end
 
-    reporter.report do |reporter|
-      grouped.each do |node_key, slots|
-        node  = Node.find(node_key)
+    Tome::Term::Reporter.new(
+      'Importing slots', imported: :green, skipped: :yellow
+    ).report do |reporter|
+    # reporter.report do |reporter|
+      grouped.each do |token, slots|
+        # The token is the node key, followed by a + or -
+        node_key = token[0..-2]
+        setter   = token[-1] == ?- ? :output= : :input=
+        node     = Node.find(node_key)
+
+        # Add the slots in a predictable order each time.
         slots = slots.sort_by { |s| s[:key] }
 
-        node_outputs = slots.each_with_object(Hash.new) do |data, collection|
+        # Create a hash containing the data to be saved into the node. Loss
+        # slots are ignored and set to elastic.
+        slot_data = slots.each_with_object({}) do |data, collection|
           collection[data[:key].to_s.split('@').last] =
             data[:type] == :loss ? :elastic : data[:share]
         end
 
-        if node_outputs.one? && node_outputs.first.last == 1.0
-          # If the node has only a single output slot, and it has the default
-          # share of 1.0, don't bother saving anything.
-          puts ""
-          puts "SKIP: #{ node_outputs.inspect }"
-          node.output = {}
-          reporter.inc(:skipped)
-        else
-          node_outputs.length.times { reporter.inc(:imported) }
-        end
-
+        node.public_send(setter, slot_data)
         node.save(false)
+
+        slot_data.length.times { reporter.inc(:imported) }
       end
 
-      # Show how many were skipped.
+      # Show many many were skipped.
       (slots.length - use.length).times { reporter.inc(:skipped) }
     end
 
