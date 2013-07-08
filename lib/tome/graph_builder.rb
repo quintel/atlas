@@ -40,7 +40,7 @@ module Tome
           # the same namespace as the parent node. Because of this, testing
           # only the namespace would raise a DocumentNotFoundError when trying
           # to connect "bridge" edges which cross from one sector to another.
-          @nodes.key?(edge.supplier)
+          @nodes.key?(edge.supplier) || @nodes.key?(edge.consumer)
         end
       else
         Edge.all
@@ -65,7 +65,21 @@ module Tome
           add_node(@graph, Tome::Node.new(key: :SUPER_SINK))
         end
 
+        unless @nodes.key?(edge.supplier)
+          add_node(@graph, Tome::Node.new(key: :SUPER_SOURCE))
+        end
+
         self.class.establish_edge(edge, @graph, @nodes)
+      end
+
+      # Produce simpler graphs; whenever a super-source child has only
+      # incoming edges from the super-source, get rid of them.
+      if super_source = @graph.node(:SUPER_SOURCE)
+        super_source.out_edges.each do |edge|
+          if edge.child.in_edges.all? { |o| o.from.key == :SUPER_SOURCE }
+            edge.from.disconnect_via(edge)
+          end
+        end
       end
     end
 
@@ -86,7 +100,7 @@ module Tome
     #
     # Returns the Turbine::Edge which was created.
     def self.establish_edge(edge, graph, nodes)
-      parent  = graph.node(edge.supplier)
+      parent  = graph.node(edge.supplier) || graph.node(:SUPER_SOURCE)
       child   = graph.node(edge.consumer) || graph.node(:SUPER_SINK)
       carrier = Carrier.find(edge.carrier)
 
@@ -98,6 +112,10 @@ module Tome
         # Send energy to the sink only once all the other edges have had their
         # demands set.
         props[:type] = :overflow
+      elsif edge.type == :flexible
+        # Receive energy from the source once all the other input edges have
+        # had their demand set.
+        props[:type] = :flexible
       end
 
       if parent.nil?
