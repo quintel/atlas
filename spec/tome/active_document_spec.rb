@@ -82,6 +82,13 @@ describe SomeDocument, :fixtures do
       expect(hash).to_not have_key(:query)
       expect(hash).to_not have_key(:description)
     end
+
+    it 'includes file comments' do
+      document = SomeDocument.new(key: 'a', description: 'okay')
+      hash     = document.to_hash
+
+      expect(hash).to include(description: 'okay')
+    end
   end
 
   describe "find" do

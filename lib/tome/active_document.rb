@@ -67,7 +67,8 @@ module Tome
       #
       # Returns a Hash.
       def to_hash
-        attributes.reject { |_, value| value.nil? }
+        attributes.merge(description: description).
+          reject { |_, value| value.nil? }
       end
 
       #######
