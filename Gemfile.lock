@@ -10,7 +10,7 @@ GIT
 PATH
   remote: .
   specs:
-    tome (0.0.1)
+    atlas (0.0.1)
       activemodel (>= 3.2.12)
       rubel (>= 0.0.3)
       turbine-graph (>= 0.1)
@@ -92,6 +92,7 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport (>= 3.2.12)
+  atlas!
   guard
   guard-rspec
   pry (>= 0.9.12)
@@ -103,4 +104,3 @@ DEPENDENCIES
   shoulda-matchers
   simplecov
   term-ansicolor (>= 1.2.0)
-  tome!

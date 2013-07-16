@@ -1,7 +1,7 @@
 namespace :import do
   OUT_SLOT_RE   = /^\((?<carrier>[\w_]+)\)-(?<node>[\w_]+)(?:$|: )/
   IN_SLOT_RE    = /^(?<node>[\w_]+)-\((?<carrier>[\w_]+)\)(?:$|: )/
-  SLOT_DEFAULTS = Tome::Slot.new(key: 'a-@e').attributes
+  SLOT_DEFAULTS = Atlas::Slot.new(key: 'a-@e').attributes
 
   # Internal: Given a slot string, returns two values: the key of the slot as
   # a symbol, and the data for the slot.
@@ -10,9 +10,9 @@ namespace :import do
     data = (data.nil? ? {} : eval(data)).with_indifferent_access 
 
     data[:key] = if match = IN_SLOT_RE.match(key)
-      Tome::Slot.key(match[:node], :in, match[:carrier])
+      Atlas::Slot.key(match[:node], :in, match[:carrier])
     elsif match = OUT_SLOT_RE.match(key)
-      Tome::Slot.key(match[:node], :out, match[:carrier])
+      Atlas::Slot.key(match[:node], :out, match[:carrier])
     end
 
     data[:path] = "#{ data[:key].to_s.split('_', 2).first }/#{ data[:key] }"
@@ -22,7 +22,7 @@ namespace :import do
 
   # Internal: Reads the old NL dataset, extracting slots and slot conversions
   # to be imported as new Slot documents. Any slot whose only attribute is
-  # "conversion=1.0" will be omitted since Tome/Refinery will assume this as
+  # "conversion=1.0" will be omitted since Atlas/Refinery will assume this as
   # the default anyway.
   #
   # Regional data looks like:
@@ -92,10 +92,10 @@ namespace :import do
     slot information.
   DESC
   task :slots, [:from, :to] => [:setup] do |_, args|
-    include Tome
+    include Atlas
 
     slots    = nl_slots.values
-    required = YAML.load_file(Tome.data_dir.join('import/required_slots.yml'))
+    required = YAML.load_file(Atlas.data_dir.join('import/required_slots.yml'))
 
     # We start by building two lists; one containing the slots which we
     # definitely need to import, and one containing those we thing can be
@@ -131,7 +131,7 @@ namespace :import do
       data[:key].to_s.split('@', 2).first.to_sym
     end
 
-    Tome::Term::Reporter.new(
+    Atlas::Term::Reporter.new(
       'Importing slots', imported: :green, skipped: :yellow
     ).report do |reporter|
     # reporter.report do |reporter|

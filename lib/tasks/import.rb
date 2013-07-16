@@ -31,8 +31,8 @@ namespace :import do
   # Given a node key and its data, determines which subclass of Node should
   # be used.
   def node_subclass(key, data)
-    return Tome::Node::FinalDemand if key.to_s.match(/final_demand/)
-    return Tome::Node::Demand      if key.to_s.match(/demand/)
+    return Atlas::Node::FinalDemand if key.to_s.match(/final_demand/)
+    return Atlas::Node::Demand      if key.to_s.match(/demand/)
 
     out_slots, in_slots = data['slots'].partition { |s| s.match(/^\(/) }
     in_slots.map!  { |slot| match = slot.match(/\((.*)\)/) ; match[1] }
@@ -41,9 +41,9 @@ namespace :import do
     if ((in_slots - ['loss']) - (out_slots - ['loss'])).any?
       # A node is a converter if it outputs energy in a different carrier than
       # it received; the exception being loss which we ignore.
-      Tome::Node::Converter
+      Atlas::Node::Converter
     else
-      Tome::Node
+      Atlas::Node
     end
   end
 
@@ -62,7 +62,7 @@ namespace :import do
           if row[:converter_key]
             key = row[:converter_key].to_sym
           else
-            key = Tome::Edge.key(row[:from], row[:to], row[:carrier])
+            key = Atlas::Edge.key(row[:from], row[:to], row[:carrier])
           end
 
           queries[key] = row[:query]
@@ -79,7 +79,7 @@ namespace :import do
   # Returns a Pathname.
   def dir(path)
     path = Pathname.new(path)
-    path = Tome.root.join(path) if path.relative?
+    path = Atlas.root.join(path) if path.relative?
 
     unless path.directory?
       raise "No directory found at #{ path.to_s }"
@@ -104,7 +104,7 @@ namespace :import do
       @message  = message
       @errors   = []
 
-      @reporter = Tome::Term::Reporter.new("Importing #{ message }",
+      @reporter = Atlas::Term::Reporter.new("Importing #{ message }",
         imported: :green, failed: :red, skipped: :yellow)
     end
 
@@ -131,12 +131,12 @@ namespace :import do
 
   # --------------------------------------------------------------------------
 
-  # Loads Tome.
+  # Loads Atlas.
   task :setup, [:from, :to] do |_, args|
     $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/..'))
 
     require 'fileutils'
-    require 'tome'
+    require 'atlas'
     require 'term/ansicolor'
     require 'active_support/core_ext/hash/indifferent_access'
 
@@ -149,7 +149,7 @@ namespace :import do
     end
 
     $from_dir     = dir(args.from)
-    Tome.data_dir = dir(args.to)
+    Atlas.data_dir = dir(args.to)
   end # task :setup
 
   task all: [:carriers, :nodes, :edges, :presets]

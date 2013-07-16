@@ -6,7 +6,7 @@ namespace :import do
     there are no hand-made changes.
   DESC
   task :presets, [:from, :to] => [:setup] do |_, args|
-    include Tome
+    include Atlas
 
     # Wipe out *everything* in the presets directory.
     FileUtils.rm_rf(Preset.directory)

@@ -4,8 +4,8 @@ require 'tmpdir'
 
 require 'support/coverage' if ENV['COVERAGE']
 
-ENV['TOME_ENV'] = 'test'
-require_relative '../lib/tome'
+ENV['ATLAS_ENV'] = 'test'
+require_relative '../lib/atlas'
 
 Bundler.require(:test)
 
@@ -33,5 +33,5 @@ RSpec.configure do |config|
 
   # Use a (safe) copy of spec/fixtures as the data-source when the "fixtures"
   # metadata is set on a spec group or example.
-  config.include Tome::Spec::Fixtures, fixtures: true
+  config.include Atlas::Spec::Fixtures, fixtures: true
 end

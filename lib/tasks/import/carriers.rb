@@ -7,12 +7,12 @@ namespace :import do
     included.
   DESC
   task :carriers, [:from, :to] => [:setup] do |_, args|
-    include Tome
+    include Atlas
 
     # Wipe out *everything* in the nodes directory; rather than simply
     # overwriting existing files, since some may have new naming conventions
     # since the previous import.
-    FileUtils.rm_rf(Tome::Node.directory)
+    FileUtils.rm_rf(Atlas::Node.directory)
 
     runner = ImportRun.new('carriers')
 

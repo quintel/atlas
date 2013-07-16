@@ -1,46 +1,43 @@
-# Tome - Object Mapper for ETSource Data
+# Atlas - Object Mapper for ETSource Data
 
-Tome is a Ruby library for interacting with the ETSource data. It provides the
+Atlas is a Ruby library for interacting with the ETSource data. It provides the
 means to easily read, write, and delete ETSource ".ad" files and is also
 responsible for converting the documents into a format which can be used by
 ETEngine.
 
-If you squint *really* hard, you can just about get Tome out of "Energy
-<b>T</b>ransition <b>O</b>bject <b>M</b>app<b>e</b>r".
+### Setting Up Atlas
 
-### Setting Up Tome
-
-In order to run Tome, you will need to check out a copy of both the Tome and
-ETSource repositories, and install Tome's dependencies. It is recommended –
+In order to run Atlas, you will need to check out a copy of both the Atlas and
+ETSource repositories, and install Atlas' dependencies. It is recommended –
 but not required – that both repositories are cloned into a common parent
 directory. In this example, we're going to put them both in "~/code":
 
 ```sh
 $ cd ~/code
-$ git clone git@github.com:quintel/tome.git
+$ git clone git@github.com:quintel/atlas.git
 $ git clone git@github.com:quintel/etsource.git
 
 $ ls
-etsource   tome
+etsource   atlas
 ```
 
-We now need to install Tome's dependencies using Bundler:
+We now need to install Atlas's dependencies using Bundler:
 
 ```sh
-$ cd tome
+$ cd atlas
 $ bundle install
 ```
 
 Once this has completed, you're ready to go!
 
-### Using The Tome Console
+### Using The Atlas Console
 
-The console provides the ability to use Tome's classes directly to create,
+The console provides the ability to use Atlas' classes directly to create,
 edit, and delete ETSource documents. Start the console with the
 `rake console` command:
 
 ```sh
-$ cd ~/code/tome
+$ cd ~/code/atlas
 $ rake console
 => "../etsource/data"
 ```
@@ -48,32 +45,32 @@ $ rake console
 When in the console, the full range of document classes are available for you
 to use:
 
-* **Tome::Carrier**
-* **Tome::Dataset** – Also provides access to data such as energy balances,
+* **Atlas::Carrier**
+* **Atlas::Dataset** – Also provides access to data such as energy balances,
   edge shares, and CHP data.
-* **Tome::Edge** – In the past known as "links".
-* **Tome::Gquery**
-* **Tome::Input**
-* **Tome::Node** – ... and the subclasses Converter, DemandNode, StatNode,
+* **Atlas::Edge** – In the past known as "links".
+* **Atlas::Gquery**
+* **Atlas::Input**
+* **Atlas::Node** – ... and the subclasses Converter, DemandNode, StatNode,
   and FinalDemandNode.
-* **Tome::Preset**
-* **Tome::Slot**
+* **Atlas::Preset**
+* **Atlas::Slot**
 
 These classes behave similarly to records in Rails applications:
 
 ```ruby
 # Fetch all Gqueries:
-Tome::Gquery.all
+Atlas::Gquery.all
 
 # Fetch a specific input:
-Tome::Input.find(:bio_ethanol_from_cane_sugar_share)
+Atlas::Input.find(:bio_ethanol_from_cane_sugar_share)
 ```
 
 You can also edit all the attributes on the documents:
 
 ```ruby
-input = Tome::Node.find(:households_collective_chp_biogas)
-# => #<Tome::ConverterNode :households_collective_chp_biogas>
+input = Atlas::Node.find(:households_collective_chp_biogas)
+# => #<Atlas::ConverterNode :households_collective_chp_biogas>
 
 input.energy_balance_group = 'household CHPs'
 input.save
@@ -101,12 +98,12 @@ errors.
 * Delete a document with `destroy!`
 * Skip validation and forcefully save an invalid document with `save(false)`.
 * Update attributes and save in one step with `update_attributes`.
-* Documents can be saved in subdirectories and Tome will load them anyway. The
-  subdirectory indicates a "namespace" for the document which can be accessed
-  by calling `ns`. Normally, document namespaces have no significance, but in
-  some cases they might (e.g. for nodes, the namespace indicates the "sector"
-  to which the node belongs; nodes in a "households" subdirectory belong to
-  the "households" sector).
+* Documents can be saved in subdirectories and Atlas will load them anyway.
+  The subdirectory indicates a "namespace" for the document which can be
+  accessed by calling `ns`. Normally, document namespaces have no
+  significance, but in some cases they might (e.g. for nodes, the namespace
+  indicates the "sector" to which the node belongs; nodes in a "households"
+  subdirectory belong to the "households" sector).
 
 #### Custom ETSource Paths
 
@@ -140,7 +137,7 @@ $ rake "console[/tmp/a whole thing of candy beans]"
 
 ### Building ETSource for ETEngine
 
-Not yet supported, but in the near future it will be possible to use Tome to
+Not yet supported, but in the near future it will be possible to use Atlas to
 build files to be used by ETEngine. This involves taking the ".ad" files and a
 region code (such as "nl"), performing the queries in each document using data
 from the chosen region, then handing the partially-calculated graph to
@@ -151,13 +148,13 @@ from the chosen region, then handing the partially-calculated graph to
 It is possible to test a subgraph already; this selects nodes which match a
 chosen sector, sets their demands and shares, and performs the Refinery
 calculation step. The results are shown in your terminal, with "before" and
-"after" images output to the ./tome/tmp directory.
+"after" images output to the ./atlas/tmp directory.
 
 To run this, you need to supply the path to the ETSource data directory, and
 the name of the sector you want to test. Separate these with a comma:
 
 ```sh
-$ cd ~/code/tome
+$ cd ~/code/atlas
 $ rake debug:subgraph[../etsource/data,transport]
 ```
 
@@ -170,15 +167,15 @@ $ rake "debug:subgraph[/tmp/the gothic castle,agriculture]"
 
 #### Production Mode
 
-Production mode loads Tome using pre-calculated node demands and edge shares
+Production mode loads Atlas using pre-calculated node demands and edge shares
 (see "Building ETSource for ETEngine"). Production mode is not yet
 implemented, but will be added once ETEngine build support is ready.
 
-Prior to loading Tome, a `TOME_ENV` environment variable must be set:
+Prior to loading Atlas, a `ATLAS_ENV` environment variable must be set:
 
 ```ruby
-ENV['TOME_ENV'] = :production
-require 'tome'
+ENV['ATLAS_ENV'] = :production
+require 'atlas'
 ```
 
 ### Importing "Legacy" ETSource Files
@@ -194,7 +191,7 @@ arguments: the path to the ETSource repository, and the path to the ETSource
 "data" directory:
 
 ```sh
-$ cd ~/code/tome
+$ cd ~/code/atlas
 $ rake import:nodes[../etsource,../etsource/data]
 ```
 

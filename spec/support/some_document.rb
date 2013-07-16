@@ -1,4 +1,4 @@
-module Tome
+module Atlas
   class SomeDocument
     include ActiveDocument
 
@@ -20,4 +20,4 @@ module Tome
   class SomeDocument::FinalDocument < SomeDocument::OtherDocument
     attribute :sets, String
   end
-end # Tome
+end # Atlas

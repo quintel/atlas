@@ -12,16 +12,16 @@ namespace :debug do
     end
 
     $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/..'))
-    require 'tome'
+    require 'atlas'
 
-    Tome.data_dir = args.data_dir
+    Atlas.data_dir = args.data_dir
 
-    debugger_dir = Tome.root.join('tmp/debug')
+    debugger_dir = Atlas.root.join('tmp/debug')
     FileUtils.mkdir_p(debugger_dir)
     debugger_dir.children.each { |child| child.delete }
 
-    graph  = Tome::GraphBuilder.build(args.sector.to_sym)
-    runner = Tome::Runner.new(Tome::Dataset.find(:nl), graph)
+    graph  = Atlas::GraphBuilder.build(args.sector.to_sym)
+    runner = Atlas::Runner.new(Atlas::Dataset.find(:nl), graph)
 
     exception = nil
 
@@ -48,8 +48,8 @@ namespace :debug do
     text_debugger = Refinery::GraphDebugger.new(runner.refinery_graph)
     File.write(debugger_dir.join('_debug.txt'), text_debugger.to_s)
 
-    puts "Writing static data to #{ Tome.root.join('tmp/static.yml') }"
-    Tome::Exporter.new(runner.refinery_graph).export_to(Tome.root.join('tmp/static.yml'))
+    puts "Writing static data to #{ Atlas.root.join('tmp/static.yml') }"
+    Atlas::Exporter.new(runner.refinery_graph).export_to(Atlas.root.join('tmp/static.yml'))
 
     if exception
       puts

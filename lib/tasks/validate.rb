@@ -13,7 +13,7 @@ namespace :validate do
     def run
       failures = []
 
-      Tome::Term::Reporter.report(
+      Atlas::Term::Reporter.report(
         'Running validation', passed: :green, failed: :red
       ) do |reporter|
         @classes.each do |klass|
@@ -42,15 +42,15 @@ namespace :validate do
     #
     # Returns a string.
     def class_name(klass)
-      klass.name.gsub(/^Tome::/, '')
+      klass.name.gsub(/^Atlas::/, '')
     end
 
-    # Internal: Returns the path of a document, relative to the Tome data
+    # Internal: Returns the path of a document, relative to the Atlas data
     # directory.
     #
     # Returns a Pathname
     def rel_path(document)
-      document.path.relative_path_from(Tome.data_dir)
+      document.path.relative_path_from(Atlas.data_dir)
     end
 
     # Internal: Load each document one-at-a-time and validate, rather than
@@ -95,22 +95,22 @@ namespace :validate do
 
   task :setup, [:dir] do |_, args|
     require 'term/ansicolor'
-    Tome.data_dir = args.dir || '../etsource/data'
+    Atlas.data_dir = args.dir || '../etsource/data'
   end
 
-  task(carriers: :setup) { ValidationRunner.new(Tome::Carrier).run }
-  task(datasets: :setup) { ValidationRunner.new(Tome::Dataset).run }
-  task(edges: :setup)    { ValidationRunner.new(Tome::Edge).run }
-  task(gqueries: :setup) { ValidationRunner.new(Tome::Gquery).run }
-  task(inputs: :setup)   { ValidationRunner.new(Tome::Input).run }
-  task(nodes: :setup)    { ValidationRunner.new(Tome::Node).run }
-  task(presets: :setup)  { ValidationRunner.new(Tome::Preset).run }
-  task(slots: :setup)    { ValidationRunner.new(Tome::Slot).run }
+  task(carriers: :setup) { ValidationRunner.new(Atlas::Carrier).run }
+  task(datasets: :setup) { ValidationRunner.new(Atlas::Dataset).run }
+  task(edges: :setup)    { ValidationRunner.new(Atlas::Edge).run }
+  task(gqueries: :setup) { ValidationRunner.new(Atlas::Gquery).run }
+  task(inputs: :setup)   { ValidationRunner.new(Atlas::Input).run }
+  task(nodes: :setup)    { ValidationRunner.new(Atlas::Node).run }
+  task(presets: :setup)  { ValidationRunner.new(Atlas::Preset).run }
+  task(slots: :setup)    { ValidationRunner.new(Atlas::Slot).run }
 
   task all: :setup do
     ValidationRunner.new(
-      Tome::Carrier, Tome::Dataset, Tome::Edge,   Tome::Gquery,
-      Tome::Input,   Tome::Node,    Tome::Preset, Tome::Slot
+      Atlas::Carrier, Atlas::Dataset, Atlas::Edge,   Atlas::Gquery,
+      Atlas::Input,   Atlas::Node,    Atlas::Preset, Atlas::Slot
     ).run
   end
 end # :validate

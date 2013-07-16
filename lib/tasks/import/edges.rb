@@ -6,7 +6,7 @@ namespace :import do
     there are no hand-made changes.
   DESC
   task :edges, [:from, :to] => [:setup] do |_, args|
-    include Tome
+    include Atlas
 
     # Wipe out *everything* in the edges directory; rather than simply
     # overwriting existing files, since some may have new naming conventions
