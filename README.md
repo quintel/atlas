@@ -1,4 +1,4 @@
-# Atlas - Object Mapper for ETSource Data
+## Atlas - Object Mapper for ETSource Data
 
 Atlas is a Ruby library for interacting with the ETSource data. It provides the
 means to easily read, write, and delete ETSource ".ad" files and is also
