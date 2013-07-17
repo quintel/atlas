@@ -47,10 +47,10 @@ namespace :import do
 
           props = { path: path, type: type, reversed: ! data[:reversed].nil? }
 
-          if queries.key?(key.to_sym)
+          if queries.key?(key)
             # For the moment, assume shares are technology shares.
-            props[:sets]  = :parent_share
-            props[:query] = queries[key.to_sym] if queries.key?(key.to_sym)
+            props[:sets]  = queries[key][:attribute]
+            props[:query] = queries[key][:query]
           end
 
           Edge.new(props)

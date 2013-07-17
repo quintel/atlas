@@ -65,7 +65,7 @@ namespace :import do
             key = Atlas::Edge.key(row[:from], row[:to], row[:carrier])
           end
 
-          queries[key] = row[:query]
+          queries[key] = row.to_hash
         end
       end
 
