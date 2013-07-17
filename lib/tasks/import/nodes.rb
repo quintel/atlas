@@ -34,12 +34,14 @@ namespace :import do
 
           data[:in_slots]  = in_slots.map  { |s| s.match(/\((.*)\)/)[1] }
           data[:out_slots] = out_slots.map { |s| s.match(/\((.*)\)/)[1] }
+          data[:path]      = "#{ sector }/#{ key }"
 
           data.delete('links')
           data.delete('slots')
 
-          data[:query] = queries[key.to_sym] if queries.key?(key.to_sym)
-          data[:path]  = "#{ sector }/#{ key }"
+          if queries.key?(key.to_sym)
+            data[:query] = queries[key.to_sym][:query]
+          end
 
           klass.new(data)
         end
