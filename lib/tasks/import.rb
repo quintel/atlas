@@ -62,7 +62,7 @@ namespace :import do
           if row[:converter_key]
             key = row[:converter_key].to_sym
           else
-            key = Atlas::Edge.key(row[:from], row[:to], row[:carrier])
+            key = Atlas::Edge.key(row[:to], row[:from], row[:carrier])
           end
 
           queries[key] = row.to_hash
