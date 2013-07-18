@@ -135,4 +135,10 @@ module Atlas
     "of the cells in the first row must contain a non-blank value."
   end
 
+  # Parser Errors ------------------------------------------------------------
+
+  CannotIdentifyError = error_class do |string|
+    "Cannot identify this line: #{ string }"
+  end
+
 end # Atlas
