@@ -80,6 +80,8 @@ module Atlas
             edge.from.disconnect_via(edge)
           end
         end
+
+        @graph.delete(super_source) if super_source.out_edges.none?
       end
     end
 
