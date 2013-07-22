@@ -31,10 +31,16 @@ namespace :debug do
     puts 'Setting up Refinery graph... '
     runner.refinery_graph
 
-    print 'Performing Refinery calculations... '
+    reporter = Atlas::Term::Reporter.new(
+      'Performing Refinery calculations', done: :green)
+
+    catalyst =
+      Refinery::Catalyst::VisualCalculator.new(debugger_dir) do |calculator|
+        reporter.inc(:done)
+      end
 
     begin
-      runner.calculate(Refinery::Catalyst::VisualCalculator.new(debugger_dir))
+      reporter.report { |*| runner.calculate(catalyst) }
     rescue Refinery::IncalculableGraphError => ex
       print '(incalculable graph) '
       exception = ex
