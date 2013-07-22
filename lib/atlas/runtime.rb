@@ -78,7 +78,7 @@ module Atlas
     #
     # Returns a Float.
     def CENTRAL_PRODUCTION(node_key)
-      dataset.central_producers.get(node_key, :production)
+      dataset.central_producers.get(node_key, :demand)
     end
 
     # Public: Given keys to look up a node or edge, retrieves the demand
