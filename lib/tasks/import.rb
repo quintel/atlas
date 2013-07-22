@@ -31,8 +31,12 @@ namespace :import do
   # Given a node key and its data, determines which subclass of Node should
   # be used.
   def node_subclass(key, data)
-    return Atlas::Node::FinalDemand if key.to_s.match(/final_demand/)
-    return Atlas::Node::Demand      if key.to_s.match(/demand/)
+    if central_producers.include?(key.to_sym)
+      return Atlas::Node::CentralProducer
+    end
+
+    return Atlas::Node::FinalDemand if key.match(/final_demand/)
+    return Atlas::Node::Demand      if key.match(/demand/)
 
     out_slots, in_slots = data['slots'].partition { |s| s.match(/^\(/) }
     in_slots.map!  { |slot| match = slot.match(/\((.*)\)/) ; match[1] }
@@ -45,6 +49,14 @@ namespace :import do
     else
       Atlas::Node
     end
+  end
+
+  # Returns an array containing the keys of all nodes in the central producers
+  # CSV file.
+  def central_producers
+    @producers ||= CSV.table(
+      Atlas.data_dir.join('datasets/nl/central_producers.csv')
+    ).map { |row| row[:key].to_sym }
   end
 
   # Returns a hash containing all the queries defined in the data/import CSVs.

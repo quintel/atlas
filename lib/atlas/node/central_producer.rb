@@ -25,8 +25,26 @@ module Atlas
     #
     # Returns a float, or raises a UnknownCSVRowError if the producer does
     # not exist in the "central_producers.csv" file.
-    def full_load_hours(area)
+    def full_load_hours(area = nil)
+      # Allow area to be nil for +to_hash+.
+      return nil if area.nil?
+
       Dataset.find(area).central_producers.get(key, :full_load_hours)
+    end
+
+    # Public: Creates a hash containing the document's attributes, omitting
+    # those whose values are nil, as well as full_load_hours and query, since
+    # those are dynamic.
+    #
+    # Returns a Hash.
+    def to_hash
+      hash = super
+
+      hash.delete(:full_load_hours)
+      hash.delete(:query)
+      hash.delete(:sets)
+
+      hash
     end
   end # Node::CentralProducer
 end # Atlas
