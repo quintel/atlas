@@ -2,7 +2,7 @@ module Atlas
   module Parser
     module TextToHash
       # A Block is a container element for lines with the same type
-      # e.g.: 
+      # for example a comment block, or a dynamic variable block.
       class Block
 
         attr_accessor :lines
@@ -13,6 +13,10 @@ module Atlas
 
         def type
           lines.first.type
+        end
+
+        def to_hash
+          { key => value }
         end
 
       end

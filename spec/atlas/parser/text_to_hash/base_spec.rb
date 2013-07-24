@@ -5,7 +5,8 @@ module Atlas
     module TextToHash
       describe Base do
 
-        let(:base) { Base.new }
+        let(:base)    { Base.new }
+        let(:content) { "# a\n# b\n- unit = kg\n~ demand =\n  SUM(1,2)" }
 
         describe '#new' do
 
@@ -20,11 +21,10 @@ module Atlas
           context 'when content is provided' do
 
             it 'parses content' do
-              content = '# a\n# b\n- unit = kg'
               base = Base.new(content)
-              expect(base.lines[1].string).to eql '# a'
-              expect(base.lines[2].string).to eql '# b'
-              expect(base.lines[3].string).to eql '- unit = kg'
+              expect(base.lines[0].to_s).to eql '# a'
+              expect(base.lines[1].to_s).to eql '# b'
+              expect(base.lines[2].to_s).to eql '- unit = kg'
             end
 
           end
@@ -36,14 +36,26 @@ module Atlas
           it 'can append lines' do
             line = Line.new('blah')
             expect(base.add_line(line)).to eql line
-            expect(base.lines[1]).to eql line
+            expect(base.lines[0]).to eql line
           end
 
         end
 
         describe '#blocks' do
 
-          it 'returns an array with blocks' do
+          it 'has content' do
+            base = Base.new(content)
+            expect(base.blocks).to have(3).blocks
+          end
+        end
+
+        describe '#to_hash' do
+
+          it 'has everything' do
+            base = Base.new(content)
+            expect(base.to_hash).to eql({ comment: "a\nb",
+                                          unit:    'kg',
+                                          demand:  'SUM(1,2)' })
           end
 
         end

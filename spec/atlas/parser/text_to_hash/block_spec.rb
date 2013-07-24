@@ -30,6 +30,14 @@ module Atlas
           end
         end
 
+        describe '#to_hash' do
+          it 'uses key and value' do
+            block.stub(:key) { :foo }
+            block.stub(:value) { 'bar!' }
+            expect(block.to_hash).to eql({ foo: 'bar!' })
+          end
+        end
+
       end
     end
   end
