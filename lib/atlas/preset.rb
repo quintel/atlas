@@ -10,7 +10,7 @@ module Atlas
     attribute :ordering,           Integer
     attribute :author,             String
     attribute :title,              String
-    attribute :description,        String
+    attribute :comments,           String
     attribute :created_at,         Time
     attribute :updated_at,         Time
     attribute :end_year,           Integer

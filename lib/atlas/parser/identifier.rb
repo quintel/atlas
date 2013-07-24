@@ -10,6 +10,7 @@ module Atlas
       ATTR_LINE      = /^#{ ATTR_PREFIX }\s(.+)\s=\s?(.*)/
       QUERY_LINE     = /^#{ QUERY_PREFIX }\s(.+)\s=/
       INNER_BLOCK    = /^\s\s(.+)/
+      EMPTY_LINE     = ""
 
       def self.type(string)
         case string
@@ -21,6 +22,8 @@ module Atlas
           :dynamic_variable
         when INNER_BLOCK
           :inner_block
+        when EMPTY_LINE
+          :empty_line
         else
           raise CannotIdentifyError.new(string)
         end

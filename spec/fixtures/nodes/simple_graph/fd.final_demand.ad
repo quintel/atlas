@@ -4,4 +4,5 @@
 - input.coal = 0.5
 - input.corn = 0.5
 
-EB(residential, natural_gas) * 1.00
+~ demand =
+  EB(residential, natural_gas) * 1.00

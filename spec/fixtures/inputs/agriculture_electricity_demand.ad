@@ -8,4 +8,5 @@
 - update_period = future
 - default_unit = %y
 
-UPDATE(V(agriculture_useful_demand_electricity), preset_demand, USER_INPUT())
+~ update =
+  UPDATE(V(agriculture_useful_demand_electricity), preset_demand, USER_INPUT())

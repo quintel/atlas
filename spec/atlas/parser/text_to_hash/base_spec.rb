@@ -49,13 +49,63 @@ module Atlas
           end
         end
 
+        describe '#comments' do
+
+          it 'contains the comments' do
+            base = Base.new(content)
+            expect(base.comments).to eql( "a\nb" )
+          end
+
+          it 'returns nil when there aint none' do
+            base = Base.new('- unit = kg')
+            expect(base.comments).to be_nil
+          end
+
+        end
+
+        describe '#properties' do
+
+          it 'contains only fixed' do
+            base = Base.new(content)
+            expect(base.properties).to eql({ unit: 'kg' })
+          end
+
+          it 'supports numbers' do
+            base = Base.new('- foo = 123.4')
+            expect(base.properties).to eql({ foo: 123.4 })
+          end
+
+
+          it 'returns nil when there aint none' do
+            base = Base.new("~ demand =\n  SUM(1,2)")
+            expect(base.properties).to eql({})
+          end
+
+        end
+
+        describe '#dynamic_attributes' do
+
+          it 'contains only dynamic ones' do
+            base = Base.new(content)
+            expect(base.queries).to eql({ demand: 'SUM(1,2)' })
+          end
+
+          it 'returns nil when there aint none' do
+            base = Base.new("")
+            expect(base.queries).to eql({})
+          end
+
+
+        end
+
         describe '#to_hash' do
 
           it 'has everything' do
             base = Base.new(content)
-            expect(base.to_hash).to eql({ comment: "a\nb",
-                                          unit:    'kg',
-                                          demand:  'SUM(1,2)' })
+            hash = { comments: "a\nb",
+                     unit:     "kg",
+                     queries:  { demand: "SUM(1,2)" } }
+            expect(base.to_hash).to eql hash
           end
 
         end
