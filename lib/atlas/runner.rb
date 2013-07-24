@@ -59,10 +59,10 @@ module Atlas
     def refinery_graph
       @refinery ||= begin
         graph.nodes.each do |node|
-          calculate_rubel_attribute(node, :demand)
+          calculate_rubel_attributes!(node)
 
           node.out_edges.each do |edge|
-            calculate_rubel_attribute(edge, edge.get(:model).sets)
+            calculate_rubel_attributes!(edge)
           end
         end
 
@@ -84,23 +84,19 @@ module Atlas
     private
     #######
 
-    # Internal: Given an +element+ and +attribute+ name, if the element has a
-    # "query" attribute, that query will be run with Rubel at the resulting
-    # values set to +attribute+.
-    #
-    # For example
-    #
-    #    calculate_rubel_attribute(node, :demand)
-    #
-    # Returns nothing.
-    def calculate_rubel_attribute(element, attribute)
+    # Internal: Given an +element+ from the graph -- a node or edge --
+    # calculate any Rubel queries which are defined on the associated
+    # ActiveDocument.
+    def calculate_rubel_attributes!(element)
       model = element.get(:model)
 
-      if model.respond_to?(:query) && ! model.query.nil?
-        element.set(attribute, query(model.query))
+      model.queries && model.queries.each do |attribute, rubel_string|
+        element.set(attribute, query(rubel_string))
       end
     end
 
+    # Internal: Executes the given Rubel query +string+, returning the
+    # result.
     def query(string)
       unless (result = runtime.execute(string)).is_a?(Numeric)
         raise NonNumericQueryError.new(result)
