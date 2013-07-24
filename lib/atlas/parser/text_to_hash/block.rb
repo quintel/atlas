@@ -8,9 +8,7 @@ module Atlas
         attr_accessor :lines
 
         def initialize(lines = nil)
-          @lines = []
-          @lines = lines if lines
-          self
+          @lines = lines || []
         end
 
         def type
