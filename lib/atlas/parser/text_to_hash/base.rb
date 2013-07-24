@@ -3,6 +3,8 @@ module Atlas
     module TextToHash
       class Base
 
+        attr_reader :lines
+
         def initialize(content = nil)
           @lines        = []
           @current_line = 0
@@ -11,30 +13,36 @@ module Atlas
         end
 
         def to_hash
-          blocks.inject({}) do |sum, block|
+          { comments: comments, queries: queries }.merge(properties)
+        end
+
+        def comments
+          unless blocks(CommentBlock).empty?
+            blocks(CommentBlock).first.value
+          end
+        end
+
+        def properties
+          blocks(SingleLineBlock).inject({}) do |sum, block|
             sum.merge(block.to_hash)
           end
         end
 
-        # Public: Returns an Array containing Line objects
-        # example
-        #   [ <Atlas::Parser::TextToHash::Line [...]>,
-        #     <Atlas::Parser::TextToHash::Line [...]> ]
-        def lines
-          @lines
+        def queries
+          blocks(MultiLineBlock).inject({}) do |sum, block|
+            sum.merge(block.to_hash)
+          end
         end
 
-        def blocks
-          LineGrouper.new(lines).blocks
+        def blocks(klass = Block)
+          LineGrouper.new(lines).blocks.select { |b| b.is_a?(klass) }
         end
 
         # Public: Adds a Line and returns it. Also sets the parent on the line
         # and for simplicity adds the current_line number.
         #
-        # Returns the line that was added
+        # Returns the line that was added.
         def add_line(line)
-          line.parent = self
-          line.number = @current_line += 1
           @lines << line
           line
         end

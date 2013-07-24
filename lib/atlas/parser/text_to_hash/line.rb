@@ -3,19 +3,16 @@ module Atlas
     module TextToHash
       class Line
 
-        attr_accessor :parent, :number
-        attr_reader   :string
-
         def initialize(string)
           @string = string
         end
 
         def to_s
-          string
+          @string
         end
 
         def type
-          Atlas::Parser::Identifier.type(string)
+          Atlas::Parser::Identifier.type(@string)
         end
 
       end

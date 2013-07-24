@@ -24,6 +24,10 @@ module Atlas
             expect(Identifier.type('  SUM(1,2)')).to eql :inner_block
           end
 
+          it 'recognizes empty lines' do
+            expect(Identifier.type('')).to eql :empty_line
+          end
+
         end
 
         context 'non-identifiable strings' do
