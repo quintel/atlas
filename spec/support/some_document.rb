@@ -2,9 +2,9 @@ module Atlas
   class SomeDocument
     include ActiveDocument
 
-    attribute :description, String
-    attribute :unit,        String
-    attribute :query,       String
+    attribute :comments, String
+    attribute :unit,     String
+    attribute :query,    String
 
     # Ignore validation except in the validation tests.
     validates :query, presence: true, if: :do_validation

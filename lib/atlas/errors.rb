@@ -141,4 +141,8 @@ module Atlas
     "Cannot identify this line: #{ string }"
   end
 
+  CannotParseError = error_class do |string, object|
+    "Cannot parse this line: #{ string } for #{ object }."
+  end
+
 end # Atlas

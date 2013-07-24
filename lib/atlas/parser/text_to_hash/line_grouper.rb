@@ -21,6 +21,8 @@ module Atlas
 
           lines.each do |line|
 
+            next if line.type == :empty_line
+
             if line.type == :inner_block
               @blocks.last.lines << line
               next

@@ -173,7 +173,7 @@ module Atlas
       def load(key)
         return nil unless path = lookup_map[key]
 
-        attributes    = Atlas::TextToHashParser.new(path.read).to_hash
+        parser        = Atlas::Parser::TextToHash::Base.new(path.read)
         relative_path = path.relative_path_from(@klass.directory)
         without_ext   = relative_path.basename.sub_ext('')
 
@@ -188,7 +188,7 @@ module Atlas
           klass = @klass
         end
 
-        klass.new(attributes.merge(path: relative_path.to_s)).tap do |doc|
+        klass.new(parser.to_hash.merge(path: relative_path.to_s)).tap do |doc|
           doc.manager = self
         end
       end

@@ -8,8 +8,10 @@ module Atlas
         let(:lines) do 
           [ Line.new('# comment1'),
             Line.new('# comment2'),
+            Line.new(''),
             Line.new('- unit = kg'),
             Line.new('- type = cool'),
+            Line.new(''),
             Line.new('~ demand ='),
             Line.new('  SUM('),
             Line.new('  1,2)') ]
