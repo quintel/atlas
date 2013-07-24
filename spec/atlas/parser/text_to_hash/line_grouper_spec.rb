@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 module Atlas
   module Parser
     module TextToHash

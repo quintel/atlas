@@ -34,7 +34,14 @@ module Atlas
               in_comment_block = true
             end
 
-            @blocks << Block.new([line])
+            case line.type
+            when :comment
+              @blocks << CommentBlock.new([line])
+            when :dynamic_variable
+              @blocks << MultiLineBlock.new([line])
+            else
+              @blocks << SingleLineBlock.new([line])
+            end
           end
 
         end
