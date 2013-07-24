@@ -54,7 +54,7 @@ module Atlas
 
       context 'when a node has an output attribute' do
         it 'sets the share of slots with an efficiency' do
-          Node.new(path: 'simple_graph/abc', query: 5.0,
+          Node.new(path: 'simple_graph/abc', queries: { demand: '5.0' },
                    output: { gas: 0.65 }).save!
 
           expect(graph.node(:abc).slots.out(:gas).get(:share)).to eq(0.65)

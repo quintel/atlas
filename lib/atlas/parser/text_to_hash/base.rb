@@ -2,7 +2,6 @@ module Atlas
   module Parser
     module TextToHash
       class Base
-
         attr_reader :lines
 
         def initialize(content = nil)
@@ -23,15 +22,12 @@ module Atlas
         end
 
         def properties
-          blocks(SingleLineBlock).inject({}) do |sum, block|
-            sum.merge(block.to_hash)
-          end
+          Atlas::Util.expand_dotted_hash(
+            blocks_to_hash(blocks(SingleLineBlock)))
         end
 
         def queries
-          blocks(MultiLineBlock).inject({}) do |sum, block|
-            sum.merge(block.to_hash)
-          end
+          blocks_to_hash(blocks(MultiLineBlock))
         end
 
         def blocks(klass = Block)
@@ -54,6 +50,16 @@ module Atlas
         def parse_chunk_to_lines(chunk)
           chunk.split("\n").each do |line_content|
             add_line(Line.new(line_content))
+          end
+        end
+
+        # Internal: Given an array of parsed blocks, converts the properties
+        # within the blocks into a single hash.
+        #
+        # Returns a hash.
+        def blocks_to_hash(blocks)
+          blocks.each_with_object({}) do |block, hash|
+            hash.merge!(block.to_hash)
           end
         end
 
