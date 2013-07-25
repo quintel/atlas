@@ -204,8 +204,8 @@ module Atlas
       end
 
       it 'sets the query when one is present' do
-        expect(Edge.find('baz-bar@corn').query).
-          to include('SHARE(cars, gasoline)')
+        expect(Edge.find('baz-bar@corn').queries[:parent_share]).to eq \
+          "SHARE(cars, gasoline)"
       end
     end # parsing an AD file
   end # Edge
