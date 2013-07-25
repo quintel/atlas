@@ -383,7 +383,6 @@ describe SomeDocument, :fixtures do
 
     context 'when nothing changed' do
       it "does not write to disk" do
-        pending("HashToText Parser")
         cache = some_document.path.read
         some_document.save!
         expect(cache).to eq(some_document.path.read)
