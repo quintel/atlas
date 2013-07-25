@@ -22,7 +22,7 @@ module Atlas
     # Public: Optional comments available on all documents and the queries
     # that are used to store the query-dependant properties.
     #
-    # Returns a String or nil.
+    # Returns a String, Hash or nil.
     attr_accessor :comments, :queries
 
     # Contains the methods which are available on instances of ActiveDocument
@@ -68,7 +68,9 @@ module Atlas
       #
       # Returns a Hash.
       def to_hash
-        attributes.merge(comments: comments).
+        attributes.
+          merge(comments: comments).
+          merge(queries: queries).
           reject { |_, value| value.nil? }
       end
 
