@@ -62,6 +62,15 @@ describe SomeDocument, :fixtures do
     end # given a file path
   end # new
 
+  describe 'queries' do
+
+    it 'remembers them' do
+      document = SomeDocument.new(key: 'a', queries: { foo: 'bar' })
+      expect(document.queries).to eql({ foo: 'bar' })
+    end
+
+  end
+
   describe 'to_hash' do
     it 'is empty when no attributes have been set' do
       expect(SomeDocument.new(key: 'a').to_hash).to be_empty
@@ -73,6 +82,12 @@ describe SomeDocument, :fixtures do
 
       expect(hash).to include(unit: '%')
       expect(hash).to include(comments: 'Mine')
+    end
+
+    it 'contains queries' do
+      document = SomeDocument.new(key: 'a', queries: { foo: 'bar' })
+
+      expect(document.to_hash[:queries]).to eql({ foo: 'bar' })
     end
 
     it 'omits attributes which have no value' do
@@ -100,6 +115,7 @@ describe SomeDocument, :fixtures do
       expect(some_document.comments).to include "MECE" #testing some words
       expect(some_document.comments).to include "graph." #testing some words
       expect(some_document.unit).to eq('kg')
+      expect(some_document.queries).to eq( { demand: "SUM(\n Q(co2_emissions_of_final_demand_excluding_imported_electricity),\n Q(co2_emissions_of_imported_electricity)\n)" })
     end
 
     it "should find by Symbol" do
