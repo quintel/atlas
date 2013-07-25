@@ -25,7 +25,7 @@ module Atlas
 
     def initialize(input)
       raise ArgumentError unless input.is_a?(Hash)
-      @comments   = input.delete(:description)
+      @comments   = input.delete(:comments)
       @query      = input.delete(:query)
       @attributes = input
     end

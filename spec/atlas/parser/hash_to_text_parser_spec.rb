@@ -58,7 +58,7 @@ module Atlas
       end
 
       it "parses comments" do
-        p = HashToTextParser.new({description: "hi\nthere!"})
+        p = HashToTextParser.new({comments: "hi\nthere!"})
         expect(p.to_text).to eql "# hi\n# there!"
       end
 
@@ -75,7 +75,7 @@ module Atlas
       end
 
       it "puts empty lines between comments and attributes" do
-        hash = { description: "hi!", foo: 'bar' }
+        hash = { comments: "hi!", foo: 'bar' }
         p = HashToTextParser.new(hash)
         expect(p.to_text).to eql "# hi!\n\n- foo = bar"
       end
@@ -87,7 +87,7 @@ module Atlas
       end
 
       it "puts empty lines between comments and query" do
-        hash = { description: 'hi', query: "SUM(1,2)" }
+        hash = { comments: 'hi', query: "SUM(1,2)" }
         p = HashToTextParser.new(hash)
         expect(p.to_text).to eql "# hi\n\nSUM(1,2)"
       end
