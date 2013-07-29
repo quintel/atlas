@@ -1,3 +1,12 @@
+GIT
+  remote: git@github.com:quintel/refinery.git
+  revision: 981b3ba435c9afc561d3dc3d1ced9a43029eb8c0
+  specs:
+    refinery (0.0.1)
+      ruby-graphviz
+      terminal-table
+      turbine-graph (>= 0.1.1)
+
 PATH
   remote: .
   specs:
@@ -6,14 +15,6 @@ PATH
       rubel (>= 0.0.3)
       turbine-graph (>= 0.1)
       virtus (>= 0.5.4)
-
-PATH
-  remote: ../refinery
-  specs:
-    refinery (0.0.1)
-      ruby-graphviz
-      terminal-table
-      turbine-graph (>= 0.1.1)
 
 GEM
   remote: https://rubygems.org/
