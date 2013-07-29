@@ -61,6 +61,8 @@ module Atlas
     # Returns nothing.
     def establish_edges!
       @edges.sort_by(&:key).each do |edge|
+        next if edge.carrier == :coupling_carrier
+
         unless @nodes.key?(edge.consumer)
           add_node(@graph, Atlas::Node.new(key: :SUPER_SINK))
         end
