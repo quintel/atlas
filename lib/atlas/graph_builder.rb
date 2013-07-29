@@ -1,5 +1,13 @@
 module Atlas
   class GraphBuilder
+    ALSO = {
+      industry: %w(
+        energy_distribution_coal_gas
+        energy_cokesoven_transformation_coal
+        energy_steel_blastfurnace_bat_transformation_cokes
+        energy_steel_blastfurnace_current_transformation_cokes )
+    }.freeze
+
     # Public: Creates a Turbine::Graph containing all the nodes in the data
     # files, and sets up the edges between them.
     #
@@ -141,7 +149,11 @@ module Atlas
     def filter(sector)
       if sector
         regex = /^#{ Regexp.escape(sector.to_s) }\.?/
-        ->(el) { el.ns && el.ns.match(regex) }
+
+        ->(el) {
+          el.ns && el.ns.match(regex) ||
+            ( ALSO[sector] && ALSO[sector].include?(el.key.to_s) )
+        }
       else
         ->(el) { true }
       end
