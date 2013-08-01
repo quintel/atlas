@@ -327,6 +327,26 @@ describe SomeDocument, :fixtures do
     end # given "two/three"
   end # ns=
 
+  describe 'ns?' do
+    let(:document) { SomeDocument.new(key: 'abc', ns: 'one.two.three') }
+
+    it 'matches when given the full namespace' do
+      expect(document.ns?('one.two.three')).to be_true
+    end
+
+    it 'matches when given a partial namespace' do
+      expect(document.ns?('one.two')).to be_true
+    end
+
+    it 'does not match when given a non-matching namespace' do
+      expect(document.ns?('four')).to be_false
+    end
+
+    it 'does not match when given a non-matching final segment' do
+      expect(document.ns?('one.two.four')).to be_false
+    end
+  end # ns?
+
   describe "path" do
     it "should change when the key has changed" do
       some_document.key = :total_co2_emitted
