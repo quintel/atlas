@@ -1,4 +1,72 @@
 namespace :debug do
+  SECTORS = %w(
+    households buildings transport industry other energy environment )
+
+  # Given a graph, and a diagram class to use, draws a diagram for each
+  # sector.
+  def draw_diagrams(graph, diagram_klass, name)
+    SECTORS.each do |sector|
+      diagram_klass.new(graph, {
+        cluster_by: ->(node) {
+          node.get(:model).ns
+        },
+        filter_by:  ->(edge) {
+          edge.from.get(:model).ns == sector ||
+          edge.to.get(:model).ns == sector
+        }
+      }).draw_to("tmp/debug/#{ sector }.#{ name }.png")
+    end
+  end
+
+  desc 'Output before and after diagrams of all the subgraphs.'
+  task graph: :environment do
+    include Atlas
+
+    # Set up debug details.
+
+    debug_dir = Atlas.root.join('tmp/debug')
+    FileUtils.mkdir_p(debug_dir)
+    debug_dir.children.each { |child| child.delete }
+
+    # Off we go...
+
+    graph     = GraphBuilder.build
+    runner    = Runner.new(Atlas::Dataset.find(:nl), graph)
+    reporter  = Atlas::Term::Reporter.new('Performing calculations', done: :green)
+
+    exception = nil
+
+    draw_diagrams(runner.refinery_graph,
+                  Refinery::Diagram::InitialValues, '00000')
+
+    begin
+      reporter.report { |*| runner.calculate }
+      draw_diagrams(runner.refinery_graph, Refinery::Diagram, '99999')
+    rescue Refinery::IncalculableGraphError => ex
+      print ' (incalculable graph) '
+      exception = ex
+
+      draw_diagrams(runner.refinery_graph,
+                    Refinery::Diagram::Incalculable, '99999-incalculable')
+
+      draw_diagrams(runner.refinery_graph,
+                    Refinery::Diagram::Calculable, '99999-calculable')
+    rescue Refinery::FailedValidationError => ex
+      print ' (failed validation) '
+      exception = ex
+
+      draw_diagrams(runner.refinery_graph, Refinery::Diagram, '99999')
+    end
+
+    puts "Writing static data to #{ Atlas.root.join('tmp/static.yml') }"
+    Atlas::Exporter.new(runner.refinery_graph).export_to(Atlas.root.join('tmp/static.yml'))
+
+    if exception
+      puts
+      puts exception.message
+    end
+  end
+
   desc 'Output before and after diagrams of the transport subgraph.'
   task :subgraph, [:data_dir, :sector] do |_, args|
     if args.data_dir.nil?
