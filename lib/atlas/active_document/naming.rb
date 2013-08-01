@@ -82,6 +82,29 @@ module Atlas
         self.path = new_path.join(key.to_s)
       end
 
+      # Public: Determines if the document is a member of the chosen
+      # namespace.
+      #
+      # namespace - The namespace to test against.
+      #
+      # For example:
+      #
+      #   doc = Document.new(ns: 'one.two.three')
+      #
+      #   doc.ns?('one')          # => true
+      #   doc.ns?('no')           # => false
+      #
+      #   doc.ns?('one.two')       # => true
+      #   doc.ns?('one.four')      # => false
+      #
+      #   doc.ns?('one.two.three') # => true
+      #   doc.ns?('one.two.four')  # => false
+      #
+      # Returns true or false.
+      def ns?(namespace)
+        !! ns.match(/^#{ Regexp.escape(namespace.to_s) }(?:\.|$)/)
+      end
+
       # Public: Compares this document with another, so that they may be
       # sorted by the order of their keys.
       #
