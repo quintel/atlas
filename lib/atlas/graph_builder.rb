@@ -1,5 +1,11 @@
 module Atlas
   class GraphBuilder
+    # A list of nodes which should be ignored and not included in the graph.
+    IGNORE = %w(
+      energy_chp_ultra_supercritical_coal
+      energy_power_ultra_supercritical_coal
+    ).map(&:to_sym).freeze
+
     ALSO = {
       industry: %w(
         energy_distribution_coal_gas
@@ -48,7 +54,11 @@ module Atlas
           # the same namespace as the parent node. Because of this, testing
           # only the namespace would raise a DocumentNotFoundError when trying
           # to connect "bridge" edges which cross from one sector to another.
-          @nodes.key?(edge.supplier) || @nodes.key?(edge.consumer)
+          in_sector = @nodes.key?(edge.supplier) || @nodes.key?(edge.consumer)
+
+          in_sector &&
+            ! IGNORE.include?(edge.supplier) &&
+            ! IGNORE.include?(edge.consumer)
         end
       else
         Edge.all
@@ -151,8 +161,8 @@ module Atlas
         regex = /^#{ Regexp.escape(sector.to_s) }\.?/
 
         ->(el) {
-          el.ns && el.ns.match(regex) ||
-            ( ALSO[sector] && ALSO[sector].include?(el.key.to_s) )
+          ( (el.ns && el.ns.match(regex) && ! IGNORE.include?(el.key)) ||
+            (ALSO[sector] && ALSO[sector].include?(el.key.to_s)) )
         }
       else
         ->(el) { true }
