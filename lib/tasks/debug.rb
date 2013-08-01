@@ -39,8 +39,10 @@ namespace :debug do
         reporter.inc(:done)
       end
 
+    Refinery::Diagram::InitialValues.new(runner.refinery_graph).draw_to('tmp/debug/00000.png', true)
+
     begin
-      reporter.report { |*| runner.calculate(catalyst) }
+      reporter.report { |*| runner.calculate }
     rescue Refinery::IncalculableGraphError => ex
       print '(incalculable graph) '
       exception = ex
@@ -53,6 +55,9 @@ namespace :debug do
 
     text_debugger = Refinery::GraphDebugger.new(runner.refinery_graph)
     File.write(debugger_dir.join('_debug.txt'), text_debugger.to_s)
+
+    Refinery::Diagram::Calculable.new(runner.refinery_graph).draw_to('tmp/debug/99999-calculable.png', true)
+    Refinery::Diagram::Incalculable.new(runner.refinery_graph).draw_to('tmp/debug/99999-incalculable.png', true)
 
     puts "Writing static data to #{ Atlas.root.join('tmp/static.yml') }"
     Atlas::Exporter.new(runner.refinery_graph).export_to(Atlas.root.join('tmp/static.yml'))
