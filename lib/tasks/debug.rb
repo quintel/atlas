@@ -37,25 +37,25 @@ namespace :debug do
     exception = nil
 
     draw_diagrams(runner.refinery_graph,
-                  Refinery::Diagram::InitialValues, '00000')
+                  Refinery::Diagram::InitialValues, '0-initial-values')
 
     begin
       reporter.report { |*| runner.calculate }
-      draw_diagrams(runner.refinery_graph, Refinery::Diagram, '99999')
+      draw_diagrams(runner.refinery_graph, Refinery::Diagram, '1-finished')
     rescue Refinery::IncalculableGraphError => ex
       print ' (incalculable graph) '
       exception = ex
 
       draw_diagrams(runner.refinery_graph,
-                    Refinery::Diagram::Incalculable, '99999-incalculable')
+                    Refinery::Diagram::Incalculable, '1-finished-incalculable')
 
       draw_diagrams(runner.refinery_graph,
-                    Refinery::Diagram::Calculable, '99999-calculable')
+                    Refinery::Diagram::Calculable, '1-finished-calculable')
     rescue Refinery::FailedValidationError => ex
       print ' (failed validation) '
       exception = ex
 
-      draw_diagrams(runner.refinery_graph, Refinery::Diagram, '99999')
+      draw_diagrams(runner.refinery_graph, Refinery::Diagram, '1-finished')
     end
 
     puts "Writing static data to #{ Atlas.root.join('tmp/static.yml') }"
