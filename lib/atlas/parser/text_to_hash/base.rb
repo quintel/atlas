@@ -16,22 +16,27 @@ module Atlas
         end
 
         def comments
-          unless blocks(CommentBlock).empty?
-            blocks(CommentBlock).first.value
-          end
+          comments = blocks { |b| b.is_a?(CommentBlock) }
+          comments.any? && comments.first.value || nil
         end
 
         def properties
           Atlas::Util.expand_dotted_hash(
-            blocks_to_hash(blocks(SingleLineBlock)))
+            blocks_to_hash(blocks { |b| b.type == :static_variable }))
         end
 
         def queries
-          blocks_to_hash(blocks(MultiLineBlock))
+          blocks_to_hash(blocks { |b| b.type == :dynamic_variable })
         end
 
-        def blocks(klass = Block)
-          LineGrouper.new(lines).blocks.select { |b| b.is_a?(klass) }
+        def blocks
+          @blocks ||= LineGrouper.new(lines).blocks
+
+          if block_given?
+            @blocks.select { |block| yield block }
+          else
+            @blocks
+          end
         end
 
         # Public: Adds a Line and returns it. Also sets the parent on the line

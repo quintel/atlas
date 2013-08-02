@@ -11,6 +11,8 @@ require 'rubel'
 require 'turbine'
 require 'virtus'
 
+require 'active_support/core_ext/string/strip'
+
 require_relative 'atlas/base'
 require_relative 'atlas/parser/hash_to_text_parser'
 

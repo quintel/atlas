@@ -19,9 +19,15 @@ module Atlas
 
           in_comment_block = nil
 
-          lines.each do |line|
+          lines.each_with_index do |line, index|
 
-            next if line.type == :empty_line
+            if line.type == :empty_line
+              if @blocks.last.is_a?(MultiLineBlock)
+                @blocks.last.lines << line
+              end
+
+              next
+            end
 
             if line.type == :inner_block
               @blocks.last.lines << line
@@ -36,11 +42,10 @@ module Atlas
               in_comment_block = true
             end
 
-            case line.type
-            when :comment
-              @blocks << CommentBlock.new([line])
-            when :dynamic_variable
-              @blocks << MultiLineBlock.new([line])
+            if lines[ index + 1 ] && lines[ index + 1 ].type == :inner_block
+              @blocks << MultiLineBlock.new([ line ])
+            elsif line.type == :comment
+              @blocks << CommentBlock.new([ line ])
             else
               @blocks << SingleLineBlock.new([line])
             end
