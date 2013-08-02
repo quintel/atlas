@@ -5,7 +5,7 @@ module Atlas
       class SingleLineBlock < Block
 
         # TODO: Integrate with Regex from Line?
-        LINE = /^-\s([a-z0-9_.]*)\s=\s(.*)$/
+        LINE = /^[-~]\s([a-z0-9_.]*)\s+=\s+(.*)$/
 
         def valid?
           line.to_s.match(LINE)
