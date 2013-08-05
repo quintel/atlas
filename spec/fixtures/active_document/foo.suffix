@@ -14,7 +14,7 @@
 - unit = kg
 
 ~ demand =
-  SUM(
-   Q(co2_emissions_of_final_demand_excluding_imported_electricity),
-   Q(co2_emissions_of_imported_electricity)
-  )
+    SUM(
+      Q(co2_emissions_of_final_demand_excluding_imported_electricity),
+      Q(co2_emissions_of_imported_electricity)
+    )

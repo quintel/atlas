@@ -54,6 +54,8 @@ module Atlas
         @last_saved_file_path = self.path.dup
 
         super(attributes)
+
+        @queries ||= {}
       end
 
       # Public: A human-readable version of the document.

@@ -38,6 +38,11 @@ module Atlas
             expect(block.value).to eql 12
           end
 
+          it 'parses blanks' do
+            block = SingleLineBlock.new([Line.new("- foo =")])
+            expect(block.value).to eql('')
+          end
+
         end
 
       end

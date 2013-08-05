@@ -73,7 +73,7 @@ describe SomeDocument, :fixtures do
 
   describe 'to_hash' do
     it 'is empty when no attributes have been set' do
-      expect(SomeDocument.new(key: 'a').to_hash).to be_empty
+      expect(SomeDocument.new(key: 'a').to_hash).to eql(queries: {})
     end
 
     it 'contains attributes set by the user' do
@@ -115,7 +115,7 @@ describe SomeDocument, :fixtures do
       expect(some_document.comments).to include "MECE" #testing some words
       expect(some_document.comments).to include "graph." #testing some words
       expect(some_document.unit).to eq('kg')
-      expect(some_document.queries).to eq( { demand: "SUM(\n Q(co2_emissions_of_final_demand_excluding_imported_electricity),\n Q(co2_emissions_of_imported_electricity)\n)" })
+      expect(some_document.queries).to eq( { demand: "SUM(\n  Q(co2_emissions_of_final_demand_excluding_imported_electricity),\n  Q(co2_emissions_of_imported_electricity)\n)" })
     end
 
     it "should find by Symbol" do

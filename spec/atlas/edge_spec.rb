@@ -9,10 +9,6 @@ module Atlas
          in_array([ :share, :flexible, :constant,
                     :inverse_flexible, :dependent ]) }
 
-    it { expect(Edge.new(key: 'a-b@gas', query: 'a')).
-         to ensure_inclusion_of(:sets).
-         in_array([ :child_share, :parent_share, :demand ]) }
-
     describe 'when creating a new Edge' do
       let(:edge) { Edge.new(path: 'left-right@gas.ad') }
 

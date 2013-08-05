@@ -52,6 +52,13 @@ module Atlas
         expect { p.to_text }.to raise_error(IllegalNestedHashError)
       end
 
+      it "parses attribute on multiple lines" do
+        query = "SUM(\n  1,\n  2\n)"
+        p = HashToTextParser.new(message: "This\nis\nOK")
+
+        expect(p.to_text).to eql("- message =\n    This\n    is\n    OK")
+      end
+
       it 'parses attributes as a Set' do
         p = HashToTextParser.new({ set: Set.new(["a","b"]) })
         expect(p.to_text).to eql "- set = [a, b]"
@@ -65,13 +72,20 @@ module Atlas
       it "parses query on one line" do
         query = "SUM(1,2)"
         p = HashToTextParser.new({ queries: { demand: query } })
-        expect(p.to_text).to eql "~ demand =\n  #{ query }"
+        expect(p.to_text).to eql "~ demand = #{ query }"
       end
 
       it "parses query on two lines" do
         query = "SUM(\n  1,\n  2\n)"
         p = HashToTextParser.new({ queries: { demand: query } })
-        expect(p.to_text).to eql "~ demand =\n  SUM(\n    1,\n    2\n  )"
+
+        expect(p.to_text).to eql(<<-EOF.strip_heredoc.chomp("\n"))
+          ~ demand =
+              SUM(
+                1,
+                2
+              )
+        EOF
       end
 
       it "puts empty lines between comments and attributes" do
@@ -83,13 +97,13 @@ module Atlas
       it "puts empty lines between attributes and query" do
         hash = { foo: 'bar', queries: { demand: 'SUM(1,2)' } }
         p = HashToTextParser.new(hash)
-        expect(p.to_text).to eql "- foo = bar\n\n~ demand =\n  SUM(1,2)"
+        expect(p.to_text).to eql "- foo = bar\n\n~ demand = SUM(1,2)"
       end
 
       it "puts empty lines between comments and query" do
         hash = { comments: 'hi', queries: { demand: 'SUM(1,2)' } }
         p = HashToTextParser.new(hash)
-        expect(p.to_text).to eql "# hi\n\n~ demand =\n  SUM(1,2)"
+        expect(p.to_text).to eql "# hi\n\n~ demand = SUM(1,2)"
       end
 
     end # describe to_text

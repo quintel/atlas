@@ -7,7 +7,7 @@ module Atlas
       COMMENT_PREFIX = "#"
 
       COMMENT_LINE   = /^#{ COMMENT_PREFIX }(.*)/
-      ATTR_LINE      = /^#{ ATTR_PREFIX }\s(.+)\s=\s?(.*)/
+      ATTR_LINE      = /^#{ ATTR_PREFIX }\s(.+)\s=(?:\s*(.*))/
       QUERY_LINE     = /^#{ QUERY_PREFIX }\s(.+)\s=/
       INNER_BLOCK    = /^\s\s(.+)/
       EMPTY_LINE     = ""

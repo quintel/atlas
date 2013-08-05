@@ -63,7 +63,7 @@ namespace :import do
   # Includes queries for nodes, edges, and slots.
   def queries
     @queries ||= begin
-      queries = {}
+      queries = Hash.new { |hash, key| hash[key] = [] }
 
       Pathname.glob($from_dir.join('data/import/**/*.csv')).each do |path|
         data = CSV.table(path).select do |row|
@@ -77,7 +77,7 @@ namespace :import do
             key = Atlas::Edge.key(row[:to], row[:from], row[:carrier])
           end
 
-          queries[key] = row.to_hash
+          queries[key].push(row.to_hash)
         end
       end
 

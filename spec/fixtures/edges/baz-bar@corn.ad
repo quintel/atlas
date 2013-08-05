@@ -1,3 +1,2 @@
 - type = share
-~ parent_share =
-  SHARE(cars, gasoline)
+~ parent_share = SHARE(cars, gasoline)

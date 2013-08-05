@@ -105,12 +105,11 @@ namespace :validate do
   task(inputs: :setup)   { ValidationRunner.new(Atlas::Input).run }
   task(nodes: :setup)    { ValidationRunner.new(Atlas::Node).run }
   task(presets: :setup)  { ValidationRunner.new(Atlas::Preset).run }
-  task(slots: :setup)    { ValidationRunner.new(Atlas::Slot).run }
 
   task all: :setup do
     ValidationRunner.new(
       Atlas::Carrier, Atlas::Dataset, Atlas::Edge,   Atlas::Gquery,
-      Atlas::Input,   Atlas::Node,    Atlas::Preset, Atlas::Slot
+      Atlas::Input,   Atlas::Node,    Atlas::Preset
     ).run
   end
 end # :validate

@@ -37,6 +37,7 @@ require_relative 'atlas/active_document/naming'
 require_relative 'atlas/active_document/subclassing'
 require_relative 'atlas/active_document/manager'
 require_relative 'atlas/active_document/production_manager'
+require_relative 'atlas/active_document/query_validator'
 require_relative 'atlas/active_document'
 require_relative 'atlas/collection'
 
