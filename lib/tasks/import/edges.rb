@@ -6,6 +6,8 @@ namespace :import do
     there are no hand-made changes.
   DESC
   task :edges, [:from, :to] => [:setup] do |_, args|
+    queries # Cache old queries before deleting the edges.
+
     include Atlas
 
     # Wipe out *everything* in the edges directory; rather than simply

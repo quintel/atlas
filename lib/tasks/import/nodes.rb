@@ -9,6 +9,8 @@ namespace :import do
     there are no hand-made changes.
   DESC
   task :nodes, [:from, :to] => [:setup] do |_, args|
+    queries # Cache old queries before deleting the nodes.
+
     include Atlas
 
     # Wipe out *everything* in the nodes directory; rather than simply
@@ -42,7 +44,7 @@ namespace :import do
           data.delete('slots')
 
           queries[key.to_sym].each do |query_data|
-            data[:queries][:demand] = query_data[:query].to_s
+            data[:queries][query_data[:attribute]] = query_data[:query].to_s
           end
 
           klass.new(data)

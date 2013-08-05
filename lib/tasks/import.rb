@@ -65,19 +65,17 @@ namespace :import do
     @queries ||= begin
       queries = Hash.new { |hash, key| hash[key] = [] }
 
-      Pathname.glob($from_dir.join('data/import/**/*.csv')).each do |path|
-        data = CSV.table(path).select do |row|
-          row[:status].nil? || row[:status] == 'necessary'
+      Atlas::Node.all.select { |n| n.queries.any? }.each do |node|
+        node.queries.each do |attribute, query|
+          queries[node.key].push(
+            key: node.key, attribute: attribute, query: query)
         end
+      end
 
-        data.each do |row|
-          if row[:converter_key]
-            key = row[:converter_key].to_sym
-          else
-            key = Atlas::Edge.key(row[:to], row[:from], row[:carrier])
-          end
-
-          queries[key].push(row.to_hash)
+      Atlas::Edge.all.select { |e| e.queries.any? }.each do |edge|
+        edge.queries.each do |attribute, query|
+          queries[edge.key].push(
+            key: edge.key, attribute: attribute, query: query)
         end
       end
 

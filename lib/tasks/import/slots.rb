@@ -138,8 +138,15 @@ namespace :import do
       grouped.each do |token, slots|
         # The token is the node key, followed by a + or -
         node_key = token[0..-2]
+        getter   = token[-1] == ?- ? 'output' : 'input'
         setter   = token[-1] == ?- ? :output= : :input=
         node     = Node.find(node_key)
+
+        # If the node has queries to set up the slots, ignore the values from
+        # the YAML files.
+        if node.queries.any? { |key, _| key.to_s.start_with?(getter.to_s) }
+          next
+        end
 
         # Add the slots in a predictable order each time.
         slots = slots.sort_by { |s| s[:key] }
