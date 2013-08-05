@@ -59,9 +59,10 @@ module Atlas
     #
     # Returns a set containing slots.
     def in_slots
-      @in_slots ||= Set.new(input.map do |carrier, _|
-        Slot.slot_for(self, :in, carrier)
-      end)
+      @in_slots ||= Set.new(
+        input.merge(dynamic_slots(:input)).map do |carrier, _|
+          Slot.slot_for(self, :in, carrier)
+        end)
     end
 
     # Public: A set containing all of the output slots for this node. Output
@@ -76,9 +77,10 @@ module Atlas
     #
     # Returns a set containing slots.
     def out_slots
-      @out_slots ||= Set.new(output.map do |carrier, _|
-        Slot.slot_for(self, :out, carrier)
-      end)
+      @out_slots ||= Set.new(
+        output.merge(dynamic_slots(:output)).map do |carrier, _|
+          Slot.slot_for(self, :out, carrier)
+        end)
     end
 
     # Public: Sets the input share data for the node. This controls how demand
@@ -111,6 +113,10 @@ module Atlas
       @out_slots = nil
     end
 
+    #######
+    private
+    #######
+
     # Internal: Asserts the input and output slot data is in a valid format.
     #
     # Returns nothing.
@@ -122,6 +128,18 @@ module Atlas
       out_slots.reject(&:valid?).each do |slot|
         slot.errors.full_messages.each { |msg| errors.add(:output, msg) }
       end
+    end
+
+    # Internal: Creates a hash representing slots whose shares are set via
+    # a Rubel query.
+    #
+    # Returns a hash.
+    def dynamic_slots(direction)
+      direction = direction.to_s
+
+      Hash[ queries.
+        select { |key, _| key.to_s.start_with?(direction) }.
+        map { |key, _| [key.to_s.split('.', 2).last.to_sym, nil] } ]
     end
 
   end # Node

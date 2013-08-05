@@ -9,25 +9,32 @@ module Atlas
 
     # Iterates through each node in the graph, converting the "efficiency"
     # attribute, if present, to the appropriate slot shares.
-    SetSlotSharesFromEfficiency = ->(refinery) do
-      refinery.nodes.each do |node|
-        model = node.get(:model)
+    SetSlotSharesFromEfficiency = ->(query) do
+      ->(refinery) do
+        refinery.nodes.each do |node|
+          model = node.get(:model)
 
-        (model.out_slots + model.in_slots).each do |slot|
-          collection = node.slots.public_send(slot.direction)
+          (model.out_slots + model.in_slots).each do |slot|
+            collection = node.slots.public_send(slot.direction)
 
-          if collection.include?(slot.carrier)
-            ref_slot = collection.get(slot.carrier)
-          else
-            ref_slot = collection.add(slot.carrier)
+            if collection.include?(slot.carrier)
+              ref_slot = collection.get(slot.carrier)
+            else
+              ref_slot = collection.add(slot.carrier)
+            end
+
+            ref_slot.set(:model, slot)
+
+            if slot.query
+              ref_slot.set(:share, query.call(slot.query))
+            else
+              ref_slot.set(:share, slot.share)
+            end
           end
-
-          ref_slot.set(:model, slot)
-          ref_slot.set(:share, slot.share)
         end
-      end
 
-      refinery
+        refinery
+      end
     end
 
     # Public: Creates a new Runner.
@@ -68,7 +75,7 @@ module Atlas
 
         Refinery::Reactor.new(
           Refinery::Catalyst::FromTurbine,
-          SetSlotSharesFromEfficiency
+          SetSlotSharesFromEfficiency.call(method(:query))
         ).run(graph)
       end
     end

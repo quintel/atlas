@@ -19,6 +19,10 @@ module Atlas
           { key => value }
         end
 
+        def query?
+          lines.first.to_s[0] == ?~
+        end
+
       end
     end
   end

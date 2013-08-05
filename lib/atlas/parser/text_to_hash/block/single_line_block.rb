@@ -35,6 +35,8 @@ module Atlas
         end
 
         def cast_scalar(text)
+          return text if query?
+
           case text
           when /\A[-+]?[0-9]*\.[0-9]+([eE][-+]?[0-9]+)?\z/
             text.to_f
