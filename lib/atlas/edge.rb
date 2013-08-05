@@ -35,8 +35,8 @@ module Atlas
     validates :type, inclusion:
       { in: [ :share, :flexible, :constant, :inverse_flexible, :dependent ] }
 
-    validates :sets, unless: ->(m) { m.query.nil? }, inclusion:
-      { in: [ :child_share, :parent_share, :demand ] }
+    validates_with QueryValidator, allow_no_query: true,
+      attributes: [ :child_share, :parent_share, :demand ]
 
     # Public: The unique key which identifies this edge.
     #

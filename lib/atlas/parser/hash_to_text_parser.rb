@@ -31,7 +31,13 @@ module Atlas
     end
 
     def to_text
-      [comment_block, attributes_block, queries_block].compact.join("\n\n")
+      content = [
+        comment_block,
+        attributes_block,
+        queries_block
+      ].compact.join("\n\n").rstrip
+
+      content
     end
 
     #######
@@ -51,7 +57,7 @@ module Atlas
       return unless @queries
 
       @queries.map do |key, value|
-        "~ #{ key } =\n  #{ value.split("\n").join("\n  ") }"
+        "~ #{ format_attribute(key, value) }"
       end
     end
 
@@ -79,7 +85,15 @@ module Atlas
           value = "[#{ value.to_a.join(', ') }]"
         end
 
-        "- #{ key } = #{ value }"
+        "- #{ format_attribute(key, value) }"
+      end
+    end
+
+    def format_attribute(key, value)
+      if value.to_s.include?("\n")
+        "#{ key } =\n    #{ value.split("\n").join("\n    ") }"
+      else
+        "#{ key } = #{ value }"
       end
     end
 

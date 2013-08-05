@@ -7,6 +7,7 @@ module Atlas
     DIRECTORY = 'presets'
 
     attribute :id,                 Integer
+    attribute :description,        String
     attribute :ordering,           Integer
     attribute :author,             String
     attribute :title,              String

@@ -16,6 +16,10 @@ module Atlas
             expect(Identifier.type('- unit = kg')).to eql :static_variable
           end
 
+          it 'recognizes blank variables' do
+            expect(Identifier.type('- unit =')).to eql :static_variable
+          end
+
           it 'recognizes dynamic variables' do
             expect(Identifier.type('~ demand =')).to eql :dynamic_variable
           end

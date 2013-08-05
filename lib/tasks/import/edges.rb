@@ -45,12 +45,11 @@ namespace :import do
           key   = Edge.key(data[:consumer], data[:supplier], data[:carrier])
           path  = sector_dir.join(key.to_s)
 
-          props = { path: path, type: type, reversed: ! data[:reversed].nil? }
+          props = { path: path, type: type, queries: {},
+                    reversed: ! data[:reversed].nil? }
 
-          if queries.key?(key)
-            # For the moment, assume shares are technology shares.
-            props[:sets]  = queries[key][:attribute]
-            props[:query] = queries[key][:query]
+          queries[key].each do |query_data|
+            props[:queries][query_data[:attribute]] = query_data[:query].to_s
           end
 
           Edge.new(props)

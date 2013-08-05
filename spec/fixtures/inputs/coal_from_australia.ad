@@ -6,9 +6,5 @@
 - factor = 100.0
 - unit = %
 - update_period = future
-
-~ start_value =
-  present: FCE_START_VALUE(coal, australia) / 100
-
-~ update =
-  UPDATE_FCE(CARRIER(coal),australia, USER_INPUT() / 100)
+- start_value = present: FCE_START_VALUE(coal, australia) / 100
+- update = UPDATE_FCE(CARRIER(coal),australia, USER_INPUT() / 100)

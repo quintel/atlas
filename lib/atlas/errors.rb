@@ -142,7 +142,7 @@ module Atlas
   end
 
   CannotParseError = error_class do |string, object|
-    "Cannot parse this line: #{ string } for #{ object }."
+    "Cannot parse this line: #{ string.to_s.inspect } using #{ object }."
   end
 
 end # Atlas
