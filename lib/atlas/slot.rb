@@ -12,6 +12,14 @@ module Atlas
     attribute :direction, Symbol
     attribute :carrier,   Symbol
 
+    # Public: A human-readable version of the Slot for debugging.
+    #
+    # Returns a string.
+    def inspect
+      "#<#{ self.class.name } node=#{ node.key } " \
+        "carrier=#{ carrier } direction=#{ direction }>"
+    end
+
     # Public: Given the +node+ key, +direction+, and +carrier+, returns the
     # key which would be assigned to a Slot with those attributes.
     #
@@ -80,6 +88,14 @@ module Atlas
       share = (in? ? node.input[carrier] : node.output[carrier])
       share = 0.4 if share == ''
       share == :elastic ? nil : share
+    end
+
+    # Public: The Rubel query which will calculate the share of the slot, if
+    # one is present.
+    #
+    # Returns a string.
+    def query
+      node.queries[:"#{ in? ? :input : :output }.#{ carrier }"]
     end
 
     # Internal: Given the key of a Slot, creates a hash of the attributes

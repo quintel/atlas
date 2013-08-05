@@ -71,13 +71,22 @@ module Atlas
         ratio   = Rational('500/746')
         i_ratio = Rational('1') - ratio
 
-        Node.find(:bar).update_attributes!(
-          output: { corn: ratio, coal: i_ratio })
+        bar = Node.find(:bar)
+
+        bar.update_attributes!(queries: bar.queries.merge({
+          :'output.corn' => ratio.to_f.to_s,
+          :'output.coal' => i_ratio.to_f.to_s
+        }))
 
         Node.find(:fd).update_attributes!(
           input: { corn: ratio, coal: i_ratio })
 
         expect(t_edge.get(:demand)).to eq(5.0)
+      end
+
+      it 'sets the share of edges' do
+        expect(graph.node(:bar).slots.out(:coal).get(:share)).to eq(0.5)
+        expect(graph.node(:bar).slots.out(:corn).get(:share)).to eq(0.5)
       end
     end # calculate
   end # Runner
