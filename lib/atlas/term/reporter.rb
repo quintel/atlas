@@ -82,6 +82,7 @@ module Atlas
         # terminal to overwrite the line we just printed the next time a
         # refresh happens.
         $stdout.print "\r" unless final
+        $stdout.puts       if     final
 
         $stdout.flush
       end
