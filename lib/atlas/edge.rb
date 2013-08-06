@@ -10,7 +10,7 @@ module Atlas
   # For example:
   #
   #   coal_power_plant-coal_mine@coal
-  #   house-coal_power_plant@electricity
+  #   electricity_grid-coal_power_plant@electricity
   class Edge
     include ActiveDocument
 
