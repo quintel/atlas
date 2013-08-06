@@ -25,6 +25,18 @@ namespace :debug do
     end
   end
 
+  desc 'Check if the queries can all be run'
+  task check: :environment do
+    include Atlas
+
+    graph     = GraphBuilder.build
+    runner    = Runner.new(Atlas::Dataset.find(:nl), graph)
+
+    runner.refinery_graph
+
+    puts "All OK!"
+  end
+
   desc 'Output before and after diagrams of all the subgraphs.'
   task graph: :environment do
     include Atlas
