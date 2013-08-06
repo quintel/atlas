@@ -12,7 +12,7 @@ namespace :import do
     # Wipe out *everything* in the nodes directory; rather than simply
     # overwriting existing files, since some may have new naming conventions
     # since the previous import.
-    FileUtils.rm_rf(Atlas::Node.directory)
+    FileUtils.rm_rf(Atlas::Carrier.directory)
 
     runner = ImportRun.new('carriers')
 
