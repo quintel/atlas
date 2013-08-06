@@ -5,16 +5,23 @@ namespace :debug do
   # Given a graph, and a diagram class to use, draws a diagram for each
   # sector.
   def draw_diagrams(graph, diagram_klass, name)
-    SECTORS.each do |sector|
-      diagram_klass.new(graph, {
-        cluster_by: ->(node) {
-          node.get(:model).ns
-        },
-        filter_by:  ->(edge) {
-          edge.from.get(:model).ns == sector ||
-          edge.to.get(:model).ns == sector
-        }
-      }).draw_to("tmp/debug/#{ sector }.#{ name }.png")
+    reporter_name = name.gsub(/\d-/, '').gsub('-', ' ')
+
+    Atlas::Term::Reporter.report("Creating \"#{ reporter_name }\" diagrams",
+                                 done: :green) do |reporter|
+      SECTORS.each do |sector|
+        diagram_klass.new(graph, {
+          cluster_by: ->(node) {
+            node.get(:model).ns
+          },
+          filter_by:  ->(edge) {
+            edge.from.get(:model).ns == sector ||
+            edge.to.get(:model).ns == sector
+          }
+        }).draw_to("tmp/debug/#{ sector }.#{ name }.png")
+
+        reporter.inc(:done)
+      end
     end
   end
 
@@ -39,11 +46,17 @@ namespace :debug do
     draw_diagrams(runner.refinery_graph,
                   Refinery::Diagram::InitialValues, '0-initial-values')
 
+    # A custom calculator catalyst which will show in real-time how many
+    # elements in the graph have been calculated.
+    calculator = Refinery::Catalyst::Calculators.new do |*|
+      reporter.inc(:done)
+    end
+
     begin
-      reporter.report { |*| runner.calculate }
+      reporter.report { |*| runner.calculate(calculator) }
       draw_diagrams(runner.refinery_graph, Refinery::Diagram, '1-finished')
     rescue Refinery::IncalculableGraphError => ex
-      print ' (incalculable graph) '
+      puts '  * Incalculable graph'
       exception = ex
 
       draw_diagrams(runner.refinery_graph,
@@ -52,7 +65,7 @@ namespace :debug do
       draw_diagrams(runner.refinery_graph,
                     Refinery::Diagram::Calculable, '1-finished-calculable')
     rescue Refinery::FailedValidationError => ex
-      print ' (failed validation) '
+      print '  * Failed validation'
       exception = ex
 
       draw_diagrams(runner.refinery_graph, Refinery::Diagram, '1-finished')
