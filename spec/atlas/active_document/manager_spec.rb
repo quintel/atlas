@@ -191,5 +191,46 @@ module Atlas::ActiveDocument
           from(true).to(false)
       end
     end # when deleting a file path
+
+    describe 'with an unparseable document' do
+      before do
+        content = <<-EOF.strip_heredoc
+          - up     = down
+          - leet   = 1337
+
+          WTF
+        EOF
+
+        File.write(SomeDocument.directory.join('abc.suffix'), content)
+      end
+
+      it 'raises an error' do
+        expect { SomeDocument.find(:abc) }.to raise_error(Atlas::ParserError)
+      end
+
+      it 'includes the filename in the message' do
+        expect { SomeDocument.find(:abc) }.to raise_error(/abc\.suffix/)
+      end
+    end # with an unparseable document
+
+    describe 'with a containing invalid content' do
+      before do
+        content = <<-EOF.strip_heredoc
+          - up^    = down
+          - leet   = 1337
+        EOF
+
+        File.write(SomeDocument.directory.join('abc.suffix'), content)
+      end
+
+      it 'raises an error' do
+        expect { SomeDocument.find(:abc) }.
+          to raise_error(Atlas::CannotParseError)
+      end
+
+      it 'includes the filename in the message' do
+        expect { SomeDocument.find(:abc) }.to raise_error(/abc\.suffix/)
+      end
+    end # with a containing invalid content
   end # Manager
 end # Atlas::ActiveDocument

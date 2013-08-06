@@ -10,6 +10,21 @@ module Atlas
   class CalculationError < AtlasError
   end
 
+  # An error used when an error occurrs during parsing. The parsers classes
+  # do not know of the file paths, so the exception is rescused higher up the
+  # stack and the relevant information added there.
+  class ParserError < AtlasError
+    attr_writer :path
+
+    def to_s
+      if @path
+        "#{ super } (in #{ @path.relative_path_from(Atlas.data_dir) })"
+      else
+        super
+      end
+    end
+  end
+
   # Internal: Creates a new error class which inherits from AtlasError,
   # whose message is created by evaluating the block you give.
   #
@@ -137,11 +152,11 @@ module Atlas
 
   # Parser Errors ------------------------------------------------------------
 
-  CannotIdentifyError = error_class do |string|
+  CannotIdentifyError = error_class(ParserError) do |string|
     "Cannot identify this line: #{ string }"
   end
 
-  CannotParseError = error_class do |string, object|
+  CannotParseError = error_class(ParserError) do |string, object|
     "Cannot parse this line: #{ string.to_s.inspect } using #{ object }."
   end
 
