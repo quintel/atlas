@@ -5,7 +5,6 @@ module Atlas
     FILE_SUFFIX = 'gql'
     DIRECTORY   = 'gqueries'
 
-    attribute :comments,       String
     attribute :query,          String
     attribute :unit,           String
     attribute :deprecated_key, String
