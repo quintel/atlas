@@ -50,9 +50,9 @@ module Atlas
       expanded = Hash.new
 
       hash.each do |key, value|
-        if key.include?('.')
+        if key.to_s.include?('.')
           # Nested hash value.
-          split = key.split('.')
+          split = key.to_s.split('.')
 
           head  = split.first.to_sym
           rest  = split[1..-1].map(&:to_sym)

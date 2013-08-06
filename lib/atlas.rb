@@ -13,7 +13,16 @@ require 'virtus'
 
 require_relative 'atlas/base'
 require_relative 'atlas/parser/hash_to_text_parser'
-require_relative 'atlas/parser/text_to_hash_parser'
+
+require_relative 'atlas/parser/text_to_hash/line'
+require_relative 'atlas/parser/text_to_hash/line_grouper'
+require_relative 'atlas/parser/text_to_hash/block'
+require_relative 'atlas/parser/text_to_hash/block/comment_block'
+require_relative 'atlas/parser/text_to_hash/block/multi_line_block'
+require_relative 'atlas/parser/text_to_hash/block/single_line_block'
+require_relative 'atlas/parser/text_to_hash/base'
+require_relative 'atlas/parser/identifier'
+
 require_relative 'atlas/errors'
 require_relative 'atlas/energy_unit'
 require_relative 'atlas/util'

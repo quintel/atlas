@@ -53,43 +53,43 @@ module Atlas
       end
 
       it 'parses attributes as a Set' do
-        p = HashToTextParser.new({set: Set.new(["a","b"])})
+        p = HashToTextParser.new({ set: Set.new(["a","b"]) })
         expect(p.to_text).to eql "- set = [a, b]"
       end
 
       it "parses comments" do
-        p = HashToTextParser.new({description: "hi\nthere!"})
+        p = HashToTextParser.new({ comments: "hi\nthere!" })
         expect(p.to_text).to eql "# hi\n# there!"
       end
 
       it "parses query on one line" do
-        query = "SUM(1+2)"
-        p = HashToTextParser.new({query: query})
-        expect(p.to_text).to eql query
+        query = "SUM(1,2)"
+        p = HashToTextParser.new({ queries: { demand: query } })
+        expect(p.to_text).to eql "~ demand =\n  #{ query }"
       end
 
       it "parses query on two lines" do
-        query = "SUM\n  (1,\n  2\n)"
-        p = HashToTextParser.new({query: query})
-        expect(p.to_text).to eql query
+        query = "SUM(\n  1,\n  2\n)"
+        p = HashToTextParser.new({ queries: { demand: query } })
+        expect(p.to_text).to eql "~ demand =\n  SUM(\n    1,\n    2\n  )"
       end
 
       it "puts empty lines between comments and attributes" do
-        hash = { description: "hi!", foo: 'bar' }
+        hash = { comments: "hi!", foo: 'bar' }
         p = HashToTextParser.new(hash)
         expect(p.to_text).to eql "# hi!\n\n- foo = bar"
       end
 
       it "puts empty lines between attributes and query" do
-        hash = { foo: 'bar', query: "SUM(1,2)" }
+        hash = { foo: 'bar', queries: { demand: 'SUM(1,2)' } }
         p = HashToTextParser.new(hash)
-        expect(p.to_text).to eql "- foo = bar\n\nSUM(1,2)"
+        expect(p.to_text).to eql "- foo = bar\n\n~ demand =\n  SUM(1,2)"
       end
 
       it "puts empty lines between comments and query" do
-        hash = { description: 'hi', query: "SUM(1,2)" }
+        hash = { comments: 'hi', queries: { demand: 'SUM(1,2)' } }
         p = HashToTextParser.new(hash)
-        expect(p.to_text).to eql "# hi\n\nSUM(1,2)"
+        expect(p.to_text).to eql "# hi\n\n~ demand =\n  SUM(1,2)"
       end
 
     end # describe to_text

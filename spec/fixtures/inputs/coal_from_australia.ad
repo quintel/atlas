@@ -3,9 +3,12 @@
 - label = 
 - max_value = 100.0
 - min_value = 0.0
-- start_value_gql = present: FCE_START_VALUE(coal, australia) / 100
 - factor = 100.0
 - unit = %
 - update_period = future
 
-UPDATE_FCE(CARRIER(coal),australia, USER_INPUT() / 100)
+~ start_value =
+  present: FCE_START_VALUE(coal, australia) / 100
+
+~ update =
+  UPDATE_FCE(CARRIER(coal),australia, USER_INPUT() / 100)

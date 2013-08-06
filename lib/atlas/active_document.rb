@@ -19,10 +19,11 @@ module Atlas
     # Returns a String.
     FILE_SUFFIX = 'ad'
 
-    # Public: An optional description available on all documents.
+    # Public: Optional comments available on all documents and the queries
+    # that are used to store the query-dependant properties.
     #
-    # Returns a String or nil.
-    attr_accessor :description
+    # Returns a String, Hash or nil.
+    attr_accessor :comments, :queries
 
     # Contains the methods which are available on instances of ActiveDocument
     # classes. This has to be a separate module so that we can ensure that
@@ -67,7 +68,9 @@ module Atlas
       #
       # Returns a Hash.
       def to_hash
-        attributes.merge(description: description).
+        attributes.
+          merge(comments: comments).
+          merge(queries: queries).
           reject { |_, value| value.nil? }
       end
 

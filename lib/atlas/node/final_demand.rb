@@ -11,7 +11,7 @@ module Atlas
       # Runtime.new(dataset, GraphBuilder.build).execute(query)
     # end
 
-    validates_presence_of(:query)
+    validates_presence_of(:queries)
 
   end
 

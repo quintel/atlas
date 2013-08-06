@@ -41,22 +41,20 @@ module Atlas
       end
 
       it 'sets the child share of edges using SHARE()' do
-        edge.update_attributes!(sets: :child_share)
+        edge.queries[:child_share] = edge.queries.delete(:parent_share)
 
         # Extracted from the nl/shares/cars.csv file.
         expect(t_edge.get(:child_share)).to eq(0.1)
       end
 
       it 'sets the parent share of edges using SHARE()' do
-        edge.update_attributes!(sets: :parent_share)
-
         # Extracted from the nl/shares/cars.csv file.
         expect(t_edge.get(:parent_share)).to eq(0.1)
       end
 
       context 'when a node has an output attribute' do
         it 'sets the share of slots with an efficiency' do
-          Node.new(path: 'simple_graph/abc', query: 5.0,
+          Node.new(path: 'simple_graph/abc', queries: { demand: '5.0' },
                    output: { gas: 0.65 }).save!
 
           expect(graph.node(:abc).slots.out(:gas).get(:share)).to eq(0.65)
@@ -64,7 +62,7 @@ module Atlas
       end
 
       it 'sets the demand of edges' do
-        edge.update_attributes!(query: '5.0', sets: :demand)
+        edge.queries[:demand] = '5.0'
 
         # The final demand node has a demand of 7.46, and the edge going into
         # bar has a demand of 5.0. The ratio is therefore 5/7.46 or, since

@@ -25,13 +25,13 @@ module Atlas
 
     def initialize(input)
       raise ArgumentError unless input.is_a?(Hash)
-      @comments   = input.delete(:description)
-      @query      = input.delete(:query)
+      @comments   = input.delete(:comments)
+      @queries    = input.delete(:queries)
       @attributes = input
     end
 
     def to_text
-      [comment_block, attributes_block, query_block].compact.join("\n\n")
+      [comment_block, attributes_block, queries_block].compact.join("\n\n")
     end
 
     #######
@@ -47,8 +47,12 @@ module Atlas
       end.join("\n")
     end
 
-    def query_block
-      @query
+    def queries_block
+      return unless @queries
+
+      @queries.map do |key, value|
+        "~ #{ key } =\n  #{ value.split("\n").join("\n  ") }"
+      end
     end
 
     # Internal: Lines containing the attributes for the document, whichi will

@@ -62,17 +62,32 @@ describe SomeDocument, :fixtures do
     end # given a file path
   end # new
 
+  describe 'queries' do
+
+    it 'remembers them' do
+      document = SomeDocument.new(key: 'a', queries: { foo: 'bar' })
+      expect(document.queries).to eql({ foo: 'bar' })
+    end
+
+  end
+
   describe 'to_hash' do
     it 'is empty when no attributes have been set' do
       expect(SomeDocument.new(key: 'a').to_hash).to be_empty
     end
 
     it 'contains attributes set by the user' do
-      document = SomeDocument.new(key: 'a', unit: '%', description: 'Mine')
+      document = SomeDocument.new(key: 'a', unit: '%', comments: 'Mine')
       hash     = document.to_hash
 
       expect(hash).to include(unit: '%')
-      expect(hash).to include(description: 'Mine')
+      expect(hash).to include(comments: 'Mine')
+    end
+
+    it 'contains queries' do
+      document = SomeDocument.new(key: 'a', queries: { foo: 'bar' })
+
+      expect(document.to_hash[:queries]).to eql({ foo: 'bar' })
     end
 
     it 'omits attributes which have no value' do
@@ -80,14 +95,14 @@ describe SomeDocument, :fixtures do
       hash     = document.to_hash
 
       expect(hash).to_not have_key(:query)
-      expect(hash).to_not have_key(:description)
+      expect(hash).to_not have_key(:comments)
     end
 
     it 'includes file comments' do
-      document = SomeDocument.new(key: 'a', description: 'okay')
+      document = SomeDocument.new(key: 'a', comments: 'okay')
       hash     = document.to_hash
 
-      expect(hash).to include(description: 'okay')
+      expect(hash).to include(comments: 'okay')
     end
   end
 
@@ -96,10 +111,11 @@ describe SomeDocument, :fixtures do
     it "should load a some_document from file" do
       expect(some_document.key).to eql(:foo)
       expect(some_document.path.to_s).to include(some_document.key.to_s)
-      expect(some_document.description.size).to be > 0
-      expect(some_document.description).to include "MECE" #testing some words
-      expect(some_document.description).to include "graph." #testing some words
+      expect(some_document.comments.size).to be > 0
+      expect(some_document.comments).to include "MECE" #testing some words
+      expect(some_document.comments).to include "graph." #testing some words
       expect(some_document.unit).to eq('kg')
+      expect(some_document.queries).to eq( { demand: "SUM(\n Q(co2_emissions_of_final_demand_excluding_imported_electricity),\n Q(co2_emissions_of_imported_electricity)\n)" })
     end
 
     it "should find by Symbol" do
@@ -392,7 +408,7 @@ describe SomeDocument, :fixtures do
     context 'when validation fails' do
       let(:result) do
         some_document.do_validation = true
-        some_document.update_attributes!(description: 'Archer', query: nil)
+        some_document.update_attributes!(comments: 'Archer', query: nil)
       end
 
       it 'does not save the file' do
@@ -461,7 +477,7 @@ describe SomeDocument, :fixtures do
 
     context 'when successful' do
       let(:result) do
-        document.update_attributes!(description: 'Archer', query: '*')
+        document.update_attributes!(comments: 'Archer', query: '*')
       end
 
       it 'returns true' do
@@ -470,7 +486,7 @@ describe SomeDocument, :fixtures do
 
       it 'updates given attributes' do
         expect { result }.to change {
-          document.attributes.values_at(:description, :query)
+          document.attributes.values_at(:comments, :query)
         }.to(%w( Archer * ))
       end
 
@@ -482,12 +498,12 @@ describe SomeDocument, :fixtures do
     context 'when validation fails' do
       let(:result) do
         document.do_validation = true
-        document.update_attributes!(description: 'Archer', query: nil)
+        document.update_attributes!(comments: 'Archer', query: nil)
       end
 
       it 'updates given attributes' do
         expect { (result rescue nil) }.to change {
-          document.attributes.values_at(:description, :query)
+          document.attributes.values_at(:comments, :query)
         }.to(['Archer', nil])
       end
 
