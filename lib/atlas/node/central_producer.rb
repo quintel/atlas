@@ -4,16 +4,8 @@ module Atlas
     # CSV data.
     #
     # Returns a string.
-    def query
-      "CENTRAL_PRODUCTION(#{ key })"
-    end
-
-    # Public: Queries for central producers always set a value for the demand
-    # attribute.
-    #
-    # Returns a Symbol.
-    def sets
-      :demand
+    def queries
+      super.merge(demand: "CENTRAL_PRODUCTION(#{ key })")
     end
 
     # Public: The number of hours in each year for which the producer is
@@ -34,7 +26,8 @@ module Atlas
 
     # Public: Creates a hash containing the document's attributes, omitting
     # those whose values are nil, as well as full_load_hours and query, since
-    # those are dynamic.
+    # those are dynamic. Also ignores the demand query which is auto-set by
+    # the node.
     #
     # Returns a Hash.
     def to_hash
@@ -43,6 +36,8 @@ module Atlas
       hash.delete(:full_load_hours)
       hash.delete(:query)
       hash.delete(:sets)
+
+      hash[:queries].delete(:demand)
 
       hash
     end
