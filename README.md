@@ -150,19 +150,23 @@ chosen sector, sets their demands and shares, and performs the Refinery
 calculation step. The results are shown in your terminal, with "before" and
 "after" images output to the ./atlas/tmp directory.
 
-To run this, you need to supply the path to the ETSource data directory, and
-the name of the sector you want to test. Separate these with a comma:
-
 ```sh
 $ cd ~/code/atlas
-$ rake debug:subgraph[../etsource/data,transport]
+$ rake debug:graph
+```
+
+If your ETSource directory is not at the same location as your Atlas
+directory, you need to specify the pato the ETSource:
+
+```sh
+$ rake debug:graph[../somewhere/else/etsource/data]
 ```
 
 Like the "console" task, there must be absoluely no spaces unless you surround
 the rake command in quotes:
 
 ```sh
-$ rake "debug:subgraph[/tmp/the gothic castle,agriculture]"
+$ rake "debug:graph[/tmp/the gothic castle]"
 ```
 
 #### Production Mode
