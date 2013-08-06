@@ -191,6 +191,9 @@ module Atlas
         klass.new(parser.to_hash.merge(path: relative_path.to_s)).tap do |doc|
           doc.manager = self
         end
+      rescue ParserError => ex
+        ex.path = path
+        raise ex
       end
 
       # Internal: Given a path, returns the key of the document.
