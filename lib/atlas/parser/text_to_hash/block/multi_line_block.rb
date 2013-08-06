@@ -4,7 +4,7 @@ module Atlas
 
       class MultiLineBlock < Block
 
-        FIRST_LINE = /^[-~]\s([a-z_]*)\s=$/
+        FIRST_LINE = /^[-~]\s([a-z_]*)\s=\s*$/
 
         def key
           lines.first.to_s.match(FIRST_LINE).captures.first.to_sym
