@@ -1,6 +1,7 @@
 namespace :debug do
   SECTORS = %w(
-    households buildings transport industry other energy environment )
+    agriculture households buildings transport
+    industry other energy environment )
 
   # Given a graph, and a diagram class to use, draws a diagram for each
   # sector.
