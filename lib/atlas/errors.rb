@@ -23,7 +23,48 @@ module Atlas
         super
       end
     end
-  end
+  end # ParserError
+
+  # Raised when an error occurs executing a Rubel query.
+  class QueryError < AtlasError
+    def initialize(exception, query)
+      @exception = exception
+      @query     = query
+    end
+
+    def backtrace
+      @exception.backtrace
+    end
+
+    def message
+      "Error executing query:\n" \
+      "#{ @exception.message }\n" \
+      "#{ query }\n"
+    end
+
+    # The query which failed to execute. If we can find the line which failed,
+    # then we place a "margin" to the left of each line so that we can
+    # highlight it to the user.
+    def query
+      return unless @query.is_a?(String)
+
+      if match_number = backtrace.first.match(/\(eval\):(\d+)/)
+        line_no = match_number[1].to_i - 1
+
+        @query.lines.map.with_index do |line, index|
+          if index == line_no
+            ">> | #{ line }"
+          else
+            "   | #{ line }"
+          end
+        end.join
+      else
+        @query
+      end
+    end
+  end # QueryError
+
+  # --------------------------------------------------------------------------
 
   # Internal: Creates a new error class which inherits from AtlasError,
   # whose message is created by evaluating the block you give.
