@@ -76,6 +76,19 @@ module Atlas
       end
     end
 
+    context 'PRIMARY_PRODUCTION' do
+      it 'executes PRIMARY_PRODUCTION functions' do
+        expect(runtime.execute(
+          "PRIMARY_PRODUCTION(energy_production_non_biogenic_waste)"
+        )).to eq(31202)
+      end
+
+      it 'raises an error if the production data is missing' do
+        expect { runtime.execute('PRIMARY_PRODUCTION(nope)') }.
+          to raise_error(UnknownCSVRowError)
+      end
+    end
+
     context 'DEMAND' do
       before do
         parent.set(:demand, 50.0)

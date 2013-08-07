@@ -81,6 +81,29 @@ module Atlas
       dataset.central_producers.get(node_key, :demand)
     end
 
+    # Public: Given the key of a node, retrieves the production (energy
+    # supplied) of the node from the primary_producers.csv file.
+    #
+    # node_key - The key of the node whose production is to be fetched.
+    #
+    # Returns a Float.
+    def PRIMARY_PRODUCTION(node_key)
+      dataset.primary_production.get(node_key, :demand)
+    end
+
+    # Public: Given a key from the time curves file, retrieves the associated
+    # value.
+    #
+    # Presently just a stub so that queries using it don't break. This will
+    # be implemented soon.
+    #
+    # key - The key identifying the row to be read.
+    #
+    # Returns a Float.
+    def TIME_CURVE(*)
+      0.0
+    end
+
     # Public: Given keys to look up a node or edge, retrieves the demand
     # attribute of the object.
     #

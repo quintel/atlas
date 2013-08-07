@@ -108,12 +108,26 @@ module Atlas
     # Expects to load a file at datasets/AREA/central_producers.csv.
     #
     # For example:
-    #   dataset.chps.get(:energy_production_algae_diesel :full_load_hours)
+    #   dataset.central_producers.
+    #     get(:energy_production_algae_diesel :full_load_hours)
     #   # => 4194.5
     #
     # Returns a CSVDocument.
     def central_producers
-      @producers ||= CSVDocument.new(path.join('central_producers.csv'))
+      @cental_prod ||= CSVDocument.new(path.join('central_producers.csv'))
+    end
+
+    # Public: Retrieves demand and max demand data for the region. Expects to
+    # load a file at datasets/AREA/primary_production.csv.
+    #
+    # For example:
+    #   dataset.primary_production.
+    #     get(:energy_production_bio_oil, :demand)
+    #   # => 0.0
+    #
+    # Returns a CSVDocument.
+    def primary_production
+      @primary_prod ||= CSVDocument.new(path.join('primary_production.csv'))
     end
 
     # Public: Path to the directory in which the dataset specific data is
