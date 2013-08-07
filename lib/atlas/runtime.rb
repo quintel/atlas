@@ -15,12 +15,14 @@ module Atlas
     # backtraces.
     #
     # Returns the result of the query.
-    def execute(query)
-      if query.is_a?(::String)
-        query = sanitized_proc(query)
+    def execute(string)
+      if string.is_a?(::String)
+        instance_exec(&sanitized_proc(string))
+      else
+        instance_exec(&string)
       end
-
-      instance_exec(&query)
+    rescue StandardError, ScriptError => ex
+      raise QueryError.new(ex, string)
     end
 
     alias query execute
