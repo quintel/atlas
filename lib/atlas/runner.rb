@@ -105,7 +105,9 @@ module Atlas
     # Internal: Executes the given Rubel query +string+, returning the
     # result.
     def query(string)
-      unless (result = runtime.execute(string)).is_a?(Numeric)
+      result = runtime.execute(string)
+
+      unless result.is_a?(Numeric) || result.nil?
         raise NonNumericQueryError.new(result)
       end
 
