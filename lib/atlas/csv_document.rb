@@ -48,13 +48,11 @@ module Atlas
     #######
 
     # Internal: Finds the value of a cell, raising an UnknownCSVRowError if no
-    # such row exists, or an UnknownCSVCellError if the row exists, but there
-    # is no such column.
+    # such row exists.
     #
     # Returns the cell content.
     def cell(row_key, column_key)
-      (data = row(row_key)) && data[column_key] ||
-        raise(UnknownCSVCellError.new(self, column_key))
+      (data = row(row_key)) && data[column_key]
     end
 
     # Internal: Finds the row by the given +key+.

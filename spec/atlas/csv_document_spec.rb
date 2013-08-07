@@ -67,7 +67,7 @@ module Atlas
         expect { doc.get('foo', 'yes') }.to raise_error(UnknownCSVRowError)
       end
 
-      it 'raises an error when carrier is not known' do
+      xit 'raises an error when carrier is not known' do
         expect { doc.get('yes', 'nope') }.to raise_error(UnknownCSVCellError)
       end
     end # get
