@@ -74,7 +74,7 @@ namespace :debug do
       exception = ex
 
       # Summarise the remaining nodes and edges.
-      incalculables = ex.message.lines[2..-1].group_by do |message|
+      incalculables = ex.message.lines.to_a[2..-1].group_by do |message|
         message.match(/:([^_:]+)[a-z0-9_]+>/)[1]
       end
 
