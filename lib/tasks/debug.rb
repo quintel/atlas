@@ -57,8 +57,8 @@ namespace :debug do
     exception = nil
     summary   = nil
 
-    # draw_diagrams(runner.refinery_graph,
-                  # Refinery::Diagram::InitialValues, '0-initial-values')
+    draw_diagrams(runner.refinery_graph,
+                  Refinery::Diagram::InitialValues, '0-initial-values')
 
     # A custom calculator catalyst which will show in real-time how many
     # elements in the graph have been calculated.
@@ -86,16 +86,16 @@ namespace :debug do
       end
 
       summary = <<-EOF.gsub(/^\s+/, '')
-        Remaining incalculables: (#{ ex.message.lines.to_a.length - 2 })
+        Remaining incalculables: (#{ ex.message.lines.length - 2 })
         ------------------------
         #{ by_sector.join("\n") }
       EOF
 
-      # draw_diagrams(runner.refinery_graph,
-                    # Refinery::Diagram::Incalculable, '1-finished-incalculable')
+      draw_diagrams(runner.refinery_graph,
+                    Refinery::Diagram::Incalculable, '1-finished-incalculable')
 
-      # draw_diagrams(runner.refinery_graph,
-                    # Refinery::Diagram::Calculable, '1-finished-calculable')
+      draw_diagrams(runner.refinery_graph,
+                    Refinery::Diagram::Calculable, '1-finished-calculable')
     rescue Refinery::FailedValidationError => ex
       print '  * Failed validation'
       exception = ex
