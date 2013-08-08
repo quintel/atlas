@@ -86,7 +86,7 @@ namespace :debug do
       end
 
       summary = <<-EOF.gsub(/^\s+/, '')
-        Remaining incalculables: (#{ ex.message.lines.length - 2 })
+        Remaining incalculables: (#{ ex.message.lines.to_a.length - 2 })
         ------------------------
         #{ by_sector.join("\n") }
       EOF
