@@ -61,7 +61,9 @@ module Atlas
             ! IGNORE.include?(edge.consumer)
         end
       else
-        Edge.all
+        Edge.all.reject do |edge|
+          IGNORE.include?(edge.supplier) || IGNORE.include?(edge.consumer)
+        end
       end
 
       @edges = Collection.new(edges)
@@ -165,7 +167,7 @@ module Atlas
             (ALSO[sector] && ALSO[sector].include?(el.key.to_s)) )
         }
       else
-        ->(el) { true }
+        ->(el) { ! IGNORE.include?(el.key) }
       end
     end
   end # GraphBuilder
