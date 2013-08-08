@@ -21,8 +21,7 @@ module Atlas
     attribute :parent_share, Float
     attribute :child_share,  Float
     attribute :reversed,     Boolean, default: false
-    attribute :query,        String
-    attribute :sets,         Symbol,  default: :default_sets
+    attribute :priority,     Integer
 
     attr_reader :supplier
     attr_reader :consumer

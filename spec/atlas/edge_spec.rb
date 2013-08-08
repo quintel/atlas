@@ -195,10 +195,6 @@ module Atlas
         expect(edge.child_share).to eq(1)
       end
 
-      it 'sets no query when none is present' do
-        expect(edge.query).to be_nil
-      end
-
       it 'sets the query when one is present' do
         expect(Edge.find('baz-bar@corn').queries[:parent_share]).to eq \
           "SHARE(cars, gasoline)"

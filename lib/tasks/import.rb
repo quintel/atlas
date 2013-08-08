@@ -13,6 +13,15 @@
 # If the paths provided are not absolute, they are assumed to be relative to
 # the ETLib root.
 namespace :import do
+  LINK_RE = /
+    (?<consumer>[\w_]+)-       # Child node key
+    \([^)]+\)\s                # Carrier key (ignored)
+    (?<reversed><)?            # Arrow indicating a reversed link?
+    --\s(?<type>\w)\s-->?\s    # Link type and arrow
+    \((?<carrier>[^)]+)\)-     # Carrier key
+    (?<supplier>[\w_]+)        # Parent node key
+  /xi
+
   # Returns a hash where each key is the name of the sector, and the value is
   # an array containing all the nodes in that sector.
   def nodes_by_sector
@@ -26,6 +35,23 @@ namespace :import do
     end
 
     nodes.group_by { |key, data| data['sector'] || 'nosector' }
+  end
+
+  # Returns a hash containing data about edges from the NL dataset'
+  def edge_data
+    @edges ||= begin
+      data = {}
+
+      Dir.glob($from_dir.join('datasets/nl/graph/**.yml')).each do |file|
+        YAML.load_file(file).each do |key, properties|
+          if key.to_s.match(LINK_RE) && properties['priority']
+            data[key] = { priority: properties['priority'] }
+          end
+        end
+      end
+
+      data
+    end
   end
 
   # Given a node key and its data, determines which subclass of Node should

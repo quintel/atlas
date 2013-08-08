@@ -15,15 +15,6 @@ namespace :import do
     # since the previous import.
     FileUtils.rm_rf(Edge.directory)
 
-    link_re = /
-      (?<consumer>[\w_]+)-       # Child node key
-      \([^)]+\)\s                # Carrier key (ignored)
-      (?<reversed><)?            # Arrow indicating a reversed link?
-      --\s(?<type>\w)\s-->?\s    # Link type and arrow
-      \((?<carrier>[^)]+)\)-     # Carrier key
-      (?<supplier>[\w_]+)        # Parent node key
-    /xi
-
     runner = ImportRun.new('edges')
 
     nodes_by_sector.each do |sector, nodes|
@@ -32,7 +23,7 @@ namespace :import do
 
       edges.each do |link|
         runner.item do
-          data = link_re.match(link)
+          data = LINK_RE.match(link)
 
           type = case data[:type]
             when 's' then :share
@@ -48,7 +39,8 @@ namespace :import do
           path  = sector_dir.join(key.to_s)
 
           props = { path: path, type: type, queries: {},
-                    reversed: ! data[:reversed].nil? }
+                    reversed: ! data[:reversed].nil?
+                  }.merge(edge_data[link] || {})
 
           queries[key].each do |query_data|
             props[:queries][query_data[:attribute]] = query_data[:query].to_s
