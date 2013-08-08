@@ -55,9 +55,10 @@ namespace :debug do
     reporter  = Atlas::Term::Reporter.new('Performing calculations', done: :green)
 
     exception = nil
+    summary   = nil
 
-    draw_diagrams(runner.refinery_graph,
-                  Refinery::Diagram::InitialValues, '0-initial-values')
+    # draw_diagrams(runner.refinery_graph,
+                  # Refinery::Diagram::InitialValues, '0-initial-values')
 
     # A custom calculator catalyst which will show in real-time how many
     # elements in the graph have been calculated.
@@ -72,11 +73,29 @@ namespace :debug do
       puts '  * Incalculable graph'
       exception = ex
 
-      draw_diagrams(runner.refinery_graph,
-                    Refinery::Diagram::Incalculable, '1-finished-incalculable')
+      # Summarise the remaining nodes and edges.
+      incalculables = ex.message.lines[2..-1].group_by do |message|
+        message.match(/:([^_:]+)[a-z0-9_]+>/)[1]
+      end
 
-      draw_diagrams(runner.refinery_graph,
-                    Refinery::Diagram::Calculable, '1-finished-calculable')
+      by_sector = incalculables.map do |sector, lines|
+        nodes = lines.select { |l| l.match(/NodeDemand/) }.length
+        edges = lines.select { |l| l.match(/EdgeDemand/) }.length
+
+        "#{ (sector + ':').ljust(13) } #{ nodes } nodes and #{ edges } edges"
+      end
+
+      summary = <<-EOF.gsub(/^\s+/, '')
+        Remaining incalculables: (#{ ex.message.lines.length - 2 })
+        ------------------------
+        #{ by_sector.join("\n") }
+      EOF
+
+      # draw_diagrams(runner.refinery_graph,
+                    # Refinery::Diagram::Incalculable, '1-finished-incalculable')
+
+      # draw_diagrams(runner.refinery_graph,
+                    # Refinery::Diagram::Calculable, '1-finished-calculable')
     rescue Refinery::FailedValidationError => ex
       print '  * Failed validation'
       exception = ex
@@ -90,6 +109,11 @@ namespace :debug do
     if exception
       puts
       puts exception.message
+    end
+
+    if summary
+      puts
+      puts summary
     end
   end
 
