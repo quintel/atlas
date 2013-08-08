@@ -106,6 +106,10 @@ namespace :debug do
     puts "Writing static data to #{ Atlas.root.join('tmp/static.yml') }"
     Atlas::Exporter.new(runner.refinery_graph).export_to(Atlas.root.join('tmp/static.yml'))
 
+    File.write(
+      debug_dir.join('_trace.txt'),
+      Refinery::GraphDebugger.new(runner.refinery_graph))
+
     if exception
       puts
       puts exception.message
