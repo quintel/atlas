@@ -57,8 +57,8 @@ namespace :debug do
     exception = nil
     summary   = nil
 
-    draw_diagrams(runner.refinery_graph,
-                  Refinery::Diagram::InitialValues, '0-initial-values')
+    # draw_diagrams(runner.refinery_graph,
+                  # Refinery::Diagram::InitialValues, '0-initial-values')
 
     # A custom calculator catalyst which will show in real-time how many
     # elements in the graph have been calculated.
@@ -79,8 +79,8 @@ namespace :debug do
       end
 
       by_sector = incalculables.map do |sector, lines|
-        nodes = lines.select { |l| l.match(/NodeDemand/) }.length
-        edges = lines.select { |l| l.match(/EdgeDemand/) }.length
+        nodes = lines.select { |l| l.match(/NodeDemand/) }.to_a.length
+        edges = lines.select { |l| l.match(/EdgeDemand/) }.to_a.length
 
         "#{ (sector + ':').ljust(13) } #{ nodes } nodes and #{ edges } edges"
       end
