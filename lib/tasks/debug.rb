@@ -91,6 +91,10 @@ namespace :debug do
         #{ by_sector.join("\n") }
       EOF
 
+      puts
+      puts summary
+      puts
+
       draw_diagrams(runner.refinery_graph,
                     Refinery::Diagram::Incalculable, '1-finished-incalculable')
 
