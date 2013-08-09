@@ -32,6 +32,10 @@ module Atlas
       @query     = query
     end
 
+    def ==(klass)
+      super || @exception.is_a?(klass)
+    end
+
     def backtrace
       @exception.backtrace
     end
