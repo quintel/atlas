@@ -24,7 +24,7 @@ module Atlas
 
     describe '#calculate' do
       let(:edge)  { Edge.find('baz-bar@corn') }
-      let(:graph) { runner.calculate }
+      let(:graph) { runner.refinery_graph }
 
       # The Turbine edge.
       let(:t_edge) do
