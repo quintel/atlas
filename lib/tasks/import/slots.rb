@@ -96,6 +96,7 @@ namespace :import do
 
     slots    = nl_slots.values
     required = YAML.load_file(Atlas.data_dir.join('import/required_slots.yml'))
+    ignored  = YAML.load_file(Atlas.data_dir.join('import/ignored_slots.yml'))
 
     # We start by building two lists; one containing the slots which we
     # definitely need to import, and one containing those we thing can be
@@ -103,12 +104,14 @@ namespace :import do
 
     use, skip = slots.partition do |data|
       direction = data[:key].to_s.include?('-') ? :output : :input
+      node_key  = data[:key].to_s.split(/[+-]/).first
 
       # We import *all* output slots whose share is not the default 1.0.
-      (direction == :output && ! all_slot_defaults?(data)) ||
+      (! ignored.include?(node_key)) &&
+       ((direction == :output && ! all_slot_defaults?(data)) ||
         # ... or any slot (including input slots) named in the ETSource
         # data/import/required_inputs_slots.yml file.
-        required[direction].include?(data[:key].to_s.split(/[+-]/).first)
+        required[direction].include?(node_key))
     end
 
     # Next, we create a list of all the nodes which need to have one or more
