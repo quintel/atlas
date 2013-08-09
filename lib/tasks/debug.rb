@@ -57,8 +57,8 @@ namespace :debug do
     exception = nil
     summary   = nil
 
-    draw_diagrams(runner.refinery_graph,
-                  Refinery::Diagram::InitialValues, '0-initial-values')
+    # draw_diagrams(runner.refinery_graph,
+                  # Refinery::Diagram::InitialValues, '0-initial-values')
 
     # A custom calculator catalyst which will show in real-time how many
     # elements in the graph have been calculated.
@@ -101,10 +101,10 @@ namespace :debug do
       draw_diagrams(runner.refinery_graph,
                     Refinery::Diagram::Calculable, '1-finished-calculable')
     rescue Refinery::FailedValidationError => ex
-      print '  * Failed validation'
+      puts '  * Failed validation'
       exception = ex
 
-      draw_diagrams(runner.refinery_graph, Refinery::Diagram, '1-finished')
+      draw_diagrams(runner.refinery_graph, Refinery::Diagram::Base, '1-finished')
     end
 
     puts "Writing static data to #{ Atlas.root.join('tmp/static.yml') }"
