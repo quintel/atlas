@@ -24,6 +24,7 @@ module Atlas
             end
 
             ref_slot.set(:model, slot)
+            ref_slot.set(:type, :elastic) if ref_slot.is_a?(Slot::Elastic)
 
             if slot.query
               ref_slot.set(:share, query.call(slot.query))
