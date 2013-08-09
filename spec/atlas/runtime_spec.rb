@@ -45,9 +45,21 @@ module Atlas
         expect(runtime.execute("SHARE(cars, gasoline)")).to eq(0.1)
       end
 
-      it 'raises an error if the CHP data is missing' do
+      it 'raises an error if the SHARE data is missing' do
         expect { runtime.execute('SHARE(cars, nope)') }.
           to raise_error(UnknownCSVRowError)
+      end
+    end
+
+    context 'TIME_CURVE' do
+      it 'executes TIME_CURVE functions' do
+        result = runtime.execute("TIME_CURVE(bio_residues, max_demand)")
+        expect(result).to eq(34)
+      end
+
+      it 'raises an error if the curve data is missing' do
+        expect { runtime.execute('TIME_CURVE(nope, nope)') }.
+          to raise_error(/no such file or directory/i)
       end
     end
 

@@ -62,6 +62,23 @@ module Atlas; describe Dataset, :fixtures do
     end
   end # shares
 
+  describe '#time_curve' do
+    let(:dataset) { Dataset.find(:nl) }
+    let(:curves)  { dataset.time_curve(:bio_residues) }
+
+    it 'returns a CSV document' do
+      expect(curves).to be_a(CSVDocument)
+    end
+
+    it 'sets the file path' do
+      expect(curves.path.to_s).to end_with('nl/time_curves/bio_residues.csv')
+    end
+
+    it 'raises an error when no time curve data exists' do
+      expect { Dataset.find(:nl).time_curve(:nope) }.to raise_error(Errno::ENOENT)
+    end
+  end # time_curves
+
   describe '#chps' do
     let(:dataset) { Dataset.find(:nl) }
     let(:chps)    { dataset.chps }

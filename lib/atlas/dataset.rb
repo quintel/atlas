@@ -93,6 +93,20 @@ module Atlas
         CSVDocument::OneDimensional.new(path.join("shares/#{ key }.csv"))
     end
 
+    # Public: Retrieves the time curve data for the file whose name matches
+    # +key+.
+    #
+    # key - The name of the time curve file to load.
+    #
+    # For example:
+    #   dataset.time_curve(bio_residues).get(2011, :max_demand) # => 34.0
+    #
+    # Returns a CSVDocument.
+    def time_curve(key)
+      (@time_curves ||= Hash.new)[key.to_sym] ||=
+        CSVDocument.new(path.join("time_curves/#{ key }.csv"))
+    end
+
     # Public: Retrieves data about CHPs for the datasets region. Expects to
     # load a file at datasets/AREA/chp.csv.
     #
