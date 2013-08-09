@@ -129,7 +129,7 @@ module Atlas
       carrier = Carrier.find(edge.carrier)
 
       props = edge.attributes.slice(
-        :parent_share, :child_share, :demand, :reversed
+        :parent_share, :child_share, :demand, :reversed, :priority
       ).merge(model: edge)
 
       if child.key == :SUPER_SINK || edge.type == :inverse_flexible
