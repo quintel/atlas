@@ -68,7 +68,7 @@ namespace :debug do
 
     begin
       reporter.report { |*| runner.calculate(calculator) }
-      draw_diagrams(runner.refinery_graph, Refinery::Diagram, '1-finished')
+      draw_diagrams(runner.refinery_graph, Refinery::Diagram::Base, '1-finished')
     rescue Refinery::IncalculableGraphError => ex
       puts '  * Incalculable graph'
       exception = ex
