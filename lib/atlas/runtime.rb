@@ -102,8 +102,8 @@ module Atlas
     # key - The key identifying the row to be read.
     #
     # Returns a Float.
-    def TIME_CURVE(*)
-      0.0
+    def TIME_CURVE(curve_key, attribute)
+      dataset.time_curve(curve_key).get(2011, attribute)
     end
 
     # Public: Given keys to look up a node or edge, retrieves the demand
