@@ -11,8 +11,8 @@ module Atlas
         end
 
         def value
-          lines[1..-1].map(&:to_s).map { |l| l[2..-1] }.
-            join("\n").strip_heredoc.rstrip
+          lines[1..-1].map(&:to_s).map { |l| l[2..-1] }
+            .join("\n").strip_heredoc.rstrip
         end
 
       end

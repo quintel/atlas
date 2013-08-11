@@ -25,7 +25,7 @@ module Atlas
       raise QueryError.new(ex, string)
     end
 
-    alias query execute
+    alias_method :query, :execute
 
     # Query Functions --------------------------------------------------------
 
@@ -173,7 +173,7 @@ module Atlas
         parent = lookup(keys[0])
         child  = lookup(keys[1])
 
-        parent.out_edges(keys.last).detect do |edge|
+        parent.out_edges(keys.last).find do |edge|
           edge.to.key == keys[1]
         end || raise(UnknownEdgeError.new(keys))
       else

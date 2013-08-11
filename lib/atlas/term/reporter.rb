@@ -92,7 +92,7 @@ module Atlas
       #
       # Returns a hash of group names and the colour to use.
       def visible_groups
-        @groups.reject {|name, *| @counters[name].zero? }
+        @groups.reject { |name, *| @counters[name].zero? }
       end
     end
   end # Term

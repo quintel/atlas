@@ -32,10 +32,10 @@ module Atlas
     validates :carrier,  presence: true
 
     validates :type, inclusion:
-      { in: [ :share, :flexible, :constant, :inverse_flexible, :dependent ] }
+      { in: [:share, :flexible, :constant, :inverse_flexible, :dependent] }
 
     validates_with QueryValidator, allow_no_query: true,
-      attributes: [ :child_share, :parent_share, :demand ]
+      attributes: [:child_share, :parent_share, :demand]
 
     # Public: The unique key which identifies this edge.
     #
@@ -111,7 +111,7 @@ module Atlas
 
       values = name.split(/[-@]/).map(&:to_sym)
 
-      Hash[ [:consumer, :supplier, :carrier].zip(values) ]
+      Hash[[:consumer, :supplier, :carrier].zip(values)]
     end
 
   end # Edge

@@ -9,8 +9,8 @@ module Atlas
 
     # Iterates through each node in the graph, converting the "efficiency"
     # attribute, if present, to the appropriate slot shares.
-    SetSlotSharesFromEfficiency = ->(query) do
-      ->(refinery) do
+    SetSlotSharesFromEfficiency = lambda do |query|
+      lambda do |refinery|
         refinery.nodes.each do |node|
           model = node.get(:model)
 
@@ -109,7 +109,7 @@ module Atlas
       result = runtime.execute(string)
 
       unless result.is_a?(Numeric) || result.nil?
-        raise NonNumericQueryError.new(result)
+        fail NonNumericQueryError.new(result)
       end
 
       result

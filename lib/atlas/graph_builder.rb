@@ -142,9 +142,7 @@ module Atlas
         props[:type] = :flexible
       end
 
-      if parent.nil?
-        raise DocumentNotFoundError.new(edge.supplier, Node)
-      end
+      raise DocumentNotFoundError.new(edge.supplier, Node) if parent.nil?
 
       parent.connect_to(child, carrier.key, props)
     rescue Turbine::DuplicateEdgeError => ex
@@ -162,10 +160,10 @@ module Atlas
       if sector
         regex = /^#{ Regexp.escape(sector.to_s) }\.?/
 
-        ->(el) {
+        lambda do |el|
           ( (el.ns && el.ns.match(regex) && ! IGNORE.include?(el.key)) ||
             (ALSO[sector] && ALSO[sector].include?(el.key.to_s)) )
-        }
+        end
       else
         ->(el) { ! IGNORE.include?(el.key) }
       end

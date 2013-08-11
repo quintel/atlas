@@ -129,8 +129,8 @@ module Atlas
       #
       # Returns nothing.
       def set_attributes_from_key!(key)
-        attributes_from_basename(key.to_s).each do |key, value|
-          public_send(:"#{ key }=", value)
+        attributes_from_basename(key.to_s).each do |attribute, value|
+          public_send(:"#{ attribute }=", value)
         end
       end
 

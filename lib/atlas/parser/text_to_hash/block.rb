@@ -20,7 +20,7 @@ module Atlas
         end
 
         def query?
-          lines.first.to_s[0] == ?~
+          lines.first.to_s[0] == '~'
         end
 
       end

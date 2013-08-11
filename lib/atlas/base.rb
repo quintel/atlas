@@ -23,9 +23,7 @@ module Atlas
   def self.data_dir=(path)
     path = path.is_a?(Pathname) ? path : Pathname.new(path.to_s)
 
-    if path.relative?
-      path = Atlas.root.join(path)
-    end
+    path = Atlas.root.join(path) if path.relative?
 
     if path != @data_dir
       @data_dir = path

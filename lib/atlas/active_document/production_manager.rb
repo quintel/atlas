@@ -41,7 +41,7 @@ module Atlas
       #
       # Returns a hash.
       def exported_data_for(key)
-        exported_data[key] || Hash.new
+        exported_data[key] || {}
       end
 
       # Internal: Loads the CSV of exported values for the class being

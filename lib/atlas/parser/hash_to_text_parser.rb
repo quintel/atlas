@@ -16,7 +16,7 @@ module Atlas
     Encoding.default_external = Encoding::UTF_8
     Encoding.default_internal = Encoding::UTF_8
 
-    ATTR_PREFIX  = "-"
+    ATTR_PREFIX  = '-'
     ATTR_LINE    = /#{ATTR_PREFIX}\s(.+)\s=\s(.+)/
     COMMENT_LINE = /^#(.+)/
     GQUERY_LINE  = /[^\s]+/

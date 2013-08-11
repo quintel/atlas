@@ -2,8 +2,8 @@ module Atlas
 
   # Error class which serves as a base for all errors which occur in Atlas.
   class AtlasError < RuntimeError
-    def initialize(*args) ; super(make_message(*args)) ; end
-    def make_message(msg) ; msg ; end
+    def initialize(*args) ; super(make_message(*args)) end
+    def make_message(msg) ; msg end
   end
 
   # Superclass for errors which occur when calculating the Rubel attributes.
@@ -32,8 +32,8 @@ module Atlas
       @query     = query
     end
 
-    def ==(klass)
-      super || @exception.is_a?(klass)
+    def ==(other)
+      super || @exception.is_a?(other)
     end
 
     def backtrace
@@ -41,8 +41,8 @@ module Atlas
     end
 
     def message
-      "Error executing query:\n" \
-      "#{ @exception.message }\n" \
+      "Error executing query:\n" +
+      "#{ @exception.message }\n" +
       "#{ query }\n"
     end
 
@@ -91,7 +91,7 @@ module Atlas
     name = klass && klass.name.demodulize.humanize.downcase || 'document'
 
     if key.is_a?(Array)
-      "Could not find a #{ name } with one of these keys: " \
+      "Could not find a #{ name } with one of these keys: " +
       "#{ key[0..-2].map(&:inspect).join(', ') }, or #{ key.last.inspect }"
     else
       "Could not find a #{ name } with the key #{ key.inspect }"
@@ -140,7 +140,8 @@ module Atlas
 
   NoSuchDocumentClassError = error_class do |subclass, path|
     "#{ path } tried to instantiate a Atlas::#{ subclass.to_s.classify }, " \
-    "but no such class exists (#{ subclass } #{ subclass.to_s } #{ subclass.classify })"
+    "but no such class exists (#{ subclass } #{ subclass.to_s } " \
+    "#{ subclass.classify })"
   end
 
   # Graph Structure / Topology Errors ----------------------------------------

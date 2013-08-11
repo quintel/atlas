@@ -4,19 +4,19 @@ module Atlas
 
     # A lambda which converts strings to a consistent format for keys in
     # CSV files.
-    KEY_NORMALIZER = ->(key) do
+    KEY_NORMALIZER = lambda do |key|
       case key
-        when nil
-          raise(InvalidKeyError.new(key))
-        when Integer
-          key
-        else
-          key.to_s.downcase.strip.
-            gsub(/\s+/, '_').
-            gsub(/[^a-zA-Z0-9_]+/, '').
-            gsub(/_+/, '_').
-            gsub(/_$/, '').
-            to_sym
+      when nil
+        raise(InvalidKeyError.new(key))
+      when Integer
+        key
+      else
+        key.to_s.downcase.strip
+          .gsub(/\s+/, '_')
+          .gsub(/[^a-zA-Z0-9_]+/, '')
+          .gsub(/_+/, '_')
+          .gsub(/_$/, '')
+          .to_sym
       end
     end
 

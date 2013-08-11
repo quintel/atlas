@@ -77,7 +77,7 @@ module Atlas
     #
     # Returns true or false.
     def out?
-      not in?
+      ! in?
     end
 
     # Public: The proportion of energy which enters or leaves the node through

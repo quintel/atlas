@@ -42,10 +42,10 @@ module Atlas
               in_comment_block = true
             end
 
-            if lines[ index + 1 ] && lines[ index + 1 ].type == :inner_block
-              @blocks << MultiLineBlock.new([ line ])
+            if lines[index + 1] && lines[index + 1].type == :inner_block
+              @blocks << MultiLineBlock.new([line])
             elsif line.type == :comment
-              @blocks << CommentBlock.new([ line ])
+              @blocks << CommentBlock.new([line])
             else
               @blocks << SingleLineBlock.new([line])
             end
