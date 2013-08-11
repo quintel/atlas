@@ -46,9 +46,7 @@ module Atlas
         path = attributes.delete(:path)
         key  = attributes.delete(:key)
 
-        if path.nil? && key.nil?
-          raise NoPathOrKeyError.new(self.class)
-        end
+        raise NoPathOrKeyError.new(self.class) if path.nil? && key.nil?
 
         path ? (self.path = path) : (self.key = key)
         @last_saved_file_path = self.path.dup
@@ -70,10 +68,10 @@ module Atlas
       #
       # Returns a Hash.
       def to_hash
-        attributes.
-          merge(comments: comments).
-          merge(queries: queries).
-          reject { |_, value| value.nil? }
+        attributes
+          .merge(comments: comments)
+          .merge(queries: queries)
+          .reject { |_, value| value.nil? }
       end
 
       #######

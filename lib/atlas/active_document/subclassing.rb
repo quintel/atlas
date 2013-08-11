@@ -9,9 +9,7 @@ module Atlas
         #
         # Returns a string or nil.
         def subclass_suffix
-          if subclassed_document?
-            name.split('::').last.underscore
-          end
+          name.split('::').last.underscore if subclassed_document?
         end
 
         # Public: Is this class a subclass of an ActiveDocument. This enables

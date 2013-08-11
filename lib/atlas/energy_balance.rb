@@ -32,7 +32,7 @@ module Atlas
     # basicly the same as get, but then in one big string, separates by comma
     # @ return [Float]
     def query(string)
-      params = string.split(",")
+      params = string.split(',')
       get(params.first, params.last)
     end
 

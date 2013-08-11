@@ -2,15 +2,15 @@ module Atlas
   module Parser
     class Identifier
 
-      ATTR_PREFIX    = "-"
-      QUERY_PREFIX   = "~"
-      COMMENT_PREFIX = "#"
+      ATTR_PREFIX    = '-'
+      QUERY_PREFIX   = '~'
+      COMMENT_PREFIX = '#'
 
       COMMENT_LINE   = /^#{ COMMENT_PREFIX }(.*)/
       ATTR_LINE      = /^#{ ATTR_PREFIX }\s(.+)\s=(?:\s*(.*))/
       QUERY_LINE     = /^#{ QUERY_PREFIX }\s(.+)\s=/
       INNER_BLOCK    = /^\s\s(.+)/
-      EMPTY_LINE     = ""
+      EMPTY_LINE     = ''
 
       def self.type(string)
         case string

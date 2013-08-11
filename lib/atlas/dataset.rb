@@ -89,7 +89,7 @@ module Atlas
     def shares(key)
       key = key.to_sym
 
-      (@shares ||= Hash.new)[key] ||=
+      (@shares ||= {})[key] ||=
         CSVDocument::OneDimensional.new(path.join("shares/#{ key }.csv"))
     end
 
@@ -103,7 +103,7 @@ module Atlas
     #
     # Returns a CSVDocument.
     def time_curve(key)
-      (@time_curves ||= Hash.new)[key.to_sym] ||=
+      (@time_curves ||= {})[key.to_sym] ||=
         CSVDocument.new(path.join("time_curves/#{ key }.csv"))
     end
 
@@ -115,7 +115,7 @@ module Atlas
     #
     # Returns a CSVDocument::OneDimensional.
     def chps
-      @chps ||= CSVDocument::OneDimensional.new(path.join("chp.csv"))
+      @chps ||= CSVDocument::OneDimensional.new(path.join('chp.csv'))
     end
 
     # Public: Retrieves demand and full load hours data for the region.

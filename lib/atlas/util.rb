@@ -17,7 +17,7 @@ module Atlas
     #
     # Returns a new hash; does not alter the argument.
     def flatten_dotted_hash(hash, ns = nil)
-      dotted = Hash.new
+      dotted = {}
 
       hash.each do |key, value|
         full_key = ns ? "#{ ns }.#{ key }" : key
@@ -26,7 +26,7 @@ module Atlas
         when Hash
           dotted.merge!(flatten_dotted_hash(value, full_key))
         when Array, Set
-          if value.any? { |value| value.is_a?(Hash) }
+          if value.any? { |element| element.is_a?(Hash) }
             raise IllegalNestedHashError.new(value)
           end
 
@@ -47,7 +47,7 @@ module Atlas
     #
     # Returns a new hash; does not alter the argument.
     def expand_dotted_hash(hash)
-      expanded = Hash.new
+      expanded = {}
 
       hash.each do |key, value|
         if key.to_s.include?('.')

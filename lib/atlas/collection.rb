@@ -23,7 +23,7 @@ module Atlas
     #
     # Returns the document from the dollection, or nil if none matched.
     def fetch(*keys)
-      (key = keys.flatten.detect { |key| key?(key) }) && find(key) ||
+      (key = keys.flatten.find { |k| key?(k) }) && find(key) ||
         raise(DocumentNotFoundError.new(keys, document_class))
     end
 

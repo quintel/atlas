@@ -12,7 +12,7 @@ module Atlas
         end
 
         def value
-          lines.map(&:to_s).map { |l| l[2..-1]}.join("\n")
+          lines.map(&:to_s).map { |l| l[2..-1] }.join("\n")
         end
       end
 

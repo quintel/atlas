@@ -87,9 +87,7 @@ module Atlas
         # Ensure the directory exists.
         FileUtils.mkdir_p(path.dirname)
 
-        unless path.file?
-          @all.push(document)
-        end
+        @all.push(document) unless path.file?
 
         path.open('w') do |file|
           file.write(content)
@@ -171,7 +169,7 @@ module Atlas
       #
       # Returns the ActiveDocument.
       def load(key)
-        return nil unless path = lookup_map[key]
+        (path = lookup_map[key]) || return
 
         parser        = Atlas::Parser::TextToHash::Base.new(path.read)
         relative_path = path.relative_path_from(@klass.directory)

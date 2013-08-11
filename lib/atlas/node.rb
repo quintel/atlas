@@ -137,9 +137,9 @@ module Atlas
     def dynamic_slots(direction)
       direction = direction.to_s
 
-      Hash[ queries.
-        select { |key, _| key.to_s.start_with?(direction) }.
-        map { |key, _| [key.to_s.split('.', 2).last.to_sym, nil] } ]
+      Hash[ queries
+        .select { |key, _| key.to_s.start_with?(direction) }
+        .map { |key, _| [key.to_s.split('.', 2).last.to_sym, nil] } ]
     end
 
   end # Node
