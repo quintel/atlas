@@ -180,7 +180,7 @@ module Atlas
           begin
             klass = "#{ @klass.name }::#{subclass.to_s.classify}".constantize
           rescue NameError => ex
-            raise Atlas::NoSuchDocumentClassError.new(subclass, relative_path)
+            fail Atlas::NoSuchDocumentClassError.new(subclass, relative_path)
           end
         else
           klass = @klass

@@ -13,7 +13,7 @@ module Atlas
     # Returns the element from the collection, or nil if none matched.
     def find(key)
       table[key.to_sym] ||
-        raise(DocumentNotFoundError.new(key, document_class))
+        fail(DocumentNotFoundError.new(key, document_class))
     end
 
     # Public: Tries each of the +keys+ in turn, until a document is found
@@ -24,7 +24,7 @@ module Atlas
     # Returns the document from the dollection, or nil if none matched.
     def fetch(*keys)
       (key = keys.flatten.find { |k| key?(k) }) && find(key) ||
-        raise(DocumentNotFoundError.new(keys, document_class))
+        fail(DocumentNotFoundError.new(keys, document_class))
     end
 
     # Public: Given a +key+, returns if a document with that key is contained

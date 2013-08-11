@@ -128,13 +128,13 @@ namespace :debug do
   desc 'Output before and after diagrams of the transport subgraph.'
   task :subgraph, [:data_dir, :sector] do |_, args|
     if args.data_dir.nil?
-      raise "You need to supply the path to ETSource data; "\
-            "e.g. rake debug:subgraph[../etsource/data,transport]"
+      fail "You need to supply the path to ETSource data; "\
+           "e.g. rake debug:subgraph[../etsource/data,transport]"
     end
 
     if args.sector.nil?
-      raise "You need to supply a sector name; "\
-            "e.g. rake debug:subgraph[../etsource/data,transport]"
+      fail "You need to supply a sector name; "\
+           "e.g. rake debug:subgraph[../etsource/data,transport]"
     end
 
     $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/..'))

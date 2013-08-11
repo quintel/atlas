@@ -26,7 +26,7 @@ module Atlas
           # Prevent finding a node which is a member of the superclass, but
           # not this subclass, e.g. FinalDemandNode.find('not_an_fd_node')
           if document.nil? || ! document.is_a?(self)
-            raise(DocumentNotFoundError.new(key, self))
+            fail(DocumentNotFoundError.new(key, self))
           end
 
           document

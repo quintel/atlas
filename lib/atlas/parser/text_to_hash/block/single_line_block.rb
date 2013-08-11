@@ -31,7 +31,7 @@ module Atlas
         #######
 
         def validate!
-          raise CannotParseError.new(line, self) unless valid?
+          fail CannotParseError.new(line, self) unless valid?
         end
 
         def cast_scalar(text)

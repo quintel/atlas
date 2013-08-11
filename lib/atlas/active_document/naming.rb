@@ -27,7 +27,7 @@ module Atlas
       # Returns whatever you gave.
       def key=(new_key)
         if new_key.nil? || ! new_key.match(/\S/)
-          raise InvalidKeyError.new(new_key)
+          fail InvalidKeyError.new(new_key)
         end
 
         @key = new_key.to_sym
@@ -151,7 +151,7 @@ module Atlas
       #
       # Returns nothing.
       def set_attributes_from_filename!(path)
-        raise InvalidKeyError.new(path) if path.to_s[0] == '/'
+        fail InvalidKeyError.new(path) if path.to_s[0] == '/'
 
         relative = directory.join(path.to_s).relative_path_from(directory)
         name     = relative.basename.to_s.split('.', 2).first

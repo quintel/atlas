@@ -118,7 +118,7 @@ namespace :import do
     path = Atlas.root.join(path) if path.relative?
 
     unless path.directory?
-      raise "No directory found at #{ path.to_s }"
+      fail "No directory found at #{ path.to_s }"
     end
 
     path
@@ -177,11 +177,11 @@ namespace :import do
     require 'active_support/core_ext/hash/indifferent_access'
 
     if args.from.nil?
-      raise "You did not specify a 'from' directory!"
+      fail "You did not specify a 'from' directory!"
     end
 
     if args.to.nil?
-      raise "You did not specify a 'to' directory!"
+      fail "You did not specify a 'to' directory!"
     end
 
     $from_dir     = dir(args.from)

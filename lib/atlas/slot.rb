@@ -104,7 +104,7 @@ module Atlas
     # Returns a hash.
     def self.attributes_from_key(key)
       if key.nil? || ! (data = key.to_s.match(KEY_FORMAT))
-        raise InvalidKeyError.new(key)
+        fail InvalidKeyError.new(key)
       end
 
       { node:      data[:node].to_sym,

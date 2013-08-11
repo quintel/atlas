@@ -29,7 +29,7 @@ module Atlas
 
     # Returns a Float for the energy value for that particular unit.
     def to_unit(unit)
-      raise UnknownUnitError.new(unit) unless JOULES[unit]
+      fail UnknownUnitError.new(unit) unless JOULES[unit]
       joule / JOULES[unit]
     end
 

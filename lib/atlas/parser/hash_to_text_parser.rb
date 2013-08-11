@@ -24,7 +24,8 @@ module Atlas
     attr_reader :hash
 
     def initialize(input)
-      raise ArgumentError unless input.is_a?(Hash)
+      fail ArgumentError unless input.is_a?(Hash)
+
       @comments   = input.delete(:comments)
       @queries    = input.delete(:queries)
       @attributes = input

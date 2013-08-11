@@ -46,7 +46,7 @@ module Atlas
         path = attributes.delete(:path)
         key  = attributes.delete(:key)
 
-        raise NoPathOrKeyError.new(self.class) if path.nil? && key.nil?
+        fail NoPathOrKeyError.new(self.class) if path.nil? && key.nil?
 
         path ? (self.path = path) : (self.key = key)
         @last_saved_file_path = self.path.dup

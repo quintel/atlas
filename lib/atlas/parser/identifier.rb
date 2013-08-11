@@ -25,7 +25,7 @@ module Atlas
         when EMPTY_LINE
           :empty_line
         else
-          raise CannotIdentifyError.new(string)
+          fail CannotIdentifyError.new(string)
         end
       end
 

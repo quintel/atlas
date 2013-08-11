@@ -7,7 +7,7 @@ module Atlas
     KEY_NORMALIZER = lambda do |key|
       case key
       when nil
-        raise(InvalidKeyError.new(key))
+        fail(InvalidKeyError.new(key))
       when Integer
         key
       else
@@ -61,7 +61,7 @@ module Atlas
     # in the file.
     def row(key)
       @table.find { |row| normalize_key(row[0]) == key } ||
-        raise(UnknownCSVRowError.new(self, key))
+        fail(UnknownCSVRowError.new(self, key))
     end
 
     # Internal: Converts the given key to a format which removes all special
