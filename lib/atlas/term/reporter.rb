@@ -43,7 +43,7 @@ module Atlas
         result
       rescue Exception => ex
         refresh!(true) # Clear any output.
-        raise ex
+        fail ex
       end
 
       # Public: Increments the counter for the given +group_name+ and updates

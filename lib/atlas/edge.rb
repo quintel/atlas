@@ -106,7 +106,7 @@ module Atlas
     # Returns a hash.
     def attributes_from_basename(name)
       if name.nil? || ! name.match(/^[\w_]+-[\w_]+@[\w_]+$/)
-        raise InvalidKeyError.new(name)
+        fail InvalidKeyError.new(name)
       end
 
       values = name.split(/[-@]/).map(&:to_sym)

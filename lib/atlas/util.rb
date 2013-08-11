@@ -27,7 +27,7 @@ module Atlas
           dotted.merge!(flatten_dotted_hash(value, full_key))
         when Array, Set
           if value.any? { |element| element.is_a?(Hash) }
-            raise IllegalNestedHashError.new(value)
+            fail IllegalNestedHashError.new(value)
           end
 
           dotted[full_key] = value

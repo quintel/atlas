@@ -21,7 +21,7 @@ module Atlas
 
     # Loads a stored energy balance
     def self.find(key, year = nil)
-      key ? new(key) : raise(InvalidKeyError.new(key))
+      key ? new(key) : fail(InvalidKeyError.new(key))
     end
 
     # Returns the energy balance item in the correct unit

@@ -55,7 +55,7 @@ module Atlas
         end
 
         if relative.to_s.include?('..')
-          raise IllegalDirectoryError.new(path, directory)
+          fail IllegalDirectoryError.new(path, directory)
         end
 
         set_attributes_from_filename!(relative)
@@ -100,7 +100,7 @@ module Atlas
       #
       # Returns true, or raises an error if the save fails.
       def save!
-        raise(InvalidDocumentError.new(self)) unless save
+        fail(InvalidDocumentError.new(self)) unless save
         true
       end
 
@@ -114,7 +114,7 @@ module Atlas
 
       def manager=(manager)
         if @manager
-          raise AtlasError, "You may not change a document's manager"
+          fail AtlasError, "You may not change a document's manager"
         end
 
         @manager = manager

@@ -142,12 +142,12 @@ module Atlas
         props[:type] = :flexible
       end
 
-      raise DocumentNotFoundError.new(edge.supplier, Node) if parent.nil?
+      fail DocumentNotFoundError.new(edge.supplier, Node) if parent.nil?
 
       parent.connect_to(child, carrier.key, props)
     rescue Turbine::DuplicateEdgeError => ex
       # Ignore duplicate edges to or from the super-nodes
-      raise ex if parent.key != :SUPER_SOURCE && child.key != :SUPER_SINK
+      fail ex if parent.key != :SUPER_SOURCE && child.key != :SUPER_SINK
     end
 
     # Internal: Given a sector, returns a lambda which can be used to filter

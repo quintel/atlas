@@ -22,7 +22,7 @@ module Atlas
         instance_exec(&string)
       end
     rescue StandardError, ScriptError => ex
-      raise QueryError.new(ex, string)
+      fail QueryError.new(ex, string)
     end
 
     alias_method :query, :execute
@@ -158,13 +158,13 @@ module Atlas
     #
     # keys* - One or more keys.
     #
-    # Returns the Turbine::Node or Turbine::Edge. Raises
+    # Returns the Turbine::Node or Turbine::Edge.
     def lookup(*keys)
       keys = keys.map(&:to_sym)
 
       if keys.one?
         # A single key looks up a node by its key.
-        @graph.node(keys.first) || raise(UnknownNodeError.new(keys.first))
+        @graph.node(keys.first) || fail(UnknownNodeError.new(keys.first))
       elsif keys.length == 3
         # Three keys looks up an edge by its parent and child node keys, and
         # the name of the carrier.
@@ -175,10 +175,10 @@ module Atlas
 
         parent.out_edges(keys.last).find do |edge|
           edge.to.key == keys[1]
-        end || raise(UnknownEdgeError.new(keys))
+        end || fail(UnknownEdgeError.new(keys))
       else
         # Any other number of keys is invalid.
-        raise InvalidLookupError.new(keys)
+        fail InvalidLookupError.new(keys)
       end
     end
 

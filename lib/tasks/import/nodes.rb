@@ -24,7 +24,7 @@ namespace :import do
       nodes.each do |key, data|
         runner.item do
           unless data['slots']
-            raise RuntimeError.new("Node #{ key.inspect } has no slots?!")
+            fail RuntimeError.new("Node #{ key.inspect } has no slots?!")
           end
 
           klass = node_subclass(key, data)

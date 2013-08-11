@@ -79,7 +79,7 @@ module Atlas
   #     "#{ weight } exceeds #{ limit }"
   #   end
   #
-  #   raise MyError.new(5000, 2500)
+  #   fail MyError.new(5000, 2500)
   #   # => #<Atlas::MyError: 5000 exceeds 2500>
   #
   # Returns an exception class.
