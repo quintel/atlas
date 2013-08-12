@@ -9,12 +9,11 @@ module Atlas
       validate :validate_data
 
       # Public: The share of energy which leaves the node through this slot.
-      # Calculated dynamically according to the shares of the other slots.
+      # Calculated in Refinery, so it remains nil here.
       #
-      # Returns a numeric.
+      # Returns nil.
       def share
-        others = inelastic_slots.sum(&:share)
-        others < 1.0 ? 1.0 - others : 0.0
+        nil
       end
 
       #######
