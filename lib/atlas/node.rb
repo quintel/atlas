@@ -9,7 +9,6 @@ module Atlas
     attribute :energy_balance_group, String
     attribute :demand,               Float
 
-    attribute :query,                String
     attribute :input,                Hash[Symbol => Object]
     attribute :output,               Hash[Symbol => Object]
 
