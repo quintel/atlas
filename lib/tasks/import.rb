@@ -37,6 +37,21 @@ namespace :import do
     nodes.group_by { |key, data| data['sector'] || 'nosector' }
   end
 
+  # Returns a hash where each key is the name of a group and value is an Array
+  # containing the nodes in that group
+  def node_groups
+    @node_groups ||= begin
+      node_groups = {}
+
+      Dir.glob($from_dir.join('topology/groups/**.yml')).each do |file|
+        group_name = File.basename(file, '.yml')
+        node_groups[group_name] = YAML.load_file(file)
+      end
+
+      node_groups
+    end
+  end
+
   # Returns a hash containing data about edges from the NL dataset'
   def edge_data
     @edges ||= begin

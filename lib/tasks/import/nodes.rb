@@ -34,6 +34,15 @@ namespace :import do
           # outgoing slots begin with the carrier key in (brackets).
           out_slots, in_slots = data['slots'].partition { |s| s.match(/^\(/) }
 
+          data[:groups] = []
+
+          # Check out whether there are any groups that this node belongs to.
+          node_groups.each do |group_key, values|
+            data[:groups] << group_key if values.include?(key)
+          end
+
+          data[:groups] = nil if data[:groups].empty?
+
           data[:in_slots]  = in_slots.map  { |s| s.match(/\((.*)\)/)[1] }
           data[:out_slots] = out_slots.map { |s| s.match(/\((.*)\)/)[1] }
           data[:path]      = "#{ sector }/#{ key }"
