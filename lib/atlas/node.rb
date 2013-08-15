@@ -37,6 +37,21 @@ module Atlas
       attribute name, Float
     end
 
+    # (Numeric) attributes that are required for the network queries to work
+    [ :network_capacity_available_in_mw,
+      :network_capacity_used_in_mw,
+      :network_expansion_costs_in_euro_per_mw,
+      :simult_sd,
+      :simult_se,
+      :simult_wd,
+      :simult_we,
+      :peak_load_units,
+      :peak_load_units_present,
+      :simult_supply,
+    ].each do |name|
+      attribute name, Float
+    end
+
     # Deprecated: Since a few months ago, electrical efficiency arrives as
     # separate attributes from the CSVs, but is converted into a hash by the
     # xls2yml script.
