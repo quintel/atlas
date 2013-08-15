@@ -98,6 +98,12 @@ namespace :import do
     @node_costs ||= YAML.load_file(file_path).with_indifferent_access
   end
 
+
+  def node_employment_properties
+    file_path = $from_dir.join('./datasets/nl/graph/employment.yml')
+    @properties ||= YAML.load_file(file_path).with_indifferent_access
+  end
+
   # Returns an array containing the keys of all nodes in the central producers
   # CSV file.
   def central_producers
