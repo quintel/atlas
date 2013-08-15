@@ -47,6 +47,12 @@ namespace :import do
           # attribute list
           data.merge!(node_costs[key]) if node_costs[key]
 
+          # See whether we have something to say about this node's employment
+          # properties...
+          if node_employment_properties[key]
+            data.merge!(node_employment_properties[key])
+          end
+
           data[:in_slots]  = in_slots.map  { |s| s.match(/\((.*)\)/)[1] }
           data[:out_slots] = out_slots.map { |s| s.match(/\((.*)\)/)[1] }
           data[:path]      = "#{ sector }/#{ key }"
