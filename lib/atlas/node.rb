@@ -68,6 +68,16 @@ module Atlas
       attribute name, Float
     end
 
+    # (Numeric) attributes for employment
+    [  :hours_prep_nl,
+       :hours_prod_nl,
+       :hours_place_nl,
+       :hours_maint_nl,
+       :hours_remov_nl
+    ].each do |name|
+      attribute name, Float
+    end
+
     # Deprecated: Since a few months ago, electrical efficiency arrives as
     # separate attributes from the CSVs, but is converted into a hash by the
     # xls2yml script.
