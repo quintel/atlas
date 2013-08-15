@@ -47,7 +47,23 @@ module Atlas
       :simult_we,
       :peak_load_units,
       :peak_load_units_present,
-      :simult_supply,
+      :simult_supply
+    ].each do |name|
+      attribute name, Float
+    end
+
+    # (Numeric) attributes for costs
+    [  :initial_investment,
+       :ccs_investment,
+       :cost_of_installing,
+       :decommissioning_costs,
+       :residual_value,
+       :fixed_operation_and_maintenance_costs_per_year,
+       :variable_operation_and_maintenance_costs_per_full_load_hour,
+       :variable_operation_and_maintenance_costs_for_ccs_per_full_load_hour,
+       :construction_time,
+       :technical_lifetime,
+       :wacc
     ].each do |name|
       attribute name, Float
     end
