@@ -7,20 +7,15 @@ module Atlas
     class ProductionManager < Manager
       # Public: Creates a new manager for the given document +klass+.
       #
-      # klass    - The ActiveDocument class whose files are read by the
-      #            Manager instance.
+      # klass - The ActiveDocument class whose files are read by the Manager.
       #
-      # area     - The area code whose exported data will be loaded.
-      #
-      # register - Tells the Manager whether to register itself with the
-      #            class. This should be set to false if you want to create
-      #            managers on-the-fly, but note that its cache will not be
-      #            expired if the ETSource data directory is changed.
+      # data  - Production data for the nodes (normally containing demands
+      #         calculated with queries or by Refinery)
       #
       # Returns a Manager::Production.
-      def initialize(klass, area)
+      def initialize(klass, data)
         super(klass, false)
-        @area = area.to_sym
+        @data = data
       end
 
       #######
@@ -41,18 +36,7 @@ module Atlas
       #
       # Returns a hash.
       def exported_data_for(key)
-        exported_data[key] || {}
-      end
-
-      # Internal: Loads the CSV of exported values for the class being
-      # managed.
-      #
-      # Returns a hash where each key is the key of one of the documents, and
-      # each value is a hash of values to be set on the document.
-      def exported_data
-        @export ||= YAML.load_file(
-          Atlas.data_dir.join("static/#{ @area }.yml")
-        )[ @klass.name.demodulize.underscore.pluralize.to_sym ]
+        @data[key] || {}
       end
     end # ProductionManager
   end # ActiveDocument
