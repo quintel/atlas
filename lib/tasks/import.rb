@@ -92,6 +92,12 @@ namespace :import do
     end
   end
 
+  # Returns a hash with nodes and its cost parameters.
+  def node_costs
+    file_path = $from_dir.join('datasets/_defaults/graph/converter_costs.yml')
+    @node_costs ||= YAML.load_file(file_path).with_indifferent_access
+  end
+
   # Returns an array containing the keys of all nodes in the central producers
   # CSV file.
   def central_producers
