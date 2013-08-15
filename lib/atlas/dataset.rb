@@ -90,7 +90,8 @@ module Atlas
       key = key.to_sym
 
       (@shares ||= {})[key] ||=
-        CSVDocument::OneDimensional.new(path.join("shares/#{ key }.csv"))
+        CSVDocument::OneDimensional.new(
+          dataset_dir.join("shares/#{ key }.csv"))
     end
 
     # Public: Retrieves the time curve data for the file whose name matches
@@ -104,7 +105,7 @@ module Atlas
     # Returns a CSVDocument.
     def time_curve(key)
       (@time_curves ||= {})[key.to_sym] ||=
-        CSVDocument.new(path.join("time_curves/#{ key }.csv"))
+        CSVDocument.new(dataset_dir.join("time_curves/#{ key }.csv"))
     end
 
     # Public: Retrieves data about CHPs for the datasets region. Expects to
@@ -115,7 +116,7 @@ module Atlas
     #
     # Returns a CSVDocument::OneDimensional.
     def chps
-      @chps ||= CSVDocument::OneDimensional.new(path.join('chp.csv'))
+      @chps ||= CSVDocument::OneDimensional.new(dataset_dir.join('chp.csv'))
     end
 
     # Public: Retrieves demand and full load hours data for the region.
@@ -128,7 +129,8 @@ module Atlas
     #
     # Returns a CSVDocument.
     def central_producers
-      @cental_prod ||= CSVDocument.new(path.join('central_producers.csv'))
+      @cental_prod ||= CSVDocument.new(
+        dataset_dir.join('central_producers.csv'))
     end
 
     # Public: Retrieves demand and max demand data for the region. Expects to
@@ -141,14 +143,15 @@ module Atlas
     #
     # Returns a CSVDocument.
     def primary_production
-      @primary_prod ||= CSVDocument.new(path.join('primary_production.csv'))
+      @primary_prod ||= CSVDocument.new(
+        dataset_dir.join('primary_production.csv'))
     end
 
     # Public: Path to the directory in which the dataset specific data is
     # stored.
     #
     # Returns a Pathname.
-    def path
+    def dataset_dir
       Atlas.data_dir.join(DIRECTORY).join(key.to_s)
     end
 
