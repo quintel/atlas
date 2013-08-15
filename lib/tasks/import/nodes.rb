@@ -43,6 +43,10 @@ namespace :import do
 
           data[:groups] = nil if data[:groups].empty?
 
+          # See whether there are associated costs and integrate them with the
+          # attribute list
+          data.merge!(node_costs[key]) if node_costs[key]
+
           data[:in_slots]  = in_slots.map  { |s| s.match(/\((.*)\)/)[1] }
           data[:out_slots] = out_slots.map { |s| s.match(/\((.*)\)/)[1] }
           data[:path]      = "#{ sector }/#{ key }"
