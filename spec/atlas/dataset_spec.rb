@@ -22,19 +22,19 @@ module Atlas; describe Dataset, :fixtures do
     end
   end # describe #load
 
-  describe '#path' do
+  describe '#dataset_dir' do
     let(:dataset) { Dataset.new(key: :kr) }
 
     it 'includes the data directory' do
-      expect(dataset.path.to_s).to include(Atlas.data_dir.to_s)
+      expect(dataset.dataset_dir.to_s).to include(Atlas.data_dir.to_s)
     end
 
     it 'points to the datasets subdirectory' do
-      expect(dataset.path.to_s).to include('/datasets/')
+      expect(dataset.dataset_dir.to_s).to include('/datasets/')
     end
 
     it 'includes the dataset key' do
-      expect(dataset.path.to_s).to end_with('/kr')
+      expect(dataset.dataset_dir.to_s).to end_with('/kr')
     end
   end
 
