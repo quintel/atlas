@@ -2,7 +2,13 @@ require 'spec_helper'
 
 module Atlas::ActiveDocument
   describe ProductionManager, :fixtures do
-    let(:manager) { ProductionManager.new(Atlas::Node, :nl) }
+    let(:manager) do
+      ProductionManager.new(Atlas::Node, { foo: {
+        demand: 50,
+        output: { coal: 0.812 }
+      }})
+    end
+
     let(:production_node) { manager.get(:foo) }
 
     it 'keeps the original attributes when not present in the static YML' do
@@ -25,18 +31,16 @@ module Atlas::ActiveDocument
       expect(production_node.demand).to eq(50)
     end
 
-    it 'loads data by the region code' do
-      uk_manager = ProductionManager.new(Atlas::Node, :uk)
-      expect(uk_manager.get(:foo).demand).to eq(100)
-    end
-
     it 'loads calculated slot data' do
       slot = production_node.out_slots.find { |n| n.carrier == :coal }
       expect(slot.share).to eql(0.812)
     end
 
     it 'loads edge data' do
-      edge = ProductionManager.new(Atlas::Edge, :nl).get(:'bar-foo@coal')
+      data = { :'bar-foo@coal' => {
+        demand: 20, parent_share: 0.385, child_share: 0.411 } }
+
+      edge = ProductionManager.new(Atlas::Edge, data).get(:'bar-foo@coal')
 
       expect(edge.demand).to eq(20)
       expect(edge.parent_share).to eql(0.385)
