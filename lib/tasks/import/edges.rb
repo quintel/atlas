@@ -30,7 +30,7 @@ namespace :import do
             when 'f' then :flexible
             when 'c' then :constant
             when 'd' then :dependent
-            when 'i' then :inverse_flexible
+            when 'i' then :inversed_flexible
           end
 
           # We currently have to construct the full path manually since Edge

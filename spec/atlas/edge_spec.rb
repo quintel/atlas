@@ -7,7 +7,7 @@ module Atlas
 
     it { expect(Edge.new(key: 'a-b@gas')).to ensure_inclusion_of(:type).
          in_array([ :share, :flexible, :constant,
-                    :inverse_flexible, :dependent ]) }
+                    :inversed_flexible, :dependent ]) }
 
     describe 'when creating a new Edge' do
       let(:edge) { Edge.new(path: 'left-right@gas.ad') }
