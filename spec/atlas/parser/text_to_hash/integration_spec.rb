@@ -32,7 +32,7 @@ module Atlas::Parser::TextToHash; describe '(integration)' do
       expect(hash).to include(goal: 350.0) # ppm
     end
 
-    it 'parses arrays', :pending do
+    it 'parses arrays' do
       expect(hash).to include(who: %w( troy abed )) # in the morning
     end
 

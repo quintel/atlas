@@ -7,6 +7,9 @@ module Atlas
         # TODO: Integrate with Regex from Line?
         LINE = /^[-~]\s([a-z0-9_.]*)\s+=(?:\s*(.*))$/
 
+        ARR_START = '['.freeze
+        ARR_END   = ']'.freeze
+
         def valid?
           line.to_s.match(LINE)
         end
@@ -23,7 +26,15 @@ module Atlas
 
         def value
           validate!
-          cast_scalar(lines.first.to_s.match(LINE).captures.last)
+
+          value = lines.first.to_s.match(LINE).captures.last.strip
+
+          if value[0] == ARR_START && value[-1] == ARR_END
+            # [arrays, of, values]
+            value[1..-2].split(',').map { |el| cast_scalar(el.strip) }
+          else
+            cast_scalar(value)
+          end
         end
 
         #######
