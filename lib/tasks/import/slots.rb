@@ -145,20 +145,18 @@ namespace :import do
         setter   = token[-1] == ?- ? :output= : :input=
         node     = Node.find(node_key)
 
-        # If the node has queries to set up the slots, ignore the values from
-        # the YAML files.
-        if node.queries.any? { |key, _| key.to_s.start_with?(getter.to_s) }
-          next
-        end
-
         # Add the slots in a predictable order each time.
         slots = slots.sort_by { |s| s[:key] }
 
         # Create a hash containing the data to be saved into the node. Loss
         # slots are ignored and set to elastic.
         slot_data = slots.each_with_object({}) do |data, collection|
-          collection[data[:key].to_s.split('@').last] =
-            data[:type] == :loss ? :elastic : data[:share]
+          carrier = data[:key].to_s.split('@').last
+
+          # Skip slots for which there is a query.
+          next if node.queries.key?("#{ getter }.#{ carrier }")
+
+          collection[carrier] = data[:type] == :loss ? :elastic : data[:share]
         end
 
         node.public_send(setter, slot_data)
