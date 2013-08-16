@@ -32,7 +32,7 @@ module Atlas
     validates :carrier,  presence: true
 
     validates :type, inclusion:
-      { in: [:share, :flexible, :constant, :inverse_flexible, :dependent] }
+      { in: [:share, :flexible, :constant, :inversed_flexible, :dependent] }
 
     validates_with QueryValidator, allow_no_query: true,
       attributes: [:child_share, :parent_share, :demand]

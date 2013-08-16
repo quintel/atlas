@@ -132,7 +132,7 @@ module Atlas
         :parent_share, :child_share, :demand, :reversed, :priority
       ).merge(model: edge)
 
-      if child.key == :SUPER_SINK || edge.type == :inverse_flexible
+      if child.key == :SUPER_SINK || edge.type == :inversed_flexible
         # Send energy to the sink only once all the other edges have had their
         # demands set.
         props[:type] = :overflow
