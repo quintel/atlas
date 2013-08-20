@@ -57,15 +57,15 @@ module Atlas
       end
 
       it 'writes [M]->[F] share' do
-        expect(edges[:'mother-father@spouse'][:child_share]).to eq(1)
+        expect(edges[:'father-mother@spouse'][:child_share]).to eq(1)
       end
 
       it 'writes [M]->[C] share' do
-        expect(edges[:'mother-child@child'][:child_share]).to eq(15.0 / 25.0)
+        expect(edges[:'child-mother@child'][:child_share]).to eq(15.0 / 25.0)
       end
 
       it 'writes [F]->[C] share' do
-        expect(edges[:'father-child@child'][:child_share]).to eq(10.0 / 25.0)
+        expect(edges[:'child-father@child'][:child_share]).to eq(10.0 / 25.0)
       end
 
       it 'writes [M]-@spouse share' do
