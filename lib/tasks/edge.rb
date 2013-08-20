@@ -7,7 +7,7 @@ namespace :edge do
     carrier  = ENV['carrier']
     type     = ENV['type'] || :share
 
-    Atlas.data_dir = '../etsource/data'
+    Atlas.data_dir = '../etsource/data' || ENV['data_dir']
 
     fail 'please specify from, e.g. rake edge:create from=foo' unless from
     fail 'please specify to, e.g. rake edge:create to=bar' unless to
