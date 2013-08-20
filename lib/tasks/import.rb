@@ -22,6 +22,11 @@ namespace :import do
     (?<supplier>[\w_]+)        # Parent node key
   /xi
 
+  IGNORED_NODES = %w(
+    energy_chp_ultra_supercritical_coal
+    energy_power_ultra_supercritical_coal
+  ).map(&:to_sym).freeze
+
   # Returns a hash where each key is the name of the sector, and the value is
   # an array containing all the nodes in that sector.
   def nodes_by_sector

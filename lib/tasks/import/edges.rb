@@ -22,9 +22,12 @@ namespace :import do
       edges      = nodes.map { |key, node| node['links'] }.flatten.compact
 
       edges.each do |link|
-        runner.item do
-          data = LINK_RE.match(link)
+        data = LINK_RE.match(link)
 
+        next if IGNORED_NODES.include?(data[:consumer].to_sym) ||
+                IGNORED_NODES.include?(data[:supplier].to_sym)
+
+        runner.item do
           type = case data[:type]
             when 's' then :share
             when 'f' then :flexible
