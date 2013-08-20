@@ -58,7 +58,7 @@ module Atlas
     # Returns nothing.
     def edges_hash(edges)
       edges.each_with_object({}) do |edge, hash|
-        hash[Atlas::Edge.key(edge.parent.key, edge.child.key, edge.label)] = {
+        hash[Atlas::Edge.key(edge.child.key, edge.parent.key, edge.label)] = {
           child_share: edge.child_share.to_f
         }
       end
