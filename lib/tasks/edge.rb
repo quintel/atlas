@@ -18,7 +18,7 @@ namespace :edge do
     Atlas::Node.find(to.to_sym)
     Atlas::Carrier.find(carrier)
 
-    edge = Atlas::Edge.new(key: "#{ to }-#{ from }@#{ carrier }", type: type)
+    edge = Atlas::Edge.new(key: Atlas::Edge.key(to, from, carrier), type: type)
 
     edge.save!
 
