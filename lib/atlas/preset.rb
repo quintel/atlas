@@ -9,6 +9,7 @@ module Atlas
     attribute :id,                 Integer
     attribute :description,        String
     attribute :ordering,           Integer
+    attribute :display_group,      String
     attribute :author,             String
     attribute :title,              String
     attribute :comments,           String
