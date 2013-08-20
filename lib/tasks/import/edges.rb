@@ -45,6 +45,10 @@ namespace :import do
                     reversed: ! data[:reversed].nil?
                   }.merge(edge_data[link] || {})
 
+          if data[:carrier] == 'coupling_carrier'
+            props[:child_share] = 1.0
+          end
+
           queries[key].each do |query_data|
             props[:queries][query_data[:attribute]] = query_data[:query].to_s
           end
