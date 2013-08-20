@@ -109,6 +109,8 @@ namespace :import do
       # We import *all* output slots whose share is not the default 1.0.
       (! ignored.include?(node_key)) &&
        ((direction == :output && ! all_slot_defaults?(data)) ||
+        # Include coupling carriers...
+        data[:key].to_s.include?('coupling_carrier') ||
         # ... or any slot (including input slots) named in the ETSource
         # data/import/required_inputs_slots.yml file.
         required[direction].include?(node_key))
@@ -119,8 +121,13 @@ namespace :import do
     # node.
 
     used_sides = use.map do |data|
-      data[:key].to_s.split('@').first
-    end.uniq
+      # We don't need to store the entire "side" if the slot is for a coupling
+      # carrier... that can be included on its own since it is ignored when
+      # performing Refinery calculations.
+      unless data[:key].to_s.include?('coupling_carrier')
+        data[:key].to_s.split('@').first
+      end
+    end.compact.uniq
 
     skip.each do |data|
       use.push(data) if used_sides.include?(data[:key].to_s.split('@').first)
@@ -155,6 +162,10 @@ namespace :import do
         # slots are ignored and set to elastic.
         slot_data = slots.each_with_object({}) do |data, collection|
           carrier = data[:key].to_s.split('@').last
+
+          if data[:key].to_s.include?('coupling')
+            puts data
+          end
 
           # Skip slots for which there is a query.
           next if node.queries.key?("#{ getter }.#{ carrier }")
