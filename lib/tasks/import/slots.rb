@@ -143,7 +143,10 @@ namespace :import do
         node_key = token[0..-2]
         getter   = token[-1] == ?- ? 'output' : 'input'
         setter   = token[-1] == ?- ? :output= : :input=
-        node     = Node.find(node_key)
+
+        next if IGNORED_NODES.include?(node_key.to_sym)
+
+        node = Node.find(node_key)
 
         # Add the slots in a predictable order each time.
         slots = slots.sort_by { |s| s[:key] }

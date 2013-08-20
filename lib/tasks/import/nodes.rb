@@ -22,6 +22,8 @@ namespace :import do
 
     nodes_by_sector.each do |sector, nodes|
       nodes.each do |key, data|
+        next if IGNORED_NODES.include?(key.to_sym)
+
         runner.item do
           unless data['slots']
             fail RuntimeError.new("Node #{ key.inspect } has no slots?!")
