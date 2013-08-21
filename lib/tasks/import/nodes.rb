@@ -55,6 +55,10 @@ namespace :import do
             data.merge!(node_employment_properties[key])
           end
 
+          # These are calculated by Refinery...
+          data.delete(:demand_expected_value)
+          data.delete(:preset_demand)
+
           data[:in_slots]  = in_slots.map  { |s| s.match(/\((.*)\)/)[1] }
           data[:out_slots] = out_slots.map { |s| s.match(/\((.*)\)/)[1] }
           data[:path]      = "#{ sector }/#{ key }"
