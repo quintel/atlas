@@ -8,6 +8,7 @@ module Atlas
     attribute :has_loss,             Boolean
     attribute :energy_balance_group, String
     attribute :demand,               Float
+    attribute :max_demand,           Float
 
     attribute :input,                Hash[Symbol => Object]
     attribute :output,               Hash[Symbol => Object]
