@@ -86,7 +86,6 @@ module Atlas
     # Returns a numeric.
     def share
       share = (in? ? node.input[carrier] : node.output[carrier])
-      share = 0.4 if share == ''
       share == :elastic ? nil : share
     end
 
