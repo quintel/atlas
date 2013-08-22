@@ -163,10 +163,6 @@ namespace :import do
         slot_data = slots.each_with_object({}) do |data, collection|
           carrier = data[:key].to_s.split('@').last
 
-          if data[:key].to_s.include?('coupling')
-            puts data
-          end
-
           # Skip slots for which there is a query.
           next if node.queries.key?("#{ getter }.#{ carrier }")
 
