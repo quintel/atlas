@@ -20,6 +20,9 @@ namespace :import do
 
     runner = ImportRun.new('nodes')
 
+    preset_demand_nodes = YAML.load_file(
+      Atlas.data_dir.join('import/preset_demand_nodes.yml'))
+
     nodes_by_sector.each do |sector, nodes|
       nodes.each do |key, data|
         next if IGNORED_NODES.include?(key.to_sym)
@@ -37,6 +40,10 @@ namespace :import do
           out_slots, in_slots = data['slots'].partition { |s| s.match(/^\(/) }
 
           data[:groups] = []
+
+          if preset_demand_nodes.include?(key.to_sym)
+            data[:groups] << :preset_demand
+          end
 
           # Check out whether there are any groups that this node belongs to.
           node_groups.each do |group_key, values|
