@@ -18,6 +18,15 @@ module Atlas
         @data = data
       end
 
+      # Production-mode documents may not be changed.
+      %w( delete write delete_path ).each do |method|
+        class_eval <<-RUBY, __FILE__, __LINE__ + 1
+          def #{ method }(*)
+            raise ReadOnlyError.new
+          end
+        RUBY
+      end
+
       #######
       private
       #######
