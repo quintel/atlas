@@ -109,7 +109,7 @@ module Atlas
       #
       # Returns nothing.
       def destroy!
-        path.delete
+        manager.delete(self)
       end
 
       def manager=(manager)

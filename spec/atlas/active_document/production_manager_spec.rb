@@ -46,5 +46,16 @@ module Atlas::ActiveDocument
       expect(edge.parent_share).to eql(0.385)
       expect(edge.child_share).to eql(0.411)
     end
+
+    it 'disallows editing the document' do
+      expect { production_node.save }.to raise_error(Atlas::ReadOnlyError)
+
+      expect { production_node.update_attributes!(demand: 0) }.
+        to raise_error(Atlas::ReadOnlyError)
+    end
+
+    it 'disallows deleting the document' do
+      expect { production_node.destroy! }.to raise_error(Atlas::ReadOnlyError)
+    end
   end # ProductionManager
 end # Atlas::ActiveDocument

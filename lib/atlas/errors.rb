@@ -98,6 +98,10 @@ module Atlas
     end
   end
 
+  ReadOnlyError = error_class do
+    'Read-only documents may not be saved, updated, or deleted'
+  end
+
   InvalidDocumentError = error_class do |document|
     "#{ document.class.name.demodulize }(#{ document.key.inspect }) was " \
     "not valid: #{ document.errors.to_a.join(", ") }"
