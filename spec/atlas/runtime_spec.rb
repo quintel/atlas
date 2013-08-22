@@ -91,12 +91,19 @@ module Atlas
     context 'PRIMARY_PRODUCTION' do
       it 'executes PRIMARY_PRODUCTION functions' do
         expect(runtime.execute(
-          "PRIMARY_PRODUCTION(energy_production_non_biogenic_waste)"
+          "PRIMARY_PRODUCTION(energy_production_non_biogenic_waste, demand)"
         )).to eq(31202)
       end
 
+      it "raises an error if you don't provide a column name" do
+        expect {
+          runtime.execute(
+            "PRIMARY_PRODUCTION(energy_production_non_biogenic_waste)")
+        }.to raise_error(ArgumentError)
+      end
+
       it 'raises an error if the production data is missing' do
-        expect { runtime.execute('PRIMARY_PRODUCTION(nope)') }.
+        expect { runtime.execute('PRIMARY_PRODUCTION(nope, demand)') }.
           to raise_error(UnknownCSVRowError)
       end
     end

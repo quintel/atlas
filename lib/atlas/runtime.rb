@@ -89,8 +89,8 @@ module Atlas
     # node_key - The key of the node whose production is to be fetched.
     #
     # Returns a Float.
-    def PRIMARY_PRODUCTION(node_key)
-      dataset.primary_production.get(node_key, :demand)
+    def PRIMARY_PRODUCTION(node_key, attribute)
+      dataset.primary_production.get(node_key, attribute)
     end
 
     # Public: Given a key from the time curves file, retrieves the associated
