@@ -71,9 +71,21 @@ module Atlas
     #
     # Returns a hash.
     def slots_hash(slots)
-      slots.each_with_object({}) do |slot, hash|
+      from_slots = slots.each_with_object({}) do |slot, hash|
         hash[slot.carrier] = slot.share.to_f
       end
+
+      if slots.any?
+        # Find any temporarily stored coupling carrier conversion.
+        node      = slots.first.node
+        direction = slots.first.direction
+
+        if cc_share = node.get(:"cc_#{ direction }")
+          from_slots[:coupling_carrier] = cc_share
+        end
+      end
+
+      from_slots
     end
   end # Exporter
 end # Atlas

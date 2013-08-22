@@ -17,7 +17,15 @@ module Atlas
           (model.out_slots + model.in_slots).each do |slot|
             collection = node.slots.public_send(slot.direction)
 
-            next if slot.carrier == :coupling_carrier
+            # Temporary storage of coupling carrier shares which are
+            # calculated using a query,
+            if slot.carrier == :coupling_carrier
+              if slot.query
+                node.set(:"cc_#{ slot.direction }", query.call(slot.query))
+              end
+
+              next
+            end
 
             if collection.include?(slot.carrier)
               ref_slot = collection.get(slot.carrier)
