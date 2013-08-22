@@ -50,17 +50,38 @@ namespace :import do
     # slots.
 
     nodes = YAML.load_file($from_dir.join('topology/export.graph'))
+    node_data = nodes_by_sector
 
-    nodes.map { |_, node| node['slots'] || [] }.flatten.each do |string|
-      key, data = parse_slot(string)
+    nodes.each do |node_key, node|
+      (node['slots'] || []).flatten.each do |string|
+        key, data = parse_slot(string)
 
-      slot = slots[key]
+        slot = slots[key]
 
-      # Merge in the NL regional data.
-      slot.merge!(data)
+        # Merge in the NL regional data.
+        slot.merge!(data)
 
-      # Change the old "conversion" attribute to "share".
-      slot[:share] = slot.delete(:conversion) if slot.key?(:conversion)
+        if data[:type] == :carrier_efficient
+          ndata = node_data[node['sector']].assoc(node_key).last
+          ceff  = ndata['carrier_efficiency'][data[:key].to_s.split('@').last]
+
+          # Determine the efficiency from the share of inputs. This is "safe"
+          # since input slots for the node are always read before the outputs.
+
+          conversion = ceff.sum do |carrier, conv|
+            if input = slots["#{ node_key }-(#{ carrier })"]
+              conv * input[:share]
+            else
+              0.0
+            end
+          end.round(4)
+
+          slot[:conversion] = conversion
+        end
+
+        # Change the old "conversion" attribute to "share".
+        slot[:share] = slot.delete(:conversion) if slot.key?(:conversion)
+      end
     end
 
     slots
