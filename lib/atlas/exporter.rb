@@ -44,11 +44,11 @@ module Atlas
     # Returns nothing.
     def nodes_hash(nodes)
       nodes.each_with_object({}) do |node, hash|
-        hash[node.key] = {
+        hash[node.key] = node.properties.except(:model).merge!({
           demand: node.demand.to_f,
           input:  slots_hash(node.slots.in),
           output: slots_hash(node.slots.out)
-        }
+        })
       end
     end
 
@@ -58,9 +58,8 @@ module Atlas
     # Returns nothing.
     def edges_hash(edges)
       edges.each_with_object({}) do |edge, hash|
-        hash[Atlas::Edge.key(edge.child.key, edge.parent.key, edge.label)] = {
-          child_share: edge.child_share.to_f
-        }
+        hash[Atlas::Edge.key(edge.child.key, edge.parent.key, edge.label)] =
+          { child_share: edge.child_share.to_f }
       end
     end
 
