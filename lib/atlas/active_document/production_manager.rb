@@ -35,7 +35,10 @@ module Atlas
       #
       # Returns the ActiveDocument.
       def load(key)
-        super.tap { |doc| doc.attributes = exported_data_for(doc.key) }
+        super.tap do |doc|
+          doc.attributes =
+            doc.attributes.deep_merge!(exported_data_for(doc.key))
+        end
       end
 
       # Internal: Returns the static, exported values for the document
