@@ -75,7 +75,13 @@ namespace :import do
           data.delete('links')
           data.delete('slots')
 
-          queries[key.to_sym].each do |query_data|
+          orig_queries = if RDR_KEYS.include?(key.to_sym)
+            queries[key.to_s.gsub(/_rdr$/, '').to_sym]
+          else
+            queries[key.to_sym]
+          end
+
+          orig_queries.each do |query_data|
             data[:queries][query_data[:attribute]] = query_data[:query].to_s
           end
 
