@@ -199,7 +199,5 @@ namespace :import do
       # Show many many were skipped.
       (slots.length - use.length).times { reporter.inc(:skipped) }
     end
-
-    puts
   end # slots
 end # import

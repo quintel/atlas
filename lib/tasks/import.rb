@@ -24,8 +24,17 @@ namespace :import do
 
   IGNORED_NODES = %w(
     energy_chp_ultra_supercritical_coal
+    energy_chp_ultra_supercritical_cofiring_coal
     energy_power_ultra_supercritical_coal
+    energy_power_ultra_supercritical_cofiring_coal
   ).map(&:to_sym).freeze
+
+  RDR_KEYS = %w(
+    energy_chp_ultra_supercritical_coal_rdr
+    energy_chp_ultra_supercritical_cofiring_coal_rdr
+    energy_power_ultra_supercritical_coal_rdr
+    energy_power_ultra_supercritical_cofiring_coal_rdr
+  ).map(&:to_sym)
 
   # Returns a hash where each key is the name of the sector, and the value is
   # an array containing all the nodes in that sector.
@@ -77,7 +86,7 @@ namespace :import do
   # Given a node key and its data, determines which subclass of Node should
   # be used.
   def node_subclass(key, data)
-    if central_producers.include?(key.to_sym)
+    if central_producers.include?(key.to_sym) || RDR_KEYS.include?(key.to_sym)
       return Atlas::Node::CentralProducer
     end
 
