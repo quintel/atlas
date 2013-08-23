@@ -1,19 +1,5 @@
 module Atlas
   class GraphBuilder
-    # A list of nodes which should be ignored and not included in the graph.
-    IGNORE = %w(
-      energy_chp_ultra_supercritical_coal
-      energy_power_ultra_supercritical_coal
-    ).map(&:to_sym).freeze
-
-    ALSO = {
-      industry: %w(
-        energy_distribution_coal_gas
-        energy_cokesoven_transformation_coal
-        energy_steel_blastfurnace_bat_transformation_cokes
-        energy_steel_blastfurnace_current_transformation_cokes )
-    }.freeze
-
     # Public: Creates a Turbine::Graph containing all the nodes in the data
     # files, and sets up the edges between them.
     #
@@ -47,26 +33,18 @@ module Atlas
       @nodes = Collection.new(Node.all.select(&filter(sector)))
       @graph = Turbine::Graph.new
 
-      edges = if sector
-        Edge.all.select do |edge|
+      @edges = if sector
+        Collection.new(Edge.all.select do |edge|
           # For the moment, we test the sector of the node on each end of the
           # edge, rather than the namespace of the edge; edges currently use
           # the same namespace as the parent node. Because of this, testing
           # only the namespace would raise a DocumentNotFoundError when trying
           # to connect "bridge" edges which cross from one sector to another.
-          in_sector = @nodes.key?(edge.supplier) || @nodes.key?(edge.consumer)
-
-          in_sector &&
-            ! IGNORE.include?(edge.supplier) &&
-            ! IGNORE.include?(edge.consumer)
-        end
+          @nodes.key?(edge.supplier) || @nodes.key?(edge.consumer)
+        end)
       else
-        Edge.all.reject do |edge|
-          IGNORE.include?(edge.supplier) || IGNORE.include?(edge.consumer)
-        end
+        Edge.all
       end
-
-      @edges = Collection.new(edges)
     end
 
     # Internal: Adds the ActiveDocument nodes to the Turbine graph.
@@ -83,27 +61,7 @@ module Atlas
       @edges.sort_by(&:key).each do |edge|
         next if edge.carrier == :coupling_carrier
 
-        unless @nodes.key?(edge.consumer)
-          add_node(@graph, Atlas::Node.new(key: :SUPER_SINK))
-        end
-
-        unless @nodes.key?(edge.supplier)
-          add_node(@graph, Atlas::Node.new(key: :SUPER_SOURCE))
-        end
-
         self.class.establish_edge(edge, @graph, @nodes)
-      end
-
-      # Produce simpler graphs; whenever a super-source child has only
-      # incoming edges from the super-source, get rid of them.
-      if super_source = @graph.node(:SUPER_SOURCE)
-        super_source.out_edges.each do |edge|
-          if edge.child.in_edges.all? { |o| o.from.key == :SUPER_SOURCE }
-            edge.from.disconnect_via(edge)
-          end
-        end
-
-        @graph.delete(super_source) if super_source.out_edges.none?
       end
     end
 
@@ -124,15 +82,15 @@ module Atlas
     #
     # Returns the Turbine::Edge which was created.
     def self.establish_edge(edge, graph, nodes)
-      parent  = graph.node(edge.supplier) || graph.node(:SUPER_SOURCE)
-      child   = graph.node(edge.consumer) || graph.node(:SUPER_SINK)
+      parent  = graph.node(edge.supplier)
+      child   = graph.node(edge.consumer)
       carrier = Carrier.find(edge.carrier)
 
       props = edge.attributes.slice(
         :parent_share, :child_share, :demand, :reversed, :priority
       ).merge(model: edge)
 
-      if child.key == :SUPER_SINK || edge.type == :inversed_flexible
+      if edge.type == :inversed_flexible
         # Send energy to the sink only once all the other edges have had their
         # demands set.
         props[:type] = :overflow
@@ -145,9 +103,6 @@ module Atlas
       fail DocumentNotFoundError.new(edge.supplier, Node) if parent.nil?
 
       parent.connect_to(child, carrier.key, props)
-    rescue Turbine::DuplicateEdgeError => ex
-      # Ignore duplicate edges to or from the super-nodes
-      fail ex if parent.key != :SUPER_SOURCE && child.key != :SUPER_SINK
     end
 
     # Internal: Given a sector, returns a lambda which can be used to filter
@@ -159,13 +114,9 @@ module Atlas
     def filter(sector)
       if sector
         regex = /^#{ Regexp.escape(sector.to_s) }\.?/
-
-        lambda do |el|
-          ( (el.ns && el.ns.match(regex) && ! IGNORE.include?(el.key)) ||
-            (ALSO[sector] && ALSO[sector].include?(el.key.to_s)) )
-        end
+        ->(el) { el.ns && el.ns.match(regex) }
       else
-        ->(el) { ! IGNORE.include?(el.key) }
+        ->(el) { true }
       end
     end
   end # GraphBuilder

@@ -220,7 +220,8 @@ namespace :import do
     Atlas.data_dir = dir(args.to)
   end # task :setup
 
-  task all: [:carriers, :nodes, :edges, :presets]
+  task :graph, [:from, :to] => [:nodes, :edges, :post_graph]
+  task :all,   [:from, :to] => [:carriers, :graph, :presets]
 end # namespace :import
 
 desc 'Import edges and nodes from the old format to ActiveDocument'
