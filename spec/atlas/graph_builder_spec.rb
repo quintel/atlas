@@ -47,53 +47,6 @@ module Atlas
           expect(baz_edges.first.get(:type)).to eql(:overflow)
         end
       end # edges
-
-      context 'with a sector' do
-        before do
-          nodes = Collection.new(Node.all)
-          edges = Collection.new(Edge.all)
-
-          # Set foo and bar to be in "one".
-          nodes.find(:foo).update_attributes!(sector: 'one')
-          nodes.find(:bar).update_attributes!(sector: 'one')
-
-          edges.find('bar-foo@coal').update_attributes!(ns: 'one')
-          edges.find('baz-bar@corn').update_attributes!(ns: 'one')
-          edges.find('fd-bar@coal').update_attributes!(ns: 'one')
-
-          # Set baz and fd to be in "two".
-          nodes.find(:baz).update_attributes!(sector: 'two')
-          nodes.find(:fd).update_attributes!(sector: 'two')
-
-          edges.find('fd-baz@corn').update_attributes!(ns: 'two')
-        end
-
-        let(:graph) { GraphBuilder.build('one') }
-
-        it 'includes nodes in the sector' do
-          expect(graph.node(:foo)).to be
-          expect(graph.node(:bar)).to be
-        end
-
-        it 'excludes nodes not in the sector' do
-          expect(graph.node(:baz)).to_not be
-          expect(graph.node(:fd)).to_not be
-        end
-
-        it 'includes edges in the sector' do
-          expect(graph.node(:foo).out_edges.to_a.length).to eql(1)
-        end
-
-        it 'includes subgraph bridge edges - to the super sink' do
-          expect(graph.node(:bar).out_edges.to_a).to_not be_empty
-          expect(graph.node(:bar).out.first.key).to eql(:SUPER_SINK)
-        end
-
-        it 'does not includes nodes which have no sector' do
-          Node.new(key: 'abc').save!
-          expect(graph.node(:abc)).to_not be
-        end
-      end # with a sector
     end # .build
 
     describe '.establish_edge' do
