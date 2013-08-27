@@ -47,7 +47,9 @@ namespace :import do
 
           # Check out whether there are any groups that this node belongs to.
           node_groups.each do |group_key, values|
-            data[:groups] << group_key if values.include?(key)
+            if values.include?(key) || values.include?(key.gsub(/_rdr$/, ''))
+              data[:groups] << group_key
+            end
           end
 
           data[:groups] = nil if data[:groups].empty?
