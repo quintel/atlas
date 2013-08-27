@@ -10,15 +10,17 @@ module Atlas
     attribute :id,                       Integer
     attribute :entity,                   String
     attribute :parent_id,                Integer
-    attribute :updated_at,               Time
+
+    # Set to false in the document to disable the region in ETModel.
+    attribute :useable,                  Boolean, default: true
 
     # Flags
     attribute :has_agriculture,          Boolean, default: true
     attribute :has_buildings,            Boolean, default: true
+    attribute :has_climate,              Boolean, default: false
     attribute :has_coastline,            Boolean, default: true
     attribute :has_cold_network,         Boolean, default: false
     attribute :has_electricity_storage,  Boolean, default: true
-    attribute :has_climate,              Boolean, default: true
     attribute :has_employment,           Boolean, default: true
     attribute :has_fce,                  Boolean, default: true
     attribute :has_industry,             Boolean, default: true
@@ -36,39 +38,56 @@ module Atlas
       :annual_infrastructure_cost_gas,
       :areable_land,
       :available_land,
+      :buildings_insulation_constant_1,
+      :buildings_insulation_constant_2,
+      :buildings_insulation_cost_constant,
+      :buildings_insulation_employment_constant,
       :capacity_buffer_decentral_in_mj_s,
       :capacity_buffer_in_mj_s,
       :co2_emission_1990,
       :co2_emission_2009,
       :co2_emission_electricity_1990,
       :co2_percentage_free,
+      :co2_price,
       :coast_line,
-      :current_electricity_demand_in_mj,
       :economic_multiplier,
       :el_export_capacity,
       :employment_fraction_production,
       :employment_local_fraction,
       :export_electricity_primary_demand_factor,
-      :heat_recovery,
       :import_electricity_primary_demand_factor,
-      :insulation_level_existing_houses,
-      :insulation_level_new_houses,
-      :insulation_level_buildings,
+      :insulation_level_buildings_max,
+      :insulation_level_buildings_min,
+      :insulation_level_new_houses_max,
+      :insulation_level_new_houses_min,
+      :insulation_level_old_houses_max,
+      :insulation_level_old_houses_min,
       :km_per_car,
       :km_per_truck,
       :land_available_for_solar,
+      :man_hours_per_man_year,
       :market_share_daylight_control,
       :market_share_motion_detection,
+      :new_houses_insulation_constant_1,
+      :new_houses_insulation_constant_2,
+      :new_houses_insulation_cost_constant,
+      :new_houses_insulation_employment_constant,
+      :number_buildings,
       :number_households,
       :number_inhabitants,
+      :number_of_existing_households,
+      :number_of_new_residences,
+      :number_of_old_residences,
       :offshore_suitable_for_wind,
+      :old_houses_insulation_constant_1,
+      :old_houses_insulation_constant_2,
+      :old_houses_insulation_cost_constant,
+      :old_houses_insulation_employment_constant,
       :onshore_suitable_for_wind,
       :percentage_of_new_houses,
-      :recirculation,
       :roof_surface_available_pv,
       :roof_surface_available_pv_buildings,
-      :ventilation_rate,
-      :number_of_existing_households
+      :technical_lifetime_insulation
     ].each do |name|
       attribute name, Float
     end
