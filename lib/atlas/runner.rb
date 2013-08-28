@@ -22,6 +22,8 @@ module Atlas
             if slot.carrier == :coupling_carrier
               if slot.query
                 node.set(:"cc_#{ slot.direction }", query.call(slot.query))
+              elsif slot.share
+                node.set(:"cc_#{ slot.direction }", slot.share)
               end
 
               next
@@ -109,7 +111,10 @@ module Atlas
       model = element.get(:model)
 
       model.queries && model.queries.each do |attribute, rubel_string|
-        element.set(attribute, query(rubel_string))
+        # Skip slot shares.
+        unless attribute.match(/^(?:in|out)put\./)
+          element.set(attribute, query(rubel_string))
+        end
       end
     end
 
