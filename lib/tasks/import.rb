@@ -233,7 +233,7 @@ namespace :import do
   end # task :setup
 
   task :graph, [:from, :to] => [:nodes, :edges, :post_graph]
-  task :all,   [:from, :to] => [:carriers, :graph, :presets]
+  task :all,   [:from, :to] => [:carriers, :datasets, :graph, :presets]
 end # namespace :import
 
 desc 'Import edges and nodes from the old format to ActiveDocument'
