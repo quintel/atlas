@@ -6,6 +6,8 @@ namespace :debug do
   # Given a graph, and a diagram class to use, draws a diagram for each
   # sector.
   def draw_diagrams(graph, diagram_klass, name)
+    return if ENV['FAST']
+
     reporter_name = name.gsub(/\d-/, '').gsub('-', ' ')
 
     Atlas::Term::Reporter.report("Creating \"#{ reporter_name }\" diagrams",
