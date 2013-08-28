@@ -12,7 +12,7 @@ module Atlas
 
     attr_accessor :key, :unit
 
-    def initialize(key = :nl, unit = :pj)
+    def initialize(key = :nl, unit = :tj)
       @key  = key
       @unit = unit
 
