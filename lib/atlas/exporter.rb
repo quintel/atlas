@@ -58,8 +58,13 @@ module Atlas
     # Returns nothing.
     def edges_hash(edges)
       edges.each_with_object({}) do |edge, hash|
-        hash[Atlas::Edge.key(edge.child.key, edge.parent.key, edge.label)] =
-          { child_share: edge.child_share.to_f }
+        attributes = { child_share: edge.child_share.to_f }
+
+        if edge.get(:model).type == :constant
+          attributes[:demand] = edge.demand.to_f
+        end
+
+        hash[edge.get(:model).key] = attributes
       end
     end
 
