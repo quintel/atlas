@@ -4,7 +4,7 @@ module Atlas
 
     DIRECTORY = 'carriers'
 
-    attribute :sustainable,                Boolean
+    attribute :sustainable,                Float
     attribute :infinite,                   Boolean
     attribute :cost_per_mj,                Float
     attribute :mj_per_kg,                  Float
