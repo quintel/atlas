@@ -1,9 +1,9 @@
 namespace :import do
   desc <<-DESC
-    Import edges from the old format to ActiveDocument.
+    Import presets from the old format to ActiveDocument.
 
-    This starts by *deleting* everything in data/edges on the assumption that
-    there are no hand-made changes.
+    This starts by *deleting* everything in data/presets on the assumption
+    that there are no hand-made changes.
   DESC
   task :presets, [:from, :to] => [:setup] do |_, args|
     include Atlas
