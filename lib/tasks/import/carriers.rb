@@ -23,9 +23,8 @@ namespace :import do
       runner.item do
         cdata ||= Hash.new
 
-        cdata[:key]         = key
-        cdata[:infinite]    = cdata[:infinite] == 1.0
-        cdata[:sustainable] = cdata[:sustainable] == 1.0
+        cdata[:key]      = key
+        cdata[:infinite] = cdata[:infinite] == 1.0
 
         Carrier.new(cdata)
       end
