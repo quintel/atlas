@@ -44,11 +44,13 @@ module Atlas
     # Returns nothing.
     def nodes_hash(nodes)
       nodes.each_with_object({}) do |node, hash|
-        hash[node.key] = node.properties.except(:model).merge!({
-          demand: node.demand.to_f,
-          input:  slots_hash(node.slots.in),
-          output: slots_hash(node.slots.out)
-        })
+        attributes = node.properties.except(:model, :cc_in, :cc_out)
+
+        attributes[:demand] = node.demand.to_f
+        attributes[:input]  = slots_hash(node.slots.in)
+        attributes[:output] = slots_hash(node.slots.out)
+
+        hash[node.key] = attributes
       end
     end
 
