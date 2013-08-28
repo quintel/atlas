@@ -62,6 +62,9 @@ namespace :import do
         node_groups[group_name] = YAML.load_file(file)
       end
 
+      node_groups['electricity_production'] << 'energy_power_ultra_supercritical_cofiring_coal'
+      node_groups['electricity_production'] << 'energy_chp_ultra_supercritical_cofiring_coal_rdr'
+
       node_groups
     end
   end
