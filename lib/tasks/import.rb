@@ -112,13 +112,25 @@ namespace :import do
   # Returns a hash with nodes and its cost parameters.
   def node_costs
     file_path = $from_dir.join('datasets/_defaults/graph/converter_costs.yml')
-    @node_costs ||= YAML.load_file(file_path).with_indifferent_access
+    @node_costs ||= with_rdr_keys(YAML.load_file(file_path))
   end
 
 
   def node_employment_properties
     file_path = $from_dir.join('./datasets/nl/graph/employment.yml')
-    @properties ||= YAML.load_file(file_path).with_indifferent_access
+    @properties ||= with_rdr_keys(YAML.load_file(file_path))
+  end
+
+  # Given a hash whose keys are node keys, adds to the hash any nodes which
+  # have been replaced by _rdr converters.
+  def with_rdr_keys(hash)
+    hash = hash.with_indifferent_access
+
+    RDR_KEYS.reject { |key| hash.key?(key) }.each do |key|
+      hash[key] = hash[key.to_s.gsub(/_rdr/, '')]
+    end
+
+    hash
   end
 
   # Returns an array containing the keys of all nodes in the central producers
