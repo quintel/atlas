@@ -13,5 +13,7 @@ module Atlas
     attribute :kg_per_liter,               Float
     attribute :graphviz_color,             Symbol
 
+    attribute :fce,                        Hash[Symbol => Hash]
+
   end # Carrier
 end # Atlas
