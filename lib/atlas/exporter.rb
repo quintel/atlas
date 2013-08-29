@@ -77,15 +77,19 @@ module Atlas
     #
     # Returns a hash.
     def slots_hash(slots)
+      node      = slots.node
+      direction = slots.direction
+
       from_slots = slots.each_with_object({}) do |slot, hash|
-        hash[slot.carrier] = slot.share.to_f
+        if slot.get(:model).is_a?(Atlas::Slot::Elastic)
+          hash[slot.carrier] = :elastic
+        else
+          hash[slot.carrier] = slot.share.to_f
+        end
       end
 
       if slots.any?
         # Find any temporarily stored coupling carrier conversion.
-        node      = slots.first.node
-        direction = slots.first.direction
-
         if cc_share = node.get(:"cc_#{ direction }")
           from_slots[:coupling_carrier] = cc_share
         end
