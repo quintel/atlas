@@ -16,15 +16,18 @@ namespace :import do
 
     runner = ImportRun.new('carriers')
 
-    path = $from_dir.join('datasets/_defaults/carriers/defaults.yml')
-    data = YAML.load_file(path)
+    path   = $from_dir.join('datasets/_defaults/carriers/defaults.yml')
+    data   = YAML.load_file(path)
+    colors = YAML.load_file(path.dirname.join('graphviz.yml'))
 
     data.each do |key, cdata|
       runner.item do
         cdata ||= Hash.new
 
-        cdata[:key]      = key
-        cdata[:infinite] = cdata[:infinite] == 1.0
+        cdata[:key]            = key
+        cdata[:infinite]       = cdata[:infinite] == 1.0
+
+        cdata.merge!(colors[key.to_s] || {})
 
         Carrier.new(cdata)
       end
