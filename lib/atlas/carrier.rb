@@ -11,6 +11,7 @@ module Atlas
     attribute :co2_conversion_per_mj,      Float
     attribute :typical_production_per_km2, Float
     attribute :kg_per_liter,               Float
+    attribute :graphviz_color,             Symbol
 
   end # Carrier
 end # Atlas
