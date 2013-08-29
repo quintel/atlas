@@ -13,6 +13,13 @@ module Atlas
     attribute :kg_per_liter,               Float
     attribute :graphviz_color,             Symbol
 
+    attribute :co2_conversion_per_mj,      Float
+    attribute :co2_exploration_per_mj,     Float
+    attribute :co2_extraction_per_mj,      Float
+    attribute :co2_treatment_per_mj,       Float
+    attribute :co2_transportation_per_mj,  Float
+    attribute :co2_waste_treatment_per_mj, Float
+
     attribute :fce,                        Hash[Symbol => Hash]
 
   end # Carrier
