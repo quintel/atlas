@@ -60,13 +60,16 @@ module Atlas
     # Returns nothing.
     def edges_hash(edges)
       edges.each_with_object({}) do |edge, hash|
+        model      = edge.get(:model)
         attributes = { child_share: edge.child_share.to_f }
 
-        if edge.get(:model).type == :constant
+        if model.type == :constant
           attributes[:demand] = edge.demand.to_f
+        elsif model.type == :share && model.reversed?
+          attributes[:parent_share] = edge.parent_share.to_f
         end
 
-        hash[edge.get(:model).key] = attributes
+        hash[model.key] = attributes
       end
     end
 
