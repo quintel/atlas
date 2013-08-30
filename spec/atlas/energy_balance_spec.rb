@@ -9,10 +9,10 @@ module Atlas
         expect(-> { EnergyBalance.new } ).to_not raise_error
       end
 
-      it 'should be by default take the Netherlands and unit = PJ' do
+      it 'should be by default take the Netherlands and unit = TJ' do
         eb = EnergyBalance.new
         expect(eb.key).to eql :nl
-        expect(eb.unit).to eql :pj
+        expect(eb.unit).to eql :tj
       end
     end # .new
 
@@ -30,7 +30,7 @@ module Atlas
     describe '#get' do
       it 'returns correct value for NL when asked for a specific attribute' do
         eb.stub(:cell).and_return 6
-        expect(eb.get('Residential','coal_and_peat')).to eql 0.006
+        expect(eb.get('Residential','coal_and_peat')).to eql 6.0
       end
 
       it 'works with other units' do

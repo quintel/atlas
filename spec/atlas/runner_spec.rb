@@ -36,8 +36,7 @@ module Atlas
       it 'sets demand of nodes using energy balances' do
         # This number is defined in the energy balance nl.csv file, and the
         # query is `EB(residential, natural_gas) * 1.0`.
-        expect(graph.node(:fd).get(:demand)).
-          to eq(Atlas::EnergyUnit.new(7460.0, :tj).to_unit(:pj))
+        expect(graph.node(:fd).get(:demand)).to eq(7460.0)
       end
 
       it 'sets the child share of edges using SHARE()' do
