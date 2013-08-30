@@ -14,6 +14,9 @@ namespace :debug do
                                  done: :green) do |reporter|
       SECTORS.each do |sector|
         diagram_klass.new(graph, {
+          format_demand: ->(value) {
+            value / 1000
+          },
           cluster_by: ->(node) {
             node.get(:model).ns
           },
