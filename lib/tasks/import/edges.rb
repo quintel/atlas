@@ -17,6 +17,9 @@ namespace :import do
 
     runner = ImportRun.new('edges')
 
+    demandless_constant = YAML.load_file(
+      Atlas.data_dir.join('import/demandless_constant_edges.yml'))
+
     nodes_by_sector.each do |sector, nodes|
       sector_dir = Edge.directory.join(sector)
       edges      = nodes.map { |key, node| node['links'] }.flatten.compact
@@ -44,6 +47,13 @@ namespace :import do
           props = { path: path, type: type, queries: {},
                     reversed: ! data[:reversed].nil?
                   }.merge(edge_data[link] || {})
+
+          if demandless_constant.include?(key)
+            # Constant links without a demand in the old InputExcel YAMLs get
+            # converted to reverse flexible, which behave identically.
+            props[:reversed] = true
+            props[:type]     = :share
+          end
 
           if data[:carrier] == 'coupling_carrier'
             props[:child_share] = 1.0
