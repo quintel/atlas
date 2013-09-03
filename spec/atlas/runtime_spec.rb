@@ -63,18 +63,6 @@ module Atlas
       end
     end
 
-    context 'CHP' do
-      it 'executes CHP functions' do
-        expect(runtime.execute("CHP(agriculture_chp_engine_biogas)")).
-          to eq(4194.586)
-      end
-
-      it 'raises an error if the CHP data is missing' do
-        expect { runtime.execute('CHP(nope)') }.
-          to raise_error(UnknownCSVRowError)
-      end
-    end
-
     context 'CENTRAL_PRODUCTION' do
       it 'executes CENTRAL_PRODUCTION functions' do
         expect(runtime.execute(

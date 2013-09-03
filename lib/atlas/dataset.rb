@@ -138,17 +138,6 @@ module Atlas
       @time_curves
     end
 
-    # Public: Retrieves data about CHPs for the datasets region. Expects to
-    # load a file at datasets/AREA/chp.csv.
-    #
-    # For example:
-    #   dataset.chps.get(:agriculture_chp_engine_biogas) # => 4194.5
-    #
-    # Returns a CSVDocument::OneDimensional.
-    def chps
-      @chps ||= CSVDocument::OneDimensional.new(dataset_dir.join('chp.csv'))
-    end
-
     # Public: Retrieves demand and full load hours data for the region.
     # Expects to load a file at datasets/AREA/central_producers.csv.
     #
