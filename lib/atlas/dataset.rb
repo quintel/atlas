@@ -135,7 +135,7 @@ module Atlas
         time_curve(csv_path.basename('.csv').to_s)
       end
 
-      @time_curves
+      @time_curves ||= {}
     end
 
     # Public: Retrieves demand and full load hours data for the region.
