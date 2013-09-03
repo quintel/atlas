@@ -36,7 +36,7 @@ namespace :debug do
     include Atlas
 
     graph     = GraphBuilder.build
-    runner    = Runner.new(Atlas::Dataset.find(:nl), graph)
+    runner    = Runner.new(Atlas::Dataset.find(ENV['DATASET'] || :nl), graph)
 
     runner.refinery_graph
 
@@ -56,7 +56,7 @@ namespace :debug do
     # Off we go...
 
     graph     = GraphBuilder.build
-    runner    = Runner.new(Atlas::Dataset.find(:nl), graph)
+    runner    = Runner.new(Atlas::Dataset.find(ENV['DATASET'] || :nl), graph)
     reporter  = Atlas::Term::Reporter.new('Performing calculations', done: :green)
 
     exception = nil
