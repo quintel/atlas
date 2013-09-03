@@ -128,7 +128,7 @@ namespace :import do
       node_key  = data[:key].to_s.split(/[+-]/).first
 
       # We import *all* output slots whose share is not the default 1.0.
-      (! ignored.include?(node_key)) &&
+      (! ignored.include?(node_key) || data[:type] == :loss) &&
        ((direction == :output && ! all_slot_defaults?(data)) ||
         # Include coupling carriers...
         data[:key].to_s.include?('coupling_carrier') ||
@@ -142,10 +142,12 @@ namespace :import do
     # node.
 
     used_sides = use.map do |data|
+      node_key = data[:key].to_s.split(/[-+]/).first
+
       # We don't need to store the entire "side" if the slot is for a coupling
       # carrier... that can be included on its own since it is ignored when
       # performing Refinery calculations.
-      unless data[:key].to_s.include?('coupling_carrier')
+      unless data[:key].to_s.include?('coupling_carrier') || ignored.include?(node_key)
         data[:key].to_s.split('@').first
       end
     end.compact.uniq
