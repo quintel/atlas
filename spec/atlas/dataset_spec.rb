@@ -77,6 +77,28 @@ module Atlas; describe Dataset, :fixtures do
     it 'raises an error when no time curve data exists' do
       expect { Dataset.find(:nl).time_curve(:nope) }.to raise_error(Errno::ENOENT)
     end
+  end # time_curve
+
+  describe '#time_curves' do
+    let(:dataset) { Dataset.find(:nl) }
+
+    describe 'when no curves have been loaded' do
+      it 'loads all the time curves' do
+        expect(dataset.time_curves).to have(2).csv_documents
+      end
+    end # when no curves have been loaded
+
+    describe 'when a curve has already been loaded' do
+      let!(:loaded) { dataset.time_curve(:bio_residues) }
+
+      it 'loads all the time curves' do
+        expect(dataset.time_curves).to have(2).csv_documents
+      end
+
+      it "reuses the already-loaded curve" do
+        expect(dataset.time_curves.values).to include(loaded)
+      end
+    end # when a curves has already been loaded
   end # time_curves
 
   describe '#chps' do

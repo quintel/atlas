@@ -1,6 +1,7 @@
 module Atlas
   class CSVDocument
     attr_reader :path
+    attr_reader :table
 
     # A lambda which converts strings to a consistent format for keys in
     # CSV files.
