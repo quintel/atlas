@@ -63,6 +63,8 @@ module Atlas
         "#<#{self.class}: #{key}>"
       end
 
+      alias_method :inspect, :to_s
+
       # Public: Creates a hash containing the document's attributes, omitting
       # those whose values are nil.
       #
