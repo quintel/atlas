@@ -71,7 +71,8 @@ module Atlas; describe Dataset, :fixtures do
     end
 
     it 'sets the file path' do
-      expect(curves.path.to_s).to end_with('nl/time_curves/bio_residues.csv')
+      expect(curves.path.to_s).
+        to end_with('nl/time_curves/bio_residues_time_curve.csv')
     end
 
     it 'raises an error when no time curve data exists' do
@@ -85,6 +86,10 @@ module Atlas; describe Dataset, :fixtures do
     describe 'when no curves have been loaded' do
       it 'loads all the time curves' do
         expect(dataset.time_curves).to have(2).csv_documents
+      end
+
+      it 'sets the correct time curve keys' do
+        expect(dataset.time_curves.keys).to eql([:bio_residues, :coal])
       end
     end # when no curves have been loaded
 
