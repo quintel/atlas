@@ -88,8 +88,12 @@ module Atlas; describe Dataset, :fixtures do
         expect(dataset.time_curves).to have(2).csv_documents
       end
 
-      it 'sets the correct time curve keys' do
-        expect(dataset.time_curves.keys).to eql([:bio_residues, :coal])
+      it "doesn't include the 'time_curve' suffix in each key" do
+        keys = dataset.time_curves.keys
+
+        expect(keys.length).to eq(2)
+        expect(keys).to include(:bio_residues)
+        expect(keys).to include(:coal)
       end
     end # when no curves have been loaded
 
