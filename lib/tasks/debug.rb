@@ -1,7 +1,8 @@
 namespace :debug do
-  SECTORS = %w(
-    agriculture households buildings transport
-    industry other energy environment )
+  # SECTORS = %w(
+    # agriculture households buildings transport
+    # industry other energy environment )
+  SECTORS = %w( energy )
 
   # Given a graph, and a diagram class to use, draws a diagram for each
   # sector.
@@ -65,6 +66,19 @@ namespace :debug do
     draw_diagrams(runner.refinery_graph,
                   Refinery::Diagram::InitialValues, '0-initial-values')
 
+    Refinery::Diagram::InitialValues.new(runner.refinery_graph, {
+      format_demand: ->(value) {
+        value / 1000
+      },
+      cluster_by: ->(node) {
+        node.get(:model).ns
+      },
+      filter_by:  ->(edge) {
+        show = [:energy_distribution_greengas, :energy_treatment_natural_gas, :energy_upgrade_biogas]
+        ([edge.from.key, edge.to.key] & show).any?
+      }
+    }).draw_to("tmp/debug/_inatgas.png")
+
     # A custom calculator catalyst which will show in real-time how many
     # elements in the graph have been calculated.
     calculator = Refinery::Catalyst::Calculators.new do |*|
@@ -118,6 +132,19 @@ namespace :debug do
     File.write(
       debug_dir.join('_trace.txt'),
       Refinery::GraphDebugger.new(runner.refinery_graph))
+
+    Refinery::Diagram::Calculable.new(runner.refinery_graph, {
+      format_demand: ->(value) {
+        value / 1000
+      },
+      cluster_by: ->(node) {
+        node.get(:model).ns
+      },
+      filter_by:  ->(edge) {
+        show = [:energy_distribution_greengas, :energy_treatment_natural_gas, :energy_upgrade_biogas]
+        ([edge.from.key, edge.to.key] & show).any?
+      }
+    }).draw_to("tmp/debug/_natgas.png")
 
     if exception
       puts
