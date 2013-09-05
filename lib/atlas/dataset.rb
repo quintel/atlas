@@ -113,6 +113,20 @@ module Atlas
           dataset_dir.join("shares/#{ key }.csv"))
     end
 
+    # Public: Retrieves the efficiency data from the named file.
+    #
+    # key - The name of the efficiencies file to load.
+    #
+    # For example:
+    #   dataset.efficiencies(:transformation).get('output.coal') # => 0.3
+    #
+    # Returns a CSVDocument::OneDimensional.
+    def efficiencies(key)
+      (@efficiencies ||= {})[key.to_sym] ||=
+        CSVDocument::OneDimensional.new(
+          dataset_dir.join("efficiencies/#{ key }.csv"))
+    end
+
     # Public: Retrieves the time curve data for the file whose name matches
     # +key+.
     #

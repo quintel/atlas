@@ -51,6 +51,18 @@ module Atlas
       end
     end
 
+    context 'EFFICIENCY' do
+      it 'executes EFFICIENCY functions' do
+        result = runtime.execute("EFFICIENCY(transformation, output, coal)")
+        expect(result).to eq(0.1)
+      end
+
+      it 'raises an error if the EFFICIENCY data is missing' do
+        expect { runtime.execute('EFFICIENCY(transformation, a, b)') }.
+          to raise_error(UnknownCSVRowError)
+      end
+    end
+
     context 'TIME_CURVE' do
       it 'executes TIME_CURVE functions' do
         result = runtime.execute("TIME_CURVE(bio_residues, max_demand)")
