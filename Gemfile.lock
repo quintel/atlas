@@ -69,6 +69,7 @@ GEM
     rspec-mocks (2.14.3)
     rubel (0.0.3)
     ruby-graphviz (1.0.9)
+    ruby-progressbar (1.2.0)
     ruby_gntp (0.3.4)
     shoulda-matchers (2.1.0)
       activesupport (>= 3.0.0)
@@ -100,6 +101,7 @@ DEPENDENCIES
   rb-fsevent (~> 0.9.1)
   refinery!
   rspec
+  ruby-progressbar
   ruby_gntp
   shoulda-matchers
   simplecov

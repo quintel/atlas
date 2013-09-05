@@ -25,5 +25,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'pry',  '>= 0.9.12'
   gem.add_development_dependency 'term-ansicolor', '>= 1.2.0'
   gem.add_development_dependency 'activesupport',  '>= 3.2.12'
+  gem.add_development_dependency 'ruby-progressbar'
 
 end

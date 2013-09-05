@@ -8,6 +8,7 @@ Bundler.setup(:default)
 
 require 'active_model'
 require 'rubel'
+require 'ruby-progressbar'
 require 'turbine'
 require 'virtus'
 
@@ -51,6 +52,7 @@ require_relative 'atlas/energy_balance'
 require_relative 'atlas/carrier'
 require_relative 'atlas/graph_builder'
 require_relative 'atlas/runner'
+require_relative 'atlas/debug_runner'
 require_relative 'atlas/preset'
 
 require_relative 'atlas/node'
