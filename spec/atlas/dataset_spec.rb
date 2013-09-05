@@ -72,7 +72,7 @@ module Atlas; describe Dataset, :fixtures do
 
     it 'sets the file path' do
       expect(efficiencies.path.to_s).
-        to end_with('nl/efficiencies/transformation.csv')
+        to end_with('nl/efficiencies/transformation_efficiency.csv')
     end
 
     it 'raises an error when no shares data exists' do

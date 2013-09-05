@@ -124,7 +124,7 @@ module Atlas
     def efficiencies(key)
       (@efficiencies ||= {})[key.to_sym] ||=
         CSVDocument::OneDimensional.new(
-          dataset_dir.join("efficiencies/#{ key }.csv"))
+          dataset_dir.join("efficiencies/#{ key }_efficiency.csv"))
     end
 
     # Public: Retrieves the time curve data for the file whose name matches
