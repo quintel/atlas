@@ -62,6 +62,25 @@ module Atlas; describe Dataset, :fixtures do
     end
   end # shares
 
+  describe '#efficiencies' do
+    let(:dataset)      { Dataset.find(:nl) }
+    let(:efficiencies) { dataset.efficiencies(:transformation) }
+
+    it 'returns a CSV document' do
+      expect(efficiencies).to be_a(CSVDocument)
+    end
+
+    it 'sets the file path' do
+      expect(efficiencies.path.to_s).
+        to end_with('nl/efficiencies/transformation.csv')
+    end
+
+    it 'raises an error when no shares data exists' do
+      expect { Dataset.find(:nl).efficiencies(:nope) }.
+        to raise_error(Errno::ENOENT)
+    end
+  end # efficiencies
+
   describe '#time_curve' do
     let(:dataset) { Dataset.find(:nl) }
     let(:curves)  { dataset.time_curve(:bio_residues) }

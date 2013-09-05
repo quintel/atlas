@@ -60,6 +60,25 @@ module Atlas
       dataset.shares(file_key).get(attribute)
     end
 
+    # Public: Retrieves an efficiency, typically assigned as a slot share
+    # ("conversion") from the given file and carrier.
+    #
+    # file_key  - The name of the file in which the efficiency is stored.
+    # direction - The direction of the slot, "input" or "output".
+    # carrier   - The name of the carrier.
+    #
+    # For example
+    #
+    #   ~ output.coal = EFFICIENCY(transformation_coal, output, coal)
+    #
+    # Returns a number.
+    def EFFICIENCY(file_key, direction, carrier)
+      direction == :input  if direction == :in
+      direction == :output if direction == :out
+
+      dataset.efficiencies(file_key).get("#{ direction }.#{ carrier }")
+    end
+
     # Public: Given the key of a node, retrieves the production (energy
     # supplied) of the node from the central_producers.csv file.
     #
