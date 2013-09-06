@@ -56,8 +56,6 @@ module Atlas
     def initialize(dataset, graph)
       @dataset = dataset
       @graph   = graph
-
-      Atlas.load_library('refinery')
     end
 
     # Public: Calculates the graph.

@@ -2,8 +2,6 @@ require 'spec_helper'
 
 module Atlas
   describe Exporter, :fixtures do
-    before { Atlas.load_library('refinery') }
-
     def make_node(key, attributes = {})
       model = Atlas::Node.new(key: key)
       Refinery::Node.new(key, attributes.merge(model: model))

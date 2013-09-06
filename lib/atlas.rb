@@ -6,6 +6,8 @@ require 'delegate'
 require 'bundler'
 Bundler.setup(:default)
 
+require 'refinery'
+
 require 'active_model'
 require 'rubel'
 require 'ruby-progressbar'
