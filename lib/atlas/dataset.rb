@@ -25,7 +25,7 @@ module Atlas
     attribute :has_fce,                  Boolean, default: true
     attribute :has_industry,             Boolean, default: true
     attribute :has_lignite,              Boolean, default: false
-    attribute :has_merit_order,          Boolean, default: true
+    attribute :has_merit_order,          Boolean, default: false
     attribute :has_metal,                Boolean, default: true
     attribute :has_mountains,            Boolean, default: true
     attribute :has_old_technologies,     Boolean, default: false
