@@ -2,9 +2,7 @@ source "https://rubygems.org"
 
 gemspec
 
-group :development do
-  gem 'refinery', git: 'git@github.com:quintel/refinery.git', require: false
-end
+gem 'refinery', git: 'git@github.com:quintel/refinery.git'
 
 group :test do
   gem 'rspec'

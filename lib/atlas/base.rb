@@ -45,18 +45,4 @@ module Atlas
   ensure
     self.data_dir = previous
   end
-
-  # Internal: Loads an optional Gem dependency. Used to limit what Atlas loads
-  # in production environments.
-  #
-  # name - The name of the library to load.
-  #
-  # Returns nothing.
-  def self.load_library(name)
-    Bundler.require(:development)
-    require name
-  rescue LoadError => ex
-    raise LoadError.new("#{ ex.message }. This is an optional dependency " \
-                        "which is not available in production.")
-  end
 end # Atlas
