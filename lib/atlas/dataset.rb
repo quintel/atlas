@@ -13,7 +13,7 @@ module Atlas
 
     # Set to false in the document to disable the region in ETModel.
     attribute :enabled,   Hash[Symbol => Boolean],
-                          default: ->{ { etengine: true, etmodel: true } }
+                          default: { etengine: true, etmodel: true }
 
     # Flags
     attribute :has_agriculture,          Boolean, default: true
