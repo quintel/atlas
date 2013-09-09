@@ -5,14 +5,15 @@ module Atlas
     DIRECTORY = 'datasets'
 
     # General Attributes
-    attribute :country,                  String
-    attribute :area,                     String
-    attribute :id,                       Integer
-    attribute :entity,                   String
-    attribute :parent_id,                Integer
+    attribute :country,   String
+    attribute :area,      String
+    attribute :id,        Integer
+    attribute :entity,    String
+    attribute :parent_id, Integer
 
     # Set to false in the document to disable the region in ETModel.
-    attribute :useable,                  Boolean, default: true
+    attribute :enabled,   Hash[Symbol => Boolean],
+                          default: ->{ { etengine: true, etmodel: true } }
 
     # Flags
     attribute :has_agriculture,          Boolean, default: true
