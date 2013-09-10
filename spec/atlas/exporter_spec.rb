@@ -37,17 +37,9 @@ module Atlas
     let!(:mc_slot) { mother.slots.out(:child).set(:share, 15.0 / 25.0) }
 
     # Result and Output
-    let!(:result) do
-      Exporter.new(graph).export_to(Atlas.data_dir.join('o/export.yml'))
-    end
-
-    let(:edges) do
-      YAML.load_file(Atlas.data_dir.join('o/export.yml'))[:edges]
-    end
-
-    let(:nodes) do
-      YAML.load_file(Atlas.data_dir.join('o/export.yml'))[:nodes]
-    end
+    let!(:result) { Exporter.dump(graph) }
+    let(:edges)   { result[:edges] }
+    let(:nodes)   { result[:nodes] }
 
     # ------------------------------------------------------------------------
 
