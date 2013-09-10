@@ -41,6 +41,10 @@ module Atlas
       content
     end
 
+    def to_attributes
+      attributes_block.rstrip
+    end
+
     #######
     private
     #######

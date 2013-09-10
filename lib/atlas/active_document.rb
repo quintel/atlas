@@ -7,6 +7,7 @@ module Atlas
         include Virtus
         include ActiveModel::Validations
         include ActiveDocument::Persistence
+        include ActiveDocument::Translator
         include ActiveDocument::Finders
         include ActiveDocument::Naming
         include ActiveDocument::Subclassing

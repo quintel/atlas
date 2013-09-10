@@ -18,6 +18,8 @@ require 'active_support/core_ext/hash/except'
 require_relative 'atlas/base'
 require_relative 'atlas/parser/hash_to_text_parser'
 
+require_relative 'atlas/parser/hash_to_csv_parser'
+
 require_relative 'atlas/parser/text_to_hash/line'
 require_relative 'atlas/parser/text_to_hash/line_grouper'
 require_relative 'atlas/parser/text_to_hash/block'
@@ -33,7 +35,9 @@ require_relative 'atlas/util'
 
 require_relative 'atlas/csv_document'
 
+require_relative 'atlas/active_document/translator'
 require_relative 'atlas/active_document/persistence'
+require_relative 'atlas/active_document/translator'
 require_relative 'atlas/active_document/finders'
 require_relative 'atlas/active_document/naming'
 require_relative 'atlas/active_document/subclassing'

@@ -4,6 +4,8 @@ module Atlas
 
     attribute :comments, String
     attribute :unit,     String
+    attribute :hash,     Hash[Symbol => String]
+    attribute :array,    Array[Symbol]
     attribute :query,    String
 
     # Ignore validation except in the validation tests.
