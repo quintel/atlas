@@ -2,6 +2,16 @@ module Atlas
   # Given a fully calculated graph, exports the demand and share data so that
   # it can be used by Atlas's production mode (in ETEngine).
   class Exporter
+    # Public: Given a graph, returns the Hash with all the exported values.
+    #
+    # graph - A Turbine::Graph containing the calculated Refinery nodes and
+    #         edges.
+    #
+    # Returns a Hash for you to save as you see fit.
+    def self.dump(graph)
+      new(graph).to_h
+    end
+
     # Public: Creates a new exporter. Does not check that the graph has been
     # calculated; it is expected you'll run the graph through Runner first,
     # which will raise errors if the graph is not fully calculated.
@@ -13,25 +23,14 @@ module Atlas
       @graph = graph
     end
 
-    # Public: Writes the calculated values in the graph to CSV files in the
-    # given directory.
+    # Public: Creates the hash of calculated attributes for nodes and edges.
     #
-    # dir - Path to the directory in which to write the CSV files.
-    #
-    # Returns nothing.
-    def export_to(path)
-      FileUtils.mkdir_p(path.dirname)
-
+    # Returns a hash.
+    def to_h
       nodes = @graph.nodes
       edges = nodes.map { |node| node.out_edges.to_a }.flatten
 
-      path.open('w') do |file|
-        file.write(YAML.dump(
-          nodes: nodes_hash(nodes),
-          edges: edges_hash(edges)))
-      end
-
-      nil
+      { nodes: nodes_hash(nodes), edges: edges_hash(edges) }
     end
 
     #######
