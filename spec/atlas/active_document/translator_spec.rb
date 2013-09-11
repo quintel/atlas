@@ -7,8 +7,8 @@ module Atlas::ActiveDocument
     let(:some_document) { Atlas::SomeDocument.find(:foo) }
 
     describe '#to_csv' do
-      it 'returns the attributes' do
-        expect(some_document.to_csv).to include 'unit,kg'
+      it 'contains unit, kg' do
+        expect(some_document.to_csv).to include "unit,kg\n"
       end
     end
   end

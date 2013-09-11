@@ -12,17 +12,35 @@ module Atlas
 
   class HashToCSVParser
 
-    attr_reader :input
-
     def initialize(input)
       fail ArgumentError unless input.is_a?(Hash)
       @input = input
     end
 
     def to_csv
-      content = Atlas::HashToTextParser.new(input).to_attributes
-      content.gsub!(/^-\s/,"")
-      content.gsub!(/\s=\s/,",")
+      lines_from_hash(@input).join("\n")
+    end
+
+    #######
+    private
+    #######
+
+    # Internal: Given a hash of attributes, returns an array of lines
+    # representing each key/value pair in the hash. Recurses into hashes.
+    #
+    # hash   - The hash of attributes to be formatted.
+    # prefix - An optional prefix to be prepended to each key name. Used when
+    #          formatting lines within nested hashes.
+    #
+    # Returns an array of strings.
+    def lines_from_hash(hash, prefix = nil)
+      Atlas::Util.flatten_dotted_hash(hash).map do |key, value|
+        if value.is_a?(Array) || value.is_a?(Set)
+          value = "[#{ value.to_a.join(', ') }]"
+        end
+
+        "#{ key },#{ value }"
+      end
     end
 
   end # HashToCSVParser
