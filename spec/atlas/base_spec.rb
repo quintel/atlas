@@ -12,10 +12,6 @@ module Atlas ; describe Atlas do
     it 'returns a Pathname' do
       expect(Atlas.data_dir).to be_a(Pathname)
     end
-
-    it 'is a subdirectory of the root path' do
-      expect(Atlas.data_dir.to_s).to include(Atlas.root.to_s)
-    end
   end
 
   describe '#data_dir=' do

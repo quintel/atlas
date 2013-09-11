@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Atlas
 
-describe Node, :fixtures do
+describe Node do
   describe '#out_slots' do
     context 'when the node has no "output" data' do
       let(:node) { Node.new(key: :a) }

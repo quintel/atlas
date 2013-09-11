@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Atlas
-  describe Preset, :fixtures do
+  describe Preset do
     it { expect(Preset.new(key: 'o')).to validate_presence_of(:title) }
     it { expect(Preset.new(key: 'o')).to validate_presence_of(:area_code) }
     it { expect(Preset.new(key: 'o')).to validate_presence_of(:end_year) }

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Atlas
-  describe EnergyBalance, :fixtures do
+  describe EnergyBalance do
     let(:eb) { EnergyBalance.new(:nl) }
 
     describe '.new' do

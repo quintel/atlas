@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Atlas
-  describe CSVDocument, :fixtures do
+  describe CSVDocument do
     let(:doc) do
       path = Atlas.data_dir.join('truth.csv')
 
@@ -73,7 +73,7 @@ module Atlas
     end # get
   end # CSVDocument
 
-  describe CSVDocument::OneDimensional, :fixtures do
+  describe CSVDocument::OneDimensional do
     let(:doc) do
       path = Atlas.data_dir.join('carriers.csv')
 

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Atlas
 
-describe SomeDocument, :fixtures do
+describe SomeDocument do
   let(:some_document) { some_document = SomeDocument.find('foo') }
 
   describe 'new' do
