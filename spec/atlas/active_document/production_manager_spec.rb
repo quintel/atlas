@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Atlas::ActiveDocument
-  describe ProductionManager, :fixtures do
+  describe ProductionManager do
     let(:manager) do
       ProductionManager.new(Atlas::Node, { foo: {
         demand: 50,

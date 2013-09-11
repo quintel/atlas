@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Atlas
 
-  describe Runtime, :fixtures do
+  describe Runtime do
     let(:dataset) { Dataset.find(:nl) }
     let(:graph)   { Turbine::Graph.new }
     let(:runtime) { Runtime.new(dataset, graph) }

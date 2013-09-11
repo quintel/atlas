@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Atlas
-  describe GraphBuilder, :fixtures do
+  describe GraphBuilder do
     describe '.build' do
       let(:graph) { GraphBuilder.build }
 

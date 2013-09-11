@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Atlas
 
-describe Node::FinalDemand, :fixtures do
+describe Node::FinalDemand do
   let(:node) { Node.find('fd') }
 
   describe '#all' do

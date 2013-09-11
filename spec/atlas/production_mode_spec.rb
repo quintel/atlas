@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Atlas
-  describe ProductionMode, :fixtures do
+  describe ProductionMode do
     let(:mode) { ProductionMode.new({ nodes: { foo: { demand: 50 } } }) }
 
     it 'retrieves nodes' do

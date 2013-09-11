@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Atlas
-  describe Edge, :fixtures do
+  describe Edge do
     it { expect(Edge.new(key: 'a-b@gas')).to validate_presence_of(:consumer) }
     it { expect(Edge.new(key: 'a-b@gas')).to validate_presence_of(:supplier) }
 

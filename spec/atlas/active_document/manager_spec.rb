@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Atlas::ActiveDocument
-  describe Manager, :fixtures do
+  describe Manager do
     SomeDocument  = Atlas::SomeDocument
     FinalDocument = SomeDocument::FinalDocument
 

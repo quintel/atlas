@@ -31,7 +31,6 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = "random"
 
-  # Use a (safe) copy of spec/fixtures as the data-source when the "fixtures"
-  # metadata is set on a spec group or example.
-  config.include Atlas::Spec::Fixtures, fixtures: true
+  # Use a (safe) copy of spec/fixtures as the data-source.
+  config.include Atlas::Spec::Fixtures
 end

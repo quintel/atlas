@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Atlas; describe Dataset, :fixtures do
+module Atlas; describe Dataset do
   describe "#new" do
     it "sets key" do
       dataset = Dataset.new(key: :nl)
