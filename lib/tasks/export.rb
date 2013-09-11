@@ -7,9 +7,11 @@ namespace :export do
 
     Atlas.data_dir = '../etsource/data'
 
+    Dir.chdir('tmp')
+
     Atlas::Node.all.each do |node|
-      node.attributes.each do |attr|
-        puts attr
+      File.open(node.key, 'w') do
+        node.to_csv
       end
     end
 
