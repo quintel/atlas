@@ -70,10 +70,14 @@ module Atlas
       #
       # Returns a Hash.
       def to_hash
-        attributes
-          .merge(comments: comments)
-          .merge(queries: queries)
-          .reject { |_, value| value.nil? }
+        attrs = attributes
+
+        attrs.delete_if { |_, value| value.nil? }
+
+        attrs[:comments] = comments if comments
+        attrs[:queries]  = queries
+
+        attrs
       end
 
       #######
