@@ -144,8 +144,7 @@ module Atlas
 
   NoSuchDocumentClassError = error_class do |subclass, path|
     "#{ path } tried to instantiate a Atlas::#{ subclass.to_s.classify }, " \
-    "but no such class exists (#{ subclass } #{ subclass.to_s } " \
-    "#{ subclass.classify })"
+    "but no such class exists (#{ subclass } => #{ subclass.classify })"
   end
 
   # Graph Structure / Topology Errors ----------------------------------------

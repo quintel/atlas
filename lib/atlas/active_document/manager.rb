@@ -176,12 +176,13 @@ module Atlas
         (path = lookup_map[key]) || return
 
         relative_path = path.relative_path_from(@directory)
-        without_ext   = relative_path.basename.sub_ext('')
+        without_ext   = relative_path.basename.sub_ext('').to_s
 
-        if without_ext.to_s.include?('.')
-          subclass = without_ext.to_s.split('.').last
+        if without_ext.include?('.')
+          subclass = without_ext.split('.').last
+
           begin
-            klass = "#{ @klass.name }::#{subclass.to_s.classify}".constantize
+            klass = "#{ @klass.name }::#{ subclass.camelize }".constantize
           rescue NameError => ex
             fail Atlas::NoSuchDocumentClassError.new(subclass, relative_path)
           end
