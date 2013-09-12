@@ -13,6 +13,8 @@ module Atlas
     #
     # Wow! I'm Mr. Manager!
     class Manager
+      attr_reader :directory
+
       # Public: Creates a new manager for the given document +klass+.
       #
       # klass    - The ActiveDocument class whose files are read by the
@@ -71,7 +73,7 @@ module Atlas
       #
       # Returns a string.
       def inspect
-        relative = @klass.directory.relative_path_from(Atlas.data_dir)
+        relative = @directory.relative_path_from(Atlas.data_dir)
         "#<#{ self.class.name } (#{ @klass.name } at ./#{ relative })>"
       end
 
@@ -120,10 +122,12 @@ module Atlas
       #
       # Returns nothing.
       def clear!
-        @documents    = {}
-        @lookup_map   = nil
+        @documents  = {}
+        @attributes = {}
+        @directory  = Atlas.data_dir.join(@klass::DIRECTORY)
+        @lookup_map = nil
         @all_loaded = false
-        @all          = []
+        @all        = []
       end
 
       # Internal: When a new manager is created, it is registered with the
@@ -157,7 +161,7 @@ module Atlas
       # Returns an array of Symbol keys and Pathname values.
       def lookup_map
         @lookup_map ||= begin
-          gpath = @klass.directory.join("**/*.#{ @klass::FILE_SUFFIX }")
+          gpath = @directory.join("**/*.#{ @klass::FILE_SUFFIX }")
 
           Pathname.glob(gpath).each_with_object({}) do |path, map|
             map[ key_from_path(path) ] = path
@@ -171,8 +175,7 @@ module Atlas
       def load(key)
         (path = lookup_map[key]) || return
 
-        parser        = Atlas::Parser::TextToHash::Base.new(path.read)
-        relative_path = path.relative_path_from(@klass.directory)
+        relative_path = path.relative_path_from(@directory)
         without_ext   = relative_path.basename.sub_ext('')
 
         if without_ext.to_s.include?('.')

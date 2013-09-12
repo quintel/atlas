@@ -137,7 +137,7 @@ module Atlas
         #
         # Returns a Pathname.
         def directory
-          Atlas.data_dir.join(self::DIRECTORY)
+          manager.directory
         end
 
         # Internal: The Manager used to fetch the documents from disk.
