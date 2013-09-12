@@ -43,7 +43,8 @@ module Atlas
     # Returns nothing.
     def nodes_hash(nodes)
       nodes.each_with_object({}) do |node, hash|
-        attributes = node.properties.except(:model, :cc_in, :cc_out)
+        attributes = node.get(:model).to_hash
+        attributes.merge!(node.properties.except(:model, :cc_in, :cc_out))
 
         attributes[:demand] = node.demand.to_f
         attributes[:input]  = slots_hash(node.slots.in)
@@ -60,7 +61,9 @@ module Atlas
     def edges_hash(edges)
       edges.each_with_object({}) do |edge, hash|
         model      = edge.get(:model)
-        attributes = { child_share: edge.child_share.to_f }
+
+        attributes = model.to_hash
+        attributes[:child_share] = edge.child_share.to_f
 
         if model.type == :constant
           attributes[:demand] = edge.demand.to_f

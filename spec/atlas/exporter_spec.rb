@@ -37,9 +37,26 @@ module Atlas
     let!(:mc_slot) { mother.slots.out(:child).set(:share, 15.0 / 25.0) }
 
     # Result and Output
-    let!(:result) { Exporter.dump(graph) }
-    let(:edges)   { result[:edges] }
-    let(:nodes)   { result[:nodes] }
+    let(:result) { Exporter.dump(graph) }
+    let(:edges)  { result[:edges] }
+    let(:nodes)  { result[:nodes] }
+
+    # ------------------------------------------------------------------------
+
+    it 'writes static data from the document' do
+      model = mother.get(:model)
+
+      model.has_loss = false
+      model.groups   = %w( bomber life drg innovation jaedong )
+
+      expect(nodes[:mother][:has_loss]).to be_false
+      expect(nodes[:mother][:groups]).to eq(model.groups)
+    end
+
+    it 'prefers data from the graph over the document' do
+      mother.get(:model).demand = 100
+      expect(nodes[:mother][:demand]).to eq(25.0)
+    end
 
     # ------------------------------------------------------------------------
 

@@ -189,12 +189,26 @@ module Atlas
           klass = @klass
         end
 
-        klass.new(parser.to_hash.merge(path: relative_path.to_s)).tap do |doc|
+        attributes = load_attributes(path, key).merge!(path: relative_path)
+
+        klass.new(attributes).tap do |doc|
           doc.manager = self
         end
       rescue ParserError => ex
         ex.path = path
         raise ex
+      end
+
+
+      # Internal: Given a document path or key, retrieves the attributes for
+      # the document
+      #
+      # path - Path to the document file.
+      # key  - The unique key which identifies the document.
+      #
+      # Returns a hash.
+      def load_attributes(path, key)
+        Atlas::Parser::TextToHash::Base.new(path.read).to_hash
       end
 
       # Internal: Given a path, returns the key of the document.

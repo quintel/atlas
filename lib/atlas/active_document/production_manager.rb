@@ -31,16 +31,6 @@ module Atlas
       private
       #######
 
-      # Internal: Loads a document from disk by its +key+.
-      #
-      # Returns the ActiveDocument.
-      def load(key)
-        super.tap do |doc|
-          doc.attributes =
-            doc.attributes.deep_merge!(exported_data_for(doc.key))
-        end
-      end
-
       # Internal: Returns the static, exported values for the document
       # matching the given key.
       #
@@ -50,6 +40,17 @@ module Atlas
       def exported_data_for(key)
         @data[key] || {}
       end
-    end # ProductionManager
+
+      # Internal: Given a document path or key, retrieves the attributes for
+      # the document
+      #
+      # path - Path to the document file.
+      # key  - The unique key which identifies the document.
+      #
+      # Returns a hash.
+      def load_attributes(path, key)
+        exported_data_for(key)
+      end
+    end
   end # ActiveDocument
 end # Atlas

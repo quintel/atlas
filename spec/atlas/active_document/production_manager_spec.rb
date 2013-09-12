@@ -11,8 +11,8 @@ module Atlas::ActiveDocument
 
     let(:production_node) { manager.get(:foo) }
 
-    it 'keeps the original attributes when not present in the static YML' do
-      expect(production_node.use).to eq('energetic')
+    it 'ignores the original attributes when not present in the export data' do
+      expect(production_node.use).to be_nil
     end
 
     it 'merges in the static, region-specific data' do
@@ -45,17 +45,6 @@ module Atlas::ActiveDocument
       expect(edge.demand).to eq(20)
       expect(edge.parent_share).to eql(0.385)
       expect(edge.child_share).to eql(0.411)
-    end
-
-    it 'deep-merges hash attributes' do
-      manager = ProductionManager.new(Atlas::Node, { fd: {
-        input: { coal: 0.7 }
-      }})
-
-      expect(manager.get(:fd).input).to eql(corn: 0.5, coal: 0.7)
-
-      # Does not change the original:
-      expect(Atlas::Node.find(:fd).input[:coal]).to eq(0.5)
     end
 
     it 'disallows editing the document' do
