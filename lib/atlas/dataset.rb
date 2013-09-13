@@ -15,6 +15,8 @@ module Atlas
     attribute :enabled,   Hash[Symbol => Boolean],
                           default: { etengine: true, etmodel: true }
 
+    attribute :analysis_year, Integer, default: 2011
+
     # Flags
     attribute :has_agriculture,          Boolean, default: true
     attribute :has_buildings,            Boolean, default: true
