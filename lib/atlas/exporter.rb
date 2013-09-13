@@ -59,7 +59,7 @@ module Atlas
     #
     # Returns nothing.
     def edges_hash(edges)
-      edges.each_with_object({}) do |edge, hash|
+      data = edges.each_with_object({}) do |edge, hash|
         model      = edge.get(:model)
 
         attributes = model.to_hash
@@ -73,6 +73,14 @@ module Atlas
 
         hash[model.key] = attributes
       end
+
+      # Yay coupling carrier special cases!
+      Edge.all.select { |e| e.carrier == :coupling_carrier }.each do |edge|
+        data[edge.key] = edge.to_hash
+        data[edge.key][:share] = edge.child_share
+      end
+
+      data
     end
 
     # Internal: Given a collection of slots, creates a hash with the shares of
