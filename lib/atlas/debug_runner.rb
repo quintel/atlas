@@ -78,6 +78,8 @@ module Atlas
       bar.total = bar.progress
 
       puts ; puts @error
+
+      @runner.refinery_graph
     end
 
     #######

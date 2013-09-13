@@ -20,7 +20,12 @@ namespace :debug do
       filters = Atlas::DebugRunner::SECTORS
     end
 
-    Atlas::DebugRunner.new(dataset, 'tmp', filters).run!
+    graph = Atlas::DebugRunner.new(dataset, 'tmp', filters).run!
+
+    if ENV['CONSOLE']
+      require 'pry'
+      binding.pry
+    end
   end
 end # namespace :debug
 
