@@ -106,5 +106,56 @@ module Atlas
       end
     end # saving a three-node, multiple carrier graph
 
+    # ------------------------------------------------------------------------
+
+    describe 'special cases' do
+      it 'exports demand of contant edges' do
+        mc_edge.get(:model).type = :constant
+        mc_edge.set(:demand, 1337)
+
+        expect(edges[:'child-mother@child']).to include(demand: 1337.0)
+      end
+
+      it 'exports parent_share of reversed share edges' do
+        mc_edge.set(:parent_share, 0.3)
+
+        mc_edge.get(:model).type     = :share
+        mc_edge.get(:model).reversed = true
+
+        expect(edges[:'child-mother@child']).to include(parent_share: 0.3)
+      end
+
+      it 'exports elastic slots with share=:elastic' do
+        mother.get(:model).output[:loss] = :elastic
+        slot = Atlas::Slot.slot_for(mother.get(:model), :out, :loss)
+
+        mother.slots.out.add(:loss, type: :elastic, model: slot)
+
+        expect(nodes[:mother][:output]).to include(loss: :elastic)
+      end
+    end # special cases
+
+    describe 'coupling carrier' do
+      it 'is exported as an output slot share' do
+        mother.set(:cc_out, 2.0)
+        expect(nodes[:mother][:output][:coupling_carrier]).to eq(2)
+      end
+
+      it 'is exported as an input slot share' do
+        child.set(:cc_in, 2.0)
+        expect(nodes[:child][:input][:coupling_carrier]).to eq(2)
+      end
+
+      it 'is exported as an edge share' do
+        key  = Atlas::Edge.key(:child, :mother, :coupling_carrier)
+        edge = Atlas::Edge.new(key: key, child_share: 1.0, type: :share)
+
+        edge.save!
+
+        expect(edges[key]).
+          to include(share: 1.0, reversed: false, type: :share)
+      end
+    end # coupling carrier
+
   end # Exporter
 end # Atlas

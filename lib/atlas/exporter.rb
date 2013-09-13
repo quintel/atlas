@@ -75,9 +75,11 @@ module Atlas
       end
 
       # Yay coupling carrier special cases!
-      Edge.all.select { |e| e.carrier == :coupling_carrier }.each do |edge|
-        data[edge.key] = edge.to_hash
-        data[edge.key][:share] = edge.child_share
+      Edge.all.each do |edge|
+        if edge.carrier == :coupling_carrier
+          data[edge.key] = edge.to_hash
+          data[edge.key][:share] = edge.child_share
+        end
       end
 
       data
