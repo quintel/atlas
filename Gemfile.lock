@@ -12,6 +12,7 @@ PATH
   specs:
     atlas (0.0.2)
       activemodel (>= 3.2.12)
+      activesupport (>= 3.2.12)
       rubel (>= 0.0.3)
       turbine-graph (>= 0.1)
       virtus (>= 0.5.4)
@@ -92,7 +93,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activesupport (>= 3.2.12)
   atlas!
   guard
   guard-rspec

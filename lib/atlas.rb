@@ -10,7 +10,6 @@ require 'refinery'
 
 require 'active_model'
 require 'rubel'
-require 'ruby-progressbar'
 require 'turbine'
 require 'virtus'
 
