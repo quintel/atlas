@@ -17,6 +17,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency 'activemodel',   '>= 3.2.12'
+  gem.add_dependency 'activesupport', '>= 3.2.12'
   gem.add_dependency 'turbine-graph', '>= 0.1'
   gem.add_dependency 'virtus',        '>= 0.5.4'
   gem.add_dependency 'rubel',         '>= 0.0.3'
@@ -24,7 +25,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rake', '>= 10.0.3'
   gem.add_development_dependency 'pry',  '>= 0.9.12'
   gem.add_development_dependency 'term-ansicolor', '>= 1.2.0'
-  gem.add_development_dependency 'activesupport',  '>= 3.2.12'
   gem.add_development_dependency 'ruby-progressbar'
 
 end

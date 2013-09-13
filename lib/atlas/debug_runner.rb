@@ -27,6 +27,8 @@ module Atlas
     #
     # Retuns a DebugRunner.
     def initialize(dataset, directory = nil, diagrams = SECTORS)
+      require 'ruby-progressbar'
+
       @dataset   = dataset
       @graph     = nil
       @runner    = nil
