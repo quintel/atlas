@@ -13,7 +13,7 @@ module Atlas
         key
       else
         key.to_s.downcase.strip
-          .gsub(/\s+/, '_')
+          .gsub(/(?:\s+|-)/, '_')
           .gsub(/[^a-zA-Z0-9_]+/, '')
           .gsub(/_+/, '_')
           .gsub(/_$/, '')
