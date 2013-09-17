@@ -28,8 +28,9 @@ module Atlas
     #
     # Returns a CSVDocument.
     def initialize(path, normalizer = KEY_NORMALIZER)
-      @path  = Pathname.new(path)
-      @table = CSV.table(@path.to_s, header_converters: [normalizer])
+      @path    = Pathname.new(path)
+      @table   = CSV.table(@path.to_s, header_converters: [normalizer])
+      @headers = @table.headers
     rescue InvalidKeyError
       raise BlankCSVHeaderError.new(path)
     end
@@ -53,6 +54,10 @@ module Atlas
     #
     # Returns the cell content.
     def cell(row_key, column_key)
+      unless header?(column_key)
+        fail UnknownCSVCellError.new(self, column_key)
+      end
+
       (data = row(row_key)) && data[column_key]
     end
 
@@ -71,6 +76,14 @@ module Atlas
     # Returns a Symbol.
     def normalize_key(key)
       KEY_NORMALIZER.call(key)
+    end
+
+    # Internal: Determines if the named column exists in the file. This will
+    # always be true if the column is named by index (a number)
+    #
+    # Returns true or false.
+    def header?(key)
+      key.is_a?(Numeric) || @headers.nil? || @headers.include?(key)
     end
   end # CSVDocument
 

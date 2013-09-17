@@ -12,6 +12,7 @@ module Atlas
           no,0,0,0
           maybe possibly,1,0,0.5
           oh_%^&/_he_said,-1,-1,-1
+          blank,,
         EOF
       end
 
@@ -67,8 +68,16 @@ module Atlas
         expect { doc.get('foo', 'yes') }.to raise_error(UnknownCSVRowError)
       end
 
-      xit 'raises an error when carrier is not known' do
+      it 'raises an error when carrier is not known' do
         expect { doc.get('yes', 'nope') }.to raise_error(UnknownCSVCellError)
+      end
+
+      it 'does not raise an error if a cell is blank' do
+        expect { doc.get('blank', 'no') }.to_not raise_error
+      end
+
+      it 'does not raise an error if the column is named by its index' do
+        expect { doc.get('blank', 1) }.to_not raise_error
       end
     end # get
   end # CSVDocument
