@@ -215,11 +215,11 @@ made by hand will be overwritten the next time they are imported.
 
 * ✗ Carriers
 * ✗ Datasets
-* ✗ Edges
+* ✓ Edges - Queries only
 * ✓ Gqueries
 * ✓ Inputs
-* ✗ Nodes
-* ✗ Presets
-* ✗ Slots
+* ✓ Nodes – Queries only
+* ✓ Presets
+* ✓ Slots – Save the slot as a node query
 
 [refinery]: https://github.com/quintel/refinery
