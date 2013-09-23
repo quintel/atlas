@@ -37,6 +37,8 @@ module Atlas
     validates_with QueryValidator, allow_no_query: true,
       attributes: [:child_share, :parent_share, :demand]
 
+    validate :validate_associated_documents
+
     # Public: The unique key which identifies this edge.
     #
     # This is a combination of the consumer (left node) and the supplier
@@ -112,6 +114,20 @@ module Atlas
       values = name.split(/[-@]/).map(&:to_sym)
 
       Hash[[:consumer, :supplier, :carrier].zip(values)]
+    end
+
+    def validate_associated_documents
+      if carrier && ! Carrier.manager.key?(carrier)
+        errors.add(:carrier, 'does not exist')
+      end
+
+      if supplier && ! Node.manager.key?(supplier)
+        errors.add(:supplier, 'does not exist')
+      end
+
+      if consumer && ! Node.manager.key?(consumer)
+        errors.add(:consumer, 'does not exist')
+      end
     end
 
   end # Edge

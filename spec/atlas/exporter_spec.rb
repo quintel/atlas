@@ -147,7 +147,7 @@ module Atlas
       end
 
       it 'is exported as an edge share' do
-        key  = Atlas::Edge.key(:child, :mother, :coupling_carrier)
+        key  = Atlas::Edge.key(:bar, :fd, :coupling_carrier)
         edge = Atlas::Edge.new(key: key, child_share: 1.0, type: :share)
 
         edge.save!
