@@ -69,6 +69,14 @@ module Atlas
         lookup_map.keys
       end
 
+      # Public: Does a document with +key+ exist? Documents only "exist" when
+      # saved; given a key for an unsaved document, false is returned.
+      #
+      # Returns true if a document exists, false otherwise.
+      def key?(key)
+        lookup_map.key?(key.to_sym)
+      end
+
       # Public: A human-readable version of the Manager.
       #
       # Returns a string.
@@ -199,7 +207,6 @@ module Atlas
         ex.path = path
         raise ex
       end
-
 
       # Internal: Given a document path or key, retrieves the attributes for
       # the document

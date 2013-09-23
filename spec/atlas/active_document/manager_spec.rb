@@ -42,6 +42,25 @@ module Atlas::ActiveDocument
       end
     end # all
 
+    describe '#key?' do
+      it 'given a symbol, is true if a matching key exists' do
+        expect(manager.key?(SomeDocument.all.first.key)).to be_true
+      end
+
+      it 'given a string, is true if a matching key exists' do
+        expect(manager.key?(SomeDocument.all.first.key.to_s)).to be_true
+      end
+
+      it 'is false if a document with no matching key exists' do
+        expect(manager.key?(:no)).to be_false
+      end
+
+      it 'is false if an unsaved document with a matching key exists' do
+        SomeDocument.new(key: :hello)
+        expect(manager.key?(:hello)).to be_false
+      end
+    end # key?
+
     describe '#clear!' do
       it 'removes the documents from the cache' do
         # First, we load a document to warm up the manager's cache, and
