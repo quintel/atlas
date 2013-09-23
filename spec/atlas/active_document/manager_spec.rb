@@ -97,6 +97,12 @@ module Atlas::ActiveDocument
           to change { manager.all.include?(document) }.
           from(false).to(true)
       end
+
+      it 'raises if a duplicate key already exists' do
+        SomeDocument.new(key: document.key).save
+
+        expect { result }.to raise_error(Atlas::DuplicateKeyError)
+      end
     end # when creating a new document
 
     describe 'when creating a subclassed document' do
@@ -117,6 +123,22 @@ module Atlas::ActiveDocument
       end
     end # when creating a subclassed document
 
+    describe 'when saving a document' do
+      let!(:document) do
+        SomeDocument.new(key: 'something', query: 'HELLO').tap do |doc|
+          doc.save!
+          doc.query = 'GOODBYE'
+        end
+      end
+
+      let(:manager) { SomeDocument.manager }
+      let(:result)  { manager.write(document) }
+
+      it 'saves the changes' do
+        expect { result }.to change { document.path.read }
+      end
+    end # when saving a document
+
     describe 'when renaming a document' do
       let!(:document) do
         SomeDocument.new(key: 'something').tap do |doc|
@@ -134,6 +156,12 @@ module Atlas::ActiveDocument
         expect { result }.
           to change { new_path.file? }.
           from(false).to(true)
+      end
+
+      it 'raises if a duplicate key already exists' do
+        SomeDocument.new(key: :updated).save
+
+        expect { result }.to raise_error(Atlas::DuplicateKeyError)
       end
 
       it 'deletes the old file' do
