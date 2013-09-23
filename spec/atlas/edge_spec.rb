@@ -33,6 +33,23 @@ module Atlas
       end
     end # when creating a new Edge
 
+    context 'validation of associated documents' do
+      it 'has an error when the carrier does not exist' do
+        edge = Edge.new(key: 'a-b@nope').tap(&:valid?)
+        expect(edge.errors[:carrier]).to include('does not exist')
+      end
+
+      it 'has an error when the supplier does not exist' do
+        edge = Edge.new(key: 'a-b@nope').tap(&:valid?)
+        expect(edge.errors[:supplier]).to include('does not exist')
+      end
+
+      it 'has an error when the consumer does not exist' do
+        edge = Edge.new(key: 'a-b@nope').tap(&:valid?)
+        expect(edge.errors[:consumer]).to include('does not exist')
+      end
+    end # validation of associated documents
+
     describe 'creating an Edge with an invalid key' do
       it 'raises an error when the key is nil' do
         expect { Edge.new(key: nil) }.to raise_error(InvalidKeyError)

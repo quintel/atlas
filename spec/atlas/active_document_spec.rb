@@ -154,7 +154,7 @@ describe SomeDocument do
 
   end
 
-  describe '.create', :focus do
+  describe '.create' do
     context 'when the document is valid' do
       let(:document) do
         SomeDocument.create(key: :okay, unit: '%',
@@ -197,7 +197,7 @@ describe SomeDocument do
     end # when the document is invalid
   end # .create
 
-  describe '.create!', :focus do
+  describe '.create!' do
     context 'when the document is valid' do
       let(:document) do
         SomeDocument.create!(key: :okay, unit: '%',
