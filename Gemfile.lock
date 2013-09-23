@@ -1,6 +1,7 @@
 GIT
   remote: git@github.com:quintel/refinery.git
-  revision: fa332c7212efbcb280f821fbd944e948fed761d9
+  revision: 9d62df1d9abc01f42bc4ceb44143c8a62333d149
+  ref: 9d62df1
   specs:
     refinery (0.0.1)
       ruby-graphviz
@@ -84,7 +85,7 @@ GEM
     terminal-table (1.4.5)
     thor (0.18.1)
     tins (0.8.0)
-    turbine-graph (0.1.1)
+    turbine-graph (0.1.2)
     virtus (0.5.5)
       backports (~> 3.3)
       descendants_tracker (~> 0.0.1)

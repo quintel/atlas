@@ -65,9 +65,11 @@ module Atlas
     #
     # Returns the calculated Graph.
     def calculate(with = Refinery::Catalyst::Calculators)
-      Refinery::Reactor.new(
-        with, Refinery::Catalyst::Validation
-      ).run(refinery_graph)
+      catalysts = [with, Refinery::Catalyst::Validation]
+
+      catalysts.reduce(refinery_graph) do |result, catalyst|
+        catalyst.call(result)
+      end
     end
 
     # Public: Returns the Refinery graph which the Runner uses to calculate
@@ -84,10 +86,13 @@ module Atlas
           end
         end
 
-        Refinery::Reactor.new(
+        catalysts = [
           Refinery::Catalyst::FromTurbine,
-          SetSlotSharesFromEfficiency.call(method(:query))
-        ).run(graph)
+          SetSlotSharesFromEfficiency.call(method(:query))]
+
+        catalysts.reduce(graph) do |result, catalyst|
+          catalyst.call(result)
+        end
       end
     end
 
