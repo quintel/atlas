@@ -150,6 +150,26 @@ module Atlas
             @manager ||= Manager.new(self)
           end
         end
+
+        # Public: Given attributes for a document, creates and saves the
+        # document. The document is not saved if there are validation errors.
+        #
+        # attributes - Attributes to be set on the document.
+        #
+        # Returns the document instance.
+        def create(attributes)
+          new(attributes).tap(&:save)
+        end
+
+        # Public: Given attributes for a document, creates and saves the
+        # document. An exception is raised if there are validation failures.
+        #
+        # attributes - Attributes to be set on the document.
+        #
+        # Returns the document instance.
+        def create!(attributes)
+          new(attributes).tap(&:save!)
+        end
       end # ClassMethods
 
     end # Persistence

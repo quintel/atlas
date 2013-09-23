@@ -154,6 +154,82 @@ describe SomeDocument do
 
   end
 
+  describe '.create', :focus do
+    context 'when the document is valid' do
+      let(:document) do
+        SomeDocument.create(key: :okay, unit: '%',
+                            query: 'A', do_validation: true)
+      end
+
+      it 'sets the given attributes' do
+        expect(document.key).to eq(:okay)
+        expect(document.unit).to eq('%')
+        expect(document.query).to eq('A')
+      end
+
+      it 'saves the document' do
+        expect(document.path.file?).to be_true
+      end
+
+      it 'has no errors' do
+        expect(document.errors).to be_empty
+      end
+    end # when the document is valid
+
+    context 'when the document is invalid' do
+      let(:document) do
+        SomeDocument.create(key: :okay, unit: '%', do_validation: true)
+      end
+
+      it 'sets the given attributes' do
+        expect(document.key).to eq(:okay)
+        expect(document.unit).to eq('%')
+        expect(document.query).to be_nil
+      end
+
+      it 'does not save the document' do
+        expect(document.path.file?).to be_false
+      end
+
+      it 'has an error' do
+        expect(document.errors).to_not be_empty
+      end
+    end # when the document is invalid
+  end # .create
+
+  describe '.create!', :focus do
+    context 'when the document is valid' do
+      let(:document) do
+        SomeDocument.create!(key: :okay, unit: '%',
+                             query: 'A', do_validation: true)
+      end
+
+      it 'sets the given attributes' do
+        expect(document.key).to eq(:okay)
+        expect(document.unit).to eq('%')
+        expect(document.query).to eq('A')
+      end
+
+      it 'saves the document' do
+        expect(document.path.file?).to be_true
+      end
+
+      it 'has no errors' do
+        expect(document.errors).to be_empty
+      end
+    end # when the document is valid
+
+    context 'when the document is invalid' do
+      let(:document) do
+        SomeDocument.create!(key: :okay, unit: '%', do_validation: true)
+      end
+
+      it 'sets the given attributes' do
+        expect { document }.to raise_error(Atlas::InvalidDocumentError)
+      end
+    end # when the document is invalid
+  end # .create
+
   describe "key" do
     it "returns just the key part" do
       expect(some_document.key).to eql(:foo)
