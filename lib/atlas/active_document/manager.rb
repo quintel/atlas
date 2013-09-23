@@ -91,6 +91,10 @@ module Atlas
       #
       # Returns true or false.
       def write(document)
+        if key?(document.key) && get(document.key) != document
+          fail Atlas::DuplicateKeyError.new(document.key)
+        end
+
         path    = document.path
         content = Atlas::HashToTextParser.new(document.to_hash).to_text
 
