@@ -89,14 +89,6 @@ module Atlas
       :"#{ consumer }-#{ supplier }@#{ carrier }"
     end
 
-    # Internal: The default value of the +sets+ attribute when no explicit
-    # value is specified by the user.
-    #
-    # Returns a symbol or nil.
-    def default_sets
-      query && query.match(/\S/) ? :child_share : nil
-    end
-
     #######
     private
     #######

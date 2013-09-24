@@ -32,7 +32,6 @@ module Atlas
       extend ActiveSupport::Concern
 
       included do
-        validate :validate_sets, if: ->{ respond_to?(:sets) && ! sets.nil? }
         validates :key, presence: true
       end
 
@@ -80,25 +79,6 @@ module Atlas
 
         attrs
       end
-
-      #######
-      private
-      #######
-
-      # Internal: When the document class has a "sets" method, the value of
-      # the "sets" attribute indicates which attribute has a value calculated
-      # by a query. It should therefore not have a value from the user.
-      #
-      # Returns nothing.
-      def validate_sets
-        attribute = sets.to_sym
-
-        if respond_to?(attribute) && ! public_send(attribute).nil?
-          errors.add(sets.to_sym, 'may not have a value since it will be ' \
-                                  'set by a query')
-        end
-      end
-
     end # Last
   end # ActiveDocument
 end # Atlas
