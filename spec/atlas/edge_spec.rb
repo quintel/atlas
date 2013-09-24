@@ -33,6 +33,33 @@ module Atlas
       end
     end # when creating a new Edge
 
+    context 'creating an edge with supplier, consumer, and carrier' do
+      let(:edge) do
+        Edge.new(supplier: 'here', consumer: 'there',
+                 carrier: 'talk', ns: 'listen')
+      end
+
+      it 'sets the supplier' do
+        expect(edge.supplier).to eq(:here)
+      end
+
+      it 'sets the consumer' do
+        expect(edge.consumer).to eq(:there)
+      end
+
+      it 'sets the carrier' do
+        expect(edge.carrier).to eq(:talk)
+      end
+
+      it 'sets the key' do
+        expect(edge.key).to eq(:'there-here@talk')
+      end
+
+      it 'sets the path' do
+        expect(edge.path.to_s).to match(%r{/listen/there-here@talk\.ad$})
+      end
+    end # creating an edge with supplier, consumer, and carrier
+
     context 'validation of associated documents' do
       it 'has an error when the carrier does not exist' do
         edge = Edge.new(key: 'a-b@nope').tap(&:valid?)
@@ -51,8 +78,8 @@ module Atlas
     end # validation of associated documents
 
     describe 'creating an Edge with an invalid key' do
-      it 'raises an error when the key is nil' do
-        expect { Edge.new(key: nil) }.to raise_error(InvalidKeyError)
+      it 'does not raise an error when the key is nil' do
+        expect { Edge.new(key: nil) }.to_not raise_error
       end
 
       it 'raises an error when the key is blank' do
@@ -129,6 +156,14 @@ module Atlas
         it { expect(edge.consumer).to eq(:one) }
         it { expect(edge.carrier).to eq(:gas) }
         it { expect(edge.path.to_s).to match(%{one-two@gas\.ad$}) }
+      end
+
+      context 'changing one of the key components' do
+        before { edge.supplier = :nine }
+
+        it { expect(edge.key).to eq(:'left-nine@gas') }
+        it { expect(edge.supplier).to eq(:nine) }
+        it { expect(edge.path.to_s).to match(%{left-nine@gas\.ad$}) }
       end
 
       it 'raises an error when omitting the supplier key' do

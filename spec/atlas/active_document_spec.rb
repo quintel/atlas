@@ -7,8 +7,8 @@ describe SomeDocument do
 
   describe 'new' do
     context 'given no key or path' do
-      it 'raises an error' do
-        expect { SomeDocument.new({}) }.to raise_error(NoPathOrKeyError)
+      it 'does not raise an error' do
+        expect { SomeDocument.new({}) }.to_not raise_error
       end
     end # given no key or path
 
@@ -711,6 +711,19 @@ describe SomeDocument do
 
       it 'sets the filename to equal the key' do
         expect(node.path.basename.sub_ext('').to_s).to eq('foo')
+      end
+    end
+
+    context 'given no key' do
+      let(:node) { SomeDocument.new }
+
+      it 'fails validation when saved' do
+        node.valid?
+        expect(node.errors[:key]).to include("can't be blank")
+      end
+
+      it 'does not save the document' do
+        expect { node.save }.to_not change { node.path.file? }.from(false)
       end
     end
 

@@ -33,23 +33,24 @@ module Atlas
 
       included do
         validate :validate_sets, if: ->{ respond_to?(:sets) && ! sets.nil? }
+        validates :key, presence: true
       end
 
       # Public: Creates a new document
       #
-      # attributes - A hash of attributes to be set on the document. You must
-      #              at least provide a :path or :key attribute which is used
-      #              to name the document.
+      # attributes - A hash of attributes to be set on the document.
       #
       # Returns your new document.
-      def initialize(attributes)
+      def initialize(attributes = {})
         path = attributes.delete(:path)
         key  = attributes.delete(:key)
 
-        fail NoPathOrKeyError.new(self.class) if path.nil? && key.nil?
-
-        path ? (self.path = path) : (self.key = key)
-        @last_saved_file_path = self.path.dup
+        if path || key
+          path ? (self.path = path) : (self.key = key)
+          @last_saved_file_path = self.path.dup
+        else
+          @last_saved_file_path = nil
+        end
 
         super(attributes)
 
