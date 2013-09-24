@@ -21,6 +21,10 @@ describe SomeDocument do
         expect(SomeDocument.new(key: 'key').key).to eql(:key)
       end
 
+      it 'sets the key when the hash keys are strings' do
+        expect(SomeDocument.new('key' => 'key').key).to eql(:key)
+      end
+
       it 'sets no subdirectory' do
         expect(SomeDocument.new(path: 'key').subdirectory).to be_nil
       end
@@ -40,6 +44,10 @@ describe SomeDocument do
 
       it 'sets the key (as a symbol)' do
         expect(SomeDocument.new(path: 'a/b/thing').key).to eql(:thing)
+      end
+
+      it 'sets the key when the hash keys are strings' do
+        expect(SomeDocument.new('path' => 'a/b/thing').key).to eql(:thing)
       end
 
       it 'saves in that folder' do
