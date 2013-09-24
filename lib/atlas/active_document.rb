@@ -41,8 +41,8 @@ module Atlas
       #
       # Returns your new document.
       def initialize(attributes = {})
-        path = attributes.delete(:path)
-        key  = attributes.delete(:key)
+        path = attributes.delete(:path) || attributes.delete('path')
+        key  = attributes.delete(:key)  || attributes.delete('key')
 
         if path || key
           path ? (self.path = path) : (self.key = key)
