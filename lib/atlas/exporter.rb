@@ -43,8 +43,14 @@ module Atlas
     # Returns nothing.
     def nodes_hash(nodes)
       nodes.each_with_object({}) do |node, hash|
-        attributes = node.get(:model).to_hash
+        model      = node.get(:model)
+        attributes = model.to_hash
+
         attributes.merge!(node.properties.except(:model, :cc_in, :cc_out))
+
+        if model.merit_order
+          attributes[:merit_order] = model.merit_order.to_hash
+        end
 
         attributes[:demand] = node.demand.to_f
         attributes[:input]  = slots_hash(node.slots.in)

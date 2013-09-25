@@ -13,6 +13,7 @@ module Atlas
     attribute :input,                Hash[Symbol => Object]
     attribute :output,               Hash[Symbol => Object]
     attribute :groups,               Array[Symbol]
+    attribute :merit_order,          MeritOrderDetails
 
     alias_method :sector,  :ns
     alias_method :sector=, :ns=

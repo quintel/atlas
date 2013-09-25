@@ -55,6 +55,7 @@ require_relative 'atlas/graph_builder'
 require_relative 'atlas/runner'
 require_relative 'atlas/debug_runner'
 require_relative 'atlas/preset'
+require_relative 'atlas/merit_order_details'
 
 require_relative 'atlas/node'
 require_relative 'atlas/node/converter'
