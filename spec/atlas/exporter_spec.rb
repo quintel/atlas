@@ -133,6 +133,14 @@ module Atlas
 
         expect(nodes[:mother][:output]).to include(loss: :elastic)
       end
+
+      it 'exports merit order data as a hash' do
+        mother.get(:model).merit_order =
+          Atlas::MeritOrderDetails.new(type: :rock, group: 'The Flower Kings')
+
+        expect(nodes[:mother][:merit_order]).
+          to eq(type: :rock, group: :'The Flower Kings')
+      end
     end # special cases
 
     describe 'coupling carrier' do
