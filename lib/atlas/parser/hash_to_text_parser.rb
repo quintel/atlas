@@ -67,9 +67,15 @@ module Atlas
     #
     # Returns a string.
     def attributes_block
-      if (lines = lines_from_hash(@attributes)).any?
-        lines.join("\n")
+      reducers = [ method(:cast_for_serialization),
+                   Atlas::Util.method(:flatten_dotted_hash),
+                   method(:lines_from_hash) ]
+
+      lines = reducers.reduce(@attributes) do |attrs, reducer|
+        reducer.call(attrs)
       end
+
+      lines.join("\n") if lines.any?
     end
 
     # Internal: Given a hash of attributes, returns an array of lines
@@ -81,12 +87,27 @@ module Atlas
     #
     # Returns an array of strings.
     def lines_from_hash(hash, prefix = nil)
-      Atlas::Util.flatten_dotted_hash(hash).map do |key, value|
+      hash.map do |key, value|
         if value.is_a?(Array) || value.is_a?(Set)
           value = "[#{ value.to_a.join(', ') }]"
         end
 
         "- #{ format_attribute(key, value) }"
+      end
+    end
+
+    # Internal: Converts embedded and value objects into hashes, which are
+    # subsequently saved using the "dotted-hash" format.
+    #
+    # hash - The hash which may contain Virtus values.
+    #
+    # Returns a new hash.
+    def cast_for_serialization(hash)
+      hash.each_with_object({}) do |(key, value), cast|
+        cast[key] = case value
+          when Virtus, Virtus::ValueObject then value.to_hash
+          else                                  value
+        end
       end
     end
 

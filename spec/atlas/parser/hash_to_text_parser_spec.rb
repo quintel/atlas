@@ -75,6 +75,14 @@ module Atlas
         expect(p.to_text).to eql "~ demand = #{ query }"
       end
 
+      it 'parses Virtus objects into a hash' do
+        p = HashToTextParser.new(
+          doc: SomeDocument.new(unit: '%', query: 'ABC'))
+
+        expect(p.to_text).to include("- doc.unit = %")
+        expect(p.to_text).to include("- doc.query = ABC")
+      end
+
       it "parses query on two lines" do
         query = "SUM(\n  1,\n  2\n)"
         p = HashToTextParser.new({ queries: { demand: query } })
