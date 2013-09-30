@@ -52,6 +52,12 @@ module Atlas
           attributes[:merit_order] = model.merit_order.to_hash
         end
 
+        if model.max_demand
+          attributes[:max_demand] = model.max_demand
+        else
+          attributes.delete(:max_demand)
+        end
+
         attributes[:demand] = node.demand.to_f
         attributes[:input]  = slots_hash(node.slots.in)
         attributes[:output] = slots_hash(node.slots.out)

@@ -255,6 +255,34 @@ describe Node do
     end
   end
 
+  describe 'max_demand=' do
+    let(:node) { Node.new }
+
+    it 'permits a numeric value' do
+      node.max_demand = 50
+      node.valid?
+
+      expect(node.max_demand).to eq(50)
+      expect(node.errors[:max_demand]).to be_empty
+    end
+
+    it 'permits "recursive"' do
+      node.max_demand = 'recursive'
+      node.valid?
+
+      expect(node.max_demand).to eql('recursive')
+      expect(node.errors[:max_demand]).to be_empty
+    end
+
+    it 'permits :recursive' do
+      node.max_demand = :recursive
+      node.valid?
+
+      expect(node.max_demand).to eql(:recursive)
+      expect(node.errors[:max_demand]).to be_empty
+    end
+  end # max_demand=
+
 end #describe Node 
 
 end #module

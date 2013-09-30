@@ -143,6 +143,35 @@ module Atlas
       end
     end # special cases
 
+    describe 'max demand' do
+      it 'is exported when specified in the document' do
+        mother.set(:max_demand, 50)
+        mother.get(:model).max_demand = 50.0
+
+        expect(nodes[:mother][:max_demand]).to eq(50)
+      end
+
+      it 'is not exported when not specified in the document' do
+        mother.set(:max_demand, 50)
+
+        expect(nodes[:mother]).to_not have_key(:max_demand)
+      end
+
+      it 'is exported as :recursive when the original value is :recursive' do
+        mother.set(:max_demand, 50)
+        mother.get(:model).max_demand = :recursive
+
+        expect(nodes[:mother][:max_demand]).to eq(:recursive)
+      end
+
+      it 'is exported as "recursive" when the original value is "recursive"' do
+        mother.set(:max_demand, 50)
+        mother.get(:model).max_demand = 'recursive'
+
+        expect(nodes[:mother][:max_demand]).to eq('recursive')
+      end
+    end # max demand
+
     describe 'coupling carrier' do
       it 'is exported as an output slot share' do
         mother.set(:cc_out, 2.0)
