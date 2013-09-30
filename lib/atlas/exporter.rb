@@ -62,6 +62,8 @@ module Atlas
         attributes[:input]  = slots_hash(node.slots.in)
         attributes[:output] = slots_hash(node.slots.out)
 
+        attributes.delete(:queries)
+
         hash[node.key] = attributes
       end
     end
@@ -82,6 +84,8 @@ module Atlas
         elsif model.type == :share && model.reversed?
           attributes[:parent_share] = edge.parent_share.to_f
         end
+
+        attributes.delete(:queries)
 
         hash[model.key] = attributes
       end
