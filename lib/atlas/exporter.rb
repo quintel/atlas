@@ -54,7 +54,8 @@ module Atlas
 
         if model.max_demand
           attributes[:max_demand] = model.max_demand
-        else
+        elsif ! model.queries.key?(:max_demand)
+          # Keep the Refinery value if it was set by a query.
           attributes.delete(:max_demand)
         end
 
