@@ -86,6 +86,9 @@ module Atlas
     attribute :electrical_efficiency_when_using_coal, Float
     attribute :electrical_efficiency_when_using_wood_pellets, Float
 
+    validates_with QueryValidator,
+      attributes: [:max_demand], allow_no_query: true
+
     validate :validate_slots
 
     # ------------------------------------------------------------------------
