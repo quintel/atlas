@@ -15,7 +15,7 @@ module Atlas
           has_attr  = record.public_send(attr)
 
           if has_query && has_attr
-            errors.add(attr, BOTH)
+            record.errors.add(attr, BOTH)
           elsif has_query || has_attr
             all_blank = false
           end
