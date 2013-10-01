@@ -109,7 +109,7 @@ module Atlas
     #
     # Returns a Float.
     def TIME_CURVE(curve_key, attribute)
-      dataset.time_curve(curve_key).get(2011, attribute)
+      dataset.time_curve(curve_key).get(@dataset.analysis_year, attribute)
     end
 
     # Public: Given keys to look up a node or edge, retrieves the demand
