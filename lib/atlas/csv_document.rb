@@ -9,8 +9,10 @@ module Atlas
       case key
       when nil
         fail(InvalidKeyError.new(key))
-      when Integer
-        key
+      when Integer, Float
+        # Time curve years may be expressed using scientific notation numbers,
+        # in which case the class is a float.
+        key.to_i
       else
         key.to_s.downcase.strip
           .gsub(/(?:\s+|-)/, '_')
