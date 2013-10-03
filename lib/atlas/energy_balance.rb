@@ -7,7 +7,6 @@ module Atlas
   # Currently, it is presumed that the EnergyBalance values are provided
   # in ktoe, the standard of the IEA.
   class EnergyBalance < CSVDocument
-    DIRECTORY =     'energy_balances'
     ORIGINAL_UNIT = :tj
 
     attr_accessor :key, :unit
@@ -16,7 +15,7 @@ module Atlas
       @key  = key
       @unit = unit
 
-      super(Atlas.data_dir.join("#{ self.class::DIRECTORY}/#{ key }.csv"))
+      super(Dataset.find(key).dataset_dir.join('energy_balance.csv'))
     end
 
     # Loads a stored energy balance
