@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 gemspec
 
-gem 'refinery', ref: '6c6e6b6', git: 'git@github.com:quintel/refinery.git'
+gem 'refinery', ref: '05607a8', git: 'git@github.com:quintel/refinery.git'
 
 group :test do
   gem 'rspec'
