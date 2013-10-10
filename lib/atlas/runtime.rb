@@ -112,40 +112,6 @@ module Atlas
       dataset.time_curve(curve_key).get(@dataset.analysis_year, attribute)
     end
 
-    # Public: Given keys to look up a node or edge, retrieves the demand
-    # attribute of the object.
-    #
-    # *keys - Keys used to identify the node or edge.
-    #
-    # Returns a numeric.
-    def DEMAND(*keys)
-      lookup(*keys).get(:demand)
-    end
-
-    # Public: Given keys to look up an edge, retrieves the value of the edge's
-    # :parent_share attribute.
-    #
-    # parent_key - The key of the parent node.
-    # child_key  - The key of the child node.
-    # carrier    - The name of the carrier.
-    #
-    # Returns a numeric.
-    def PARENT_SHARE(parent_key, child_key, carrier)
-      lookup(parent_key, child_key, carrier).get(:parent_share)
-    end
-
-    # Public: Given keys to look up an edge, retrieves the value of the edge's
-    # :child_share attribute.
-    #
-    # parent_key - The key of the parent node.
-    # child_key  - The key of the child node.
-    # carrier    - The name of the carrier.
-    #
-    # Returns a numeric.
-    def CHILD_SHARE(parent_key, child_key, carrier)
-      lookup(parent_key, child_key, carrier).get(:child_share)
-    end
-
     #######
     private
     #######
@@ -157,35 +123,6 @@ module Atlas
     # Returns an EnergyBalance.
     def energy_balance
       dataset.energy_balance
-    end
-
-    # Internal: Retrieves a Node by it's key, or an edge by the key of the
-    # parent node, child node, and carrier.
-    #
-    # keys* - One or more keys.
-    #
-    # Returns the Turbine::Node or Turbine::Edge.
-    def lookup(*keys)
-      keys = keys.map(&:to_sym)
-
-      if keys.one?
-        # A single key looks up a node by its key.
-        @graph.node(keys.first) || fail(UnknownNodeError.new(keys.first))
-      elsif keys.length == 3
-        # Three keys looks up an edge by its parent and child node keys, and
-        # the name of the carrier.
-
-        # Assert that both nodes exist.
-        parent = lookup(keys[0])
-        child  = lookup(keys[1])
-
-        parent.out_edges(keys.last).find do |edge|
-          edge.to.key == keys[1]
-        end || fail(UnknownEdgeError.new(keys))
-      else
-        # Any other number of keys is invalid.
-        fail InvalidLookupError.new(keys)
-      end
     end
 
   end # Runtime
