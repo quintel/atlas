@@ -184,6 +184,22 @@ module Atlas
         dataset_dir.join('primary_production.csv'))
     end
 
+    # Public: Retrieves the demand data for the file whose name matches +key+.
+    #
+    # key - The name of the demand file to load.
+    #
+    # For example:
+    #   dataset.demands(:industry).get(:final_demand_coal_gas) # => 0.4
+    #
+    # Returns a CSVDocument::OneDimensional.
+    def demands(key)
+      key = key.to_sym
+
+      (@demands ||= {})[key] ||=
+        CSVDocument::OneDimensional.new(
+          dataset_dir.join("demands/#{ key }.csv"))
+    end
+
     # Public: Path to the directory in which the dataset specific data is
     # stored.
     #
