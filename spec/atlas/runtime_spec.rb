@@ -107,5 +107,30 @@ module Atlas
           to raise_error(UnknownCSVRowError)
       end
     end
+
+    context 'DEMAND' do
+      it 'executes DEMAND functions' do
+        expect(
+          runtime.execute("DEMAND(industry, final_demand_coal_gas)")
+        ).to eq(132)
+      end
+
+      it "raises an error if you don't provide a node key" do
+        expect {
+          runtime.execute("DEMAND(industry)")
+        }.to raise_error(ArgumentError)
+      end
+
+      it "raises an error if you don't provide an invalid node key" do
+        expect {
+          runtime.execute("DEMAND(industry, not_there)")
+        }.to raise_error(UnknownCSVRowError)
+      end
+
+      it 'raises an error if the named file is missing' do
+        expect { runtime.execute('DEMAND(nope, demand)') }.
+          to raise_error(Errno::ENOENT)
+      end
+    end
   end # Runtime
 end # Atlas

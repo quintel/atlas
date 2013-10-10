@@ -112,6 +112,22 @@ module Atlas
       dataset.time_curve(curve_key).get(@dataset.analysis_year, attribute)
     end
 
+    # Public: Retrieves a demand value identified by the given key.
+    #
+    # file_key  - The name of the file in which to find the demand value, minus
+    #             the ".csv" extension.
+    # attribute - The name of the attribute to be extracted from the demand
+    #             file.
+    #
+    # For example, retrieving the gasoline share from trucks.csv.
+    #
+    #   DEMAND(:industry, :final_demand_coal_gas)
+    #
+    # Returns a Numeric.
+    def DEMAND(file_key, attribute)
+      dataset.demands(file_key).get(attribute)
+    end
+
     #######
     private
     #######
