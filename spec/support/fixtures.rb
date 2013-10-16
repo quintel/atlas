@@ -6,7 +6,7 @@ module Atlas
       # Public: The directory which will be used to store copies of the
       # fixtures for each test.
       #
-      # Each test run has fixtures places into a directory unique to that run.
+      # Each test run has fixtures placed into a directory unique to that run.
       # This ensures that if RSpec is running multiple times (e.g. Guard is
       # running the specs already, and you execute "rspec" in a separate
       # window), one run will not affect the files used by the other.
