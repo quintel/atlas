@@ -22,6 +22,7 @@ module Atlas
     attribute :child_share,  Float
     attribute :reversed,     Boolean, default: false
     attribute :priority,     Integer
+    attribute :groups,       Array[Symbol]
 
     attr_reader :supplier
     attr_reader :consumer
