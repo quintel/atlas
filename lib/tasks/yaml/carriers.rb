@@ -1,4 +1,4 @@
-namespace :import do
+namespace :yaml do
   desc <<-DESC
     Import carriers from the old format to ActiveDocument.
 
@@ -50,4 +50,4 @@ namespace :import do
 
     Rake::Task['validate:carriers'].invoke(args.to)
   end # :carriers
-end # :import
+end # :yaml

@@ -1,4 +1,4 @@
-namespace :import do
+namespace :yaml do
   OUT_SLOT_RE   = /^\((?<carrier>[\w_]+)\)-(?<node>[\w_]+)(?:$|: )/
   IN_SLOT_RE    = /^(?<node>[\w_]+)-\((?<carrier>[\w_]+)\)(?:$|: )/
   SLOT_DEFAULTS = Atlas::Slot.new(key: 'a-@e').attributes
@@ -202,4 +202,4 @@ namespace :import do
       (slots.length - use.length).times { reporter.inc(:skipped) }
     end
   end # slots
-end # import
+end # yaml

@@ -1,4 +1,4 @@
-namespace :import do
+namespace :yaml do
   desc <<-DESC
     Import the region data from the old format to ActiveDocument.
 
@@ -29,4 +29,4 @@ namespace :import do
 
     runner.finish
   end # :datasets
-end # :import
+end # :yaml
