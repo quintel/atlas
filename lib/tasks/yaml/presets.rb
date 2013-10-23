@@ -1,4 +1,4 @@
-namespace :import do
+namespace :yaml do
   desc <<-DESC
     Import presets from the old format to ActiveDocument.
 
@@ -28,4 +28,4 @@ namespace :import do
 
     Rake::Task['validate:presets'].invoke(args.to)
   end # :presets
-end # :import
+end # :yaml

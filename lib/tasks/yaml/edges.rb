@@ -1,4 +1,4 @@
-namespace :import do
+namespace :yaml do
   desc <<-DESC
     Import edges from the old format to ActiveDocument.
 
@@ -72,4 +72,4 @@ namespace :import do
 
     Rake::Task['validate:edges'].invoke(args.to)
   end # task :edges
-end # namespace :import
+end # namespace :yaml

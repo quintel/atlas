@@ -1,4 +1,4 @@
-namespace :import do
+namespace :yaml do
   desc <<-DESC
     Import nodes from the old format to ActiveDocument.
 
@@ -94,7 +94,7 @@ namespace :import do
 
     runner.finish
 
-    Rake::Task['import:slots'].invoke(args.from, args.to)
+    Rake::Task['yaml:slots'].invoke(args.from, args.to)
     Rake::Task['validate:nodes'].invoke(args.to)
   end # task :nodes
-end # namespace :import
+end # namespace :yaml

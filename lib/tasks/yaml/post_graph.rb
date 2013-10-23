@@ -1,4 +1,4 @@
-namespace :import do
+namespace :yaml do
   # A hidden task which needs to run after importing the nodes, slots, and
   # edges to "fix" the keys of any RDR nodes.
   task :post_graph, [:from, :to] => [:setup] do |_, args|
@@ -29,4 +29,4 @@ namespace :import do
       edge.save(false)
     end
   end # task :post_graph
-end # namespace :import
+end # namespace :yaml
