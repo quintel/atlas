@@ -9,10 +9,8 @@ module Atlas
       case key
       when nil
         fail(InvalidKeyError.new(key))
-      when Integer, Float
-        # Time curve years may be expressed using scientific notation numbers,
-        # in which case the class is a float.
-        key.to_i
+      when Numeric
+        key
       else
         key.to_s.downcase.strip
           .gsub(/(?:\s+|-)/, '_')
@@ -23,6 +21,11 @@ module Atlas
       end
     end
 
+    # Columns called "year" will be converted to an integer.
+    YEAR_NORMALIZER = lambda do |value, info|
+      info.header == :year ? value.to_f.to_i : value
+    end
+
     # Public: Creates a new CSV document instance which will read data from a
     # CSV file on disk. Document are read-only.
     #
@@ -30,8 +33,13 @@ module Atlas
     #
     # Returns a CSVDocument.
     def initialize(path, normalizer = KEY_NORMALIZER)
-      @path    = Pathname.new(path)
-      @table   = CSV.table(@path.to_s, header_converters: [normalizer])
+      @path = Pathname.new(path)
+
+      @table = CSV.table(@path.to_s, {
+        converters: [YEAR_NORMALIZER, :all],
+        header_converters: [normalizer]
+      })
+
       @headers = @table.headers
     rescue InvalidKeyError
       raise BlankCSVHeaderError.new(path)
