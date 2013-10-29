@@ -66,7 +66,7 @@ module Atlas
     context 'TIME_CURVE' do
       it 'executes TIME_CURVE functions' do
         result = runtime.execute("TIME_CURVE(bio_residues, max_demand)")
-        expect(result).to eq(34)
+        expect(result).to eq(34087.2093)
       end
 
       it 'raises an error if the curve data is missing' do
