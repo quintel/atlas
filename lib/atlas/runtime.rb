@@ -21,7 +21,7 @@ module Atlas
       else
         instance_exec(&string)
       end
-    rescue StandardError, ScriptError => ex
+    rescue ::StandardError, ::ScriptError => ex
       fail QueryError.new(ex, string)
     end
 
