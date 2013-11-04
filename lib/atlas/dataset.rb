@@ -34,6 +34,7 @@ module Atlas
     attribute :has_old_technologies,     Boolean, default: false
     attribute :has_other,                Boolean, default: true
     attribute :has_solar_csp,            Boolean, default: false
+    attribute :has_import_export,        Boolean, default: true
     attribute :use_network_calculations, Boolean, default: true
 
     # Numeric Data
