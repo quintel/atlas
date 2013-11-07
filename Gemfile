@@ -4,6 +4,10 @@ gemspec
 
 gem 'refinery', ref: '9cf6a73', git: 'git@github.com:quintel/refinery.git'
 
+group :development do
+  gem 'httparty'
+end
+
 group :test do
   gem 'rspec'
   gem 'guard'
