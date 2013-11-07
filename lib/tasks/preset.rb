@@ -23,7 +23,7 @@ namespace :preset do
 
     Atlas.data_dir = '../etsource/data'
 
-    server = ENV['server'] || 'et-engine.com'
+    server = ENV['SERVER'] || 'et-engine.com'
     id     = ENV['ID']     || 'please provide which (scenario) ID!'
 
     puts "Retrieving data from #{ server } for scenario_id=#{ id }"
