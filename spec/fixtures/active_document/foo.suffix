@@ -12,6 +12,7 @@
 # final_demand.primary_co2_emission == useful_demand.primary_co2_emission != primary_demand.primary_co2_emission
 
 - unit = kg
+- array = []
 
 ~ demand =
     SUM(

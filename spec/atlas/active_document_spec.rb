@@ -81,7 +81,9 @@ describe SomeDocument do
 
   describe 'to_hash' do
     it 'is empty when no attributes have been set' do
-      expect(SomeDocument.new(key: 'a').to_hash).to eql(queries: {})
+      expect(SomeDocument.new(key: 'a').to_hash).to eql(queries: {},
+                                                        hash: {},
+                                                        array: [])
     end
 
     it 'contains attributes set by the user' do
