@@ -207,19 +207,4 @@ an import if your ETSource repository has uncommitted changes.
 After running an import, you should change to the ETSource directory to
 commit the updated files and remove those which have been deleted.
 
-#### Safe To Edit?
-
-Since importing completely removes all of the old documents before remaking
-them, those created via the import tool *are not* safe to edit; and changes
-made by hand will be overwritten the next time they are imported.
-
-* ✗ Carriers
-* ✗ Datasets
-* ✓ Edges - Queries only
-* ✓ Gqueries
-* ✓ Inputs
-* ✓ Nodes – Queries only
-* ✓ Presets
-* ✓ Slots – Save the slot as a node query
-
 [refinery]: https://github.com/quintel/refinery

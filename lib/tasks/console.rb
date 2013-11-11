@@ -1,7 +1,7 @@
 namespace :console do
   def start_console(dir, prelude = nil)
     command = system("which pry > /dev/null 2>&1") ? 'pry' : 'irb'
-    dir     = dir.nil? ? '../etsource/data' : dir
+    dir     = dir.nil? ? '../etsource' : dir
     prelude = %(Atlas.data_dir = #{ dir.inspect } ; #{ prelude })
 
     prelude.gsub!("\n", '; ')

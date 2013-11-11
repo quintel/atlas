@@ -47,9 +47,9 @@ end # namespace :manip
 MANIP_CLASS_NAMES.each do |class_name|
   namespace class_name.downcase do
     desc "Create a new #{ class_name.downcase }"
-    task create: ["manip:#{ class_name }:create"]
+    task create: ["manip:#{ class_name.downcase }:create"]
 
     desc "Delete a #{ class_name.downcase }"
-    task destroy: ["manip:#{ class_name }:destroy"]
+    task destroy: ["manip:#{ class_name.downcase }:destroy"]
   end # namespace class_name
 end

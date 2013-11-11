@@ -7,5 +7,5 @@ task :environment, [:data_dir] do |_, args|
   require 'term/ansicolor'
   require 'active_support/core_ext/hash/indifferent_access'
 
-  Atlas.data_dir = dir(args.data_dir || '../etsource/data')
+  Atlas.data_dir = args.data_dir || '../etsource'
 end # environment

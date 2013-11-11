@@ -95,7 +95,7 @@ namespace :validate do
 
   task :setup, [:dir] do |_, args|
     require 'term/ansicolor'
-    Atlas.data_dir = args.dir || '../etsource/data'
+    Atlas.data_dir = args.dir || '../etsource'
   end
 
   task(carriers: :setup) { ValidationRunner.new(Atlas::Carrier).run }
