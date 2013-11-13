@@ -19,15 +19,34 @@ module Atlas
         end.map(&:last)
 
         lambda do |refinery|
-          refinery.nodes.each do |node|
-            if disabled_ns.any? { |namespace| node.get(:model).ns?(namespace) }
-              node.set(:demand, 0)
-            end
+          disabled_nodes = refinery.nodes.select do |node|
+            disabled_ns.any? { |namespace| node.get(:model).ns?(namespace) }
           end
+
+          disabled_nodes.each(&method(:zero!))
 
           refinery
         end
       end
+
+      # Internal: Given a node, zeros out its demand, and sets the associated
+      # edges and slots to be zero.
+      #
+      # Returns nothing.
+      def self.zero!(node)
+        (node.out_edges.to_a + node.in_edges.to_a).each do |edge|
+          edge.set(:child_share, 0)
+          edge.set(:parent_share, 0)
+          edge.set(:demand, 0)
+        end
+
+        (node.slots.out.to_a + node.slots.in.to_a).each do |slot|
+          slot.set(:share, 0)
+        end
+
+        node.set(:demand, 0)
+      end
     end # ZeroDisabledSectors
   end # Runner
+
 end # Atlas
