@@ -5,22 +5,22 @@ module Atlas
     # for "has_metal" will cause all metal nodes and edges to be given zero
     # demand.
     module ZeroDisabledSectors
-      # Maps boolean flags on the dataset to node namespaces which should be
+      # Maps boolean flags on the dataset to node groups which should be
       # disabled if the flag is false.
-      FEATURE_MAP = { has_metal: 'industry.metal' }
+      FEATURE_MAP = { has_metal: :metal }
 
       # Public: Creates a proc which can be used by Refinery to zero-out any
       # disabled subsectors.
       def self.with_dataset(dataset)
         # Create an array of namespaces which have been disabled in the
         # given dataset.
-        disabled_ns = FEATURE_MAP.reject do |ds_attribute, namespace|
+        disabled_groups = FEATURE_MAP.reject do |ds_attribute, group|
           dataset.send(ds_attribute)
         end.map(&:last)
 
         lambda do |refinery|
           disabled_nodes = refinery.nodes.select do |node|
-            disabled_ns.any? { |namespace| node.get(:model).ns?(namespace) }
+            (node.get(:model).groups & disabled_groups).any?
           end
 
           disabled_nodes.each(&method(:zero!))
