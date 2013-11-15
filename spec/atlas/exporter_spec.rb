@@ -8,7 +8,7 @@ module Atlas
     end
 
     def make_edge(from, to, carrier, attributes = {})
-      model = Atlas::Edge.new(key: Atlas::Edge.key(to.key, from.key, carrier))
+      model = Atlas::Edge.new(key: Atlas::Edge.key(from.key, to.key, carrier))
       from.connect_to(to, carrier, attributes.merge(model: model))
     end
 
@@ -74,15 +74,15 @@ module Atlas
       end
 
       it 'writes [M]->[F] share' do
-        expect(edges[:'father-mother@spouse'][:child_share]).to eq(1)
+        expect(edges[:'mother-father@spouse'][:child_share]).to eq(1)
       end
 
       it 'writes [M]->[C] share' do
-        expect(edges[:'child-mother@child'][:child_share]).to eq(15.0 / 25.0)
+        expect(edges[:'mother-child@child'][:child_share]).to eq(15.0 / 25.0)
       end
 
       it 'writes [F]->[C] share' do
-        expect(edges[:'child-father@child'][:child_share]).to eq(10.0 / 25.0)
+        expect(edges[:'father-child@child'][:child_share]).to eq(10.0 / 25.0)
       end
 
       it 'writes [M]-@spouse share' do
@@ -113,7 +113,7 @@ module Atlas
         mc_edge.get(:model).type = :constant
         mc_edge.set(:demand, 1337)
 
-        expect(edges[:'child-mother@child']).to include(demand: 1337.0)
+        expect(edges[:'mother-child@child']).to include(demand: 1337.0)
       end
 
       it 'exports parent_share of reversed share edges' do
@@ -122,7 +122,7 @@ module Atlas
         mc_edge.get(:model).type     = :share
         mc_edge.get(:model).reversed = true
 
-        expect(edges[:'child-mother@child']).to include(parent_share: 0.3)
+        expect(edges[:'mother-child@child']).to include(parent_share: 0.3)
       end
 
       it 'exports elastic slots with share=:elastic' do
@@ -184,7 +184,7 @@ module Atlas
       end
 
       it 'is exported as an edge share' do
-        key  = Atlas::Edge.key(:bar, :fd, :coupling_carrier)
+        key  = Atlas::Edge.key(:fd, :bar, :coupling_carrier)
         edge = Atlas::Edge.new(key: key, child_share: 1.0, type: :share)
 
         edge.save!

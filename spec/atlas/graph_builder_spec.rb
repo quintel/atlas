@@ -65,7 +65,7 @@ module Atlas
       end
 
       context 'with a single, share link' do
-        let(:link_data) { [ Edge.new(key: 'key-parent@coal', type: :share) ] }
+        let(:link_data) { [ Edge.new(key: 'parent-key@coal', type: :share) ] }
         let(:edge)      { t_node.in_edges.first }
 
         it 'adds a single incoming edge' do
@@ -98,7 +98,7 @@ module Atlas
       end # with a single, share link
 
       context 'with a reversed link' do
-        let(:link_data) { [ Edge.new(key: 'key-parent@coal', type: :share, reversed: true) ] }
+        let(:link_data) { [ Edge.new(key: 'parent-key@coal', type: :share, reversed: true) ] }
         let(:edge)      { t_node.in_edges.first }
 
         it 'adds a single incoming edge' do
@@ -120,8 +120,8 @@ module Atlas
 
       context 'with multiple links using different carriers' do
         let(:link_data) { [
-          Edge.new(key: 'key-parent@coal', type: :share),
-          Edge.new(key: 'key-parent@corn', type: :share),
+          Edge.new(key: 'parent-key@coal', type: :share),
+          Edge.new(key: 'parent-key@corn', type: :share)
         ] }
 
         describe 'the coal edge' do
@@ -144,14 +144,14 @@ module Atlas
       context 'with a non-existent node' do
         let(:link_data) { [] }
 
-        it 'raises an InvalidLinkError' do
-          link = Edge.new(key: 'key-nope@coal', type: :share)
+        it 'raises an InvalidLinkError with the parent does not exist' do
+          link = Edge.new(key: 'nope-key@coal', type: :share)
 
           expect do
             GraphBuilder.establish_edge(link, graph, nodes)
           end.to raise_error(Atlas::DocumentNotFoundError)
         end
-      end # with an invalid link type
+      end # with a non-existent node
 
       context 'with a non-existent carrier' do
         let(:link_data) { [] }

@@ -13,11 +13,11 @@ module Atlas
       let(:edge) { Edge.new(path: 'left-right@gas.ad') }
 
       it 'sets the consumer from the filename' do
-        expect(edge.consumer).to eq(:left)
+        expect(edge.consumer).to eq(:right)
       end
 
       it 'sets the supplier from the filename' do
-        expect(edge.supplier).to eq(:right)
+        expect(edge.supplier).to eq(:left)
       end
 
       it 'sets the carrier from the filename' do
@@ -52,11 +52,11 @@ module Atlas
       end
 
       it 'sets the key' do
-        expect(edge.key).to eq(:'there-here@talk')
+        expect(edge.key).to eq(:'here-there@talk')
       end
 
       it 'sets the path' do
-        expect(edge.path.to_s).to match(%r{/listen/there-here@talk\.ad$})
+        expect(edge.path.to_s).to match(%r{/listen/here-there@talk\.ad$})
       end
     end # creating an edge with supplier, consumer, and carrier
 
@@ -110,8 +110,8 @@ module Atlas
         before { edge.key = 'left-other@gas' }
 
         it { expect(edge.key).to eq(:'left-other@gas') }
-        it { expect(edge.supplier).to eq(:other) }
-        it { expect(edge.consumer).to eq(:left) }
+        it { expect(edge.supplier).to eq(:left) }
+        it { expect(edge.consumer).to eq(:other) }
         it { expect(edge.carrier).to eq(:gas) }
         it { expect(edge.path.to_s).
                to match(%{left-other@gas\.ad$}) }
@@ -121,8 +121,8 @@ module Atlas
         before { edge.key = 'other-right@gas' } 
 
         it { expect(edge.key).to eq(:'other-right@gas') }
-        it { expect(edge.supplier).to eq(:right) }
-        it { expect(edge.consumer).to eq(:other) }
+        it { expect(edge.supplier).to eq(:other) }
+        it { expect(edge.consumer).to eq(:right) }
         it { expect(edge.path.to_s).to match(%{other-right@gas\.ad$}) }
       end
 
@@ -130,8 +130,8 @@ module Atlas
         before { edge.key = 'left-right@electricity' } 
 
         it { expect(edge.key).to eq(:'left-right@electricity') }
-        it { expect(edge.supplier).to eq(:right) }
-        it { expect(edge.consumer).to eq(:left) }
+        it { expect(edge.supplier).to eq(:left) }
+        it { expect(edge.consumer).to eq(:right) }
         it { expect(edge.carrier).to eq(:electricity) }
         it { expect(edge.path.to_s).
                to match(%{left-right@electricity\.ad$}) }
@@ -141,8 +141,8 @@ module Atlas
         before { edge.key = 'one-two@electricity' }
 
         it { expect(edge.key).to eq(:'one-two@electricity') }
-        it { expect(edge.supplier).to eq(:two) }
-        it { expect(edge.consumer).to eq(:one) }
+        it { expect(edge.supplier).to eq(:one) }
+        it { expect(edge.consumer).to eq(:two) }
         it { expect(edge.carrier).to eq(:electricity) }
         it { expect(edge.path.to_s).
                to match(%{one-two@electricity\.ad$}) }
@@ -152,8 +152,8 @@ module Atlas
         before { edge.key = :'one-two@gas' }
 
         it { expect(edge.key).to eq(:'one-two@gas') }
-        it { expect(edge.supplier).to eq(:two) }
-        it { expect(edge.consumer).to eq(:one) }
+        it { expect(edge.supplier).to eq(:one) }
+        it { expect(edge.consumer).to eq(:two) }
         it { expect(edge.carrier).to eq(:gas) }
         it { expect(edge.path.to_s).to match(%{one-two@gas\.ad$}) }
       end
@@ -161,9 +161,9 @@ module Atlas
       context 'changing one of the key components' do
         before { edge.supplier = :nine }
 
-        it { expect(edge.key).to eq(:'left-nine@gas') }
+        it { expect(edge.key).to eq(:'nine-right@gas') }
         it { expect(edge.supplier).to eq(:nine) }
-        it { expect(edge.path.to_s).to match(%{left-nine@gas\.ad$}) }
+        it { expect(edge.path.to_s).to match(%{nine-right@gas\.ad$}) }
       end
 
       it 'raises an error when omitting the supplier key' do
@@ -197,10 +197,10 @@ module Atlas
 
     describe 'changing the filename' do
       let(:edge) { Edge.new(key: 'left-right@gas') }
-      before { edge.path = 'yes-no@electricity.ad' }
+      before { edge.path = 'no-yes@electricity.ad' }
 
       it 'updates the file path' do
-        expect(edge.path.to_s).to match(/yes-no@electricity\.ad$/)
+        expect(edge.path.to_s).to match(/no-yes@electricity\.ad$/)
       end
 
       it 'updates the supplier node' do
@@ -216,12 +216,12 @@ module Atlas
       end
 
       it 'updates the key' do
-        expect(edge.key).to eql(:'yes-no@electricity')
+        expect(edge.key).to eql(:'no-yes@electricity')
       end
     end # changing the filename
 
     describe 'parsing an AD file' do
-      let(:edge) { Edge.find('bar-foo@coal') }
+      let(:edge) { Edge.find('foo-bar@coal') }
 
       it 'sets the supplier' do
         expect(edge.supplier).to eq(:foo)
@@ -248,7 +248,7 @@ module Atlas
       end
 
       it 'sets the query when one is present' do
-        expect(Edge.find('baz-bar@corn').queries[:parent_share]).to eq \
+        expect(Edge.find('bar-baz@corn').queries[:parent_share]).to eq \
           "SHARE(cars, gasoline)"
       end
     end # parsing an AD file

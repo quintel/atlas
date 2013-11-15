@@ -37,10 +37,10 @@ module Atlas::ActiveDocument
     end
 
     it 'loads edge data' do
-      data = { :'bar-foo@coal' => {
+      data = { :'foo-bar@coal' => {
         demand: 20, parent_share: 0.385, child_share: 0.411 } }
 
-      edge = ProductionManager.new(Atlas::Edge, data).get(:'bar-foo@coal')
+      edge = ProductionManager.new(Atlas::Edge, data).get(:'foo-bar@coal')
 
       expect(edge.demand).to eq(20)
       expect(edge.parent_share).to eql(0.385)
