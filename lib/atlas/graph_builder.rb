@@ -101,6 +101,7 @@ module Atlas
       end
 
       fail DocumentNotFoundError.new(edge.supplier, Node) if parent.nil?
+      fail DocumentNotFoundError.new(edge.consumer, Node) if child.nil?
 
       parent.connect_to(child, carrier.key, props)
     end

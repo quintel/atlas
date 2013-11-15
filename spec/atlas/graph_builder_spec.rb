@@ -151,6 +151,14 @@ module Atlas
             GraphBuilder.establish_edge(link, graph, nodes)
           end.to raise_error(Atlas::DocumentNotFoundError)
         end
+
+        it 'raises an InvalidLinkError with the child does not exist' do
+          link = Edge.new(key: 'key-nope@coal', type: :share)
+
+          expect do
+            GraphBuilder.establish_edge(link, graph, nodes)
+          end.to raise_error(Atlas::DocumentNotFoundError)
+        end
       end # with a non-existent node
 
       context 'with a non-existent carrier' do
