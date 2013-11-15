@@ -185,7 +185,7 @@ module Atlas
         if str.match(/^[A-Z]+$/)
           # Namespace (sector) filter.
           namespace = str.downcase
-          ->(node) { node.get(:model).ns == namespace }
+          ->(node) { node.get(:model).ns?(namespace) }
         else
           # Node key filter.
           key = str.to_sym
