@@ -21,7 +21,7 @@ namespace :preset do
     require 'httparty'
     require 'active_support/core_ext/hash/indifferent_access'
 
-    Atlas.data_dir = '../etsource/data'
+    Atlas.data_dir = '../etsource'
 
     server = ENV['SERVER'] || 'et-engine.com'
     id     = ENV['ID']     || 'please provide which (scenario) ID!'
