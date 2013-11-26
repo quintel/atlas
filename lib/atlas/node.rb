@@ -32,7 +32,7 @@ module Atlas
       :variability,
       :electricity_output_capacity,
       :heat_output_capacity,
-      :typical_nominal_input_capacity,
+      :typical_input_capacity,
       :preset_demand,
       :expected_demand,
       :average_effective_output_of_nominal_capacity_over_lifetime
