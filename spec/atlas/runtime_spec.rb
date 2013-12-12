@@ -36,7 +36,7 @@ module Atlas
 
     context 'AREA' do
       it "executes Area functions" do
-        expect(runtime.execute("AREA(number_inhabitants)")).to be > -1
+        expect(runtime.execute("AREA(number_of_inhabitants)")).to be > -1
       end
     end
 
