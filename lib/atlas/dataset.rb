@@ -5,10 +5,8 @@ module Atlas
     DIRECTORY = 'datasets'
 
     # General Attributes
-    attribute :country,   String
     attribute :area,      String
     attribute :id,        Integer
-    attribute :entity,    String
     attribute :parent_id, Integer
 
     # Set to false in the document to disable the region in ETModel.
@@ -41,7 +39,6 @@ module Atlas
     [ :annual_infrastructure_cost_electricity,
       :annual_infrastructure_cost_gas,
       :areable_land,
-      :available_land,
       :buildings_insulation_constant_1,
       :buildings_insulation_constant_2,
       :buildings_insulation_cost_constant,
@@ -50,12 +47,10 @@ module Atlas
       :capacity_buffer_in_mj_s,
       :co2_emission_1990,
       :co2_emission_2009,
-      :co2_emission_electricity_1990,
       :co2_percentage_free,
       :co2_price,
       :coast_line,
       :economic_multiplier,
-      :el_export_capacity,
       :employment_fraction_production,
       :employment_local_fraction,
       :export_electricity_primary_demand_factor,
@@ -66,19 +61,15 @@ module Atlas
       :insulation_level_new_houses_min,
       :insulation_level_old_houses_max,
       :insulation_level_old_houses_min,
-      :km_per_car,
-      :km_per_truck,
       :land_available_for_solar,
       :man_hours_per_man_year,
-      :market_share_daylight_control,
-      :market_share_motion_detection,
       :new_houses_insulation_constant_1,
       :new_houses_insulation_constant_2,
       :new_houses_insulation_cost_constant,
       :new_houses_insulation_employment_constant,
-      :number_buildings,
-      :number_households,
-      :number_inhabitants,
+      :number_of_buildings,
+      :number_of_residences,
+      :number_of_inhabitants,
       :number_of_existing_households,
       :number_of_new_residences,
       :number_of_old_residences,
@@ -88,9 +79,8 @@ module Atlas
       :old_houses_insulation_cost_constant,
       :old_houses_insulation_employment_constant,
       :onshore_suitable_for_wind,
-      :percentage_of_new_houses,
-      :roof_surface_available_pv,
-      :roof_surface_available_pv_buildings,
+      :residences_roof_surface_available_for_pv,
+      :buildings_roof_surface_available_for_pv,
       :technical_lifetime_insulation
     ].each do |name|
       attribute name, Float
