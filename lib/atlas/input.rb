@@ -4,7 +4,6 @@ module Atlas
 
     DIRECTORY = 'inputs'
 
-    attribute :id,              Integer
     attribute :query,           String
     attribute :share_group,     String
     attribute :label,           String
