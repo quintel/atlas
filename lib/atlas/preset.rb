@@ -9,18 +9,11 @@ module Atlas
     attribute :id,                 Integer
     attribute :description,        String
     attribute :ordering,           Integer
-    attribute :display_group,      String
-    attribute :author,             String
     attribute :title,              String
-    attribute :comments,           String
-    attribute :created_at,         Time
-    attribute :updated_at,         Time
+    attribute :display_group,      String
     attribute :end_year,           Integer
     attribute :in_start_menu,      Boolean
-    attribute :user_id,            Integer
     attribute :use_fce,            Boolean
-    attribute :present_updated_at, Time
-    attribute :protected,          Boolean
     attribute :area_code,          String
     attribute :user_values,        Hash[Symbol => Float]
 
