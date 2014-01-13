@@ -58,6 +58,7 @@ require_relative 'atlas/runner/zero_disabled_sectors'
 require_relative 'atlas/debug_runner'
 require_relative 'atlas/preset'
 require_relative 'atlas/merit_order_details'
+require_relative 'atlas/load_profile'
 
 require_relative 'atlas/node'
 require_relative 'atlas/node/converter'
