@@ -4,11 +4,10 @@ module Atlas
 
   describe LoadProfile do
 
-    around(:each) do |example|
-      Atlas.with_data_dir('spec/fixtures') { example.run }
+    let(:load_profile) do
+      LoadProfile.new(
+        Atlas.data_dir.join('datasets/nl/load_profiles/total_demand.yml'))
     end
-
-    let(:load_profile) { LoadProfile.new('total_demand.yml') }
 
     describe '#new' do
       it 'loads the fixtures' do

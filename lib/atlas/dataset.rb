@@ -147,6 +147,20 @@ module Atlas
       @time_curves ||= {}
     end
 
+    # Public: Retrieves the load profile data for the file whose name matches
+    # the given +key+.
+    #
+    # key - The name of the load curve file to load.
+    #
+    # For example:
+    #   dataset.load_profile(:river)
+    #
+    # Returns a LoadProfile.
+    def load_profile(key)
+      (@time_curves ||= {})[key.to_sym] ||=
+        LoadProfile.new(dataset_dir.join("load_profiles/#{ key }.yml"))
+    end
+
     # Public: Retrieves demand and full load hours data for the region.
     # Expects to load a file at datasets/AREA/central_producers.csv.
     #

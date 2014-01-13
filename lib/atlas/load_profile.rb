@@ -1,23 +1,13 @@
 module Atlas
   class LoadProfile
-
-    DIRECTORY = 'load_profiles'
+    attr_reader :path
 
     def initialize(path)
-      @yaml = YAML.load_file full_path(path)
+      @path = path
     end
 
     def values
-      @yaml
+      @values ||= YAML.load_file(@path)
     end
-
-    #######
-    private
-    #######
-
-    def full_path(path)
-      Atlas.data_dir.join(DIRECTORY, path)
-    end
-
   end # Load Profile
 end # Atlas
