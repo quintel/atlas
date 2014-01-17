@@ -81,7 +81,10 @@ module Atlas
       :onshore_suitable_for_wind,
       :residences_roof_surface_available_for_pv,
       :buildings_roof_surface_available_for_pv,
-      :technical_lifetime_insulation
+      :technical_lifetime_insulation,
+      :capacity_credit_wind_constant_p1,
+      :capacity_credit_wind_constant_p2,
+      :capacity_credit_wind_constant_q1
     ].each do |name|
       attribute name, Float
     end
