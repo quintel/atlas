@@ -128,4 +128,27 @@ module Atlas; describe Dataset do
       end
     end # when a curves has already been loaded
   end # time_curves
+
+  describe '#load_profile' do
+    let(:dataset) { Dataset.find(:nl) }
+    let(:profile)  { dataset.load_profile(:total_demand) }
+
+    it 'returns a LoadProfile' do
+      expect(profile).to be_a(LoadProfile)
+    end
+
+    it 'loads the data' do
+      expect(profile.values).to_not be_empty
+    end
+
+    it 'sets the file path' do
+      expect(profile.path.to_s).
+        to end_with('nl/load_profiles/total_demand.yml')
+    end
+
+    it 'raises an error when no time curve data exists' do
+      expect { Dataset.find(:nl).load_profile(:nope).values }.
+        to raise_error(Errno::ENOENT)
+    end
+  end # load_profile
 end ; end
