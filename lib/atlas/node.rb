@@ -27,7 +27,7 @@ module Atlas
       :full_load_hours,
       :households_supplied_per_unit,
       :land_use_per_unit,
-      :part_ets,
+      :takes_part_in_ets,
       :part_load_efficiency_penalty,
       :part_load_operating_point,
       :variability,
