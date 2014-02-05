@@ -16,8 +16,8 @@ module Atlas
           end
 
           it 'parses numbers' do
-            block = SingleLineBlock.new([Line.new("- co2_free = 0.0")])
-            expect(block.key).to eql :co2_free
+            block = SingleLineBlock.new([Line.new("- free_co2_factor = 0.0")])
+            expect(block.key).to eql :free_co2_factor
           end
 
         end
