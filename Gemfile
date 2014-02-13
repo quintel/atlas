@@ -2,7 +2,8 @@ source "https://rubygems.org"
 
 gemspec
 
-gem 'refinery', ref: '9cf6a73', git: 'git@github.com:quintel/refinery.git'
+gem 'refinery', ref: '9cf6a73', github: 'quintel/refinery'
+gem 'rubel',    '~> 0.1.0',     github: 'quintel/rubel'
 
 group :development do
   gem 'httparty'

@@ -17,7 +17,7 @@ module Atlas
     # Returns the result of the query.
     def execute(string)
       if string.is_a?(::String)
-        instance_exec(&sanitized_proc(string))
+        instance_exec(&Rubel.sanitized_proc(string))
       else
         instance_exec(&string)
       end

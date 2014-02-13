@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:quintel/refinery.git
+  remote: git://github.com/quintel/refinery.git
   revision: 9cf6a7378cbccac245947890a5f76208530fcf97
   ref: 9cf6a73
   specs:
@@ -8,13 +8,18 @@ GIT
       terminal-table
       turbine-graph (>= 0.1.1)
 
+GIT
+  remote: git://github.com/quintel/rubel.git
+  revision: ad3d44ef4304da6a98db3ec42747a7af9e7e64c7
+  specs:
+    rubel (0.1.0)
+
 PATH
   remote: .
   specs:
     atlas (0.0.2)
       activemodel
       activesupport
-      rubel (>= 0.0.3)
       turbine-graph (>= 0.1)
       virtus (~> 0.5.4)
 
@@ -31,7 +36,7 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
     atomic (1.1.14)
-    backports (3.3.5)
+    backports (3.5.0)
     builder (3.1.4)
     celluloid (0.15.2)
       timers (~> 1.1.0)
@@ -79,7 +84,6 @@ GEM
     rspec-expectations (2.14.3)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.14.4)
-    rubel (0.0.3)
     ruby-graphviz (1.0.9)
     ruby-progressbar (1.2.0)
     ruby_gntp (0.3.4)
@@ -117,6 +121,7 @@ DEPENDENCIES
   rb-fsevent (~> 0.9.1)
   refinery!
   rspec
+  rubel (~> 0.1.0)!
   ruby-progressbar
   ruby_gntp
   shoulda-matchers
