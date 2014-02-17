@@ -20,7 +20,21 @@ module Atlas
     attribute :co2_transportation_per_mj,  Float
     attribute :co2_waste_treatment_per_mj, Float
 
-    attribute :fce,                        Hash[Symbol => Hash]
+    def fce(region)
+      region = region.to_sym
+
+      @fce ||= {}
+      @fce.key?(region) ? @fce[region] : @fce[region] = load_fce_values(region)
+    end
+
+    #######
+    private
+    #######
+
+    def load_fce_values(region)
+      yaml_path = Atlas.data_dir.join("datasets/#{ region }/fce/#{ key }.yml")
+      yaml_path.file? && YAML.load_file(yaml_path)
+    end
 
   end # Carrier
 end # Atlas
