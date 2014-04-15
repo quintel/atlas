@@ -22,7 +22,8 @@ module Atlas
     validates :end_year,    presence: true
     validates :user_values, presence: true
 
-    validate  :validate_input_keys, if: ->{ user_values && user_values.any? }
+    validate  :validate_input_keys,   if: ->{ user_values && user_values.any? }
+    validate  :validate_share_groups, if: ->{ user_values && user_values.any? }
 
     #######
     private
@@ -42,5 +43,28 @@ module Atlas
                    "#{ intersection.sort.inspect }")
       end
     end
+
+    # Internal: Asserts that any input keys which belong to a share group
+    # specify values which sum to 100.
+    #
+    # Returns nothing.
+    def validate_share_groups
+      unvalidated_inputs = user_values.keys
+
+      Input.by_share_group.each do |key, inputs|
+        group_keys = inputs.map(&:key)
+
+        if (unvalidated_inputs & group_keys).any?
+          sum = group_keys.sum { |key| user_values[key] }
+
+          unless sum.between?(99.9, 100.1)
+            errors.add(:user_values,
+                       "contains inputs belonging to the #{ key } share " \
+                       "group, but the values sum to #{ sum }, not 100")
+          end
+        end
+      end
+    end
+
   end # Preset
 end # Atlas
