@@ -57,7 +57,7 @@ module Atlas
         if (unvalidated_inputs & group_keys).any?
           sum = group_keys.sum { |key| user_values[key] || 0.0 }
 
-          unless sum.between?(99.9, 100.1)
+          unless sum.between?(99.99, 100.01)
             errors.add(:user_values,
                        "contains inputs belonging to the #{ key } share " \
                        "group, but the values sum to #{ sum }, not 100")

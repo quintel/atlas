@@ -33,9 +33,9 @@ module Atlas
           expect(preset).to have(:no).errors_on(:user_values)
         end
 
-        it 'permits a sum of 99.9' do
+        it 'permits a sum of 99.99' do
           preset = Preset.new(user_values: {
-            grouped_one: 50.0, grouped_two: 49.9
+            grouped_one: 50.0, grouped_two: 49.99
           })
 
           expect(preset).to have(:no).errors_on(:user_values)
@@ -49,9 +49,9 @@ module Atlas
           expect(preset).to have(:no).errors_on(:user_values)
         end
 
-        it 'permits a sum of 100.1' do
+        it 'permits a sum of 100.01' do
           preset = Preset.new(user_values: {
-            grouped_one: 50.0, grouped_two: 50.1
+            grouped_one: 50.0, grouped_two: 50.01
           })
 
           expect(preset).to have(:no).errors_on(:user_values)
@@ -62,28 +62,28 @@ module Atlas
           expect(preset).to have(:no).errors_on(:user_values)
         end
 
-        it 'does not permit sums of less than 99.9' do
+        it 'does not permit sums of less than 99.99' do
           preset = Preset.new(user_values: {
-            grouped_one: 50.0, grouped_two: 49.89
+            grouped_one: 50.0, grouped_two: 49.989
           })
 
           expect(preset).to have(1).error_on(:user_values)
 
           expect(preset.errors[:user_values]).
             to include("contains inputs belonging to the my_group share " \
-                       "group, but the values sum to 99.89, not 100")
+                       "group, but the values sum to 99.989, not 100")
         end
 
-        it 'does not permit sums of more than 100.1' do
+        it 'does not permit sums of more than 100.01' do
           preset = Preset.new(user_values: {
-            grouped_one: 50.0, grouped_two: 50.11
+            grouped_one: 50.0, grouped_two: 50.011
           })
 
           expect(preset).to have(1).error_on(:user_values)
 
           expect(preset.errors[:user_values]).
             to include("contains inputs belonging to the my_group share " \
-                       "group, but the values sum to 100.11, not 100")
+                       "group, but the values sum to 100.011, not 100")
         end
       end
     end # user values
