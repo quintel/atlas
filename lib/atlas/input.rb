@@ -26,10 +26,27 @@ module Atlas
     attribute :default_unit,    String
     attribute :dependent_on,    String
 
-    validates_presence_of :query
+    validates_presence_of :query, if: ->{ share_group.blank? }
+
+    validate :validate_query_within_group,
+      if: ->{ ! share_group.blank? && ! query }
 
     validates_presence_of :share_group, allow_nil: true,
       message: 'must be blank, or have a value of non-zero length'
+
+    # Internal: Asserts that a query is defined on the Input.
+    #
+    # A query may be omitted only if the input belongs to a share group and all
+    # the other inputs have a query defined.
+    #
+    # Returns nothing.
+    def validate_query_within_group
+      unless (self.class.by_share_group[share_group] - [self]).all?(&:query)
+        errors.add(:query, :blank)
+      end
+    end
+
+    private :validate_query_within_group
 
     # Public: Creates a hash where each key is the name of a share group, and
     # each value an array containing the inputs belonging to the group.

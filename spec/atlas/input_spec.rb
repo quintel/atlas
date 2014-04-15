@@ -29,6 +29,32 @@ module Atlas
       end
     end
 
+    describe 'query' do
+      context 'when the input belongs to a share group' do
+        let(:input) { Input.find(:grouped_one) }
+        let(:other) { Input.find(:grouped_two) }
+
+        it 'may be present' do
+          expect(input).to have(:no).errors_on(:query)
+        end
+
+        it 'may be omitted if all other inputs in the group have a query' do
+          input.query = nil
+          expect(input).to have(:no).errors_on(:query)
+        end
+
+        it 'may not be omitted if any other input in the group omits a query' do
+          input.query = nil
+          other.query = nil
+
+          expect(input).to have(1).errors_on(:query)
+          expect(other).to have(1).errors_on(:query)
+
+          expect(input.errors[:query]).to eq(["can't be blank"])
+        end
+      end
+    end
+
     describe '.by_share_group' do
       it 'returns a Hash' do
         expect(Input.by_share_group).to be_a(Hash)
