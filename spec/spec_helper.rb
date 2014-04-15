@@ -10,6 +10,7 @@ require_relative '../lib/atlas'
 Bundler.require(:test)
 
 require 'support/fixtures'
+require 'support/matchers'
 require 'support/some_document'
 
 RSpec.configure do |config|
