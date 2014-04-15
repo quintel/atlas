@@ -55,7 +55,7 @@ module Atlas
         group_keys = inputs.map(&:key)
 
         if (unvalidated_inputs & group_keys).any?
-          sum = group_keys.sum { |key| user_values[key] }
+          sum = group_keys.sum { |key| user_values[key] || 0.0 }
 
           unless sum.between?(99.9, 100.1)
             errors.add(:user_values,

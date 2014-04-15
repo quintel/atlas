@@ -57,6 +57,11 @@ module Atlas
           expect(preset).to have(:no).errors_on(:user_values)
         end
 
+        it 'ignores any missing inputs' do
+          preset = Preset.new(user_values: { grouped_one: 100.0 })
+          expect(preset).to have(:no).errors_on(:user_values)
+        end
+
         it 'does not permit sums of less than 99.9' do
           preset = Preset.new(user_values: {
             grouped_one: 50.0, grouped_two: 49.89
