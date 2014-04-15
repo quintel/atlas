@@ -28,6 +28,9 @@ module Atlas
 
     validates_presence_of :query
 
+    validates_presence_of :share_group, allow_nil: true,
+      message: 'must be blank, or have a value of non-zero length'
+
     # Public: Creates a hash where each key is the name of a share group, and
     # each value an array containing the inputs belonging to the group.
     #

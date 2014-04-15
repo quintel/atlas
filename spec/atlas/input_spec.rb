@@ -8,6 +8,27 @@ module Atlas
       end
     end # priority
 
+    describe 'share_group' do
+      it 'may be nil' do
+        input = Input.new(share_group: nil)
+        expect(input).to have(:no).errors_on(:share_group)
+      end
+
+      it 'may have a value' do
+        input = Input.new(share_group: :my_group)
+        expect(input).to have(:no).errors_on(:share_group)
+      end
+
+      it 'coerces strings to a symbol' do
+        expect(Input.new(share_group: 'my_group').share_group).to eq(:my_group)
+      end
+
+      it 'may not be a zero-length value' do
+        input = Input.new(share_group: '')
+        expect(input).to have(1).error_on(:share_group)
+      end
+    end
+
     describe '.by_share_group' do
       it 'returns a Hash' do
         expect(Input.by_share_group).to be_a(Hash)
