@@ -28,5 +28,19 @@ module Atlas
 
     validates_presence_of :query
 
+    # Public: Creates a hash where each key is the name of a share group, and
+    # each value an array containing the inputs belonging to the group.
+    #
+    # Inputs which do not belong to a share group are not included.
+    #
+    # Returns a hash.
+    def self.by_share_group
+      grouped_inputs = Input.all.select(&:share_group)
+
+      grouped_inputs.each_with_object({}) do |input, groups|
+        groups[input.share_group] ||= []
+        groups[input.share_group].push(input)
+      end
+    end
   end # Input
 end # Atlas
