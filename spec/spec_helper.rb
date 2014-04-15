@@ -7,6 +7,8 @@ require 'support/coverage' if ENV['COVERAGE']
 ENV['ATLAS_ENV'] = 'test'
 require_relative '../lib/atlas'
 
+I18n.config.enforce_available_locales = true
+
 Bundler.require(:test)
 
 require 'support/fixtures'

@@ -5,9 +5,27 @@ module Atlas
     it { expect(Edge.new(key: 'a-b@gas')).to validate_presence_of(:consumer) }
     it { expect(Edge.new(key: 'a-b@gas')).to validate_presence_of(:supplier) }
 
-    it { expect(Edge.new(key: 'a-b@gas')).to ensure_inclusion_of(:type).
-         in_array([ :share, :flexible, :constant,
-                    :inversed_flexible, :dependent ]) }
+    describe 'type' do
+      valid_types = [ :share, :flexible, :constant,
+                      :inversed_flexible, :dependent ]
+
+      valid_types.each do |type|
+        it "is permitted to be #{ type.inspect }" do
+          edge = Edge.new(key: 'a-b@gas', type: type)
+          expect(edge).to have(:no).errors_on(:type)
+        end
+      end
+
+      it 'may not be blank' do
+        edge = Edge.new(key: 'a-b@gas', type: nil)
+        expect(edge).to have(1).error_on(:type)
+      end
+
+      it 'may not be any other value' do
+        edge = Edge.new(key: 'a-b@gas', type: :nope)
+        expect(edge).to have(1).error_on(:type)
+      end
+    end # type
 
     describe 'when creating a new Edge' do
       let(:edge) { Edge.new(path: 'left-right@gas.ad') }

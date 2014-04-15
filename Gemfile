@@ -14,7 +14,10 @@ group :test do
   gem 'guard-rspec'
   gem 'rb-fsevent', '~> 0.9.1'
   gem 'simplecov'
-  gem 'shoulda-matchers'
+
+  # Switch back to mainline once 2.6.1 is released.
+  gem 'shoulda-matchers',
+    github: 'antw/shoulda-matchers', ref: 'fix-ar-matcher-inclusion'
 
   # Growl notifications in Guard.
   gem 'ruby_gntp', require: false
