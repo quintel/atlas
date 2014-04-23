@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/antw/shoulda-matchers.git
-  revision: 0ac771687f956399550cd31d256ebde8851ae00c
-  ref: fix-ar-matcher-inclusion
-  specs:
-    shoulda-matchers (2.6.0)
-      activesupport (>= 3.0.0)
-
-GIT
   remote: git://github.com/quintel/refinery.git
   revision: f29ead19f878f660501e5bcbe0251c002d9dab13
   ref: f29ead1
@@ -97,6 +89,8 @@ GEM
     ruby-graphviz (1.0.9)
     ruby-progressbar (1.4.2)
     ruby_gntp (0.3.4)
+    shoulda-matchers (2.6.1.rc1)
+      activesupport (>= 3.0.0)
     simplecov (0.8.2)
       docile (~> 1.1.0)
       multi_json
@@ -132,6 +126,6 @@ DEPENDENCIES
   rspec
   ruby-progressbar
   ruby_gntp
-  shoulda-matchers!
+  shoulda-matchers (>= 2.6.1.rc1)
   simplecov
   term-ansicolor (>= 1.2.0)

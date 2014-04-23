@@ -16,8 +16,7 @@ group :test do
   gem 'simplecov'
 
   # Switch back to mainline once 2.6.1 is released.
-  gem 'shoulda-matchers',
-    github: 'antw/shoulda-matchers', ref: 'fix-ar-matcher-inclusion'
+  gem 'shoulda-matchers', '>= 2.6.1.rc1'
 
   # Growl notifications in Guard.
   gem 'ruby_gntp', require: false
