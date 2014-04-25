@@ -8,13 +8,19 @@ GIT
       terminal-table
       turbine-graph (>= 0.1.1)
 
+GIT
+  remote: git://github.com/quintel/rubel.git
+  revision: ad3d44ef4304da6a98db3ec42747a7af9e7e64c7
+  ref: ad3d44e
+  specs:
+    rubel (0.1.0)
+
 PATH
   remote: .
   specs:
     atlas (0.0.2)
       activemodel
       activesupport
-      rubel (>= 0.0.3)
       turbine-graph (>= 0.1)
       virtus (~> 0.5.4)
 
@@ -85,7 +91,6 @@ GEM
     rspec-expectations (2.14.5)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.14.6)
-    rubel (0.0.3)
     ruby-graphviz (1.0.9)
     ruby-progressbar (1.4.2)
     ruby_gntp (0.3.4)
@@ -124,6 +129,7 @@ DEPENDENCIES
   rb-fsevent (~> 0.9.1)
   refinery!
   rspec
+  rubel!
   ruby-progressbar
   ruby_gntp
   shoulda-matchers (>= 2.6.1.rc1)
