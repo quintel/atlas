@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gemspec
 
 gem 'rubel',    ref: 'ad3d44e', github: 'quintel/rubel'
-gem 'refinery', ref: 'f29ead1', github: 'quintel/refinery'
+gem 'refinery', ref: '0c14132', github: 'quintel/refinery'
 
 group :development do
   gem 'httparty'
