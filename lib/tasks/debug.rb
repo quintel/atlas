@@ -10,19 +10,20 @@ namespace :debug do
   end # task :graph
 
   task debug: :environment do
-    dataset = Atlas::Dataset.find(ENV['DATASET'] || :nl)
+    env     = Hash[ENV.map { |key, val| [key.upcase, val] }]
+    dataset = Atlas::Dataset.find(env['DATASET'] || :nl)
 
-    if ENV['FAST']
+    if env['FAST']
       filters = []
-    elsif ENV['FILTER']
-      filters = ENV['FILTER'].split(',')
+    elsif env['FILTER']
+      filters = env['FILTER'].split(',')
     else
       filters = Atlas::DebugRunner::SECTORS
     end
 
     graph = Atlas::DebugRunner.new(dataset, 'tmp', filters).run!
 
-    if ENV['CONSOLE']
+    if env['CONSOLE']
       require 'pry'
       binding.pry
     end
