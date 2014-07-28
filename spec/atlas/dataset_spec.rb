@@ -129,26 +129,40 @@ module Atlas; describe Dataset do
     end # when a curves has already been loaded
   end # time_curves
 
+  describe '#load_profile_path' do
+    let(:dataset) { Dataset.find(:nl) }
+    let(:profile) { dataset.load_profile_path(:total_demand) }
+
+    it 'returns a Pathname' do
+      expect(profile).to be_a(Pathname)
+    end
+
+    it 'includes the dataset directory' do
+      expect(profile.to_s).to start_with(dataset.dataset_dir.to_s)
+    end
+  end # load_profile_path
+
   describe '#load_profile' do
     let(:dataset) { Dataset.find(:nl) }
-    let(:profile)  { dataset.load_profile(:total_demand) }
+    let(:profile) { dataset.load_profile(:total_demand) }
 
-    it 'returns a LoadProfile' do
-      expect(profile).to be_a(LoadProfile)
-    end
+    describe 'when Merit has been loaded' do
+      before do
+        profile_const = double('LoadProfile')
+        allow(profile_const).to receive(:load).and_return('my profile')
 
-    it 'loads the data' do
-      expect(profile.values).to_not be_empty
-    end
+        stub_const('Merit::LoadProfile', profile_const)
+      end
 
-    it 'sets the file path' do
-      expect(profile.path.to_s).
-        to end_with('nl/load_profiles/total_demand.yml')
-    end
+      it 'returns the load profile' do
+        expect(profile).to eq('my profile')
+      end
+    end # when Merit has been loaded
 
-    it 'raises an error when no time curve data exists' do
-      expect { Dataset.find(:nl).load_profile(:nope).values }.
-        to raise_error(Errno::ENOENT)
-    end
+    describe 'when Merit has not been loaded' do
+      it 'raises a MeritRequired error' do
+        expect { profile }.to raise_error(Atlas::MeritRequired)
+      end
+    end # when Merit has not been loaded
   end # load_profile
 end ; end

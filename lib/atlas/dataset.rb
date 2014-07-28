@@ -158,15 +158,31 @@ module Atlas
     # Public: Retrieves the load profile data for the file whose name matches
     # the given +key+.
     #
-    # key - The name of the load curve file to load.
+    # Public: Given the +key+ of a load profile, returns the path to the CSV
+    # file containing the values. This file can be read into a
+    # Merit::LoadProfile.
+    #
+    # key - The name of the load curve file path to create.
     #
     # For example:
-    #   dataset.load_profile(:river)
+    #   dataset.load_profile_path(:river)
+    #   # => #<Pathname .../nl/load_profiles/river.csv>
     #
-    # Returns a LoadProfile.
+    # Returns a Pathname.
+    def load_profile_path(key)
+      dataset_dir.join("load_profiles/#{ key }.csv")
+    end
+
+    # Public: If the Merit library has been loaded, returns the
+    # Merit::LoadProfile containing the values of the named curve.
+    #
+    # key - The name of the load curve file path to read.
+    #
+    # Returns a Merit::LoadProfile.
     def load_profile(key)
-      (@time_curves ||= {})[key.to_sym] ||=
-        LoadProfile.new(dataset_dir.join("load_profiles/#{ key }.yml"))
+      Merit::LoadProfile.load(load_profile_path(key))
+    rescue NameError => ex
+      raise(ex.message.match(/Merit$/) ? MeritRequired.new : ex)
     end
 
     # Public: Retrieves demand and full load hours data for the region.

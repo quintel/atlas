@@ -147,6 +147,11 @@ module Atlas
     "but no such class exists (#{ subclass } => #{ subclass.classify })"
   end
 
+  MeritRequired = error_class do
+    'The Merit library must have been loaded before you can ' \
+    'call Dataset#load_profile'
+  end
+
   # Graph Structure / Topology Errors ----------------------------------------
 
   InvalidLinkError = error_class do |link|
