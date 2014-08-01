@@ -18,11 +18,13 @@ module Atlas
       @defaults = defaults
     end
 
-    # Public: Creates the new user values.
+    # Public: A hash containing all the inputs which will be changed. Includes
+    # unchanged inputs belonging to the same group as a changed input.
     #
     # Returns a hash.
     def to_h
-      balance(@values.merge(missing_inputs))
+      balance(@values.merge(missing_inputs.merge(corrected_values)))
+        .select { |key, value| Input.exists?(key) || value.nil? }
     end
 
     # Public: Creates a string which describes the changes which would be made
@@ -57,12 +59,39 @@ module Atlas
         INFO
       end.compact
 
+      # Inputs changed based on their extrema.
+      if (corrected = corrected_values).any?
+        corrected_list = corrected.map do |key, value|
+          '~ %s :: %f -> %f' % [key, @values[key], corrected[key]]
+        end
+
+        string.unshift(<<-CORRECTED.gsub(/^ {10}/, ''))
+          Corrected Values
+          ----------------
+          #{ corrected_list.join("\n") }
+        CORRECTED
+      end
+
       string.join("\n")
     end
 
     #######
     private
     #######
+
+    # Internal: Returns a hash containing new values for any input whose value
+    # is too high or too low.
+    def corrected_values
+      Hash[@values.map do |key, value|
+        next unless @defaults[key] && value
+
+        if value > @defaults[key][:max]
+          [key, @defaults[key][:max]]
+        elsif value < @defaults[key][:min]
+          [key, @defaults[key][:min]]
+        end
+      end.compact]
+    end
 
     # Internal: Creates a hash containing any inputs which are missing from the
     # user values. Only inputs belonging to groups for which the user has
@@ -134,7 +163,10 @@ module Atlas
     # Internal: An array of group keys for which the user has specified at least
     # one input in their scenario.
     def user_groups
-      @values.keys.map(&Input.method(:find)).map(&:share_group).compact.uniq
+      @values.keys
+        .select(&Input.method(:exists?))
+        .map(&Input.method(:find))
+        .map(&:share_group).compact.uniq
     end
 
     # Internal: Given the key of a group, and a collection of input values, sums
