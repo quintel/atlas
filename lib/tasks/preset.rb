@@ -59,6 +59,21 @@ namespace :preset do
 
   # ----------------------------------------------------------------------------
 
+  desc <<-DESC
+    Updates share group inputs in presets
+
+    Adds missing inputs belonging to share groups, and adjusts the user values
+    to ensure groups sum to 100.
+
+    First run "inputs:dump" in ETEngine, and copy the "tmp/input_values"
+    directory it creates into Atlas' "tmp" directory:
+
+    └ Atlas/
+      ├ lib/
+      ├ spec/
+      └ tmp/
+        └ input_values/
+  DESC
   task fix: :environment do
     include Atlas
     require 'osmosis'
