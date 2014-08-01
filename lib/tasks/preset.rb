@@ -57,4 +57,26 @@ namespace :preset do
     end
   end
 
-end
+  # ----------------------------------------------------------------------------
+
+  task fix: :environment do
+    include Atlas
+    require 'osmosis'
+
+    Preset.all.reject(&:valid?).each do |preset|
+      # We only care about share group validation:
+      next unless preset.errors.none? { |e| e.match(/the values sum to/) }
+
+      defaults = YAML.load_file(
+        Atlas.root.join("tmp/input_values/#{ preset.area_code }.yml")
+      )
+
+      rec = ScenarioReconciler.new(preset.user_values, defaults)
+
+      preset.user_values = preset.user_values.merge(rec.to_h)
+      preset.save!
+
+      puts "Fixed inputs in #{ preset.path.relative_path_from(Atlas.data_dir) }"
+    end
+  end # :fix
+end # :preset

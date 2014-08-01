@@ -152,6 +152,11 @@ module Atlas
     'call Dataset#load_profile'
   end
 
+  OsmosisRequired = error_class do |klass|
+    "The Osmosis library must have been loaded before you can " \
+    "use an #{ klass.name }"
+  end
+
   # Graph Structure / Topology Errors ----------------------------------------
 
   InvalidLinkError = error_class do |link|

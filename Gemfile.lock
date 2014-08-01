@@ -1,4 +1,10 @@
 GIT
+  remote: git://github.com/quintel/osmosis.git
+  revision: ac8a371a76fe9bafd72edca03a8b1f3891abcf8d
+  specs:
+    osmosis (1.0.0)
+
+GIT
   remote: git://github.com/quintel/refinery.git
   revision: 9e08b098fd5ce2c5af04a4e6e1b29d884e63dc84
   ref: 9e08b09
@@ -124,6 +130,7 @@ DEPENDENCIES
   guard
   guard-rspec
   httparty
+  osmosis!
   pry (>= 0.9.12)
   rake (>= 10.0.3)
   rb-fsevent (~> 0.9.1)

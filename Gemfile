@@ -7,6 +7,7 @@ gem 'refinery', ref: '9e08b09', github: 'quintel/refinery'
 
 group :development do
   gem 'httparty'
+  gem 'osmosis', github: 'quintel/osmosis', require: false
 end
 
 group :test do

@@ -76,6 +76,7 @@ require_relative 'atlas/exporter'
 require_relative 'atlas/term/reporter'
 
 require_relative 'atlas/production_mode'
+require_relative 'atlas/scenario_reconciler'
 
 ActiveSupport::Inflector.inflections do |inflect|
   # Otherwise "loss".classify => "Los"
