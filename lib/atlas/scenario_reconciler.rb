@@ -103,7 +103,6 @@ module Atlas
           Osmosis.balance(osmosis_data, 100.0)
         end
 
-        # p balanced
         balanced.each do |key, value|
           if value.abs <= 1.0e-7
             # If any input has a very tiny value, set it to zero.
