@@ -15,6 +15,15 @@ module Atlas
           end
         end
 
+        # Public: Given a document +key+, tells you if such a document exists.
+        #
+        # key - The key whose document you want to check.
+        #
+        # Returns true or false.
+        def exists?(key)
+          manager.key?(key)
+        end
+
         # Public: Given a document +key+ finds the matching document.
         #
         # key - The key whose document you want to retrieve.

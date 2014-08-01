@@ -115,7 +115,6 @@ describe SomeDocument do
   end
 
   describe "find" do
-
     it "should load a some_document from file" do
       expect(some_document.key).to eql(:foo)
       expect(some_document.path.to_s).to include(some_document.key.to_s)
@@ -160,6 +159,21 @@ describe SomeDocument do
         to raise_error(DocumentNotFoundError)
     end
 
+  end
+
+  describe '.exists?' do
+    it 'returns true when a matching document exists' do
+      expect(Atlas::SomeDocument.exists?(:foo)).to be_true
+    end
+
+    it 'returns false when no matching document exists' do
+      expect(Atlas::SomeDocument.exists?(:nope)).to be_false
+    end
+
+    it 'returns false when no SAVED document exists' do
+      Atlas::SomeDocument.new(key: :nope)
+      expect(Atlas::SomeDocument.exists?(:nope)).to be_false
+    end
   end
 
   describe '.create' do
