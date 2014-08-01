@@ -37,6 +37,15 @@ module Atlas
         expect(p.to_text).to eql "- hash.one = 1\n- hash.two = 2"
       end
 
+      it 'parses Hash attributes in alpha-numerical order' do
+        hash = {}
+        hash[:z] = 1
+        hash[:a] = 2
+
+        p = HashToTextParser.new(hash: hash)
+        expect(p.to_text).to eql "- hash.a = 2\n- hash.z = 1"
+      end
+
       it 'parses attributes as a nested Hash' do
         p = HashToTextParser.new({hash: {one: 1, two: { three: 4 }}})
         expect(p.to_text).to eql "- hash.one = 1\n- hash.two.three = 4"
