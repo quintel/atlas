@@ -68,11 +68,11 @@ namespace :preset do
     First run "inputs:dump" in ETEngine, and copy the "tmp/input_values"
     directory it creates into Atlas' "tmp" directory:
 
-    └ Atlas/
-      ├ lib/
-      ├ spec/
-      └ tmp/
-        └ input_values/
+    - Atlas/
+      - lib/
+      - spec/
+      - tmp/
+        - input_values/
   DESC
   task fix: :environment do
     include Atlas
