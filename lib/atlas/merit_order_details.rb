@@ -1,9 +1,11 @@
 module Atlas
   class MeritOrderDetails
-    include Virtus::ValueObject
+    include Virtus.value_object
 
-    attribute :type,  Symbol
-    attribute :group, Symbol
+    values do
+      attribute :type,  Symbol
+      attribute :group, Symbol
+    end
 
     # Public: The merit order details as a hash, with any nil attributes not
     # present.

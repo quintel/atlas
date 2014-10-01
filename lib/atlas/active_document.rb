@@ -4,7 +4,7 @@ module Atlas
   module ActiveDocument
     def self.included(base)
       base.class_eval do
-        include Virtus
+        include Virtus.model
         include ActiveModel::Validations
         include ActiveDocument::Persistence
         include ActiveDocument::Finders

@@ -3,7 +3,7 @@ module Atlas
   # input slots - slots through which energy flows into the node - and output
   # slots - slots through which energy leaves.
   class Slot
-    include Virtus
+    include Virtus.model
     include ActiveModel::Validations
 
     KEY_FORMAT = /^(?<node>[\w_]+)(?<direction>[+-])@(?<carrier>[\w_]+)$/

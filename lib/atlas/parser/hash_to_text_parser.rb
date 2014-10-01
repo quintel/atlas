@@ -105,7 +105,7 @@ module Atlas
     def cast_for_serialization(hash)
       hash.each_with_object({}) do |(key, value), cast|
         cast[key] = case value
-          when Virtus, Virtus::ValueObject
+          when Virtus::Model::Core
             Hash[value.to_hash.sort_by(&:first)]
           when Hash
             Hash[value.sort_by(&:first)]
