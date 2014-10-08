@@ -24,7 +24,7 @@ GIT
 PATH
   remote: .
   specs:
-    atlas (0.0.2)
+    atlas (1.0.0)
       activemodel
       activesupport
       turbine-graph (>= 0.1)
