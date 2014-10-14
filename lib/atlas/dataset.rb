@@ -16,6 +16,8 @@ module Atlas
     attribute :analysis_year, Integer, default: 2011
 
     # Flags
+    # -----
+
     attribute :has_agriculture,          Boolean, default: true
     attribute :has_buildings,            Boolean, default: true
     attribute :has_climate,              Boolean, default: false
@@ -36,20 +38,18 @@ module Atlas
     attribute :use_network_calculations, Boolean, default: true
 
     # Numeric Data
-    [ :annual_infrastructure_cost_electricity,
-      :annual_infrastructure_cost_gas,
-      :areable_land,
-      :buildings_insulation_constant_1,
+    # ------------
+
+    # These attributes are constants, and are expected to be the same regardless
+    # of whether we're calculating the entire region, or simulating a smaller
+    # sub-region.
+
+    [ :buildings_insulation_constant_1,
       :buildings_insulation_constant_2,
       :buildings_insulation_cost_constant,
       :buildings_insulation_employment_constant,
-      :capacity_buffer_decentral_in_mj_s,
-      :capacity_buffer_in_mj_s,
-      :co2_emission_1990,
-      :co2_emission_2009,
       :co2_percentage_free,
       :co2_price,
-      :coast_line,
       :economic_multiplier,
       :employment_fraction_production,
       :employment_local_fraction,
@@ -61,12 +61,35 @@ module Atlas
       :insulation_level_new_houses_min,
       :insulation_level_old_houses_max,
       :insulation_level_old_houses_min,
-      :land_available_for_solar,
-      :man_hours_per_man_year,
       :new_houses_insulation_constant_1,
       :new_houses_insulation_constant_2,
       :new_houses_insulation_cost_constant,
       :new_houses_insulation_employment_constant,
+      :old_houses_insulation_constant_1,
+      :old_houses_insulation_constant_2,
+      :old_houses_insulation_cost_constant,
+      :old_houses_insulation_employment_constant,
+      :capacity_credit_wind_constant_p1,
+      :capacity_credit_wind_constant_p2,
+      :capacity_credit_wind_constant_q1
+    ].each do |name|
+      attribute name, Float
+    end
+
+    # These attributes are relative to the size of the region. If we simulate a
+    # sub-region (say, 5% of the "full" region size), these attributes can be
+    # reduced in proportion to the sub-region size.
+
+    [ :annual_infrastructure_cost_electricity,
+      :annual_infrastructure_cost_gas,
+      :areable_land,
+      :capacity_buffer_decentral_in_mj_s,
+      :capacity_buffer_in_mj_s,
+      :co2_emission_1990,
+      :co2_emission_2009,
+      :coast_line,
+      :land_available_for_solar,
+      :man_hours_per_man_year,
       :number_of_buildings,
       :number_of_residences,
       :number_of_inhabitants,
@@ -74,24 +97,17 @@ module Atlas
       :number_of_new_residences,
       :number_of_old_residences,
       :offshore_suitable_for_wind,
-      :old_houses_insulation_constant_1,
-      :old_houses_insulation_constant_2,
-      :old_houses_insulation_cost_constant,
-      :old_houses_insulation_employment_constant,
       :onshore_suitable_for_wind,
       :residences_roof_surface_available_for_pv,
       :buildings_roof_surface_available_for_pv,
       :technical_lifetime_insulation,
-      :capacity_credit_wind_constant_p1,
-      :capacity_credit_wind_constant_p2,
-      :capacity_credit_wind_constant_q1,
       :capacity_credit_wind_minimum,
       :capacity_credit_wind_maximum,
       :investment_hv_net_low,
       :investment_hv_net_high,
       :investment_hv_net_per_turbine
     ].each do |name|
-      attribute name, Float
+      attribute name, Float, proportional: true
     end
 
     # Returns the Energy Balance for this area/dataset.
