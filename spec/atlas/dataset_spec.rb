@@ -83,7 +83,7 @@ module Atlas; describe Dataset do
 
   describe '#time_curve' do
     let(:dataset) { Dataset.find(:nl) }
-    let(:curves)  { dataset.time_curve(:bio_residues) }
+    let(:curves)  { dataset.time_curve(:woody_biomass) }
 
     it 'returns a CSV document' do
       expect(curves).to be_a(CSVDocument)
@@ -91,7 +91,7 @@ module Atlas; describe Dataset do
 
     it 'sets the file path' do
       expect(curves.path.to_s).
-        to end_with('nl/time_curves/bio_residues_time_curve.csv')
+        to end_with('nl/time_curves/woody_biomass_time_curve.csv')
     end
 
     it 'raises an error when no time curve data exists' do
@@ -111,13 +111,13 @@ module Atlas; describe Dataset do
         keys = dataset.time_curves.keys
 
         expect(keys.length).to eq(2)
-        expect(keys).to include(:bio_residues)
+        expect(keys).to include(:woody_biomass)
         expect(keys).to include(:coal)
       end
     end # when no curves have been loaded
 
     describe 'when a curve has already been loaded' do
-      let!(:loaded) { dataset.time_curve(:bio_residues) }
+      let!(:loaded) { dataset.time_curve(:woody_biomass) }
 
       it 'loads all the time curves' do
         expect(dataset.time_curves).to have(2).csv_documents

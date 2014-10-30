@@ -65,7 +65,7 @@ module Atlas
 
     context 'TIME_CURVE' do
       it 'executes TIME_CURVE functions' do
-        result = runtime.execute("TIME_CURVE(bio_residues, max_demand)")
+        result = runtime.execute("TIME_CURVE(woody_biomass, max_demand)")
         expect(result).to eq(34087.2093)
       end
 
