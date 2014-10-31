@@ -69,9 +69,16 @@ module Atlas
       :old_houses_insulation_constant_2,
       :old_houses_insulation_cost_constant,
       :old_houses_insulation_employment_constant,
+      :man_hours_per_man_year,
+      :technical_lifetime_insulation,
       :capacity_credit_wind_constant_p1,
       :capacity_credit_wind_constant_p2,
-      :capacity_credit_wind_constant_q1
+      :capacity_credit_wind_constant_q1,
+      :capacity_credit_wind_minimum,
+      :capacity_credit_wind_maximum,
+      :investment_hv_net_low,
+      :investment_hv_net_high,
+      :investment_hv_net_per_turbine
     ].each do |name|
       attribute name, Float
     end
@@ -89,7 +96,6 @@ module Atlas
       :co2_emission_2009,
       :coast_line,
       :land_available_for_solar,
-      :man_hours_per_man_year,
       :number_of_buildings,
       :number_of_residences,
       :number_of_inhabitants,
@@ -99,13 +105,7 @@ module Atlas
       :offshore_suitable_for_wind,
       :onshore_suitable_for_wind,
       :residences_roof_surface_available_for_pv,
-      :buildings_roof_surface_available_for_pv,
-      :technical_lifetime_insulation,
-      :capacity_credit_wind_minimum,
-      :capacity_credit_wind_maximum,
-      :investment_hv_net_low,
-      :investment_hv_net_high,
-      :investment_hv_net_per_turbine
+      :buildings_roof_surface_available_for_pv
     ].each do |name|
       attribute name, Float, proportional: true
     end
