@@ -30,7 +30,6 @@ module Atlas
       :takes_part_in_ets,
       :part_load_efficiency_penalty,
       :part_load_operating_point,
-      :variability,
       :electricity_output_capacity,
       :heat_output_capacity,
       :typical_input_capacity,
