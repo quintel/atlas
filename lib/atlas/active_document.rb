@@ -70,14 +70,7 @@ module Atlas
       #
       # Returns a Hash.
       def to_hash
-        attrs = attributes
-
-        attrs.delete_if { |_, value| value.nil? }
-
-        attrs[:comments] = comments if comments
-        attrs[:queries]  = queries
-
-        attrs
+        attributes.merge(comments: comments).delete_if { |_, value| value.nil? }
       end
     end # Last
   end # ActiveDocument

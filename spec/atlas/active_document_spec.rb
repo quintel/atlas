@@ -81,7 +81,7 @@ describe SomeDocument do
 
   describe 'to_hash' do
     it 'is empty when no attributes have been set' do
-      expect(SomeDocument.new(key: 'a').to_hash).to eql(queries: {})
+      expect(SomeDocument.new(key: 'a').to_hash).to eql({})
     end
 
     it 'contains attributes set by the user' do
@@ -92,10 +92,10 @@ describe SomeDocument do
       expect(hash).to include(comments: 'Mine')
     end
 
-    it 'contains queries' do
+    it 'does not contain queries' do
       document = SomeDocument.new(key: 'a', queries: { foo: 'bar' })
 
-      expect(document.to_hash[:queries]).to eql({ foo: 'bar' })
+      expect(document.to_hash).to_not have_key(:queries)
     end
 
     it 'omits attributes which have no value' do

@@ -95,8 +95,11 @@ module Atlas
           fail Atlas::DuplicateKeyError.new(document.key)
         end
 
-        path    = document.path
-        content = Atlas::HashToTextParser.new(document.to_hash).to_text
+        path = document.path
+
+        content = Atlas::HashToTextParser.new(
+          document.to_hash.merge(queries: document.queries)
+        ).to_text
 
         # Ensure the directory exists.
         FileUtils.mkdir_p(path.dirname)
