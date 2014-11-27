@@ -37,8 +37,6 @@ module Atlas
       hash.delete(:query)
       hash.delete(:sets)
 
-      hash[:queries].delete(:demand)
-
       hash
     end
   end # Node::CentralProducer
