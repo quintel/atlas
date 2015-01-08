@@ -20,7 +20,6 @@ module Atlas
 
     # Numeric attributes.
     [ :availability,
-      :capacity_credit,
       :free_co2_factor,
       :demand_expected_value,
       :forecasting_error,

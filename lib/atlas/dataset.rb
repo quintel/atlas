@@ -71,11 +71,6 @@ module Atlas
       :old_houses_insulation_employment_constant,
       :man_hours_per_man_year,
       :technical_lifetime_insulation,
-      :capacity_credit_wind_constant_p1,
-      :capacity_credit_wind_constant_p2,
-      :capacity_credit_wind_constant_q1,
-      :capacity_credit_wind_minimum,
-      :capacity_credit_wind_maximum,
       :investment_hv_net_low,
       :investment_hv_net_high,
       :investment_hv_net_per_turbine
