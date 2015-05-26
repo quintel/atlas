@@ -141,6 +141,13 @@ module Atlas
         expect(nodes[:mother][:merit_order]).
           to eq(type: :rock, group: :'The Flower Kings')
       end
+
+      it 'exports storage data as a hash' do
+        mother.get(:model).storage =
+          Atlas::StorageDetails.new(volume: 1, decay: 0.5)
+
+        expect(nodes[:mother][:storage]).to eq(volume: 1.0, decay: 0.5)
+      end
     end # special cases
 
     describe 'max demand' do

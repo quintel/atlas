@@ -48,8 +48,8 @@ module Atlas
 
         attributes.merge!(node.properties.except(:model, :cc_in, :cc_out))
 
-        if model.merit_order
-          attributes[:merit_order] = model.merit_order.to_hash
+        attributes.each do |key, value|
+          attributes[key] = value.to_hash if value.is_a?(ValueObject)
         end
 
         if model.max_demand
