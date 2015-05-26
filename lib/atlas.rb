@@ -44,6 +44,7 @@ require_relative 'atlas/active_document/production_manager'
 require_relative 'atlas/active_document/query_validator'
 require_relative 'atlas/active_document'
 require_relative 'atlas/collection'
+require_relative 'atlas/value_object'
 
 require_relative 'atlas/edge'
 require_relative 'atlas/input'
@@ -57,7 +58,9 @@ require_relative 'atlas/runner/set_slot_shares_from_efficiency'
 require_relative 'atlas/runner/zero_disabled_sectors'
 require_relative 'atlas/debug_runner'
 require_relative 'atlas/preset'
+
 require_relative 'atlas/merit_order_details'
+require_relative 'atlas/storage_details'
 
 require_relative 'atlas/node'
 require_relative 'atlas/node/converter'

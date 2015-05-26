@@ -14,6 +14,7 @@ module Atlas
     attribute :output,               Hash[Symbol => Object]
     attribute :groups,               Array[Symbol]
     attribute :merit_order,          MeritOrderDetails
+    attribute :storage,              StorageDetails
 
     alias_method :sector,  :ns
     alias_method :sector=, :ns=
