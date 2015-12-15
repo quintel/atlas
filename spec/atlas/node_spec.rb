@@ -283,6 +283,58 @@ describe Node do
     end
   end # max_demand=
 
+  describe 'capacity_distribution' do
+    context 'when blank' do
+      let(:node) { Node.new }
+
+      it 'does not require an "available network capacity' do
+        expect(node.errors_on(:network_capacity_available_in_mw))
+          .to be_empty
+      end
+
+      it 'does not require a "used network capacity' do
+        expect(node.errors_on(:network_capacity_used_in_mw))
+          .to be_empty
+      end
+    end # when blank
+
+    context 'when present' do
+      context 'with blank network attributes' do
+        let(:node) { Node.new(capacity_distribution: 'okay') }
+
+        it 'requires an "available network capacity' do
+          expect(node.errors_on(:network_capacity_available_in_mw)).to include(
+            'must not be blank when a capacity_distribution is present')
+        end
+
+        it 'requires a "used network capacity' do
+          expect(node.errors_on(:network_capacity_used_in_mw)).to include(
+            'must not be blank when a capacity_distribution is present')
+        end
+      end
+
+      context 'with assigned network attributes' do
+        let(:node) do
+          Node.new(
+            capacity_distribution: 'okay',
+            network_capacity_available_in_mw: 1.0,
+            network_capacity_used_in_mw: 1.0
+          )
+        end
+
+        it 'has no errors on "available network capacity' do
+          expect(node.errors_on(:network_capacity_available_in_mw))
+            .to be_blank
+        end
+
+        it 'has no errors on "used network capacity' do
+          expect(node.errors_on(:network_capacity_used_in_mw))
+            .to be_blank
+        end
+      end
+    end # when present
+  end # capacity_distribution
+
 end #describe Node 
 
 end #module

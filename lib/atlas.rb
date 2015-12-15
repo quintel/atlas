@@ -62,6 +62,7 @@ require_relative 'atlas/preset'
 require_relative 'atlas/merit_order_details'
 require_relative 'atlas/storage_details'
 
+require_relative 'atlas/node/capacity_distribution_validator'
 require_relative 'atlas/node'
 require_relative 'atlas/node/converter'
 require_relative 'atlas/node/demand'

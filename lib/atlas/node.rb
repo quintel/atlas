@@ -4,17 +4,18 @@ module Atlas
 
     DIRECTORY = 'nodes'
 
-    attribute :use,                  String
-    attribute :has_loss,             Boolean
-    attribute :energy_balance_group, String
-    attribute :demand,               Float
-    attribute :max_demand,           Float
+    attribute :use,                   String
+    attribute :has_loss,              Boolean
+    attribute :energy_balance_group,  String
+    attribute :demand,                Float
+    attribute :max_demand,            Float
 
-    attribute :input,                Hash[Symbol => Object]
-    attribute :output,               Hash[Symbol => Object]
-    attribute :groups,               Array[Symbol]
-    attribute :merit_order,          MeritOrderDetails
-    attribute :storage,              StorageDetails
+    attribute :input,                 Hash[Symbol => Object]
+    attribute :output,                Hash[Symbol => Object]
+    attribute :groups,                Array[Symbol]
+    attribute :merit_order,           MeritOrderDetails
+    attribute :storage,               StorageDetails
+    attribute :capacity_distribution, String
 
     alias_method :sector,  :ns
     alias_method :sector=, :ns=
@@ -89,6 +90,8 @@ module Atlas
 
     validates_with QueryValidator,
       attributes: [:max_demand], allow_no_query: true
+
+    validates_with Atlas::Node::CapacityDistributionValidator
 
     validate :validate_slots
 
