@@ -107,4 +107,63 @@ module Atlas
       end
     end # get
   end # CSVDocument::OneDimensional
+
+  describe CSVDocument, '.curve' do
+    context' with a simple list of values' do
+      let(:doc) do
+        path = Atlas.data_dir.join('curve.csv')
+
+        path.open('w') do |f|
+          f.puts(<<-EOF.lines.map(&:strip).join("\n"))
+            0.0
+            0.2
+            0.3
+          EOF
+        end
+
+        CSVDocument.curve(path.to_s)
+      end
+
+      it 'is an array' do
+        expect(doc).to be_a(Array)
+      end
+
+      it 'contains all the values' do
+        expect(doc.to_a).to eq([0.0, 0.2, 0.3])
+      end
+    end # with a simple list of values
+
+    context' with a lines ending in a comma' do
+      let(:doc) do
+        path = Atlas.data_dir.join('curve.csv')
+
+        path.open('w') do |f|
+          f.puts(<<-EOF.lines.map(&:strip).join("\n"))
+            0.0,
+            0.2,
+            0.3,
+          EOF
+        end
+
+        CSVDocument.curve(path.to_s)
+      end
+
+      it 'contains all the values' do
+        expect(doc.to_a).to eq([0.0, 0.2, 0.3])
+      end
+    end # with a lines ending in a comma
+
+    context' with an empty file' do
+      let(:doc) do
+        path = Atlas.data_dir.join('curve.csv')
+        path.open('w') { |f| f.puts('') }
+
+        CSVDocument.curve(path.to_s)
+      end
+
+      it 'has no values' do
+        expect(doc.to_a).to eq([])#be_empty
+      end
+    end # with a lines ending in a comma
+  end # CSVDocument.curve
 end # Atlas

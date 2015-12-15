@@ -26,6 +26,16 @@ module Atlas
       info.header == :year ? value.to_f.to_i : value
     end
 
+    # Public: Reads a CSV file whose contents is a simple list of values with
+    # no headers.
+    #
+    # Returns an Array.
+    def self.curve(path)
+      CSV.read(
+        path.to_s, converters: [YEAR_NORMALIZER, :all]
+      ).map(&:first).compact
+    end
+
     # Public: Creates a new CSV document instance which will read data from a
     # CSV file on disk. Document are read-only.
     #
