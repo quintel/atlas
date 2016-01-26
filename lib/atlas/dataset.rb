@@ -92,6 +92,7 @@ module Atlas
       :coast_line,
       :land_available_for_solar,
       :number_of_buildings,
+      :number_of_cars,
       :number_of_residences,
       :number_of_inhabitants,
       :number_of_existing_households,
