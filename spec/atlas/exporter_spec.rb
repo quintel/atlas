@@ -139,7 +139,7 @@ module Atlas
           Atlas::MeritOrderDetails.new(type: :rock, group: 'The Flower Kings')
 
         expect(nodes[:mother][:merit_order]).
-          to eq(type: :rock, group: :'The Flower Kings')
+          to eq(type: :rock, group: :'The Flower Kings', target: nil)
       end
 
       it 'exports storage data as a hash' do
