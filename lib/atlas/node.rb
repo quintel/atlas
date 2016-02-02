@@ -96,6 +96,8 @@ module Atlas
     # TODO Move to StorageDetails as soon as ETE has better support for nested
     #      attributes.
     attribute :reserved_fraction, Float
+    attribute :input_efficiency,  Float
+    attribute :output_efficiency, Float
 
     validates_with QueryValidator,
       attributes: [:max_demand], allow_no_query: true
