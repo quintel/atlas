@@ -36,6 +36,7 @@ module Atlas
     attribute :has_solar_csp,            Boolean, default: false
     attribute :has_import_export,        Boolean, default: true
     attribute :use_network_calculations, Boolean, default: true
+    attribute :use_merit_order_demands,  Boolean, default: true
 
     # Numeric Data
     # ------------
