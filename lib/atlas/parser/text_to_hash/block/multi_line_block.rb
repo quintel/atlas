@@ -7,7 +7,11 @@ module Atlas
         FIRST_LINE = /^[-~]\s([a-z_]*)\s=\s*$/
 
         def key
-          lines.first.to_s.match(FIRST_LINE).captures.first.to_sym
+          if match = lines.first.to_s.match(FIRST_LINE)
+            match.captures.first.to_sym
+          else
+            fail InvalidMultilineBlockError.new(lines)
+          end
         end
 
         def value

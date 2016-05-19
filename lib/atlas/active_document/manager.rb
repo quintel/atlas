@@ -224,6 +224,9 @@ module Atlas
       # Returns a hash.
       def load_attributes(path, key)
         Atlas::Parser::TextToHash::Base.new(path.read).to_hash
+      rescue Atlas::ParserError => ex
+        ex.path = path
+        fail ex
       end
 
       # Internal: Given a path, returns the key of the document.

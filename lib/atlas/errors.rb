@@ -18,7 +18,8 @@ module Atlas
 
     def to_s
       if @path
-        "#{ super } (in #{ @path.relative_path_from(Atlas.data_dir) })"
+        "#{ super }\n\n" \
+        "Occurred in: #{ @path.relative_path_from(Atlas.data_dir) }"
       else
         super
       end
@@ -217,6 +218,14 @@ module Atlas
 
   CannotParseError = error_class(ParserError) do |string, object|
     "Cannot parse this line: #{ string.to_s.inspect } using #{ object }."
+  end
+
+  InvalidMultilineBlockError = error_class(ParserError) do |lines|
+    block    = lines.map { |line| "  #{ line }" }.join("\n")
+    preamble = "Invalid start to a multi-line attribute. The value must " \
+               "start on the line following the equals ('=') sign."
+
+    "#{ preamble }\n\n#{ block }"
   end
 
 end # Atlas
