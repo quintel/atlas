@@ -222,8 +222,9 @@ module Atlas
 
   InvalidMultilineBlockError = error_class(ParserError) do |lines|
     block    = lines.map { |line| "  #{ line }" }.join("\n")
-    preamble = "Invalid start to a multi-line attribute. The value must " \
-               "start on the line following the equals ('=') sign."
+    preamble = "Invalid start to a multi-line attribute. There should be " \
+               "no content after the equals ('=') sign; the value should " \
+               "start on the following line."
 
     "#{ preamble }\n\n#{ block }"
   end
