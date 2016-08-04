@@ -37,6 +37,10 @@ module Atlas
     attribute :has_import_export,        Boolean, default: true
     attribute :use_network_calculations, Boolean, default: true
     attribute :use_merit_order_demands,  Boolean, default: true
+    attribute :has_aggregated_chemical_industry,  Boolean, default:true
+    attribute :has_detailed_chemical_industry,    Boolean, default:false
+    attribute :has_aggregated_other_industry,     Boolean, default:true
+    attribute :has_detailed_other_industry,       Boolean, default:false
 
     # Numeric Data
     # ------------
