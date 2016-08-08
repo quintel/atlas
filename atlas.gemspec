@@ -16,8 +16,8 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency 'activemodel'
-  gem.add_dependency 'activesupport'
+  gem.add_dependency 'activemodel',   '~> 4.0'
+  gem.add_dependency 'activesupport', '~> 4.0'
   gem.add_dependency 'turbine-graph', '>= 0.1'
   gem.add_dependency 'virtus',        '~> 1.0'
 
