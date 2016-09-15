@@ -95,6 +95,7 @@ module Atlas
       :co2_emission_1990,
       :co2_emission_2009,
       :coast_line,
+      :interconnector_capacity,
       :land_available_for_solar,
       :number_of_buildings,
       :number_of_cars,
