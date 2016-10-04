@@ -7,9 +7,9 @@ module Atlas
     # CSV files.
     KEY_NORMALIZER = lambda do |key|
       case key
-      when nil
-        fail(InvalidKeyError.new(key))
-      when Numeric
+      when Numeric, nil
+        # nils never happen here in Ruby >= 2.3 since nils
+        # skip the normalizer.
         key
       else
         key.to_s.downcase.strip
@@ -47,12 +47,12 @@ module Atlas
 
       @table = CSV.table(@path.to_s, {
         converters: [YEAR_NORMALIZER, :all],
-        header_converters: [normalizer]
+        header_converters: [normalizer],
       })
 
       @headers = @table.headers
-    rescue InvalidKeyError
-      raise BlankCSVHeaderError.new(path)
+
+      raise(BlankCSVHeaderError, path) if @headers.any?(&:nil?)
     end
 
     # Public: Retrieves the value of a cell identified by its row and column.
