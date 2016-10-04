@@ -22,12 +22,10 @@ module Atlas
     validates :end_year,    presence: true
     validates :user_values, presence: true
 
-    validate  :validate_input_keys,   if: ->{ user_values && user_values.any? }
-    validate  :validate_share_groups, if: ->{ user_values && user_values.any? }
+    validate  :validate_input_keys,   if: -> { user_values && user_values.any? }
+    validate  :validate_share_groups, if: -> { user_values && user_values.any? }
 
-    #######
     private
-    #######
 
     # Internal: Validation which asserts that the input keys contained in the
     # user values hash each reference an input which exists.
@@ -38,9 +36,11 @@ module Atlas
       preset_keys  = user_values.keys
 
       if (intersection = preset_keys - input_keys).any?
-        errors.add(:user_values,
-                   "contains input keys which don't exist: " \
-                   "#{ intersection.sort.inspect }")
+        errors.add(
+          :user_values,
+          "contains input keys which don't exist: " \
+          "#{ intersection.sort.inspect }"
+        )
       end
     end
 
@@ -54,17 +54,18 @@ module Atlas
       Input.by_share_group.each do |key, inputs|
         group_keys = inputs.map(&:key)
 
-        if (unvalidated_inputs & group_keys).any?
-          sum = group_keys.sum { |key| user_values[key] || 0.0 }
+        next unless (unvalidated_inputs & group_keys).any?
 
-          unless sum.between?(99.99, 100.01)
-            errors.add(:user_values,
-                       "contains inputs belonging to the #{ key } share " \
-                       "group, but the values sum to #{ sum }, not 100")
-          end
-        end
+        sum = group_keys.sum { |k| user_values[k] || 0.0 }
+
+        next if sum.between?(99.99, 100.01)
+
+        errors.add(
+          :user_values,
+          "contains inputs belonging to the #{ key } share " \
+          "group, but the values sum to #{ sum }, not 100"
+        )
       end
     end
-
   end # Preset
 end # Atlas
