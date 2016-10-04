@@ -76,7 +76,7 @@ GEM
       multi_xml (>= 0.5.2)
     i18n (0.6.9)
     ice_nine (0.11.2)
-    json (1.8.1)
+    json (1.8.3)
     listen (2.7.1)
       celluloid (>= 0.15.2)
       celluloid-io (>= 0.15.0)
