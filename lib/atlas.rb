@@ -57,6 +57,7 @@ require_relative 'atlas/runner'
 require_relative 'atlas/runner/set_slot_shares_from_efficiency'
 require_relative 'atlas/runner/zero_disabled_sectors'
 require_relative 'atlas/debug_runner'
+require_relative 'atlas/preset/scaling'
 require_relative 'atlas/preset'
 
 require_relative 'atlas/merit_order_details'

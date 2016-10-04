@@ -16,6 +16,7 @@ module Atlas
     attribute :use_fce,            Boolean
     attribute :area_code,          String
     attribute :user_values,        Hash[Symbol => Float]
+    attribute :scaling,            Scaling
 
     validates :title,       presence: true
     validates :area_code,   presence: true
@@ -24,6 +25,7 @@ module Atlas
 
     validate  :validate_input_keys,   if: -> { user_values && user_values.any? }
     validate  :validate_share_groups, if: -> { user_values && user_values.any? }
+    validate  :validate_scaling,      if: -> { scaling }
 
     private
 
@@ -65,6 +67,14 @@ module Atlas
           "contains inputs belonging to the #{ key } share " \
           "group, but the values sum to #{ sum }, not 100"
         )
+      end
+    end
+
+    def validate_scaling
+      return if scaling.valid?
+
+      scaling.errors.each do |key, messages|
+        errors.add("scaling.#{ key }", messages)
       end
     end
   end # Preset

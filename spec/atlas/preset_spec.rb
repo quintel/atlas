@@ -87,5 +87,29 @@ module Atlas
         end
       end
     end # user values
+
+    describe 'scaling' do
+      it 'may be blank' do
+        preset = Preset.new(scaling: nil)
+        preset.valid?
+
+        error_keys = preset.errors.keys.select do |key|
+          key.to_s.start_with?('scaling.')
+        end
+
+        expect(error_keys).to be_empty
+      end
+
+      it 'passes scaling errors through to the Preset' do
+        preset = Preset.new(scaling: {})
+        preset.valid?
+
+        error_keys = preset.errors.keys.select do |key|
+          key.to_s.start_with?('scaling.')
+        end
+
+        expect(error_keys).not_to be_empty
+      end
+    end
   end # Preset
 end # Atlas
