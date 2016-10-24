@@ -37,7 +37,8 @@ module Atlas
       :number_of_units,
       :preset_demand,
       :expected_demand,
-      :average_effective_output_of_nominal_capacity_over_lifetime
+      :average_effective_output_of_nominal_capacity_over_lifetime,
+      :sustainability_share
     ].each do |name|
       attribute name, Float
     end
