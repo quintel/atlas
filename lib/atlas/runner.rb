@@ -7,6 +7,9 @@ module Atlas
   class Runner
     attr_reader :dataset, :graph
 
+    # Queries must return a numeric value, or one of these.
+    PERMITTED_NON_NUMERICS = [nil, :infinity, :recursive].freeze
+
     # Public: Creates a new Runner.
     #
     # Returns a Runner.
@@ -85,11 +88,11 @@ module Atlas
     def query(string)
       result = runtime.execute(string)
 
-      unless result.is_a?(Numeric) || result.nil?
+      unless result.is_a?(Numeric) || PERMITTED_NON_NUMERICS.include?(result)
         fail NonNumericQueryError.new(result)
       end
 
-      result
+      result == :infinity ? Float::INFINITY : result
     rescue RuntimeError => ex
       ex.message.gsub!(/$/, " (executing: #{ string.inspect })")
       raise ex
