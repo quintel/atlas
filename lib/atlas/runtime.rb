@@ -22,7 +22,7 @@ module Atlas
         instance_exec(&string)
       end
     rescue ::StandardError, ::ScriptError => ex
-      fail QueryError.new(ex, string)
+      ::Kernel.raise(QueryError.new(ex, string))
     end
 
     alias_method :query, :execute
