@@ -3,6 +3,9 @@ script: "bundle exec rspec"
 bundler_args: "--without extras"
 env:
   - CI=true
+os:
+  - linux
+  - osx
 rvm:
   - '2.1.9'
   - 2.2
