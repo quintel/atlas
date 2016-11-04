@@ -85,7 +85,7 @@ module Atlas
       it 'raises an error if the production data is missing' do
         begin
           runtime.execute('CENTRAL_PRODUCTION(nope)')
-        rescue ex
+        rescue StandardError => ex
           puts '-' * 80
           puts ex.inspect
           puts '-' * 80
