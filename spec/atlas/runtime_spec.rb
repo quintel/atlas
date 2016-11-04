@@ -83,13 +83,13 @@ module Atlas
       end
 
       it 'raises an error if the production data is missing' do
+        puts '-' * 80
         begin
           runtime.execute('CENTRAL_PRODUCTION(nope)')
-        rescue StandardError => ex
-          puts '-' * 80
+        rescue Exception => ex
           puts ex.inspect
-          puts '-' * 80
         end
+        puts '-' * 80
 
         expect { runtime.execute('CENTRAL_PRODUCTION(nope)') }.
           to raise_error(Atlas::UnknownCSVRowError)
