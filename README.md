@@ -1,4 +1,9 @@
-## Atlas - Object Mapper for ETSource Data
+<h1 align="center">Atlas</h1>
+<p align="center">Object Mapper for ETSource Data</p>
+
+<p align="center">
+  <a href="https://travis-ci.org/quintel/atlas"><img alt="Master branch build status" src="https://img.shields.io/travis/quintel/atlas/master.svg" /></a>
+</p>
 
 Atlas is a Ruby library for interacting with the ETSource data. It provides the
 means to easily read, write, and delete ETSource ".ad" files and is also
