@@ -16,6 +16,7 @@ group :test do
   gem 'guard-rspec'
   gem 'rb-fsevent', '~> 0.9.1'
   gem 'simplecov'
+  gem 'codecov', require: false
 
   # Switch back to mainline once 2.6.1 is released.
   gem 'shoulda-matchers', '>= 2.6.1.rc1'

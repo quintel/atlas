@@ -3,6 +3,8 @@
 
 <p align="center">
   <a href="https://travis-ci.org/quintel/atlas"><img alt="Master branch build status" src="https://img.shields.io/travis/quintel/atlas/master.svg" /></a>
+
+  <a href="https://codecov.io/gh/quintel/atlas"><img alt="Code coverage status" src="https://img.shields.io/codecov/c/github/quintel/atlas/master.svg" /></a>
 </p>
 
 Atlas is a Ruby library for interacting with the ETSource data. It provides the
