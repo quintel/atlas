@@ -2,7 +2,7 @@ require 'fileutils'
 require 'yaml'
 require 'tmpdir'
 
-require 'support/coverage' if ENV['COVERAGE']
+require 'support/coverage'
 
 ENV['ATLAS_ENV'] = 'test'
 require_relative '../lib/atlas'
