@@ -83,7 +83,7 @@ module Atlas
       end
 
       it 'raises an error if the production data is missing' do
-        expect { runtime.execute('CENTRAL_PRODUCTION(nope)') }.
+        expect { runtime.CENTRAL_PRODUCTION(:nope) }.
           to raise_error(UnknownCSVRowError)
       end
     end
