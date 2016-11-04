@@ -1,6 +1,9 @@
 language: ruby
 script: "bundle exec rspec"
 bundler_args: "--without extras"
+dist: trusty
+sudo: false
+group: beta
 env:
   - CI=true
 os:
