@@ -112,6 +112,8 @@ module Atlas
       attribute name, Float, proportional: true
     end
 
+    validates :interconnector_capacity, numericality: true
+
     # Returns the Energy Balance for this area/dataset.
     def energy_balance
       @energy_balance ||= EnergyBalance.find(area)
