@@ -14,6 +14,7 @@ Bundler.require(:test)
 require 'support/fixtures'
 require 'support/matchers'
 require 'support/some_document'
+require 'support/graph_helper'
 
 RSpec.configure do |config|
   # Use only the new "expect" syntax.

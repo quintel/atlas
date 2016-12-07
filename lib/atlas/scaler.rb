@@ -7,8 +7,8 @@ module Atlas
     end
 
     def create_scaled_dataset
-      local_dataset = LocalDataset.new(attributes)
-      local_dataset.save
+      LocalDataset.new(attributes).save
+      Scaler::GraphPersistor.new(@dataset, @local_dataset_name).persist_graph
     end
 
     private
