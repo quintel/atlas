@@ -7,11 +7,24 @@ module Atlas
     end
 
     def create_scaled_dataset
-      local_dataset = LocalDataset.new(attributes)
-      local_dataset.save
+      create_local_dataset
+      persist_current_graph
     end
 
     private
+
+    def create_local_dataset
+      LocalDataset.new(attributes).save
+    end
+
+    def persist_current_graph
+      # Dump this as a yaml file
+      Runner.new(@dataset, graph).calculate
+    end
+
+    def graph
+      GraphBuilder.build
+    end
 
     def attributes
       {
