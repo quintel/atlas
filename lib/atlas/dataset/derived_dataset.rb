@@ -1,9 +1,9 @@
 module Atlas
   class Dataset::DerivedDataset < Dataset
-    GRAPH     = 'graph.yml'.freeze
+    GRAPH = 'graph.yml'.freeze
 
-    attribute :base_dataset,      String
-    attribute :scaling,           Hash
+    attribute :base_dataset, String
+    attribute :scaling,      Hash
 
     validate :base_dataset_exists
 
