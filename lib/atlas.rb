@@ -61,6 +61,8 @@ require_relative 'atlas/debug_runner'
 require_relative 'atlas/preset/scaling'
 require_relative 'atlas/preset'
 require_relative 'atlas/scaler'
+require_relative 'atlas/scaler/graph_exporter'
+require_relative 'atlas/scaler/graph_persistor'
 
 require_relative 'atlas/merit_order_details'
 require_relative 'atlas/storage_details'
