@@ -11,6 +11,11 @@ module Atlas
       YAML.load_file(File.join(directory, area, GRAPH))
     end
 
+    # Overwrite
+    def dataset_dir
+      @dataset_dir ||= Atlas.data_dir.join(DIRECTORY).join(Dataset::FullDataset.find(base_dataset).key.to_s)
+    end
+
     #######
     private
     #######
