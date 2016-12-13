@@ -16,9 +16,7 @@ module Atlas
       @dataset_dir ||= Atlas.data_dir.join(DIRECTORY).join(Dataset::FullDataset.find(base_dataset).key.to_s)
     end
 
-    #######
     private
-    #######
 
     def base_dataset_exists
       errors.add(:base_dataset, "does not exist") unless Dataset::FullDataset.exists? base_dataset
