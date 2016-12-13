@@ -19,8 +19,8 @@ module Atlas
     end
 
     def file_path
-      File.join(Atlas.data_dir, LocalDataset::DIRECTORY, @path,
-        LocalDataset::GRAPH)
+      File.join(Atlas.data_dir, Dataset::DerivedDataset::DIRECTORY, @path,
+        Dataset::DerivedDataset::GRAPH)
     end
   end
 end
