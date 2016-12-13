@@ -7,8 +7,11 @@ module Atlas
     end
 
     def create_scaled_dataset
-      derived_dataset = Dataset::DerivedDataset.new(@base_dataset.attributes.merge(attributes))
+      derived_dataset = Dataset::DerivedDataset.new(
+        @base_dataset.attributes.merge(attributes))
+
       derived_dataset.save!
+
       GraphPersistor.call(@base_dataset, derived_dataset.graph_path)
     end
 
@@ -20,8 +23,8 @@ module Atlas
         key:            @derived_dataset_name,
         area:           @derived_dataset_name,
         base_dataset:   @base_dataset.area,
-        scaling:        scaling,
-      }
+        scaling:        scaling
+      }.merge(scaled_attributes)
     end
 
     def scaling
@@ -30,6 +33,10 @@ module Atlas
         base_value:     @base_dataset.number_of_residences,
         area_attribute: 'number_of_residences',
       }
+    end
+
+    def scaled_attributes
+      ScaledAttributes.new(@base_dataset, @number_of_residences).scale
     end
   end
 end

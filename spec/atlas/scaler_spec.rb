@@ -41,6 +41,10 @@ module Atlas; describe Scaler do
           to eq(Atlas::Dataset.find('nl').number_of_residences)
       end
 
+      it 'assigns the correct number of residences' do
+        expect(derived_dataset.number_of_residences).to eq(1000)
+      end
+
       it 'dumps a graph.yml' do
         expect(derived_dataset.graph).to_not be_blank
       end
