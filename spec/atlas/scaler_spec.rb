@@ -21,7 +21,6 @@ module Atlas; describe Scaler do
 
     let(:derived_dataset) { Atlas::Dataset::DerivedDataset.find('ameland') }
 
-
     context 'with scaling value 1000' do
       let(:scaler) { Atlas::Scaler.new('nl', 'ameland', 1000) }
 
@@ -32,28 +31,20 @@ module Atlas; describe Scaler do
         expect(derived_dataset.errors).to be_empty
       end
 
-      it 'creates a file called ameland.ad' do
-        expect(derived_dataset).to_not be_blank
-      end
-
-      it 'has a scaling value of 1000' do
-        expect(derived_dataset.scaling[:value]).to eq(1000)
-      end
-
       it 'has a scaling base_value equal to the number_of_residences in nl' do
         expect(derived_dataset.scaling[:base_value]).to eq(Atlas::Dataset.find('nl').number_of_residences)
       end
 
+      it 'creates a local dataset' do
+        expect(derived_dataset).to_not be_blank
+      end
+
       it 'dumps a graph.yml' do
-        expect(derived_dataset.graph).to eq({
-          :nodes => {
-            :a => { :demand => (25/1), :in => {}, :out => { :a_b => {} } },
-            :b => { :demand => (10/1), :in => { :a_b => {} }, :out => {} }
-          },
-          :edges => {
-            :"a-b@a_b" => { :child_share => (1/1) }
-          }
-        })
+        expect(derived_dataset.graph).to_not be_blank
+      end
+
+      it 'sets the correct demand for a node' do
+        expect(derived_dataset.graph[:nodes][:a][:demand]).to eq(25/1)
       end
     end
 

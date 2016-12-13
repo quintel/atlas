@@ -9,7 +9,7 @@ module Atlas
     def create_scaled_dataset
       derived_dataset = Dataset::DerivedDataset.new(@base_dataset.attributes.merge(attributes))
       derived_dataset.save!
-      Scaler::GraphPersistor.new(@base_dataset, @derived_dataset_name).persist_graph
+      GraphPersistor.new(@base_dataset, @derived_dataset_name).persist_graph
     end
 
     private
