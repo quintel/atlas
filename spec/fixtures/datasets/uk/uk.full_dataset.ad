@@ -1,4 +1,4 @@
-# This is Meta information about the Netherlands.
+# This is Meta information about the United Kingdom.
 
 - annual_infrastructure_cost_electricity = 1810.0
 - annual_infrastructure_cost_gas = 1452.0
@@ -46,5 +46,6 @@
 - roof_surface_available_pv_buildings = 133.33
 - use_network_calculations = true
 - ventilation_rate = 2.5
-- area = nl
+- area = uk
 - number_of_existing_households = 6228292.0
+- interconnector_capacity = 5850.0

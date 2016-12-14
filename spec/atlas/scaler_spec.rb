@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Atlas; describe Scaler do
-  describe "create local dataset" do
+  describe "create derived dataset" do
     include GraphHelper
 
     # Graph:
@@ -20,20 +20,20 @@ module Atlas; describe Scaler do
       allow(GraphBuilder).to receive(:build).and_return(graph)
     }
 
-    let(:local_dataset) { Atlas::LocalDataset.find('ameland') }
+    let(:derived_dataset) { Atlas::Dataset::DerivedDataset.find('ameland') }
 
     before { scaler.create_scaled_dataset }
 
     it 'creates a file called ameland.ad' do
-      expect(local_dataset).to_not be_blank
+      expect(derived_dataset).to_not be_blank
     end
 
     it 'has a scaling value of 1000' do
-      expect(local_dataset.scaling['value']).to eq(1000)
+      expect(derived_dataset.scaling[:value]).to eq(1000)
     end
 
     it 'dumps a graph.yml' do
-      expect(local_dataset.graph).to eq({
+      expect(derived_dataset.graph).to eq({
         :nodes => {
           :a => { :demand => (25/1), :in => {}, :out => { :a_b => {} } },
           :b => { :demand => (10/1), :in => { :a_b => {} }, :out => {} }
