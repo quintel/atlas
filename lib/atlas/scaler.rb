@@ -14,7 +14,7 @@ module Atlas
 
       derived_dataset.save!
 
-      GraphPersistor.call(@base_dataset, derived_dataset.graph_path)
+      GraphPersistor.call(@base_dataset, derived_dataset)
     end
 
     private

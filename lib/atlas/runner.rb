@@ -13,9 +13,9 @@ module Atlas
     # Public: Creates a new Runner.
     #
     # Returns a Runner.
-    def initialize(dataset, graph)
+    def initialize(dataset, graph = nil)
       @dataset = dataset
-      @graph   = graph
+      @graph   = graph || dataset.graph
     end
 
     # Public: Calculates the graph.
@@ -24,35 +24,20 @@ module Atlas
     # temporary simplicity, I'm going to put it in a method.
     #
     # Returns the calculated Graph.
-    def calculate(with = Refinery::Catalyst::Calculators)
-      catalysts = [with, Refinery::Catalyst::Validation]
-
-      catalysts.reduce(refinery_graph) do |result, catalyst|
-        catalyst.call(result)
-      end
+    def calculate
+      catalysts_for_refinery_graph(:calculate)
+        .reduce(refinery_graph) do |result, catalyst|
+          catalyst.call(result)
+        end
     end
 
     # Public: Returns the Refinery graph which the Runner uses to calculate
     # missing attributes.
     #
     # Returns a Turbine::Graph.
-    def refinery_graph
+    def refinery_graph(which = refinery_scope)
       @refinery ||= begin
-        graph.nodes.each do |node|
-          calculate_rubel_attributes!(node)
-
-          node.out_edges.each do |edge|
-            calculate_rubel_attributes!(edge)
-          end
-        end
-
-        catalysts = [
-          Refinery::Catalyst::FromTurbine,
-          ZeroDisabledSectors.with_dataset(dataset),
-          SetSlotSharesFromEfficiency.with_queryable(method(:query))
-        ]
-
-        catalysts.reduce(graph) do |result, catalyst|
+        catalysts_for_refinery_graph(which).reduce(graph) do |result, catalyst|
           catalyst.call(result)
         end
       end
@@ -65,24 +50,32 @@ module Atlas
       @runtime ||= Runtime.new(dataset, graph)
     end
 
-    #######
     private
-    #######
 
-    # Internal: Given an +element+ from the graph -- a node or edge --
-    # calculate any Rubel queries which are defined on the associated
-    # ActiveDocument.
-    def calculate_rubel_attributes!(element)
-      model = element.get(:model)
-
-      model.queries && model.queries.each do |attribute, rubel_string|
-        # Skip slot shares.
-        unless attribute.match(/^(?:in|out)put\./)
-          element.set(attribute, query(rubel_string))
-        end
-      end
+    def refinery_scope
+      dataset.is_a?(Dataset::DerivedDataset) ? :import : :all
     end
 
+    def catalysts_for_refinery_graph(which)
+      catalysts.select { |_, scopes| scopes.include?(which) }.keys
+    end
+
+    def catalysts
+      {
+        SetRubelAttributes.with_queryable(method(:query)) =>
+          [:export, :all],
+        Refinery::Catalyst::FromTurbine =>
+          [:import, :export, :all],
+        SetSlotSharesFromEfficiency.with_queryable(method(:query)) =>
+          [:import, :export, :all],
+        ZeroDisabledSectors.with_dataset(dataset) =>
+          [:import, :all],
+        Refinery::Catalyst::Calculators =>
+          [:calculate],
+        Refinery::Catalyst::Validation =>
+          [:calculate]
+      }
+    end
     # Internal: Executes the given Rubel query +string+, returning the
     # result.
     def query(string)

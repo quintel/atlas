@@ -84,36 +84,48 @@ module Atlas
           expect(graph.node(:bar).slots.out(:coal).get(:share)).to eq(0.5)
           expect(graph.node(:bar).slots.out(:corn).get(:share)).to eq(0.5)
         end
-
-        context 'max_demand' do
-          let(:node) { Node.find(:bar) }
-
-          it 'is set when :recursive' do
-            node.queries[:max_demand] = 'recursive'
-            expect(graph.node(:bar).get(:max_demand)).to eq(:recursive)
-          end
-
-          it 'is set when :infinity' do
-            node.queries[:max_demand] = 'infinity'
-            expect(graph.node(:bar).get(:max_demand)).to eq(Float::INFINITY)
-          end
-
-          it 'is set when numeric' do
-            node.queries[:max_demand] = 'infinity'
-            expect(graph.node(:bar).get(:max_demand)).to eq(Float::INFINITY)
-          end
-
-          it 'raises an error when non-numeric' do
-            node.queries[:max_demand] = 'nope'
-            expect { graph }.to raise_error(Atlas::NonNumericQueryError)
-          end
-        end
       end
     end # calculate
 
     describe "'global' dataset" do
       let(:runner) do
         Runner.new(Dataset.find(:nl), GraphBuilder.build(:simple_graph))
+      end
+
+      it_behaves_like "runner"
+
+      let(:graph) { runner.refinery_graph }
+
+      context 'max_demand' do
+        let(:node) { Node.find(:bar) }
+
+        it 'is set when :recursive' do
+          node.queries[:max_demand] = 'recursive'
+          expect(graph.node(:bar).get(:max_demand)).to eq(:recursive)
+        end
+
+        it 'is set when :infinity' do
+          node.queries[:max_demand] = 'infinity'
+          expect(graph.node(:bar).get(:max_demand)).to eq(Float::INFINITY)
+        end
+
+        it 'is set when numeric' do
+          node.queries[:max_demand] = 'infinity'
+          expect(graph.node(:bar).get(:max_demand)).to eq(Float::INFINITY)
+        end
+
+        it 'raises an error when non-numeric' do
+          node.queries[:max_demand] = 'nope'
+          expect { graph }.to raise_error(Atlas::NonNumericQueryError)
+        end
+      end
+    end
+
+    describe "'local' dataset" do
+      let(:runner) do
+        dataset = Dataset.find(:groningen)
+
+        Runner.new(dataset, dataset.graph)
       end
 
       it_behaves_like "runner"

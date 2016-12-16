@@ -4,6 +4,14 @@ module Atlas
   # data), so that it can be used for long-term storage of a (derived)
   # dataset - independent of the country-specific data files (CSVs etc).
   class EssentialExporter < Exporter
+    def self.dump(graph, scaling_factor)
+      new(graph, scaling_factor).to_h
+    end
+
+    def initialize(graph, scaling_factor)
+      @graph          = graph
+      @scaling_factor = scaling_factor
+    end
 
     private
 
@@ -17,12 +25,13 @@ module Atlas
     # Returns a Hash.
     def nodes_hash(nodes)
       nodes.each_with_object({}) do |node, hash|
-        attributes = node.properties.except(:model)
+        attributes      = node.properties
+        node_attributes = attributes.except(:model)
 
-        attributes[:in]  = slots_hash(node.slots.in)
-        attributes[:out] = slots_hash(node.slots.out)
+        node_attributes[:in]  = slots_hash(node.slots.in)
+        node_attributes[:out] = slots_hash(node.slots.out)
 
-        hash[node.key] = attributes
+        hash[node.key] = node_attributes
       end
     end
 
@@ -44,7 +53,9 @@ module Atlas
     # Returns a hash.
     def slots_hash(slots)
       slots.each_with_object({}) do |slot, hash|
-        hash[slot.carrier] = slot.properties.except(:model)
+        slot.properties.slice(:share, :type).each do |_, val|
+          hash[slot.carrier] = val
+        end
       end
     end
   end # EssentialExporter

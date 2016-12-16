@@ -11,7 +11,7 @@ module Atlas
     validate :scaling_valid
 
     def graph
-      @graph ||= YAML.load_file(graph_path)
+      @graph ||= GraphFromYaml.build(YAML.load_file(graph_path))
     end
 
     def graph_path
@@ -20,13 +20,18 @@ module Atlas
 
     # Overwrite
     def dataset_dir
-      @dataset_dir ||=
-        Atlas.data_dir.
-          join(DIRECTORY).
-          join(Dataset::FullDataset.find(base_dataset).key.to_s)
+      @dataset_dir ||= Atlas.data_dir.join(DIRECTORY, full_dataset.key.to_s)
+    end
+
+    def scaling_factor
+      number_of_residences / full_dataset.number_of_residences
     end
 
     private
+
+    def full_dataset
+      Dataset::FullDataset.find(base_dataset)
+    end
 
     def base_dataset_exists
       unless Dataset::FullDataset.exists?(base_dataset)

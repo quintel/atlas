@@ -1,0 +1,59 @@
+---
+:nodes:
+  :foo:
+    :in: {}
+    :out:
+      :coal: 1
+  :bar:
+    :in: {}
+    :out:
+      :coal: !ruby/object:Rational
+        denominator: 2
+        numerator: 1
+      :corn: !ruby/object:Rational
+        denominator: 2
+        numerator: 1
+  :baz:
+    :in: {}
+    :out: {}
+
+  :fd:
+    :demand: 898
+    :in: {}
+    :out: {}
+
+:edges:
+  :bar-baz@corn:
+    :parent_share: 0.1
+    :child_share: 0.1
+    :demand: 5
+    :reversed: false
+    :priority:
+
+  :bar-fd@coal:
+    :parent_share: 0.1
+    :child_share: 0.1
+    :demand:
+    :reversed: false
+    :priority:
+
+  :bar-fd@coal:
+    :parent_share: 0.1
+    :child_share: 0.1
+    :demand:
+    :reversed: false
+    :priority:
+
+  :baz-fd@corn:
+    :parent_share: 0.1
+    :child_share: 0.1
+    :demand:
+    :reversed: false
+    :priority:
+
+  :foo-bar@coal:
+    :parent_share: 0.1
+    :child_share: 0.1
+    :demand:
+    :reversed: false
+    :priority:
