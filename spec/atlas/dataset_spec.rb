@@ -207,6 +207,12 @@ module Atlas
         dataset.valid?
         expect(dataset.errors[:base_dataset]).to include('does not exist')
       end
+
+      it "validates the existence of the scaling" do
+        dataset = Dataset::DerivedDataset.new(key: :ameland, base_dataset: :fantasia)
+        dataset.valid?
+        expect(dataset.errors[:scaling]).to include("can't be blank")
+      end
     end # describe #new
   end # describe Dataset::DerivedDataset
 end # Atlas

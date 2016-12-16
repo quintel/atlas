@@ -5,6 +5,8 @@ module Atlas
     attribute :base_dataset, String
     attribute :scaling,      Preset::Scaling
 
+    validates :scaling, presence: true
+
     validate :base_dataset_exists
     validate :scaling_valid
 
@@ -29,9 +31,11 @@ module Atlas
     end
 
     def scaling_valid
-      scaling.valid?
-      scaling.errors.full_messages.each do |message|
-        errors.add(:scaling, message)
+      if scaling
+        scaling.valid?
+        scaling.errors.full_messages.each do |message|
+          errors.add(:scaling, message)
+        end
       end
     end
   end # Dataset::DerivedDataset
