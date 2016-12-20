@@ -18,8 +18,8 @@ module Atlas
     # Public: Creates a new ProductionMode instance.
     #
     # data - A hash containing production data for the nodes and edges. This
-    #        will typically be a +YAML.load_file+'d copy of the output from
-    #        the +Exporter+.
+    #        will typically be a +MessagePack.unpack+'ed copy of the output from
+    #        the +FullExporter+.
     #
     # Returns a ProductionMode
     def initialize(data)
