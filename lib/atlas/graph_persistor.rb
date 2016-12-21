@@ -5,9 +5,13 @@ module Atlas
       @path    = path
     end
 
-    def persist_graph
-      File.open(file_path, 'w') do |f|
-        f.write GraphExporter.new(refinery_graph).to_h
+    def self.call(dataset, path)
+      new(dataset, path).persist!
+    end
+
+    def persist!
+      File.open(@path, 'w') do |f|
+        f.write GraphExporter.dump(refinery_graph).to_yaml
       end
     end
 
@@ -15,11 +19,6 @@ module Atlas
 
     def refinery_graph
       Runner.new(@dataset, GraphBuilder.build).refinery_graph
-    end
-
-    def file_path
-      File.join(Atlas.data_dir, Dataset::DerivedDataset::DIRECTORY, @path,
-        Dataset::DerivedDataset::GRAPH)
     end
   end
 end

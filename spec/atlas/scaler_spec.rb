@@ -28,22 +28,24 @@ module Atlas; describe Scaler do
 
       it 'creates a valid DerivedDataset' do
         derived_dataset.valid?
+
         expect(derived_dataset.errors).to be_empty
       end
 
-      it 'has a scaling base_value equal to the number_of_residences in nl' do
-        expect(derived_dataset.scaling[:base_value]).to eq(Atlas::Dataset.find('nl').number_of_residences)
+      it 'sets the scaling value of the DerivedDataset to 1000' do
+        expect(derived_dataset.scaling[:value]).to eq(1000)
       end
 
-      it 'creates a local dataset' do
-        expect(derived_dataset).to_not be_blank
+      it 'sets the scaling base_value of the DerivedDataset to the number_of_residences in nl' do
+        expect(derived_dataset.scaling[:base_value]).
+          to eq(Atlas::Dataset.find('nl').number_of_residences)
       end
 
       it 'dumps a graph.yml' do
         expect(derived_dataset.graph).to_not be_blank
       end
 
-      it 'sets the correct demand for a node' do
+      it 'exports the correct demand 25/1 for node :a' do
         expect(derived_dataset.graph[:nodes][:a][:demand]).to eq(25/1)
       end
     end
@@ -52,7 +54,8 @@ module Atlas; describe Scaler do
       let(:scaler) { Atlas::Scaler.new('nl', 'ameland', nil) }
 
       it 'creates an invalid DerivedDataset' do
-        expect { scaler.create_scaled_dataset }.to raise_error(Atlas::InvalidDocumentError, /Scaling Value/)
+        expect { scaler.create_scaled_dataset }.
+          to raise_error(Atlas::InvalidDocumentError, /Scaling Value/)
       end
     end
   end

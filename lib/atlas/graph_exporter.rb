@@ -1,11 +1,11 @@
 module Atlas
   class GraphExporter < Exporter
-    def to_h
-      super.to_yaml
-    end
 
     private
 
+    # References for the choice of node properties:
+    # https://github.com/quintel/atlas/issues/59#issuecomment-265736310
+    # https://github.com/quintel/internal/issues/5#issuecomment-265120551
     def nodes_hash(nodes)
       nodes.each_with_object({}) do |node, result|
         result[node.key] = node.properties
