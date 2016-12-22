@@ -1,6 +1,6 @@
 module Atlas
   class Dataset::DerivedDataset < Dataset
-    GRAPH = 'graph.yml'.freeze
+    GRAPH_FILENAME = 'graph.yml'.freeze
 
     attribute :base_dataset, String
     attribute :scaling,      Preset::Scaling
@@ -11,7 +11,11 @@ module Atlas
     validate :scaling_valid
 
     def graph
-      YAML.load_file(File.join(directory, area, GRAPH))
+      @graph ||= YAML.load_file(graph_path)
+    end
+
+    def graph_path
+      File.join(directory, key.to_s, GRAPH_FILENAME)
     end
 
     # Overwrite
