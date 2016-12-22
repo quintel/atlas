@@ -82,7 +82,8 @@ require_relative 'atlas/slot/carrier_efficient'
 
 require_relative 'atlas/runtime'
 require_relative 'atlas/exporter'
-require_relative 'atlas/graph_exporter'
+require_relative 'atlas/exporter/essential_exporter'
+require_relative 'atlas/exporter/full_exporter'
 
 require_relative 'atlas/term/reporter'
 

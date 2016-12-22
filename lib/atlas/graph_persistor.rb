@@ -11,7 +11,7 @@ module Atlas
 
     def persist!
       File.open(@path, 'w') do |f|
-        f.write GraphExporter.dump(refinery_graph).to_yaml
+        f.write EssentialExporter.dump(refinery_graph).to_yaml
       end
     end
 

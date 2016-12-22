@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Atlas
-  describe Exporter do
+  describe FullExporter do
     include GraphHelper
 
     #  (25) [M] -- 10 --> [F] (10)
@@ -29,7 +29,7 @@ module Atlas
     let!(:mc_slot) { mother.slots.out(:child).set(:share, 15.0 / 25.0) }
 
     # Result and Output
-    let(:result) { Exporter.dump(graph) }
+    let(:result) { FullExporter.dump(graph) }
     let(:edges)  { result[:edges] }
     let(:nodes)  { result[:nodes] }
 
@@ -198,5 +198,5 @@ module Atlas
       end
     end # coupling carrier
 
-  end # Exporter
+  end # FullExporter
 end # Atlas
