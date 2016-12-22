@@ -26,14 +26,6 @@ module Atlas; describe Scaler do
 
       before { scaler.create_scaled_dataset }
 
-      it 'creates a DerivedDataset' do
-        new_derived_dataset = nil
-        expect do
-            new_derived_dataset = Atlas::Dataset::DerivedDataset.find('ameland')
-          end.to_not raise_error
-        expect(new_derived_dataset).to_not be_blank
-      end
-
       it 'creates a valid DerivedDataset' do
         derived_dataset.valid?
 
