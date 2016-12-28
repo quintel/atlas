@@ -15,7 +15,10 @@ module Atlas
     private
 
     def attributes
+      id = Dataset.all.map(&:id).max + 1
       {
+        id:             id,
+        parent_id:      id,
         ns:             @derived_dataset_name,
         key:            @derived_dataset_name,
         area:           @derived_dataset_name,
