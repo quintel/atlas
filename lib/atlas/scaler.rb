@@ -8,7 +8,9 @@ module Atlas
 
     def create_scaled_dataset
       derived_dataset = Dataset::DerivedDataset.new(
-        @base_dataset.attributes.merge(attributes))
+        @base_dataset.attributes
+        .merge(scaled_attributes)
+        .merge(new_attributes))
 
       derived_dataset.save!
 
@@ -17,14 +19,14 @@ module Atlas
 
     private
 
-    def attributes
+    def new_attributes
       {
         ns:             @derived_dataset_name,
         key:            @derived_dataset_name,
         area:           @derived_dataset_name,
         base_dataset:   @base_dataset.area,
-        scaling:        scaling
-      }.merge(scaled_attributes)
+        scaling:        scaling,
+      }
     end
 
     def scaling

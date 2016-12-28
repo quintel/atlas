@@ -1,20 +1,29 @@
 module Atlas
   class Scaler::ScaledAttributes
+    # Only attributes common to FullDataset and DerivedDataset
+    # may be scaled
+    SCALEABLE_AREA_ATTRS = Atlas::Dataset.attribute_set
+      .select { |attr| attr.options[:proportional] }.map(&:name).freeze
+
     def initialize(dataset, number_of_residences)
       @dataset              = dataset
       @number_of_residences = number_of_residences
     end
 
     def scale
-      Hash[proportional_attributes.map do |attr|
-        [attr.name.to_s, @dataset.send(attr.name) / scaling_factor]
-      end]
+      Hash[
+        SCALEABLE_AREA_ATTRS.map do |attr|
+          if value = @dataset[attr]
+            [attr, Util::round_computation_errors(value * scaling_factor)]
+          end
+        end.compact
+      ]
     end
 
     private
 
     def scaling_factor
-      base_value / value
+      value.to_f / base_value
     end
 
     def base_value
@@ -22,13 +31,7 @@ module Atlas
     end
 
     def value
-      @number_of_residences.to_f
-    end
-
-    def proportional_attributes
-      @dataset.send(:attribute_set).select do |attr|
-        attr.options[:proportional] && @dataset.send(attr.name)
-      end
+      @number_of_residences
     end
   end
 end
