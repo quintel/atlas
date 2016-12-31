@@ -67,7 +67,7 @@ require_relative 'atlas/dataset/full_dataset'
 
 require_relative 'atlas/graph_deserializer'
 require_relative 'atlas/scaler'
-require_relative 'atlas/scaled_attributes'
+require_relative 'atlas/scaler/area_attributes_scaler'
 
 require_relative 'atlas/merit_order_details'
 require_relative 'atlas/storage_details'

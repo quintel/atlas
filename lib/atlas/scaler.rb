@@ -9,7 +9,7 @@ module Atlas
     def create_scaled_dataset
       derived_dataset = Dataset::DerivedDataset.new(
         @base_dataset.attributes
-        .merge(scaled_attributes)
+        .merge(AreaAttributesScaler.call(@base_dataset, scaling_factor))
         .merge(new_attributes))
 
       derived_dataset.save!
@@ -18,6 +18,18 @@ module Atlas
     end
 
     private
+
+    def value
+      @number_of_residences
+    end
+
+    def base_value
+      @base_dataset.number_of_residences
+    end
+
+    def scaling_factor
+      value.to_r / base_value.to_r
+    end
 
     def new_attributes
       id = Dataset.all.map(&:id).max + 1
@@ -28,20 +40,13 @@ module Atlas
         key:            @derived_dataset_name,
         area:           @derived_dataset_name,
         base_dataset:   @base_dataset.area,
-        scaling:        scaling,
+        scaling:
+          {
+            value:          value,
+            base_value:     base_value,
+            area_attribute: 'number_of_residences',
+          },
       }
-    end
-
-    def scaling
-      {
-        value:          @number_of_residences,
-        base_value:     @base_dataset.number_of_residences,
-        area_attribute: 'number_of_residences',
-      }
-    end
-
-    def scaled_attributes
-      ScaledAttributes.new(@base_dataset, @number_of_residences).scale
     end
   end
 end
