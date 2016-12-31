@@ -59,11 +59,13 @@ require_relative 'atlas/runner/zero_disabled_sectors'
 require_relative 'atlas/debug_runner'
 require_relative 'atlas/preset/scaling'
 require_relative 'atlas/preset'
-require_relative 'atlas/scaler'
 
 require_relative 'atlas/dataset'
 require_relative 'atlas/dataset/derived_dataset'
 require_relative 'atlas/dataset/full_dataset'
+
+require_relative 'atlas/scaler'
+require_relative 'atlas/scaled_attributes'
 
 require_relative 'atlas/merit_order_details'
 require_relative 'atlas/storage_details'

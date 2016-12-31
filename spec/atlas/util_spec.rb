@@ -88,7 +88,7 @@ module Atlas
       end # when one of the values is an array
     end # flatten_dotted_hash
 
-    describe 'expand_dotted_hash' do
+    describe '.expand_dotted_hash' do
       let(:expanded) { Atlas::Util.expand_dotted_hash(hash) }
 
       context 'when the hash contains only one level' do
@@ -148,5 +148,40 @@ module Atlas
         end
       end # when the hash contains three levels
     end # expand_dotted_hash
+
+
+    describe '.round_computation_errors' do
+      let(:rounded) { Atlas::Util.round_computation_errors(@value) }
+
+      it 'does not round 2.3' do
+        @value = 2.3
+        expect(rounded).to eq(@value)
+      end
+
+      it 'rounds 1.999999999 to 2' do
+        @value = 1.999999999
+        expect(rounded).to eq(2)
+      end
+
+      it 'rounds 2.000000001 to 2' do
+        @value = 2.000000001
+        expect(rounded).to eq(2)
+      end
+
+      it 'rounds -2.000000001 to -2' do
+        @value = -2.000000001
+        expect(rounded).to eq(-2)
+      end
+
+      it 'does not round 0.000000001' do
+        @value = 0.000000001
+        expect(rounded).to eq(@value)
+      end
+
+      it 'does not round -0.000000001' do
+        @value = -0.000000001
+        expect(rounded).to eq(@value)
+      end
+    end # round_computation_errors
   end # Util
 end # Atlas
