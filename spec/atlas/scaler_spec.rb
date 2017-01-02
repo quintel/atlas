@@ -32,6 +32,16 @@ module Atlas; describe Scaler do
         expect(derived_dataset.errors).to be_empty
       end
 
+      it 'assigns a new id to the DerivedDataset' do
+        datasets = Atlas::Dataset.all
+        old_max = (datasets - [derived_dataset]).map(&:id).max
+        expect(derived_dataset.id).to be > old_max
+      end
+
+      it 'assigns the new id also as parent_id' do
+        expect(derived_dataset.parent_id).to eq(derived_dataset.id)
+      end
+
       it 'sets the scaling value of the DerivedDataset to 1000' do
         expect(derived_dataset.scaling[:value]).to eq(1000)
       end
