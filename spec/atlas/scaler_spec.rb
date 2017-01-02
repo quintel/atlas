@@ -63,14 +63,8 @@ module Atlas; describe Scaler do
         expect(derived_dataset.graph).to_not be_blank
       end
 
-      #it 'exports the correct demand 25/1 for node :a' do
-      #  demand = derived_dataset.graph.node(:a).demand
-
-      #  expect(demand / derived_dataset.scaling_factor).to eq(25/1)
-      #end
-
-      it 'assigns the correct number of residences' do
-        expect(derived_dataset.number_of_residences).to eq(1000)
+      it 'exports the correct demand 25/1 for node :a' do
+        expect(derived_dataset.graph.node(:a).get(:demand)).to eq(25/1)
       end
     end
 

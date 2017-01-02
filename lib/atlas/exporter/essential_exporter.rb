@@ -4,14 +4,6 @@ module Atlas
   # data), so that it can be used for long-term storage of a (derived)
   # dataset - independent of the country-specific data files (CSVs etc).
   class EssentialExporter < Exporter
-    def self.dump(graph, scaling_factor)
-      new(graph, scaling_factor).to_h
-    end
-
-    def initialize(graph, scaling_factor)
-      @graph          = graph
-      @scaling_factor = scaling_factor
-    end
 
     private
 

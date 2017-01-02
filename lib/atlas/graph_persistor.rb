@@ -1,18 +1,17 @@
 module Atlas
   class GraphPersistor
-    def initialize(dataset, derived_dataset)
-      @dataset         = dataset
-      @derived_dataset = derived_dataset
+    def initialize(dataset, path)
+      @dataset = dataset
+      @path    = path
     end
 
-    def self.call(dataset, derived_dataset)
-      new(dataset, derived_dataset).persist!
+    def self.call(dataset, path)
+      new(dataset, path).persist!
     end
 
     def persist!
-      File.open(@derived_dataset.graph_path, 'w') do |f|
-        f.write EssentialExporter.dump(
-          refinery_graph, @derived_dataset.scaling_factor).to_yaml
+      File.open(@path, 'w') do |f|
+        f.write EssentialExporter.dump(refinery_graph).to_yaml
       end
     end
 
