@@ -24,11 +24,12 @@ module Atlas
     # temporary simplicity, I'm going to put it in a method.
     #
     # Returns the calculated Graph.
-    def calculate
-      catalysts_for_refinery_graph(:calculate)
-        .reduce(refinery_graph) do |result, catalyst|
-          catalyst.call(result)
-        end
+    def calculate(with = Refinery::Catalyst::Calculators)
+      catalysts = [with, Refinery::Catalyst::Validation]
+
+      catalysts.reduce(refinery_graph) do |result, catalyst|
+        catalyst.call(result)
+      end
     end
 
     # Public: Returns the Refinery graph which the Runner uses to calculate
@@ -57,23 +58,19 @@ module Atlas
     end
 
     def catalysts_for_refinery_graph(which)
-      catalysts.select { |_, scopes| scopes.include?(which) }.keys
+      which == :all ? catalysts.values.flatten : catalysts[which]
     end
 
     def catalysts
-      {
-        SetRubelAttributes.with_queryable(method(:query)) =>
-          [:export, :all],
-        Refinery::Catalyst::FromTurbine =>
-          [:export, :all],
-        SetSlotSharesFromEfficiency.with_queryable(method(:query)) =>
-          [:export, :all],
-        ZeroDisabledSectors.with_dataset(dataset) =>
-          [:import, :all],
-        Refinery::Catalyst::Calculators =>
-          [:calculate],
-        Refinery::Catalyst::Validation =>
-          [:calculate]
+      @catalysts ||= {
+        export: [
+          SetRubelAttributes.with_queryable(method(:query)),
+          Refinery::Catalyst::FromTurbine,
+          SetSlotSharesFromEfficiency.with_queryable(method(:query))
+        ],
+        import: [
+          ZeroDisabledSectors.with_dataset(dataset)
+        ]
       }
     end
     # Internal: Executes the given Rubel query +string+, returning the
