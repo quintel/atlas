@@ -25,9 +25,9 @@ module Atlas
     #
     # Returns the calculated Graph.
     def calculate(with = Refinery::Catalyst::Calculators)
-      catalysts = [with, Refinery::Catalyst::Validation]
+      refinery_catalysts = [with, Refinery::Catalyst::Validation]
 
-      catalysts.reduce(refinery_graph) do |result, catalyst|
+      refinery_catalysts.reduce(refinery_graph) do |result, catalyst|
         catalyst.call(result)
       end
     end
@@ -38,7 +38,7 @@ module Atlas
     # Returns a Turbine::Graph.
     def refinery_graph(which = refinery_scope)
       @refinery ||= begin
-        catalysts_for_refinery_graph(which).reduce(graph) do |result, catalyst|
+        catalysts(which).reduce(graph) do |result, catalyst|
           catalyst.call(result)
         end
       end
@@ -57,12 +57,16 @@ module Atlas
       dataset.is_a?(Dataset::DerivedDataset) ? :import : :all
     end
 
-    def catalysts_for_refinery_graph(which)
-      which == :all ? catalysts.values.flatten : catalysts[which]
+    def catalysts(which)
+      if which == :all
+        transformations.values.flatten
+      else
+        transformations.fetch(which)
+      end
     end
 
-    def catalysts
-      @catalysts ||= {
+    def transformations
+      {
         export: [
           SetRubelAttributes.with_queryable(method(:query)),
           Refinery::Catalyst::FromTurbine,
@@ -73,6 +77,7 @@ module Atlas
         ]
       }
     end
+
     # Internal: Executes the given Rubel query +string+, returning the
     # result.
     def query(string)
