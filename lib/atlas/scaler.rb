@@ -15,6 +15,8 @@ module Atlas
       derived_dataset.save!
 
       GraphPersistor.call(@base_dataset, derived_dataset.graph_path, export_modifier: Scaler::GraphScaler.new(scaling_factor))
+
+      TimeCurveScaler.call(@base_dataset, scaling_factor, derived_dataset)
     end
 
     private
