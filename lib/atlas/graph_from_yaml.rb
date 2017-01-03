@@ -6,21 +6,17 @@ module Atlas
 
     def initialize(graph_yaml)
       @graph_yaml = graph_yaml
-      @graph      = GraphBuilder.build
+      @graph      = Refinery::Catalyst::FromTurbine.call(GraphBuilder.build)
     end
 
     def build_graph
-      @graph.nodes.each do |node|
-        if node_attributes = @graph_yaml.fetch(:nodes)[node.key]
-          atlas_node        = node.get(:model)
-          atlas_node.input  = node_attributes[:in]
-          atlas_node.output = node_attributes[:out]
+      graph_nodes.each_pair do |node, attributes|
+        attributes.fetch(:node).each_pair do |attr, val|
+          node.set(attr, val)
+        end
 
-          node_attributes.except(:in, :out).each_pair do |attr, val|
-            node.set(attr, val)
-          end
-
-          set_slots(atlas_node, node_attributes.slice(:in, :out))
+        attributes.fetch(:slot).each_pair do |direction, attributes|
+          update_slots(node.slots.public_send(direction), attributes)
         end
       end
 
@@ -33,17 +29,32 @@ module Atlas
 
     private
 
-    def set_slots(node, node_attributes)
-      node_attributes.each_pair do |direction, slot_attributes|
-        slot_collection = node.public_send("#{ direction }_slots")
+    def graph_nodes
+      Hash[@graph.nodes.map do |node|
+        attributes       = @graph_yaml.fetch(:nodes)[node.key] || {}
+        node_attributes  = attributes.slice!(:in, :out)
 
-        slot_attributes.each_pair do |slot_key, share_attributes|
-          slot_collection.add(Atlas::Slot.new(
-            node: node,
-            direction: direction,
-            carrier: slot_key
-          ))
+        [ node, { slot: attributes, node: node_attributes } ]
+      end]
+    end
+
+    def update_slots(slots, attributes)
+      attributes.each_pair do |slot_key, share|
+        ref_slot = get_slot(slots, slot_key)
+
+        if share.is_a?(Numeric)
+          ref_slot.set(:share, share)
+        else
+          ref_slot.set(:type, share)
         end
+      end
+    end
+
+    def get_slot(slots, slot_key)
+      if slots.include?(slot_key)
+        slots.get(slot_key)
+      else
+        slots.add(slot_key)
       end
     end
 

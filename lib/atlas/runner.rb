@@ -65,9 +65,9 @@ module Atlas
         SetRubelAttributes.with_queryable(method(:query)) =>
           [:export, :all],
         Refinery::Catalyst::FromTurbine =>
-          [:import, :export, :all],
+          [:export, :all],
         SetSlotSharesFromEfficiency.with_queryable(method(:query)) =>
-          [:import, :export, :all],
+          [:export, :all],
         ZeroDisabledSectors.with_dataset(dataset) =>
           [:import, :all],
         Refinery::Catalyst::Calculators =>
