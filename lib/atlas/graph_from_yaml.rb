@@ -51,13 +51,11 @@ module Atlas
     end
 
     def edges
-      @edges ||= @graph.nodes.map { |node| node.out_edges.to_a }.flatten
+      @graph.nodes.map { |node| node.out_edges.to_a }.flatten
     end
 
     def properties_for_edge(edge)
-      @graph_yaml.fetch(:edges).detect { |key, _|
-        key == edge.properties[:model].key
-      }.last
+      @graph_yaml.fetch(:edges)[edge.properties[:model].key]
     end
   end
 end
