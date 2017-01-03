@@ -14,7 +14,7 @@ module Atlas
 
       derived_dataset.save!
 
-      GraphPersistor.call(@base_dataset, derived_dataset.graph_path)
+      GraphPersistor.call(@base_dataset, derived_dataset.graph_path, export_modifier: Scaler::GraphScaler.new(scaling_factor))
     end
 
     private
@@ -48,5 +48,5 @@ module Atlas
           },
       }
     end
-  end
-end
+  end # Scaler
+end # Atlas
