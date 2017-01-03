@@ -47,7 +47,6 @@ module Atlas
         end
 
         catalysts = [
-          Refinery::Catalyst::FromTurbine,
           ZeroDisabledSectors.with_dataset(dataset),
           SetSlotSharesFromEfficiency.with_queryable(method(:query))
         ]
