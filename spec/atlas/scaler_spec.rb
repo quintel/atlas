@@ -14,18 +14,22 @@ module Atlas; describe Scaler do
     end
   end
 
-  let(:scaling_factor) { 1000.to_r / 7_349_500 }
-
   before { allow(GraphBuilder).to receive(:build).and_return(graph) }
+
+  let(:base_dataset) { Atlas::Dataset.find('nl') }
+
+  let(:scaling_value) { 1000 }
+  let(:scaling_factor) { scaling_value.to_r / 7_349_500 }
 
 
   describe '#create_scaled_dataset' do
-    let(:derived_dataset) { Atlas::Dataset::DerivedDataset.find('ameland') }
 
-    context 'with scaling value 1000' do
-      let(:scaler) { Scaler.new('nl', 'ameland', 1000) }
+    context 'with scaling value #{ scaling_value }' do
+      let(:scaler) { Scaler.new('nl', 'ameland', scaling_value) }
 
       before { scaler.create_scaled_dataset }
+
+      let(:derived_dataset) { Atlas::Dataset::DerivedDataset.find('ameland') }
 
       it 'creates a valid DerivedDataset' do
         derived_dataset.valid?
@@ -43,17 +47,17 @@ module Atlas; describe Scaler do
         expect(derived_dataset.parent_id).to eq(derived_dataset.id)
       end
 
-      it 'sets the scaling value of the DerivedDataset to 1000' do
-        expect(derived_dataset.scaling[:value]).to eq(1000)
+      it 'sets the scaling value of the DerivedDataset to #{ scaling_value }' do
+        expect(derived_dataset.scaling[:value]).to eq(scaling_value)
       end
 
       it 'sets the scaling base_value of the DerivedDataset to the number_of_residences in nl' do
         expect(derived_dataset.scaling[:base_value]).
-          to eq(Atlas::Dataset.find('nl').number_of_residences)
+          to eq(base_dataset.number_of_residences)
       end
 
       it 'assigns the correctly scaled number of residences' do
-        expect(derived_dataset.number_of_residences).to eq(1000)
+        expect(derived_dataset.number_of_residences).to eq(scaling_value)
       end
 
       it 'assigns the correctly scaled number of inhabitants' do
@@ -91,4 +95,19 @@ module Atlas; describe Scaler do
         to eql(10.to_r * scaling_factor)
     end
   end # GraphScaler
+
+
+  describe Scaler::TimeCurveScaler do
+    let(:derived_dataset) do
+      Scaler.new('nl', 'rotterdam', scaling_value).create_scaled_dataset
+      Atlas::Dataset::DerivedDataset.find('rotterdam')
+    end
+
+    before { Scaler::TimeCurveScaler.call(base_dataset, scaling_factor, derived_dataset) }
+
+    it 'scales the time curves' do
+      expect(derived_dataset.time_curve(:woody_biomass).get(2030, :max_demand)).
+        to be_within(0.001).of(9.73488372100000E+04 * scaling_factor)
+    end
+  end # TimeCurveScaler
 end; end # Atlas::Scaler

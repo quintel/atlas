@@ -23,6 +23,11 @@ module Atlas
       @dataset_dir ||= Atlas.data_dir.join(DIRECTORY, base_dataset)
     end
 
+    # Overwrite
+    def time_curves_dir
+      Atlas.data_dir.join(DIRECTORY, key.to_s, 'time_curves')
+    end
+
     private
 
     def base_dataset_exists
