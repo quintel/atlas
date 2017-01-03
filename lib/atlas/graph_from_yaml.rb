@@ -10,14 +10,13 @@ module Atlas
     end
 
     def build_graph
-      graph_nodes.each_pair do |node, attributes|
-        attributes.fetch(:node).each_pair do |attr, val|
+      graph_nodes.each do |node, node_attributes, slot_attributes|
+        node_attributes.each_pair do |attr, val|
           node.set(attr, val)
         end
 
-        attributes.fetch(:slot).each_pair do |direction, attributes|
-          update_slots(node.slots.public_send(direction), attributes)
-        end
+        update_slots(node.slots.in, slot_attributes[:in])
+        update_slots(node.slots.out, slot_attributes[:out])
       end
 
       edges.each do |edge|
@@ -30,31 +29,24 @@ module Atlas
     private
 
     def graph_nodes
-      Hash[@graph.nodes.map do |node|
-        attributes       = @graph_yaml.fetch(:nodes)[node.key] || {}
-        node_attributes  = attributes.slice!(:in, :out)
+      @graph.nodes.map do |node|
+        attributes = @graph_yaml.fetch(:nodes)[node.key] || {}
 
-        [ node, { slot: attributes, node: node_attributes } ]
-      end]
-    end
-
-    def update_slots(slots, attributes)
-      attributes.each_pair do |slot_key, share|
-        ref_slot = get_slot(slots, slot_key)
-
-        if share.is_a?(Numeric)
-          ref_slot.set(:share, share)
-        else
-          ref_slot.set(:type, share)
-        end
+        [ node,
+          attributes.except(:in, :out),
+          attributes.slice(:in, :out) ]
       end
     end
 
-    def get_slot(slots, slot_key)
-      if slots.include?(slot_key)
-        slots.get(slot_key)
-      else
-        slots.add(slot_key)
+    def update_slots(slots, attributes)
+      attributes.each_pair do |carrier, share_attributes|
+        ref_slot = if slots.include?(carrier)
+          slots.get(carrier)
+        else
+          slots.add(carrier)
+        end
+
+        ref_slot.properties = share_attributes
       end
     end
 

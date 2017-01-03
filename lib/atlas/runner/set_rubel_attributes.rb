@@ -1,6 +1,9 @@
 module Atlas
   class Runner
     class SetRubelAttributes
+      # Iterates over the +element+s from the graph -- nodes and edges --
+      # and calculates any Rubel queries which are defined on the associated
+      # ActiveDocuments.
       def self.with_queryable(query)
         lambda do |graph|
           graph.nodes.each do |node|

@@ -45,9 +45,7 @@ module Atlas
     # Returns a hash.
     def slots_hash(slots)
       slots.each_with_object({}) do |slot, hash|
-        slot.properties.slice(:share, :type).each do |_, val|
-          hash[slot.carrier] = val
-        end
+        hash[slot.carrier] = slot.properties.slice(:share, :type)
       end
     end
   end # EssentialExporter

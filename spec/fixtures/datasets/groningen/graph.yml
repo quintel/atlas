@@ -3,16 +3,20 @@
   :foo:
     :in: {}
     :out:
-      :coal: 1
+      :coal:
+        :share: 1
+
   :bar:
     :in: {}
     :out:
-      :coal: !ruby/object:Rational
-        denominator: 2
-        numerator: 1
-      :corn: !ruby/object:Rational
-        denominator: 2
-        numerator: 1
+      :coal:
+        :share: !ruby/object:Rational
+          denominator: 2
+          numerator: 1
+      :corn:
+        :share: !ruby/object:Rational
+          denominator: 2
+          numerator: 1
   :baz:
     :in: {}
     :out: {}
@@ -21,6 +25,16 @@
     :demand: 898
     :in: {}
     :out: {}
+
+  :my_residence:
+    :in: {}
+    :out: {}
+
+  :abc:
+    :in: {}
+    :out:
+      :gas:
+        :share: 0.65
 
 :edges:
   :bar-baz@corn:
