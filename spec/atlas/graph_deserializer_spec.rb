@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-module Atlas; describe GraphFromYaml do
+module Atlas; describe GraphDeserializer do
   let(:derived_dataset) { Dataset::DerivedDataset.find(:groningen) }
   let(:graph_yaml) { YAML.load_file(derived_dataset.graph_path) }
-  let(:turbine_graph) { GraphFromYaml.build(graph_yaml) }
+  let(:turbine_graph) { GraphDeserializer.build(graph_yaml) }
 
   it 'turns a graph.yml into a full Turbine::Graph' do
     expect(turbine_graph).to be_a(Turbine::Graph)

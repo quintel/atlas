@@ -1,11 +1,11 @@
 module Atlas
-  class GraphFromYaml
-    def self.build(graph_yaml)
-      new(graph_yaml).build_graph
+  class GraphDeserializer
+    def self.build(graph_hash)
+      new(graph_hash).build_graph
     end
 
-    def initialize(graph_yaml)
-      @graph_yaml = graph_yaml
+    def initialize(graph_hash)
+      @graph_hash = graph_hash
       @graph      = Refinery::Catalyst::FromTurbine.call(GraphBuilder.build)
     end
 
@@ -30,7 +30,7 @@ module Atlas
 
     def graph_nodes
       @graph.nodes.map do |node|
-        attributes = @graph_yaml.fetch(:nodes)[node.key] || {}
+        attributes = @graph_hash.fetch(:nodes)[node.key] || {}
 
         [ node,
           attributes.except(:in, :out),
@@ -55,7 +55,7 @@ module Atlas
     end
 
     def properties_for_edge(edge)
-      @graph_yaml.fetch(:edges)[edge.properties[:model].key]
+      @graph_hash.fetch(:edges)[edge.properties[:model].key]
     end
   end
 end

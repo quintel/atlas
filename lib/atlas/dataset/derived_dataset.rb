@@ -11,7 +11,7 @@ module Atlas
     validate :scaling_valid
 
     def graph
-      @graph ||= GraphFromYaml.build(YAML.load_file(graph_path))
+      @graph ||= GraphDeserializer.build(YAML.load_file(graph_path))
     end
 
     def graph_path
