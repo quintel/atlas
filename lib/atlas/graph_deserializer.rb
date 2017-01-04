@@ -15,8 +15,8 @@ module Atlas
           node.set(key, val)
         end
 
-        update_slots(node.slots.in, slot_attributes[:in])
-        update_slots(node.slots.out, slot_attributes[:out])
+        update_slots(node, node.slots.in, slot_attributes[:in])
+        update_slots(node, node.slots.out, slot_attributes[:out])
       end
 
       edges.each do |edge|
@@ -40,17 +40,24 @@ module Atlas
       end
     end
 
-    def update_slots(slots, attributes)
+    def update_slots(node, slots, attributes)
       attributes.each_pair do |carrier, share_attributes|
-        ref_slot = if slots.include?(carrier)
-          slots.get(carrier)
-        else
-          slots.add(carrier)
-        end
+        slot = find_refinery_slot(slots, carrier)
+
+        slot.set(:model,
+          Slot.slot_for(node.get(:model), slot.direction, carrier))
 
         share_attributes.each_pair do |key, val|
-          ref_slot.set(key, val)
+          slot.set(key, val)
         end
+      end
+    end
+
+    def find_refinery_slot(slots, carrier)
+      if slots.include?(carrier)
+        slots.get(carrier)
+      else
+        slots.add(carrier)
       end
     end
 

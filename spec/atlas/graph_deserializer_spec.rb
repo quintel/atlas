@@ -16,6 +16,11 @@ module Atlas; describe GraphDeserializer do
       expect(turbine_graph.node(:fd).slots.in.get(:coal).get(:share))
         .to eq(Rational(1, 2))
     end
+
+    it 'sets a model for Atlas::Slot' do
+      expect(turbine_graph.node(:fd).slots.in.get(:coal).get(:model))
+        .to be_a(Atlas::Slot)
+    end
   end
 
   describe "create a Turbine::Graph" do
