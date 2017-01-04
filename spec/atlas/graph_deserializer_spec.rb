@@ -12,8 +12,9 @@ module Atlas; describe GraphDeserializer do
       expect(turbine_graph.node(:fd).get(:demand)).to eq(898)
     end
 
-    it 'sets the coal out slot of node foo share value to 1' do
-      expect(turbine_graph.node(:foo).slots.out.get(:coal).get(:share)).to eq(1)
+    it 'sets the coal in slot of node fd share value to 1' do
+      expect(turbine_graph.node(:fd).slots.in.get(:coal).get(:share))
+        .to eq(Rational(1, 2))
     end
   end
 

@@ -36,16 +36,35 @@ module Atlas
           expect(graph.node(:fd).get(:demand)).to eq(898.0)
         end
 
-        it 'sets the child share of edges using SHARE()' do
-          edge.queries[:child_share] = edge.queries.delete(:parent_share)
-
-          # Extracted from the nl/shares/cars.csv file.
-          expect(t_edge.get(:child_share)).to eq(0.1)
-        end
-
         it 'sets the parent share of edges using SHARE()' do
           # Extracted from the nl/shares/cars.csv file.
           expect(t_edge.get(:parent_share)).to eq(0.1)
+        end
+
+        it 'sets the share of edges' do
+          expect(graph.node(:bar).slots.out(:coal).get(:share)).to eq(0.5)
+          expect(graph.node(:bar).slots.out(:corn).get(:share)).to eq(0.5)
+        end
+      end
+    end # calculate
+
+    describe "'global' dataset" do
+      let(:runner) do
+        Runner.new(Dataset.find(:nl), GraphBuilder.build(:simple_graph))
+      end
+
+      it_behaves_like "runner"
+
+      let(:graph) { runner.refinery_graph }
+
+      describe '#calculate' do
+        let(:edge)  { Edge.find('bar-baz@corn') }
+        let(:graph) { runner.refinery_graph }
+
+        let(:t_edge) do
+          graph.node(:bar).out_edges.detect do |edge|
+            edge.to.key == :baz && edge.label == :corn
+          end
         end
 
         context 'when a node has an output attribute' do
@@ -80,21 +99,13 @@ module Atlas
           expect(t_edge.get(:demand)).to eq(5.0)
         end
 
-        it 'sets the share of edges' do
-          expect(graph.node(:bar).slots.out(:coal).get(:share)).to eq(0.5)
-          expect(graph.node(:bar).slots.out(:corn).get(:share)).to eq(0.5)
+        it 'sets the child share of edges using SHARE()' do
+          edge.queries[:child_share] = edge.queries.delete(:parent_share)
+
+          # Extracted from the nl/shares/cars.csv file.
+          expect(t_edge.get(:child_share)).to eq(0.1)
         end
       end
-    end # calculate
-
-    describe "'global' dataset" do
-      let(:runner) do
-        Runner.new(Dataset.find(:nl), GraphBuilder.build(:simple_graph))
-      end
-
-      it_behaves_like "runner"
-
-      let(:graph) { runner.refinery_graph }
 
       context 'max_demand' do
         let(:node) { Node.find(:bar) }

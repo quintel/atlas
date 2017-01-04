@@ -1,14 +1,27 @@
 ---
 :nodes:
-  :foo:
-    :in: {}
-    :out:
-      :coal:
-        :share: 1
-
   :bar:
-    :in: {}
+    :in:
+      :coal: {}
     :out:
+      :corn:
+        :share: !ruby/object:Rational
+          denominator: 2
+          numerator: 1
+      :coal:
+        :share: !ruby/object:Rational
+          denominator: 2
+          numerator: 1
+  :baz:
+    :in:
+      :corn: {}
+    :out:
+      :corn: {}
+  :fd:
+    :demand: !ruby/object:Rational
+      denominator: 1
+      numerator: 898
+    :in:
       :coal:
         :share: !ruby/object:Rational
           denominator: 2
@@ -17,58 +30,47 @@
         :share: !ruby/object:Rational
           denominator: 2
           numerator: 1
-
-  :baz:
-    :in: {}
     :out: {}
-
-  :fd:
-    :demand: 898
+  :foo:
     :in: {}
-    :out: {}
-
+    :out:
+      :coal: {}
   :my_residence:
     :in: {}
     :out: {}
-
-  :abc:
-    :in: {}
-    :out:
-      :gas:
-        :share: 0.65
-
 :edges:
   :bar-baz@corn:
-    :parent_share: 0.1
-    :child_share: 0.1
-    :demand: 5
-    :reversed: false
-    :priority:
-
-  :bar-fd@coal:
-    :parent_share: 0.1
-    :child_share: 0.1
+    :parent_share: !ruby/object:Rational
+      denominator: 10
+      numerator: 1
+    :child_share:
     :demand:
     :reversed: false
     :priority:
-
   :bar-fd@coal:
-    :parent_share: 0.1
-    :child_share: 0.1
+    :parent_share: !ruby/object:Rational
+      denominator: 2
+      numerator: 1
+    :child_share: !ruby/object:Rational
+      denominator: 1
+      numerator: 1
     :demand:
     :reversed: false
     :priority:
-
   :baz-fd@corn:
-    :parent_share: 0.1
-    :child_share: 0.1
+    :parent_share:
+    :child_share:
     :demand:
     :reversed: false
     :priority:
-
+    :type: :overflow
   :foo-bar@coal:
-    :parent_share: 0.1
-    :child_share: 0.1
+    :parent_share: !ruby/object:Rational
+      denominator: 2
+      numerator: 1
+    :child_share: !ruby/object:Rational
+      denominator: 1
+      numerator: 1
     :demand:
     :reversed: false
     :priority:
