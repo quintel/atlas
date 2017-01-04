@@ -18,16 +18,16 @@ module Atlas; describe GraphDeserializer do
   end
 
   describe "create a Turbine::Graph" do
-    let(:graph_yaml)      { YAML.load_file(dataset.graph_path) }
-    let(:turbine_graph)   { GraphDeserializer.build(graph_yaml) }
+    let(:graph_hash)      { YAML.load_file(dataset.graph_path) }
+    let(:turbine_graph)   { GraphDeserializer.build(graph_hash) }
 
     it_behaves_like "graph"
   end
 
   describe "export and import a graph" do
     let(:graph)         { Runner.new(dataset, GraphBuilder.build).refinery_graph(:export) }
-    let(:graph_yaml)    { EssentialExporter.dump(graph) }
-    let(:turbine_graph) { GraphDeserializer.build(graph_yaml) }
+    let(:graph_hash)    { EssentialExporter.dump(graph) }
+    let(:turbine_graph) { GraphDeserializer.build(graph_hash) }
 
     it_behaves_like "graph"
   end
