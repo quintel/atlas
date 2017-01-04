@@ -54,7 +54,7 @@ module Atlas
     private
 
     def refinery_scope
-      dataset.is_a?(Dataset::DerivedDataset) ? :import : :all
+      dataset.derived? ? :import : :all
     end
 
     def catalysts(which)
@@ -93,12 +93,10 @@ module Atlas
     end
 
     def set_graph(graph)
-      return graph if graph.is_a?(Turbine::Graph)
-
-      if @dataset.is_a?(Dataset::DerivedDataset)
-        @dataset.graph
+      if dataset.derived?
+        dataset.graph
       else
-        GraphBuilder.build
+        graph || GraphBuilder.build
       end
     end
   end # Runner
