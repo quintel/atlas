@@ -48,7 +48,9 @@ module Atlas
           slots.add(carrier)
         end
 
-        ref_slot.properties = share_attributes
+        share_attributes.each_pair do |key, val|
+          ref_slot.set(key, val)
+        end
       end
     end
 
