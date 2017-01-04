@@ -71,7 +71,7 @@ module Atlas
     # Returns nothing.
     def add_node(graph, document)
       unless graph.node(document.key)
-        graph.add(Turbine::Node.new(document.key, model: document))
+        graph.add(Refinery::Node.new(document.key, model: document))
       end
     end
 
