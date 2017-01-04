@@ -10,11 +10,6 @@ module Atlas
     validate :base_dataset_exists
     validate :scaling_valid
 
-    # Public: Check if the dataset is derived from another dataset
-    def derived?
-      true
-    end
-
     def graph
       @graph ||= GraphDeserializer.build(YAML.load_file(graph_path))
     end

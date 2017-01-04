@@ -114,11 +114,6 @@ module Atlas
 
     validates :interconnector_capacity, numericality: true
 
-    # Public: Check if the dataset is derived from another dataset
-    def derived?
-      false
-    end
-
     # Returns the Energy Balance for this area/dataset.
     def energy_balance
       @energy_balance ||= EnergyBalance.find(area)
