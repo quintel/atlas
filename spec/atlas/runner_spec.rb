@@ -130,5 +130,15 @@ module Atlas
 
       it_behaves_like "runner"
     end
+
+    describe "with a non-graph" do
+      let(:runner) do
+        Runner.new(Dataset.find(:groningen), 1)
+      end
+
+      it 'falls back to the GraphBuilder if someone gives a non graph input' do
+        expect(runner.graph).to be_a(Turbine::Graph)
+      end
+    end
   end # Runner
 end # Atlas

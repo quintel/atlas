@@ -93,10 +93,12 @@ module Atlas
     end
 
     def set_graph(graph)
-      if dataset.derived?
+      if graph.is_a?(Turbine::Graph)
+        graph
+      elsif dataset.derived?
         dataset.graph
       else
-        graph || GraphBuilder.build
+        GraphBuilder.build
       end
     end
   end # Runner
