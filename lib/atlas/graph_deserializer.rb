@@ -6,7 +6,7 @@ module Atlas
 
     def initialize(graph_hash)
       @graph_hash = graph_hash
-      @graph      = Refinery::Catalyst::FromTurbine.call(GraphBuilder.build)
+      @graph      = GraphBuilder.build
     end
 
     def build_graph

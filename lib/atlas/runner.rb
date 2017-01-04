@@ -69,7 +69,6 @@ module Atlas
       {
         export: [
           SetRubelAttributes.with_queryable(method(:query)),
-          Refinery::Catalyst::FromTurbine,
           SetSlotSharesFromEfficiency.with_queryable(method(:query))
         ],
         import: [
