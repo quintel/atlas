@@ -17,6 +17,7 @@
         :share: !ruby/object:Rational
           denominator: 2
           numerator: 1
+
   :baz:
     :in: {}
     :out: {}

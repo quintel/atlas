@@ -11,8 +11,8 @@ module Atlas
 
     def build_graph
       graph_nodes.each do |node, node_attributes, slot_attributes|
-        node_attributes.each_pair do |attr, val|
-          node.set(attr, val)
+        node_attributes.each_pair do |key, val|
+          node.set(key, val)
         end
 
         update_slots(node.slots.in, slot_attributes[:in])
@@ -20,7 +20,9 @@ module Atlas
       end
 
       edges.each do |edge|
-        edge.properties.merge!(properties_for_edge(edge))
+        properties_for_edge(edge).each_pair do |key, val|
+          edge.set(key, val)
+        end
       end
 
       @graph
