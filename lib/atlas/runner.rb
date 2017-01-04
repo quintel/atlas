@@ -15,7 +15,7 @@ module Atlas
     # Returns a Runner.
     def initialize(dataset, graph = nil)
       @dataset = dataset
-      @graph   = graph || dataset.graph
+      @graph   = set_graph(graph)
     end
 
     # Public: Calculates the graph.
@@ -93,5 +93,14 @@ module Atlas
       raise ex
     end
 
+    def set_graph(graph)
+      return graph if graph.is_a?(Turbine::Graph)
+
+      if @dataset.is_a?(Dataset::DerivedDataset)
+        @dataset.graph
+      else
+        GraphBuilder.build
+      end
+    end
   end # Runner
 end # Atlas
