@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Atlas
   describe Runner, :fixtures do
-    shared_examples "runner" do |fd_demand|
+    shared_examples "runner" do |with_calculate = true|
       it 'exposes a graph' do
         expect(runner.graph).to be_a(Turbine::Graph)
       end
@@ -19,34 +19,36 @@ module Atlas
         expect(runner.dataset).to be_an(Atlas::Dataset)
       end
 
-      describe '#calculate' do
-        let(:edge)  { Edge.find('bar-baz@corn') }
-        let(:graph) { runner.refinery_graph }
+      if with_calculate
+        describe '#calculate' do
+          let(:edge)  { Edge.find('bar-baz@corn') }
+          let(:graph) { runner.refinery_graph }
 
-        # The Turbine edge.
-        let(:t_edge) do
-          graph.node(:bar).out_edges.detect do |edge|
-            edge.to.key == :baz && edge.label == :corn
+          # The Turbine edge.
+          let(:t_edge) do
+            graph.node(:bar).out_edges.detect do |edge|
+              edge.to.key == :baz && edge.label == :corn
+            end
+          end
+
+          it 'sets demand of nodes using energy balances' do
+            # This number is defined in the energy balance nl.csv file, and the
+            # query is `EB(residential, natural_gas) * 1.0`.
+            expect(graph.node(:fd).get(:demand)).to eq(898.0)
+          end
+
+          it 'sets the parent share of edges using SHARE()' do
+            # Extracted from the nl/shares/cars.csv file.
+            expect(t_edge.get(:parent_share)).to eq(0.1)
+          end
+
+          it 'sets the share of edges' do
+            expect(graph.node(:bar).slots.out(:coal).get(:share)).to eq(0.5)
+            expect(graph.node(:bar).slots.out(:corn).get(:share)).to eq(0.5)
           end
         end
-
-        it 'sets demand of nodes using energy balances' do
-          # This number is defined in the energy balance nl.csv file, and the
-          # query is `EB(residential, natural_gas) * 1.0`.
-          expect(graph.node(:fd).get(:demand)).to eq(fd_demand)
-        end
-
-        it 'sets the parent share of edges using SHARE()' do
-          # Extracted from the nl/shares/cars.csv file.
-          expect(t_edge.get(:parent_share)).to eq(0.1)
-        end
-
-        it 'sets the share of edges' do
-          expect(graph.node(:bar).slots.out(:coal).get(:share)).to eq(0.5)
-          expect(graph.node(:bar).slots.out(:corn).get(:share)).to eq(0.5)
-        end
-      end
-    end # calculate
+      end # calculate
+    end # runner
 
     context 'for a FullDataset' do
       let(:runner) do
@@ -139,7 +141,7 @@ module Atlas
         Runner.new(dataset)
       end
 
-      it_behaves_like "runner", 4242
+      it_behaves_like "runner", false
     end
   end # Runner
 end # Atlas
