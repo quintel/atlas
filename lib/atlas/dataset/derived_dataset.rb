@@ -4,6 +4,7 @@ module Atlas
 
     attribute :base_dataset, String
     attribute :scaling,      Preset::Scaling
+    attribute :init,         Hash
 
     validates :scaling, presence: true
 
