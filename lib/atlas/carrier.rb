@@ -33,9 +33,8 @@ module Atlas
     #######
 
     def load_fce_values(region)
-      yaml_path = Atlas.data_dir.join("datasets/#{ region }/fce/#{ key }.yml")
-      yaml_path.file? && YAML.load_file(yaml_path)
+      path = Atlas::Dataset.find(region).dataset_dir.join("fce/#{ key }.yml")
+      path.file? && YAML.load_file(path)
     end
-
   end # Carrier
 end # Atlas
