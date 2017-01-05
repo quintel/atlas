@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 module Atlas; describe EssentialExporter do
-  let(:dataset)    { Dataset::DerivedDataset.find(:groningen) }
-  let(:graph)      { Runner.new(dataset, GraphBuilder.build).refinery_graph(:export) }
+  let(:dataset)    { Dataset.find(:nl) }
+  let(:graph)      { Runner.new(dataset).refinery_graph(:export) }
   let(:graph_dump) { EssentialExporter.dump(graph) }
 
   it 'exports correct demand for fd node' do

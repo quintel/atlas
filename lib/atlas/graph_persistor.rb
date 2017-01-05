@@ -18,7 +18,7 @@ module Atlas
     private
 
     def refinery_graph
-      Runner.new(@dataset, GraphBuilder.build).refinery_graph(:export)
+      Runner.new(@dataset).refinery_graph(:export)
     end
   end
 end

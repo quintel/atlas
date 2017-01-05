@@ -31,7 +31,7 @@ module Atlas; describe GraphDeserializer do
   end
 
   describe "export and import a graph" do
-    let(:graph)         { Runner.new(dataset, GraphBuilder.build).refinery_graph(:export) }
+    let(:graph)         { Runner.new(dataset).refinery_graph(:export) }
     let(:graph_hash)    { EssentialExporter.dump(graph) }
     let(:turbine_graph) { GraphDeserializer.build(graph_hash) }
 

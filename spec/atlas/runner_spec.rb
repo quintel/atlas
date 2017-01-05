@@ -136,7 +136,7 @@ module Atlas
       let(:runner) do
         dataset = Dataset.find(:groningen)
 
-        Runner.new(dataset, dataset.graph)
+        Runner.new(dataset)
       end
 
       it_behaves_like "runner"

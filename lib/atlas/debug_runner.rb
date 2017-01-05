@@ -30,7 +30,6 @@ module Atlas
       require 'ruby-progressbar'
 
       @dataset   = dataset
-      @graph     = nil
       @runner    = nil
       @error     = nil
 
@@ -93,10 +92,9 @@ module Atlas
     def graph_setup!
       with_animated_bar do
         bar.title = 'Building structure'
-        @graph = GraphBuilder.build
 
         bar.title = MESSAGES.sample
-        @runner = Runner.new(@dataset, @graph)
+        @runner = Runner.new(@dataset)
         @runner.refinery_graph
 
         draw_diagrams(Refinery::Diagram::InitialValues, 'initial')
