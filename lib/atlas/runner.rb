@@ -5,7 +5,7 @@ module Atlas
   # the Rubel-based attributes, triggers the Refinery calculations, and
   # returns to results to you.
   class Runner
-    attr_reader :dataset, :graph
+    attr_reader :dataset, :graph, :precomputed_graph
 
     # Queries must return a numeric value, or one of these.
     PERMITTED_NON_NUMERICS = [nil, :infinity, :recursive].freeze
@@ -14,8 +14,11 @@ module Atlas
     #
     # Returns a Runner.
     def initialize(dataset, graph = nil)
-      @dataset = dataset
-      @graph   = set_graph(graph)
+      @dataset           = dataset
+      @graph             = graph
+      @precomputed_graph = false
+
+      set_initial_graph
     end
 
     # Public: Calculates the graph.
@@ -54,7 +57,7 @@ module Atlas
     private
 
     def refinery_scope
-      precomputed_graph? ? :import : :all
+      precomputed_graph ? :import : :all
     end
 
     def catalysts(which)
@@ -92,17 +95,14 @@ module Atlas
       raise ex
     end
 
-    def precomputed_graph?
-      dataset.is_a?(Dataset::DerivedDataset)
-    end
-
-    def set_graph(graph)
-      if graph.is_a?(Turbine::Graph)
-        graph
-      elsif precomputed_graph?
-        dataset.graph
-      else
-        GraphBuilder.build
+    def set_initial_graph
+      unless graph.is_a?(Turbine::Graph)
+        @graph = if dataset.is_a?(Dataset::DerivedDataset)
+          @precomputed_graph = true
+          dataset.graph
+        else
+          GraphBuilder.build
+        end
       end
     end
   end # Runner
