@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Atlas
   describe Runner, :fixtures do
-    shared_examples "runner" do
+    shared_examples "runner" do |fd_demand|
       it 'exposes a graph' do
         expect(runner.graph).to be_a(Turbine::Graph)
       end
@@ -33,7 +33,7 @@ module Atlas
         it 'sets demand of nodes using energy balances' do
           # This number is defined in the energy balance nl.csv file, and the
           # query is `EB(residential, natural_gas) * 1.0`.
-          expect(graph.node(:fd).get(:demand)).to eq(898.0)
+          expect(graph.node(:fd).get(:demand)).to eq(fd_demand)
         end
 
         it 'sets the parent share of edges using SHARE()' do
@@ -53,7 +53,7 @@ module Atlas
         Runner.new(Dataset.find(:nl), GraphBuilder.build(:simple_graph))
       end
 
-      it_behaves_like "runner"
+      it_behaves_like "runner", 898
 
       let(:graph) { runner.refinery_graph }
 
@@ -139,7 +139,7 @@ module Atlas
         Runner.new(dataset)
       end
 
-      it_behaves_like "runner"
+      it_behaves_like "runner", 4242
     end
 
     describe "with a non-graph" do

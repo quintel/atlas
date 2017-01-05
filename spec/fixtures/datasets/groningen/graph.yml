@@ -20,7 +20,7 @@
   :fd:
     :demand: !ruby/object:Rational
       denominator: 1
-      numerator: 898
+      numerator: 4242
     :in:
       :coal:
         :share: !ruby/object:Rational
