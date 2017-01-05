@@ -13,10 +13,8 @@ module Atlas
     # Public: Creates a new Runner.
     #
     # Returns a Runner.
-    def initialize(dataset, graph = nil)
+    def initialize(dataset)
       @dataset           = dataset
-      @graph             = graph
-      @precomputed_graph = false
 
       set_initial_graph
     end
@@ -96,13 +94,10 @@ module Atlas
     end
 
     def set_initial_graph
-      unless graph.is_a?(Turbine::Graph)
-        @graph = if dataset.is_a?(Dataset::DerivedDataset)
-          @precomputed_graph = true
-          dataset.graph
-        else
-          GraphBuilder.build
-        end
+      @graph, @precomputed_graph = if dataset.is_a?(Dataset::DerivedDataset)
+        [ dataset.graph, true ]
+      else
+        [ GraphBuilder.build, false ]
       end
     end
   end # Runner

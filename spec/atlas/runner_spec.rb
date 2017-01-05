@@ -48,9 +48,9 @@ module Atlas
       end
     end # calculate
 
-    describe "'global' dataset" do
+    context 'for a FullDataset' do
       let(:runner) do
-        Runner.new(Dataset.find(:nl), GraphBuilder.build(:simple_graph))
+        Runner.new(Dataset.find(:nl))
       end
 
       it_behaves_like "runner", 898
@@ -132,7 +132,7 @@ module Atlas
       end
     end
 
-    describe "'local' dataset" do
+    context 'for a DerivedDataset' do
       let(:runner) do
         dataset = Dataset.find(:groningen)
 
@@ -140,16 +140,6 @@ module Atlas
       end
 
       it_behaves_like "runner", 4242
-    end
-
-    describe "with a non-graph" do
-      let(:runner) do
-        Runner.new(Dataset.find(:groningen), 1)
-      end
-
-      it 'falls back to the GraphBuilder if someone gives a non graph input' do
-        expect(runner.graph).to be_a(Turbine::Graph)
-      end
     end
   end # Runner
 end # Atlas
