@@ -1,13 +1,22 @@
 module Atlas
   class Scaler::GraphScaler
-    # All node attributes occurring in a graph.yml
-    # created from nl dataset on 17-12-2016:
-    # [:in, :out, :demand, :cc_out, :cc_in, :max_demand,
-    #  :typical_input_capacity, :electricity_output_capacity]
-    SCALED_NODE_ATTRIBUTES = [:demand,
-                              :max_demand,
-                              :typical_input_capacity,
-                              :electricity_output_capacity].freeze
+    # Edge attributes which must be scaled.
+    EDGE_ATTRIBUTES = [:demand].freeze
+
+    # Node attributes which must be scaled.
+    NODE_ATTRIBUTES = [
+      :demand,
+      :max_demand,
+      :typical_input_capacity,
+      :electricity_output_capacity
+    ].freeze
+
+    # Maps top-level keys from the dumped graph to arrays of attributes which
+    # need to be scaled.
+    SCALED_ATTRIBUTES = {
+      edges: EDGE_ATTRIBUTES,
+      nodes: NODE_ATTRIBUTES
+    }.freeze
 
     def initialize(scaling_factor)
       @scaling_factor = scaling_factor
@@ -19,10 +28,10 @@ module Atlas
     #
     # Returns the graph itself.
     def call(graph)
-      graph[:nodes].each do |_, attributes|
-        attributes.each do |key, value|
-          if SCALED_NODE_ATTRIBUTES.include?(key) && value
-            attributes[key] = @scaling_factor * value
+      SCALED_ATTRIBUTES.each do |graph_key, attributes|
+        graph[graph_key].each_value do |record|
+          attributes.each do |attr|
+            record[attr] = @scaling_factor * record[attr] if record[attr]
           end
         end
       end

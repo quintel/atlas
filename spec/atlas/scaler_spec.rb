@@ -12,7 +12,7 @@ module Atlas; describe Scaler do
     let!(:a)  { graph.add(make_node(:a, demand: 25)) }
     let!(:b)  { graph.add(make_node(:b, demand: 10)) }
 
-    let!(:ab_edge) { make_edge(a, b, :a_b, child_share: 1.0) }
+    let!(:ab_edge) { make_edge(a, b, :a_b, child_share: 1.0, demand: 10) }
 
 
     let!(:mock_graph) {
@@ -23,6 +23,7 @@ module Atlas; describe Scaler do
 
     context 'with scaling value 1000' do
       let(:scaler) { Atlas::Scaler.new('nl', 'ameland', 1000) }
+      let(:scaling_divisor) { (7_349_500.to_f / 1000).to_r }
 
       before { scaler.create_scaled_dataset }
 
@@ -63,8 +64,14 @@ module Atlas; describe Scaler do
         expect(derived_dataset.graph).to_not be_blank
       end
 
-      it 'exports the correct demand 50/14699 for node :a' do
-        expect(derived_dataset.graph.node(:a).get(:demand)).to eql(50.to_r/14699)
+      it 'exports the correct demand 25/scaling for node :a' do
+        expect(derived_dataset.graph.node(:a).get(:demand)).
+          to eql(25.to_r / scaling_divisor)
+      end
+
+      it 'exports the correct demand 10/scaling for edge :a->:b' do
+        expect(derived_dataset.graph.node(:a).out_edges.first.get(:demand)).
+          to eql(10.to_r / scaling_divisor)
       end
     end
 
