@@ -5,7 +5,7 @@ module Atlas; describe Scaler do
     include GraphHelper
 
     # Graph:
-    # [ a (25) ] === [ a_b (10) ] === [ b (10) ]
+    # [ a (25) ]--< a_b (10) >--[ b (10) ]
 
     let(:graph) { Turbine::Graph.new }
 
@@ -64,7 +64,7 @@ module Atlas; describe Scaler do
       end
 
       it 'exports the correct demand 25/1 for node :a' do
-        expect(derived_dataset.graph[:nodes][:a][:demand]).to eq(25/1)
+        expect(derived_dataset.graph.node(:a).get(:demand)).to eq(25/1)
       end
     end
 

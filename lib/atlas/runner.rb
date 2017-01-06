@@ -5,7 +5,7 @@ module Atlas
   # the Rubel-based attributes, triggers the Refinery calculations, and
   # returns to results to you.
   class Runner
-    attr_reader :dataset, :graph
+    attr_reader :dataset
 
     # Queries must return a numeric value, or one of these.
     PERMITTED_NON_NUMERICS = [nil, :infinity, :recursive].freeze
@@ -13,9 +13,8 @@ module Atlas
     # Public: Creates a new Runner.
     #
     # Returns a Runner.
-    def initialize(dataset, graph)
+    def initialize(dataset)
       @dataset = dataset
-      @graph   = graph
     end
 
     # Public: Calculates the graph.
@@ -25,9 +24,9 @@ module Atlas
     #
     # Returns the calculated Graph.
     def calculate(with = Refinery::Catalyst::Calculators)
-      catalysts = [with, Refinery::Catalyst::Validation]
+      refinery_catalysts = [with, Refinery::Catalyst::Validation]
 
-      catalysts.reduce(refinery_graph) do |result, catalyst|
+      refinery_catalysts.reduce(refinery_graph) do |result, catalyst|
         catalyst.call(result)
       end
     end
@@ -36,22 +35,9 @@ module Atlas
     # missing attributes.
     #
     # Returns a Turbine::Graph.
-    def refinery_graph
+    def refinery_graph(which = refinery_scope)
       @refinery ||= begin
-        graph.nodes.each do |node|
-          calculate_rubel_attributes!(node)
-
-          node.out_edges.each do |edge|
-            calculate_rubel_attributes!(edge)
-          end
-        end
-
-        catalysts = [
-          ZeroDisabledSectors.with_dataset(dataset),
-          SetSlotSharesFromEfficiency.with_queryable(method(:query))
-        ]
-
-        catalysts.reduce(graph) do |result, catalyst|
+        catalysts(which).reduce(graph) do |result, catalyst|
           catalyst.call(result)
         end
       end
@@ -64,22 +50,35 @@ module Atlas
       @runtime ||= Runtime.new(dataset, graph)
     end
 
-    #######
+    def graph
+      @graph ||=
+        precomputed_graph? ? dataset.graph : GraphBuilder.build
+    end
+
     private
-    #######
 
-    # Internal: Given an +element+ from the graph -- a node or edge --
-    # calculate any Rubel queries which are defined on the associated
-    # ActiveDocument.
-    def calculate_rubel_attributes!(element)
-      model = element.get(:model)
+    def refinery_scope
+      precomputed_graph? ? :import : :all
+    end
 
-      model.queries && model.queries.each do |attribute, rubel_string|
-        # Skip slot shares.
-        unless attribute.match(/^(?:in|out)put\./)
-          element.set(attribute, query(rubel_string))
-        end
+    def catalysts(which)
+      if which == :all
+        transformations.values.flatten
+      else
+        transformations.fetch(which)
       end
+    end
+
+    def transformations
+      {
+        export: [
+          SetRubelAttributes.with_queryable(method(:query)),
+          SetSlotSharesFromEfficiency.with_queryable(method(:query))
+        ],
+        import: [
+          ZeroDisabledSectors.with_dataset(dataset)
+        ]
+      }
     end
 
     # Internal: Executes the given Rubel query +string+, returning the
@@ -97,5 +96,8 @@ module Atlas
       raise ex
     end
 
+    def precomputed_graph?
+      dataset.is_a?(Dataset::DerivedDataset)
+    end
   end # Runner
 end # Atlas

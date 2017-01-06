@@ -17,12 +17,13 @@ module Atlas
     # Returns a Hash.
     def nodes_hash(nodes)
       nodes.each_with_object({}) do |node, hash|
-        attributes = node.properties.except(:model)
+        attributes      = node.properties
+        node_attributes = attributes.except(:model)
 
-        attributes[:in]  = slots_hash(node.slots.in)
-        attributes[:out] = slots_hash(node.slots.out)
+        node_attributes[:in]  = slots_hash(node.slots.in)
+        node_attributes[:out] = slots_hash(node.slots.out)
 
-        hash[node.key] = attributes
+        hash[node.key] = node_attributes
       end
     end
 
@@ -44,7 +45,7 @@ module Atlas
     # Returns a hash.
     def slots_hash(slots)
       slots.each_with_object({}) do |slot, hash|
-        hash[slot.carrier] = slot.properties.except(:model)
+        hash[slot.carrier] = slot.properties.slice(:share, :type)
       end
     end
   end # EssentialExporter

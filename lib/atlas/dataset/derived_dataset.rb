@@ -11,7 +11,7 @@ module Atlas
     validate :scaling_valid
 
     def graph
-      @graph ||= YAML.load_file(graph_path)
+      @graph ||= GraphDeserializer.build(YAML.load_file(graph_path))
     end
 
     def graph_path
@@ -20,10 +20,7 @@ module Atlas
 
     # Overwrite
     def dataset_dir
-      @dataset_dir ||=
-        Atlas.data_dir.
-          join(DIRECTORY).
-          join(Dataset::FullDataset.find(base_dataset).key.to_s)
+      @dataset_dir ||= Atlas.data_dir.join(DIRECTORY, base_dataset)
     end
 
     private
