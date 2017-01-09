@@ -85,8 +85,8 @@ module Atlas
     # node_key - The key of the node whose production is to be fetched.
     #
     # Returns a Float.
-    def CENTRAL_PRODUCTION(node_key)
-      dataset.central_producers.get(node_key, :demand)
+    def CENTRAL_PRODUCTION(node_key, attribute = :demand)
+      dataset.central_producers.get(node_key, attribute)
     end
 
     # Public: Given the key of a node, retrieves the production (energy
