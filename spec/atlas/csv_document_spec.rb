@@ -56,7 +56,7 @@ module Atlas
         expect(doc.get('oh_he_said', 'yes')).to eq(-1)
       end
 
-      it 'finds special character carriers with special characters' do
+      it 'finds column headers with special characters' do
         expect(doc.get('yes', 'maybe (possibly)')).to be(1)
       end
 
@@ -68,7 +68,7 @@ module Atlas
         expect { doc.get('foo', 'yes') }.to raise_error(UnknownCSVRowError)
       end
 
-      it 'raises an error when carrier is not known' do
+      it 'raises an error when column header is not known' do
         expect { doc.get('yes', 'nope') }.to raise_error(UnknownCSVCellError)
       end
 
@@ -80,6 +80,67 @@ module Atlas
         expect { doc.get('blank', 1) }.to_not raise_error
       end
     end # get
+
+    describe '#set' do
+      it 'sets a given value for given row and column' do
+        expect { doc.set('yes', 'no', 42) }.to change { doc.get('yes', 'no') }.from(0).to(42)
+      end
+
+      it 'creates non-existing rows on-the-fly' do
+        expect { doc.get('foo bar', 'yes') }.to raise_error(UnknownCSVRowError)
+        doc.set('foo bar', 'yes', 21)
+        expect(doc.get('foo bar', 'yes')).to eq(21)
+      end
+
+      it 'raises an error when column header is not known' do
+        expect { doc.set('yes', 'nope', 99) }.to raise_error(UnknownCSVCellError)
+      end
+    end # set
+
+    describe '#save' do
+      it 'saves the CSVDocument content to disk' do
+        doc.set('yes', 'no', 42)
+        doc.save
+
+        expect(File.readlines(doc.path).map(&:strip)).to eq(
+          <<-EOF.lines.map(&:strip))
+            "",yes,no,maybe_possibly
+            yes,1,42,1
+            no,0,0,0
+            maybe possibly,1,0,0.5
+            oh_%^&/_he_said,-1,-1,-1
+            blank,,,
+          EOF
+      end
+    end
+
+    describe '.create' do
+      let(:doc_path) { Atlas.data_dir.join('new.csv') }
+      let(:headers) { %i(year hello\ world yes no) }
+      let(:normalized_headers) { %i(year hello_world yes no) }
+      let!(:doc) { CSVDocument.create(doc_path, headers) }
+
+      it 'creates a new csv file' do
+        expect(File.file?(doc_path)).to be_true
+      end
+
+      it 'creates a normalized header row in the csv file' do
+        expect(File.readlines(doc_path).first.strip).to eq(normalized_headers.map(&:to_s).join(','))
+      end
+
+      it 'returns a new CSVDocument' do
+        expect(doc).to_not be_blank
+      end
+
+      it 'sets the headers / column_keys for the CSVDocument' do
+        expect(doc.column_keys).to eq(normalized_headers)
+      end
+
+      it 'allows setting (and retrieving) a value on the create CSVDocument' do
+        expect { doc.set(2018, :yes, 999) }.to_not raise_error
+        expect(doc.get(2018, 'yes')).to eq(999)
+      end
+    end # .create
   end # CSVDocument
 
   describe CSVDocument::OneDimensional do
