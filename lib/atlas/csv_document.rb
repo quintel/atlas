@@ -42,12 +42,12 @@ module Atlas
     # path - Path to the CSV file.
     #
     # Returns a CSVDocument.
-    def initialize(path, normalizer = KEY_NORMALIZER)
+    def initialize(path)
       @path = Pathname.new(path)
 
       @table = CSV.table(@path.to_s, {
         converters: [YEAR_NORMALIZER, :all],
-        header_converters: [normalizer],
+        header_converters: [KEY_NORMALIZER],
         # Needed to retrieve the headers in case
         # of an otherwise empty csv file
         return_headers: true
@@ -202,13 +202,4 @@ module Atlas
       cell(normalize_key(row), 1)
     end
   end # CSVDocument::OneDimensional
-
-  # A CSVDocument which reads CSV files which are output by the Exporter. Each
-  # left-hand column is a node, edge, or slot key whose value needs to be
-  # preserved without removing special characters.
-  class CSVDocument::Production < CSVDocument
-    def initialize(path)
-      super(path, ->(value) { value.to_sym })
-    end
-  end # CSVDocument::Production
 end # Atlas
