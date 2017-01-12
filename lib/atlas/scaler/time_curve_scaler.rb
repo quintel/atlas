@@ -24,20 +24,33 @@ module Atlas
     #
     # Returns nil
     def scale
-      @base_dataset.time_curves.each do |key, base_csv|
-        row_keys = base_csv.row_keys
-        column_keys = base_csv.column_keys
-
-        scaled_csv = CSVDocument.new(@derived_dataset.time_curve_path(key), column_keys)
-        row_keys.each do |row_key|
-          column_keys.each do |column_key|
-            base_value = base_csv.get(row_key, column_key)
-            scaled_csv.set(row_key, column_key, base_value * @scaling_factor)
-          end
-        end
-        scaled_csv.save!
+      @base_dataset.time_curves.each do |key, csv|
+        scale_time_curve(key, csv)
       end
       nil
+    end
+
+    private
+
+    def scale_time_curve(time_curve_key, csv)
+      scaled_csv =
+        CSVDocument.new(
+          @derived_dataset.time_curve_path(time_curve_key),
+          csv.column_keys
+        )
+      copy_csv_content(csv, scaled_csv) { |val| val * @scaling_factor }
+      scaled_csv.save!
+    end
+
+    def copy_csv_content(src, dest)
+      row_keys = src.row_keys
+      column_keys = src.column_keys
+      row_keys.each do |row_key|
+        column_keys.each do |column_key|
+          value = yield src.get(row_key, column_key)
+          dest.set(row_key, column_key, value)
+        end
+      end
     end
   end # Scaler::TimeCurveScaler
 end # Atlas
