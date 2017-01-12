@@ -1,27 +1,15 @@
 module Atlas
-  class GraphPersistor
-    def initialize(dataset, path, export_modifier: nil)
-      @dataset        = dataset
-      @path           = path
-      @export_modifier = export_modifier
-    end
-
-    def self.call(dataset, path, export_modifier: nil)
-      new(dataset, path, export_modifier: export_modifier).persist!
-    end
-
-    def persist!
-      data = EssentialExporter.dump(refinery_graph)
-      @export_modifier.call(data) if @export_modifier
-      File.open(@path, 'w') do |f|
-        f.write data.to_yaml
-      end
-    end
-
-    private
-
-    def refinery_graph
-      Runner.new(@dataset).refinery_graph(:export)
-    end
+    # Public: Builds the graph and exports it to a YAML file.
+    #
+    # dataset         - This dataset's graph will be built and persisted
+    # path            - File to which the graph will be exported
+    # export_modifier - Will be called on the graph's exported hash prior to saving it
+    #
+    # Returns a Hash
+  GraphPersistor = lambda do |dataset, path, export_modifier: nil|
+    data = EssentialExporter.dump(Runner.new(dataset).refinery_graph(:export))
+    export_modifier.call(data) if export_modifier
+    File.write(path, data.to_yaml)
+    data
   end
 end
