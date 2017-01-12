@@ -15,13 +15,13 @@ module Atlas
     end
 
     def scale
-      Hash[
-        SCALEABLE_AREA_ATTRS.map do |attr|
-          if value = @base_dataset[attr]
-            [attr, Util::round_computation_errors(value * @scaling_factor)]
-          end
-        end.compact
-      ]
+      result = {}
+      SCALEABLE_AREA_ATTRS.map do |attr|
+        if value = @base_dataset[attr]
+          result[attr] = Util::round_computation_errors(value * @scaling_factor)
+        end
+      end
+      result
     end
   end # Scaler::AreaAttributesScaler
 end # Atlas
