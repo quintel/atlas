@@ -149,6 +149,14 @@ module Atlas
           dataset_dir.join("efficiencies/#{ key }_efficiency.csv"))
     end
 
+    def time_curves_dir
+      dataset_dir.join('time_curves')
+    end
+
+    def time_curve_path(key)
+      time_curves_dir.join("#{ key }_time_curve.csv")
+    end
+
     # Public: Retrieves the time curve data for the file whose name matches
     # +key+.
     #
@@ -160,15 +168,14 @@ module Atlas
     # Returns a CSVDocument.
     def time_curve(key)
       (@time_curves ||= {})[key.to_sym] ||=
-        CSVDocument.new(
-          dataset_dir.join("time_curves/#{ key }_time_curve.csv"))
+        CSVDocument.new(time_curve_path(key))
     end
 
     # Public: Retrieves all the time curves for the dataset's region.
     #
     # Returns a hash of document keys, and the CSVDocuments.
     def time_curves
-      Pathname.glob(dataset_dir.join('time_curves/*.csv')).each do |csv_path|
+      Pathname.glob(time_curves_dir.join('*.csv')).each do |csv_path|
         time_curve(csv_path.basename('_time_curve.csv').to_s)
       end
 
