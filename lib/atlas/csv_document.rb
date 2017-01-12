@@ -42,45 +42,37 @@ module Atlas
     # path - Path to the CSV file.
     #
     # Returns a CSVDocument.
-    def initialize(path)
+    def initialize(path, headers = nil)
       @path = Pathname.new(path)
 
-      @table = CSV.table(@path.to_s, {
-        converters: [YEAR_NORMALIZER, :all],
-        header_converters: [KEY_NORMALIZER],
-        # Needed to retrieve the headers in case
-        # of an otherwise empty csv file
-        return_headers: true
-      })
+      if headers
+        raise(ExistingCSVHeaderError, path) if @path.file?
+        @headers = headers.map(&KEY_NORMALIZER)
+        @table = CSV::Table.new([CSV::Row.new(@headers, @headers, true)])
+      else
+        @table = CSV.table(@path.to_s, {
+          converters: [YEAR_NORMALIZER, :all],
+          header_converters: [KEY_NORMALIZER],
+          # Needed to retrieve the headers in case
+          # of an otherwise empty csv file
+          return_headers: true
+        })
 
-      @headers = table.headers
+        @headers = table.headers
 
-      # Delete the header row for the internal representation -
-      # will be dynamically (re-)created when outputting
-      table.delete(0)
+        # Delete the header row for the internal representation -
+        # will be dynamically (re-)created when outputting
+        table.delete(0)
 
-      raise(BlankCSVHeaderError, path) if @headers.any?(&:nil?)
-    end
-
-    # Public: Creates a new csv file on disk and a corresponding
-    # new CSV document instance connected to that
-    #
-    # path    - Path to the new CSV file
-    # headers - The column headers of the new CSV
-    #
-    # Returns a CSVDocument
-    def self.create(path, headers, normalizer = KEY_NORMALIZER)
-      headers = headers.map(&normalizer)
-      initial_table = CSV::Table.new([CSV::Row.new(headers, headers, true)])
-
-      write(initial_table, Pathname.new(path))
-
-      new(path, normalizer)
+        raise(BlankCSVHeaderError, path) if @headers.any?(&:nil?)
+      end
     end
 
     # Public: Saves the CSV document to disk
-    def save
-      self.class.write(table, path)
+    def save!
+      FileUtils.mkdir_p(path.dirname)
+      File.write(path, table.to_csv)
+      self
     end
 
     # Public: Sets the value of a cell identified by its row and column.
@@ -116,12 +108,6 @@ module Atlas
     #######
     private
     #######
-
-    # Internal: Writes the content of a CSV table to disk
-    def self.write(table, path)
-      FileUtils.mkdir_p(path.dirname)
-      File.write(path, table.to_csv)
-    end
 
     # Internal: Finds the value of a cell, raising an UnknownCSVRowError if no
     # such row exists.

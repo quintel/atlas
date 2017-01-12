@@ -210,6 +210,11 @@ module Atlas
     "of the cells in the first row must contain a non-blank value."
   end
 
+  ExistingCSVHeaderError = error_class do |path|
+    "Column headers provided although CSV file #{path} already exists"
+  end
+
+
   # Parser Errors ------------------------------------------------------------
 
   CannotIdentifyError = error_class(ParserError) do |string|

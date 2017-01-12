@@ -99,8 +99,7 @@ module Atlas; describe Scaler do
 
   describe Scaler::TimeCurveScaler do
     let(:derived_dataset) do
-      Scaler.new('nl', 'rotterdam', scaling_value).create_scaled_dataset
-      Atlas::Dataset::DerivedDataset.find('rotterdam')
+      Atlas::Dataset::DerivedDataset.new(key: 'rotterdam', area: 'rotterdam')
     end
 
     before { Scaler::TimeCurveScaler.call(base_dataset, scaling_factor, derived_dataset) }

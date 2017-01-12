@@ -15,14 +15,14 @@ module Atlas
         row_keys = base_csv.row_keys
         column_keys = base_csv.column_keys
 
-        scaled_csv = CSVDocument.create(@derived_dataset.time_curve_path(key), column_keys)
+        scaled_csv = CSVDocument.new(@derived_dataset.time_curve_path(key), column_keys)
         row_keys.each do |row_key|
           column_keys.each do |column_key|
             base_value = base_csv.get(row_key, column_key)
             scaled_csv.set(row_key, column_key, base_value * @scaling_factor)
           end
         end
-        scaled_csv.save
+        scaled_csv.save!
       end
     end
   end # Scaler::TimeCurveScaler

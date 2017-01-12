@@ -19,16 +19,41 @@ module Atlas
       CSVDocument.new(path.to_s)
     end
 
-    it 'raises when the file does not exist' do
-      expect { CSVDocument.new('no') }.to raise_error(/no such file/i)
-    end
+    describe '.new' do
+      context 'without specified headers' do
+        it 'raises when the file does not exist' do
+          expect { CSVDocument.new('no') }.to raise_error(/no such file/i)
+        end
 
-    it 'raises when a header cell contains no value' do
-      path = Atlas.data_dir.join('blank.csv')
-      path.open('w') { |f| f.puts(",yes\nyes,1") }
+        it 'raises when a header cell contains no value' do
+          path = Atlas.data_dir.join('blank.csv')
+          path.open('w') { |f| f.puts(",yes\nyes,1") }
 
-      expect { CSVDocument.new(path.to_s) }.
-        to raise_error(BlankCSVHeaderError)
+          expect { CSVDocument.new(path.to_s) }.
+            to raise_error(BlankCSVHeaderError)
+        end
+      end
+
+      context 'with specified headers' do
+        let(:headers) { %i( yes no maybe ) }
+        let(:path) { Atlas.data_dir.join('new.csv') }
+        let(:doc) { CSVDocument.new(path.to_s, headers) }
+
+        it 'does not save the new file to disk' do
+          expect(File.exist?(doc.path)).to be_false
+        end
+
+        it 'raises when the file already exists' do
+          doc.save!
+          expect { CSVDocument.new(path.to_s, %i( hello world )) }.
+            to raise_error(ExistingCSVHeaderError)
+        end
+
+        it 'sets the headers / column_keys' do
+          expect(doc.column_keys).to eq(headers)
+        end
+      end
+
     end
 
     describe '#get' do
@@ -97,10 +122,10 @@ module Atlas
       end
     end # set
 
-    describe '#save' do
+    describe '#save!' do
       it 'saves the CSVDocument content to disk' do
         doc.set('yes', 'no', 42)
-        doc.save
+        doc.save!
 
         expect(File.readlines(doc.path).map(&:strip)).to eq(
           <<-EOF.lines.map(&:strip))
@@ -112,35 +137,20 @@ module Atlas
             blank,,,
           EOF
       end
+
+      context 'when the file did not exist before' do
+        let(:doc) { CSVDocument.new(Atlas.data_dir.join('doesnotexistbefore.csv'), %i( yes no maybe\ baby )) }
+        it 'creates a new csv file' do
+          doc.save!
+          expect(File.file?(doc.path)).to be_true
+        end
+
+        it 'creates a normalized header row in the csv file' do
+          doc.save!
+          expect(File.readlines(doc.path).first.strip).to eq('yes,no,maybe_baby')
+        end
+      end
     end
-
-    describe '.create' do
-      let(:doc_path) { Atlas.data_dir.join('new.csv') }
-      let(:headers) { %i(year hello\ world yes no) }
-      let(:normalized_headers) { %i(year hello_world yes no) }
-      let!(:doc) { CSVDocument.create(doc_path, headers) }
-
-      it 'creates a new csv file' do
-        expect(File.file?(doc_path)).to be_true
-      end
-
-      it 'creates a normalized header row in the csv file' do
-        expect(File.readlines(doc_path).first.strip).to eq(normalized_headers.map(&:to_s).join(','))
-      end
-
-      it 'returns a new CSVDocument' do
-        expect(doc).to_not be_blank
-      end
-
-      it 'sets the headers / column_keys for the CSVDocument' do
-        expect(doc.column_keys).to eq(normalized_headers)
-      end
-
-      it 'allows setting (and retrieving) a value on the create CSVDocument' do
-        expect { doc.set(2018, :yes, 999) }.to_not raise_error
-        expect(doc.get(2018, 'yes')).to eq(999)
-      end
-    end # .create
   end # CSVDocument
 
   describe CSVDocument::OneDimensional do
