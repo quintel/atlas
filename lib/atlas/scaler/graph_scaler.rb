@@ -22,11 +22,11 @@ module Atlas
       @scaling_factor = scaling_factor
     end
 
-    # Public: Scales the demands in the graph - modifying the original graph!
+    # Public: Scales the demands in the graph hash - modifying the original hash!
     #
-    # graph - A Turbine::Graph containing nodes and edges.
+    # graph - A Hash containing nodes and edges.
     #
-    # Returns the graph itself.
+    # Returns the modified graph hash itself.
     def call(graph)
       SCALED_ATTRIBUTES.each do |graph_key, attributes|
         graph[graph_key].each_value do |record|
@@ -35,6 +35,7 @@ module Atlas
           end
         end
       end
+      graph
     end
   end # Scaler::GraphScaler
 end # Atlas
