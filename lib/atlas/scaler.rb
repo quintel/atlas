@@ -1,5 +1,7 @@
 module Atlas
   class Scaler
+    UNSCALED_ETENGINE_DATA_FILES = %w( fce load_profiles network ).freeze
+
     def initialize(base_dataset_key, derived_dataset_name, number_of_residences)
       @base_dataset         = Dataset::FullDataset.find(base_dataset_key)
       @derived_dataset_name = derived_dataset_name
@@ -58,7 +60,7 @@ module Atlas
 
     def copy_etengine_data_files
       FileUtils.cp_r(
-        %w( fce load_profiles network ).
+        UNSCALED_ETENGINE_DATA_FILES.
           map { |subdir| File.join(@base_dataset.dataset_dir, subdir) },
         @derived_dataset.dataset_dir)
     end
