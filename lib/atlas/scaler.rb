@@ -7,16 +7,21 @@ module Atlas
     end
 
     def create_scaled_dataset
-      derived_dataset = Dataset::DerivedDataset.new(
+      @derived_dataset = Dataset::DerivedDataset.new(
         @base_dataset.attributes.
           merge(AreaAttributesScaler.call(@base_dataset, scaling_factor)).
           merge(new_attributes))
 
-      derived_dataset.save!
+      @derived_dataset.save!
 
-      GraphPersistor.call(@base_dataset, derived_dataset.graph_path, export_modifier: Scaler::GraphScaler.new(scaling_factor))
+      GraphPersistor.call(
+        @base_dataset,
+        @derived_dataset.graph_path,
+        export_modifier: Scaler::GraphScaler.new(scaling_factor))
 
-      TimeCurveScaler.call(@base_dataset, scaling_factor, derived_dataset)
+      TimeCurveScaler.call(@base_dataset, scaling_factor, @derived_dataset)
+
+      copy_etengine_data_files
     end
 
     private
@@ -49,6 +54,13 @@ module Atlas
             area_attribute: 'number_of_residences',
           },
       }
+    end
+
+    def copy_etengine_data_files
+      FileUtils.cp_r(
+        %w( fce load_profiles network ).
+          map { |subdir| File.join(@base_dataset.dataset_dir, subdir) },
+        @derived_dataset.dataset_dir)
     end
   end # Scaler
 end # Atlas
