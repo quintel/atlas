@@ -2,10 +2,11 @@ module Atlas
   class Scaler
     UNSCALED_ETENGINE_DATA_FILES = %w( fce load_profiles network ).freeze
 
-    def initialize(base_dataset_key, derived_dataset_name, number_of_residences)
+    def initialize(base_dataset_key, derived_dataset_name, number_of_residences, base_value = nil)
       @base_dataset         = Dataset::FullDataset.find(base_dataset_key)
       @derived_dataset_name = derived_dataset_name
       @number_of_residences = number_of_residences
+      @base_value           = base_value
     end
 
     def create_scaled_dataset
@@ -33,7 +34,7 @@ module Atlas
     end
 
     def base_value
-      @base_dataset.number_of_residences
+      @base_value || @base_dataset.number_of_residences
     end
 
     def scaling_factor
