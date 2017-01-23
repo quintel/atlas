@@ -15,6 +15,12 @@ module Atlas
       @graph ||= GraphDeserializer.build(YAML.load_file(graph_path))
     end
 
+    def initializer_inputs
+      Hash[init.map do |key, value|
+        [InitializerInput.find(key), value]
+      end]
+    end
+
     def graph_path
       File.join(directory, key.to_s, GRAPH_FILENAME)
     end
