@@ -7,8 +7,10 @@ module Atlas
     NODE_ATTRIBUTES = [
       :demand,
       :max_demand,
-      :typical_input_capacity,
-      :electricity_output_capacity
+      # Scaling of the following two attributes is disabled for the time being -
+      # see https://github.com/quintel/etengine/issues/901#issuecomment-274062242
+      # :typical_input_capacity,
+      # :electricity_output_capacity
     ].freeze
 
     # Maps top-level keys from the dumped graph to arrays of attributes which
