@@ -11,5 +11,6 @@ module Atlas
     attribute :update_type,     String
 
     validates_presence_of :query
+    validates :update_type, inclusion: { in: [nil, '%', 'factor'] }
   end
 end
