@@ -50,7 +50,7 @@ module Atlas; describe Dataset::DerivedDataset do
 
       it "raises an error" do
         expect(dataset.errors_on(:init))
-          .to include("share group 'test_heating_households' doesn't add up to 100%")
+          .to include("contains inputs belonging to the test_heating_households share group, but the values sum to 99.0, not 100")
       end
     end
 
