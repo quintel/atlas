@@ -18,46 +18,49 @@ module Atlas; describe Dataset::DerivedDataset do
     expect(dataset).to be_valid
   end
 
-  describe 'with a non-existing initializer input' do
-    it "raises an error" do
-      dataset.init = { non_existing_key: 1.0 }
+  describe '(validations)' do
+    before do
+      dataset.init = init
       dataset.valid?
-
-      expect(dataset.errors_on(:init))
-        .to include("initializer input 'non_existing_key' does not exist")
     end
-  end
 
-  describe 'with a blank value' do
-    it "raises an error" do
-      dataset.init = { initializer_input_mock: nil }
-      dataset.valid?
+    describe 'with a non-existing initializer input' do
+      let(:init) { { non_existing_key: 1.0 } }
 
-      expect(dataset.errors_on(:init))
-        .to include("value for initializer input 'initializer_input_mock' can't be blank")
+      it "raises an error" do
+        expect(dataset.errors_on(:init))
+          .to include("initializer input 'non_existing_key' does not exist")
+      end
     end
-  end
 
-  describe "share values don't add up to 100" do
-    it "raises an error" do
-      dataset.init = {
+    describe 'with a blank value' do
+      let(:init) { { initializer_input_mock: nil } }
+
+      it "raises an error" do
+        expect(dataset.errors_on(:init))
+          .to include("value for initializer input 'initializer_input_mock' can't be blank")
+      end
+    end
+
+    describe "share values don't add up to 100" do
+      let(:init) { {
         households_space_heater_coal_share: 50.0,
         households_space_heater_crude_oil_share: 49.0
-      }
-      dataset.valid?
+      } }
 
-      expect(dataset.errors_on(:init))
-        .to include("share group 'test_heating_households' doesn't add up to 100%")
+      it "raises an error" do
+        expect(dataset.errors_on(:init))
+          .to include("share group 'test_heating_households' doesn't add up to 100%")
+      end
     end
-  end
 
-  describe "not all share values are not defined" do
-    it "raises an error" do
-      dataset.init = { households_space_heater_coal_share: 50.0 }
-      dataset.valid?
+    describe "not all share values are not defined" do
+      let(:init) { { households_space_heater_coal_share: 50.0 } }
 
-      expect(dataset.errors_on(:init))
-        .to include("share group 'test_heating_households' is missing the following share(s): households_space_heater_crude_oil_share")
+      it "raises an error" do
+        expect(dataset.errors_on(:init))
+          .to include("share group 'test_heating_households' is missing the following share(s): households_space_heater_crude_oil_share")
+      end
     end
   end
 end; end
