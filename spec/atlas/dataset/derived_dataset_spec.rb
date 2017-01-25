@@ -55,7 +55,7 @@ module Atlas; describe Dataset::DerivedDataset do
     end
 
     describe "not all share values are not defined" do
-      let(:init) { { households_space_heater_coal_share: 50.0 } }
+      let(:init) { { households_space_heater_coal_share: 100.0 } }
 
       it "raises an error" do
         expect(dataset.errors_on(:init))

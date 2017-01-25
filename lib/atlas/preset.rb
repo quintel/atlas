@@ -26,7 +26,7 @@ module Atlas
     validate  :validate_input_keys,   if: -> { user_values && user_values.any? }
     validate  :validate_scaling,      if: -> { scaling }
 
-    validates_with ShareGroupValidator,
+    validates_with ShareGroupTotalValidator,
       attribute: :user_values, input_class: Input,
       if: -> { user_values && user_values.any? }
 

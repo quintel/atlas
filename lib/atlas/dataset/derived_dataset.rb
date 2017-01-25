@@ -14,7 +14,10 @@ module Atlas
     validate :init_keys_exist
     validate :init_values_present
 
-    validates_with ShareGroupValidator,
+    validates_with ShareGroupTotalValidator,
+      attribute: :init, input_class: InitializerInput
+
+    validates_with ShareGroupInclusionValidator,
       attribute: :init, input_class: InitializerInput
 
     def graph
