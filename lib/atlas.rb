@@ -47,6 +47,7 @@ require_relative 'atlas/collection'
 require_relative 'atlas/value_object'
 
 require_relative 'atlas/edge'
+require_relative 'atlas/input_helper'
 require_relative 'atlas/input'
 require_relative 'atlas/initializer_input'
 require_relative 'atlas/gquery'

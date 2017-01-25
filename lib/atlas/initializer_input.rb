@@ -1,6 +1,7 @@
 module Atlas
   class InitializerInput
     include ActiveDocument
+    include InputHelper
 
     DIRECTORY = 'initializer_inputs'
 
