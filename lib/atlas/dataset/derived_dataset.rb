@@ -10,6 +10,14 @@ module Atlas
 
     validate :base_dataset_exists
     validate :scaling_valid
+    validate :init_keys_exist
+    validate :init_values_present
+
+    validates_with ShareGroupTotalValidator,
+      attribute: :init, input_class: InitializerInput
+
+    validates_with ShareGroupInclusionValidator,
+      attribute: :init, input_class: InitializerInput
 
     def graph
       @graph ||= GraphDeserializer.build(YAML.load_file(graph_path))
@@ -32,6 +40,22 @@ module Atlas
         scaling.valid?
         scaling.errors.full_messages.each do |message|
           errors.add(:scaling, message)
+        end
+      end
+    end
+
+    def init_keys_exist
+      init.each_key do |key|
+        unless InitializerInput.exists?(key)
+          errors.add(:init, "'#{ key }' does not exist as an initializer input")
+        end
+      end
+    end
+
+    def init_values_present
+      init.each_pair do |key, value|
+        unless value.present?
+          errors.add(:init, "value for initializer input '#{ key }' can't be blank")
         end
       end
     end

@@ -21,7 +21,7 @@ module Atlas
         #
         # Returns true or false.
         def exists?(key)
-          manager.key?(key)
+          key.present? && manager.key?(key)
         end
 
         # Public: Given a document +key+ finds the matching document.
