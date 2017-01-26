@@ -7,7 +7,6 @@ module Atlas
     attribute :init,         Hash[Symbol => Float]
 
     validates :scaling, presence: true
-    validates :base_dataset, presence: true
 
     validate :base_dataset_exists
     validate :scaling_valid
