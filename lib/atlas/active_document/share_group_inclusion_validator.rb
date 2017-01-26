@@ -4,8 +4,10 @@ module Atlas
       def validate(record)
         return if record.errors.messages[options[:attribute]]
 
+        inputs = input_class.by_share_group
+
         share_groups_for(record).each_pair do |share_group, inputs|
-          missing = input_class.by_share_group[share_group] - inputs.keys
+          missing = inputs[share_group] - inputs.keys
 
           if missing && missing.any?
             record.errors.add(
