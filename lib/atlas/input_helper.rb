@@ -10,10 +10,7 @@ module Atlas
       #
       # Returns a hash.
       def by_share_group
-        all.select(&:share_group).each_with_object({}) do |input, groups|
-          groups[input.share_group] ||= []
-          groups[input.share_group].push(input)
-        end
+        all.select(&:share_group).group_by(&:share_group)
       end
     end
   end

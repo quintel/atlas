@@ -46,9 +46,9 @@ module Atlas
     end
 
     def init_keys_exist
-      init.each_pair do |key, value|
+      init.each_key do |key|
         unless InitializerInput.exists?(key)
-          errors.add(:init, "initializer input '#{ key }' does not exist")
+          errors.add(:init, "'#{ key }' does not exist as an initializer input")
         end
       end
     end

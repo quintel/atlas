@@ -29,7 +29,7 @@ module Atlas; describe Dataset::DerivedDataset do
 
       it "raises an error" do
         expect(dataset.errors_on(:init))
-          .to include("initializer input 'non_existing_key' does not exist")
+          .to include("'non_existing_key' does not exist as an initializer input")
       end
     end
 
