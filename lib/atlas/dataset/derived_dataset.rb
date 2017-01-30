@@ -8,10 +8,10 @@ module Atlas
 
     validates :scaling, presence: true
 
-    validate :base_dataset_exists
-    validate :scaling_valid
-    validate :init_keys_exist
-    validate :init_values_present
+    validate :validate_presence_of_base_dataset
+    validate :validate_scaling
+    validate :validate_presence_of_init_keys
+    validate :validate_presence_of_init_values
 
     validates_with ShareGroupTotalValidator,
       attribute: :init, input_class: InitializerInput
@@ -29,13 +29,13 @@ module Atlas
 
     private
 
-    def base_dataset_exists
+    def validate_presence_of_base_dataset
       unless Dataset::FullDataset.exists?(base_dataset)
         errors.add(:base_dataset, 'does not exist')
       end
     end
 
-    def scaling_valid
+    def validate_scaling
       if scaling
         scaling.valid?
         scaling.errors.full_messages.each do |message|
@@ -44,7 +44,7 @@ module Atlas
       end
     end
 
-    def init_keys_exist
+    def validate_presence_of_init_keys
       init.each_key do |key|
         unless InitializerInput.exists?(key)
           errors.add(:init, "'#{ key }' does not exist as an initializer input")
@@ -52,7 +52,7 @@ module Atlas
       end
     end
 
-    def init_values_present
+    def validate_presence_of_init_values
       init.each_pair do |key, value|
         unless value.present?
           errors.add(:init, "value for initializer input '#{ key }' can't be blank")

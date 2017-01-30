@@ -20,7 +20,6 @@ module Atlas
 
       private
 
-      # ActiveDocument.
       def self.calculate_rubel_attributes!(element, query)
         model = element.get(:model)
 

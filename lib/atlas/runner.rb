@@ -51,8 +51,7 @@ module Atlas
     end
 
     def graph
-      @graph ||=
-        precomputed_graph? ? dataset.graph : GraphBuilder.build
+      @graph ||= precomputed_graph? ? dataset.graph : GraphBuilder.build
     end
 
     private
