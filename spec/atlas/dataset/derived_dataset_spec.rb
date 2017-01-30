@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-module Atlas; describe Dataset::DerivedDataset do
+module Atlas; describe Dataset::Derived do
   let(:dataset) {
-    Dataset::DerivedDataset.new(
+    Dataset::Derived.new(
       key: 'lutjebroek',
       base_dataset: 'nl',
       interconnector_capacity: 1.0,

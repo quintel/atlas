@@ -29,15 +29,15 @@ module Atlas; describe Scaler do
 
       before { scaler.create_scaled_dataset }
 
-      let(:derived_dataset) { Atlas::Dataset::DerivedDataset.find('ameland') }
+      let(:derived_dataset) { Atlas::Dataset::Derived.find('ameland') }
 
-      it 'creates a valid DerivedDataset' do
+      it 'creates a valid Derived' do
         derived_dataset.valid?
 
         expect(derived_dataset.errors).to be_empty
       end
 
-      it 'assigns a new id to the DerivedDataset' do
+      it 'assigns a new id to the Derived' do
         datasets = Atlas::Dataset.all
         old_max = (datasets - [derived_dataset]).map(&:id).max
         expect(derived_dataset.id).to be > old_max
@@ -47,11 +47,11 @@ module Atlas; describe Scaler do
         expect(derived_dataset.parent_id).to eq(derived_dataset.id)
       end
 
-      it 'sets the scaling value of the DerivedDataset to #{ scaling_value }' do
+      it 'sets the scaling value of the Derived to #{ scaling_value }' do
         expect(derived_dataset.scaling[:value]).to eq(scaling_value)
       end
 
-      it 'sets the scaling base_value of the DerivedDataset to the number_of_residences in nl' do
+      it 'sets the scaling base_value of the Derived to the number_of_residences in nl' do
         expect(derived_dataset.scaling[:base_value]).
           to eq(base_dataset.number_of_residences)
       end
@@ -72,7 +72,7 @@ module Atlas; describe Scaler do
     context 'with scaling value nil' do
       let(:scaler) { Scaler.new('nl', 'ameland', nil) }
 
-      it 'creates an invalid DerivedDataset' do
+      it 'creates an invalid Derived' do
         expect { scaler.create_scaled_dataset }.
           to raise_error(Atlas::InvalidDocumentError, /Scaling Value/)
       end
@@ -99,7 +99,7 @@ module Atlas; describe Scaler do
 
   describe Scaler::TimeCurveScaler do
     let(:derived_dataset) do
-      Atlas::Dataset::DerivedDataset.new(key: 'rotterdam', area: 'rotterdam')
+      Atlas::Dataset::Derived.new(key: 'rotterdam', area: 'rotterdam')
     end
 
     before { Scaler::TimeCurveScaler.call(base_dataset, scaling_factor, derived_dataset) }

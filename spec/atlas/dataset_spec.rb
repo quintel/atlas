@@ -13,21 +13,21 @@ module Atlas
       it "finds the Dutch dataset from file" do
         dataset = Dataset.find(:nl)
         expect(dataset).to be_a(Dataset)
-        expect(dataset).to be_a(Dataset::FullDataset)
+        expect(dataset).to be_a(Dataset::Full)
         expect(dataset.key).to eql(:nl)
       end
 
       it "finds the UK dataset from file" do
         dataset = Dataset.find(:uk)
         expect(dataset).to be_a(Dataset)
-        expect(dataset).to be_a(Dataset::FullDataset)
+        expect(dataset).to be_a(Dataset::Full)
         expect(dataset.key).to eql(:uk)
       end
 
       it "finds the Groningen dataset from file" do
         dataset = Dataset.find(:groningen)
         expect(dataset).to be_a(Dataset)
-        expect(dataset).to be_a(Dataset::DerivedDataset)
+        expect(dataset).to be_a(Dataset::Derived)
         expect(dataset.key).to eql(:groningen)
       end
     end # describe #load
@@ -200,19 +200,19 @@ module Atlas
   end # describe Dataset
 
 
-  describe Dataset::DerivedDataset do
+  describe Dataset::Derived do
     describe "#valid?" do
       it "validates the existence of the base_dataset" do
-        dataset = Dataset::DerivedDataset.new(key: :ameland, base_dataset: :fantasia)
+        dataset = Dataset::Derived.new(key: :ameland, base_dataset: :fantasia)
         dataset.valid?
         expect(dataset.errors[:base_dataset]).to include('does not exist')
       end
 
       it "validates the existence of the scaling" do
-        dataset = Dataset::DerivedDataset.new(key: :ameland, base_dataset: :fantasia)
+        dataset = Dataset::Derived.new(key: :ameland, base_dataset: :fantasia)
         dataset.valid?
         expect(dataset.errors[:scaling]).to include("can't be blank")
       end
     end # describe #new
-  end # describe Dataset::DerivedDataset
+  end # describe Dataset::Derived
 end # Atlas

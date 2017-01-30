@@ -96,7 +96,7 @@ module Atlas
     end
 
     def precomputed_graph?
-      dataset.is_a?(Dataset::DerivedDataset)
+      dataset.is_a?(Dataset::Derived)
     end
   end # Runner
 end # Atlas

@@ -1,5 +1,5 @@
 module Atlas
-  class Dataset::DerivedDataset < Dataset
+  class Dataset::Derived < Dataset
     GRAPH_FILENAME = 'graph.yml'.freeze
 
     attribute :base_dataset, String
@@ -30,7 +30,7 @@ module Atlas
     private
 
     def validate_presence_of_base_dataset
-      unless Dataset::FullDataset.exists?(base_dataset)
+      unless Dataset::Full.exists?(base_dataset)
         errors.add(:base_dataset, 'does not exist')
       end
     end
@@ -59,5 +59,5 @@ module Atlas
         end
       end
     end
-  end # Dataset::DerivedDataset
+  end # Dataset::Derived
 end # Atlas

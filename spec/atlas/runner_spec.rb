@@ -50,7 +50,7 @@ module Atlas
       end # calculate
     end # runner
 
-    context 'for a FullDataset' do
+    context 'for a Full' do
       let(:runner) do
         Runner.new(Dataset.find(:nl))
       end
@@ -134,7 +134,7 @@ module Atlas
       end
     end
 
-    context 'for a DerivedDataset' do
+    context 'for a Derived' do
       let(:runner) do
         dataset = Dataset.find(:groningen)
 

@@ -3,14 +3,14 @@ module Atlas
     UNSCALED_ETENGINE_DATA_FILES = %w( fce load_profiles network ).freeze
 
     def initialize(base_dataset_key, derived_dataset_name, number_of_residences, base_value = nil)
-      @base_dataset         = Dataset::FullDataset.find(base_dataset_key)
+      @base_dataset         = Dataset::Full.find(base_dataset_key)
       @derived_dataset_name = derived_dataset_name
       @number_of_residences = number_of_residences
       @base_value           = base_value
     end
 
     def create_scaled_dataset
-      @derived_dataset = Dataset::DerivedDataset.new(
+      @derived_dataset = Dataset::Derived.new(
         @base_dataset.attributes.
           merge(AreaAttributesScaler.call(@base_dataset, scaling_factor)).
           merge(new_attributes))

@@ -1,6 +1,6 @@
 module Atlas
   class Scaler::AreaAttributesScaler
-    # Only attributes common to FullDataset and DerivedDataset
+    # Only attributes common to Full and Derived
     # may be scaled
     SCALEABLE_AREA_ATTRS = Atlas::Dataset.attribute_set
       .select { |attr| attr.options[:proportional] }.map(&:name).freeze
