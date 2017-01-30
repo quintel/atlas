@@ -2,20 +2,23 @@ module Atlas
   class GraphDeserializer
     # Public: build method
     #
-    # Takes a +graph_hash+ as an argument. A +graph_hash+ looks like:
+    # graph_hash - A Hash structure of the sparse graph as is formed as a yml
+    #              by EssentialExporter.
     #
-    # {
-    #   edges: {
-    #     <key> : { .. }
-    #   },
-    #   nodes: {
-    #     <key> : {
-    #       in: { .. },
-    #       out: { .. },
-    #       ...
+    # Example
+    #
+    #   {
+    #     edges: {
+    #       <key> : { .. }
+    #     },
+    #     nodes: {
+    #       <key> : {
+    #         in: { .. },
+    #         out: { .. },
+    #         ...
+    #       }
     #     }
     #   }
-    # }
     #
     def self.build(graph_hash)
       new(graph_hash).build_graph
