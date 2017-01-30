@@ -9,6 +9,8 @@ module Atlas
       new(*args).scale
     end
 
+    private_class_method :new
+
     def initialize(base_dataset, scaling_factor)
       @base_dataset   = base_dataset
       @scaling_factor = scaling_factor

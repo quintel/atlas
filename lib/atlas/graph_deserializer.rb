@@ -1,8 +1,27 @@
 module Atlas
   class GraphDeserializer
+    # Public: build method
+    #
+    # Takes a +graph_hash+ as an argument. A +graph_hash+ looks like:
+    #
+    # {
+    #   edges: {
+    #     <key> : { .. }
+    #   },
+    #   nodes: {
+    #     <key> : {
+    #       in: { .. },
+    #       out: { .. },
+    #       ...
+    #     }
+    #   }
+    # }
+    #
     def self.build(graph_hash)
       new(graph_hash).build_graph
     end
+
+    private_class_method :new
 
     def initialize(graph_hash)
       @graph_hash = graph_hash
