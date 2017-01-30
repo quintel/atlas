@@ -37,22 +37,54 @@ module Atlas
     end
 
     # Public: Creates a new CSV document instance which will read data from a
-    # CSV file on disk. Document are read-only.
+    # CSV file on disk. Documents are read-write.
     #
     # path - Path to the CSV file.
     #
     # Returns a CSVDocument.
-    def initialize(path, normalizer = KEY_NORMALIZER)
+    def initialize(path, headers = nil)
       @path = Pathname.new(path)
 
-      @table = CSV.table(@path.to_s, {
-        converters: [YEAR_NORMALIZER, :all],
-        header_converters: [normalizer],
-      })
+      if headers
+        raise(ExistingCSVHeaderError, path) if @path.file?
+        @headers = headers.map(&KEY_NORMALIZER)
+        @table = CSV::Table.new([CSV::Row.new(@headers, @headers, true)])
+      else
+        @table = CSV.table(@path.to_s, {
+          converters: [YEAR_NORMALIZER, :all],
+          header_converters: [KEY_NORMALIZER],
+          # Needed to retrieve the headers in case
+          # of an otherwise empty csv file
+          return_headers: true
+        })
 
-      @headers = @table.headers
+        @headers = table.headers
 
-      raise(BlankCSVHeaderError, path) if @headers.any?(&:nil?)
+        # Delete the header row for the internal representation -
+        # will be dynamically (re-)created when outputting
+        table.delete(0)
+
+        raise(BlankCSVHeaderError, path) if @headers.any?(&:nil?)
+      end
+    end
+
+    # Public: Saves the CSV document to disk
+    def save!
+      FileUtils.mkdir_p(path.dirname)
+      File.write(path, table.to_csv)
+      self
+    end
+
+    # Public: Sets the value of a cell identified by its row and column.
+    # Non-existing rows are created automatically.
+    #
+    # row    - The unique row name.
+    # column - The name of the column in which the data shall be put.
+    # value  - The value that shall be set.
+    #
+    # Returns the set cell contents.
+    def set(row, column, value)
+      set_cell(normalize_key(row), normalize_key(column), value)
     end
 
     # Public: Retrieves the value of a cell identified by its row and column.
@@ -65,6 +97,14 @@ module Atlas
       cell(normalize_key(row), normalize_key(column))
     end
 
+    def row_keys
+      table.map { |row| normalize_key(row[0]) }
+    end
+
+    def column_keys
+      @headers.map(&method(:normalize_key))
+    end
+
     #######
     private
     #######
@@ -74,11 +114,19 @@ module Atlas
     #
     # Returns the cell content.
     def cell(row_key, column_key)
-      unless header?(column_key)
-        fail UnknownCSVCellError.new(self, column_key)
-      end
+      assert_header(column_key)
 
-      (data = row(row_key)) && data[column_key]
+      (table_row = row(row_key)) && table_row[column_key]
+    end
+
+    # Internal: Sets the value of a cell, raising an UnknownCSVCellError if no
+    # such column exists. Non-existing rows are created automatically.
+    #
+    # Returns the cell content.
+    def set_cell(row_key, column_key, value)
+      assert_header(column_key)
+
+      get_or_create_row(row_key)[column_key] = value
     end
 
     # Internal: Finds the row by the given +key+.
@@ -86,8 +134,26 @@ module Atlas
     # Returns a CSV::Row or raises an UnknownCSVRowError if no such row exists
     # in the file.
     def row(key)
-      @table.find { |row| normalize_key(row[0]) == key } ||
-        fail(UnknownCSVRowError.new(self, key))
+      safe_row(key) || fail(UnknownCSVRowError.new(self, key))
+    end
+
+    # Internal: Finds the row by the given +key+.
+    #
+    # Returns a CSV::Row or nil.
+    def safe_row(key)
+      table.find { |row| normalize_key(row[0]) == key }
+    end
+
+    # Internal: Finds the row by the given +key+ or creates it if no such
+    # row exists in the file.
+    #
+    # Returns a CSV::Row.
+    def get_or_create_row(key)
+      safe_row(key) || begin
+        row = CSV::Row.new(@headers, [key])
+        table << row
+        safe_row(key)
+      end
     end
 
     # Internal: Converts the given key to a format which removes all special
@@ -98,12 +164,14 @@ module Atlas
       KEY_NORMALIZER.call(key)
     end
 
-    # Internal: Determines if the named column exists in the file. This will
-    # always be true if the column is named by index (a number)
+    # Internal: Raises unless the named column exists in the file.
+    # Never raises if the column is named by index (a number)
     #
     # Returns true or false.
-    def header?(key)
-      key.is_a?(Numeric) || @headers.nil? || @headers.include?(key)
+    def assert_header(key)
+      unless key.is_a?(Numeric) || @headers.nil? || @headers.include?(key)
+        fail UnknownCSVCellError.new(self, key)
+      end
     end
   end # CSVDocument
 
@@ -120,13 +188,4 @@ module Atlas
       cell(normalize_key(row), 1)
     end
   end # CSVDocument::OneDimensional
-
-  # A CSVDocument which reads CSV files which are output by the Exporter. Each
-  # left-hand column is a node, edge, or slot key whose value needs to be
-  # preserved without removing special characters.
-  class CSVDocument::Production < CSVDocument
-    def initialize(path)
-      super(path, ->(value) { value.to_sym })
-    end
-  end # CSVDocument::Production
 end # Atlas

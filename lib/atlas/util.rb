@@ -77,5 +77,16 @@ module Atlas
       expanded
     end
 
+    # Public: Rounds the given number to the nearest integer, but only
+    # if it is already very close (1e-6) to this integer (which is not 0)
+    def round_computation_errors(float)
+      int = float.round
+      if int != 0 && int == float.round(6)
+        int.to_f
+      else
+        float
+      end
+    end
+
   end # Util
 end # Atlas

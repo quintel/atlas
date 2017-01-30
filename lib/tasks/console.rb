@@ -16,8 +16,7 @@ namespace :console do
   desc 'Opens a console with a graph ready for calculation by Refinery'
   task :refinery, [:dir] do |_, args|
     start_console(args.dir, <<-RUBY)
-      turbine = Atlas::GraphBuilder.build
-      runner  = Atlas::Runner.new(Atlas::Dataset.find(:nl), turbine)
+      runner  = Atlas::Runner.new(Atlas::Dataset.find(:nl))
       graph   = runner.refinery_graph
     RUBY
   end

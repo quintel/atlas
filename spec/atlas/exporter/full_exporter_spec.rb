@@ -1,16 +1,8 @@
 require 'spec_helper'
 
 module Atlas
-  describe Exporter do
-    def make_node(key, attributes = {})
-      model = Atlas::Node.new(key: key)
-      Refinery::Node.new(key, attributes.merge(model: model))
-    end
-
-    def make_edge(from, to, carrier, attributes = {})
-      model = Atlas::Edge.new(key: Atlas::Edge.key(from.key, to.key, carrier))
-      from.connect_to(to, carrier, attributes.merge(model: model))
-    end
+  describe FullExporter do
+    include GraphHelper
 
     #  (25) [M] -- 10 --> [F] (10)
     #         \           /
@@ -37,7 +29,7 @@ module Atlas
     let!(:mc_slot) { mother.slots.out(:child).set(:share, 15.0 / 25.0) }
 
     # Result and Output
-    let(:result) { Exporter.dump(graph) }
+    let(:result) { FullExporter.dump(graph) }
     let(:edges)  { result[:edges] }
     let(:nodes)  { result[:nodes] }
 
@@ -206,5 +198,5 @@ module Atlas
       end
     end # coupling carrier
 
-  end # Exporter
+  end # FullExporter
 end # Atlas
