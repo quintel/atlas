@@ -50,12 +50,11 @@ module Atlas
         key:            @derived_dataset_name,
         area:           @derived_dataset_name,
         base_dataset:   @base_dataset.area,
-        scaling:
-          {
-            value:          value,
-            base_value:     base_value,
-            area_attribute: 'number_of_residences',
-          },
+        scaling: {
+          value:          value,
+          base_value:     base_value,
+          area_attribute: 'number_of_residences'
+        }
       }
     end
 
