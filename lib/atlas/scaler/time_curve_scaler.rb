@@ -40,13 +40,14 @@ module Atlas
           @derived_dataset.time_curve_path(time_curve_key),
           csv.column_keys
         )
-      copy_csv_content(csv, scaled_csv) { |val| val * @scaling_factor }
+      copy_csv_content(csv, scaled_csv) { |val| (val * @scaling_factor).to_f }
       scaled_csv.save!
     end
 
     def copy_csv_content(src, dest)
       row_keys = src.row_keys
-      column_keys = src.column_keys
+      column_keys = src.column_keys[1..-1] # Omit the row key column
+
       row_keys.each do |row_key|
         column_keys.each do |column_key|
           value = yield src.get(row_key, column_key)
