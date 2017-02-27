@@ -25,8 +25,8 @@ PATH
   remote: .
   specs:
     atlas (1.0.0)
-      activemodel (~> 4.0)
-      activesupport (~> 4.0)
+      activemodel (>= 4.0)
+      activesupport (>= 4.0)
       turbine-graph (>= 0.1)
       virtus (~> 1.0)
 
@@ -46,7 +46,7 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
-    builder (3.2.2)
+    builder (3.2.3)
     celluloid (0.15.2)
       timers (~> 1.1.0)
     celluloid-io (0.15.0)
@@ -80,7 +80,7 @@ GEM
       multi_xml (>= 0.5.2)
     i18n (0.6.9)
     ice_nine (0.11.2)
-    json (1.8.3)
+    json (1.8.6)
     listen (2.7.1)
       celluloid (>= 0.15.2)
       celluloid-io (>= 0.15.0)
@@ -159,4 +159,4 @@ DEPENDENCIES
   term-ansicolor (>= 1.2.0)
 
 BUNDLED WITH
-   1.13.6
+   1.14.3
