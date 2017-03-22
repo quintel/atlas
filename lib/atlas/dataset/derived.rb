@@ -5,6 +5,7 @@ module Atlas
     attribute :base_dataset, String
     attribute :scaling,      Preset::Scaling
     attribute :init,         Hash[Symbol => Float]
+    attribute :geo_id,       String
 
     validates :scaling, presence: true
 
@@ -18,6 +19,12 @@ module Atlas
 
     validates_with ShareGroupInclusionValidator,
       attribute: :init, input_class: InitializerInput
+
+    def self.find_by_geo_id(geo_id)
+      all.detect do |item|
+        item.geo_id == geo_id
+      end
+    end
 
     def graph
       @graph ||= GraphDeserializer.build(YAML.load_file(graph_path))

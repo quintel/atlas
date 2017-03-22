@@ -76,4 +76,12 @@ module Atlas; describe Dataset::Derived do
       end
     end
   end
+
+  describe "find by geo_id" do
+    let(:dataset) { Dataset::Derived.find(:groningen) }
+
+    it "find by geo id" do
+      expect(Dataset::Derived.find_by_geo_id("test")).to eq(dataset)
+    end
+  end
 end; end
