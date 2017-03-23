@@ -24,7 +24,7 @@ module Atlas
     end
 
     def graph_path
-      File.join(directory, key.to_s, GRAPH_FILENAME)
+      dataset_dir.join(GRAPH_FILENAME)
     end
 
     private

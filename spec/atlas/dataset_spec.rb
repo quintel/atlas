@@ -33,18 +33,28 @@ module Atlas
     end # describe #load
 
     describe '#dataset_dir' do
-      let(:dataset) { Dataset.new(key: :kr) }
+      describe "for a key" do
+        let(:dataset) { Dataset.new(key: :kr) }
 
-      it 'includes the data directory' do
-        expect(dataset.dataset_dir.to_s).to include(Atlas.data_dir.to_s)
+        it 'includes the data directory' do
+          expect(dataset.dataset_dir.to_s).to include(Atlas.data_dir.to_s)
+        end
+
+        it 'ends with datasets' do
+          expect(dataset.dataset_dir.to_s).to end_with('/datasets')
+        end
       end
 
-      it 'points to the datasets subdirectory' do
-        expect(dataset.dataset_dir.to_s).to include('/datasets/')
-      end
+      describe "with a path" do
+        let(:dataset) { Dataset.new(path: "test/test/kr") }
 
-      it 'includes the dataset key' do
-        expect(dataset.dataset_dir.to_s).to end_with('/kr')
+        it 'includes the data directory' do
+          expect(dataset.dataset_dir.to_s).to include(Atlas.data_dir.to_s)
+        end
+
+        it 'ends with the last folder names' do
+          expect(dataset.dataset_dir.to_s).to end_with('/test/test')
+        end
       end
     end
 

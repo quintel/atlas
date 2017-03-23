@@ -18,6 +18,19 @@ module Atlas; describe Dataset::Derived do
     expect(dataset).to be_valid
   end
 
+  describe '#graph_path' do
+    let(:dataset) {
+      Dataset::Derived.new(
+        path: 'lutjebroek/lutjebroek',
+        base_dataset: 'nl'
+      )
+    }
+
+    it "graph.yml lives in the root directory of the dataset" do
+      expect(dataset.graph_path.to_s).to end_with("lutjebroek/graph.yml")
+    end
+  end
+
   describe '(validations)' do
     before do
       dataset.init = init

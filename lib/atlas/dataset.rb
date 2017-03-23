@@ -275,7 +275,7 @@ module Atlas
     #
     # Returns a Pathname.
     def dataset_dir
-      Atlas.data_dir.join(DIRECTORY).join(key.to_s)
+      path.parent
     end
   end # Dataset
 end # Atlas
