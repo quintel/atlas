@@ -1,5 +1,6 @@
 # This is Meta information about Groningen.
 
+- geo_id = test
 - base_dataset = nl
 - annual_infrastructure_cost_electricity = 1810.0
 - annual_infrastructure_cost_gas = 1452.0
