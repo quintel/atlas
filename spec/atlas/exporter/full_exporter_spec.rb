@@ -132,10 +132,27 @@ module Atlas
 
         expect(nodes[:mother][:merit_order]).to eq(
           type: :rock,
+          group: :'The Flower Kings'
+        )
+      end
+
+      it 'exports additional merit order data with the hash' do
+        mother.get(:model).merit_order = Atlas::MeritOrderDetails.new(
+          type: :rock,
+          group: 'The Flower Kings',
+          target: :a_target,
+          demand_source: :a_source,
+          demand_profile: :a_profile,
+          profile_mix: { 'a' => 0.1, :b => '0.9' }
+        )
+
+        expect(nodes[:mother][:merit_order]).to eq(
+          type: :rock,
           group: :'The Flower Kings',
-          target: nil,
-          demand_source: nil,
-          demand_profile: nil
+          target: :a_target,
+          demand_source: :a_source,
+          demand_profile: :a_profile,
+          profile_mix: { a: 0.1, b: 0.9 }
         )
       end
 
