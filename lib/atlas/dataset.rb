@@ -78,7 +78,12 @@ module Atlas
       :technical_lifetime_insulation,
       :investment_hv_net_low,
       :investment_hv_net_high,
-      :investment_hv_net_per_turbine
+      :investment_hv_net_per_turbine,
+      :insulation_profile_fraction_new_houses,
+      :insulation_profile_fraction_old_houses,
+      :electric_vehicle_profile_1,
+      :electric_vehicle_profile_2,
+      :electric_vehicle_profile_3
     ].each do |name|
       attribute name, Float
     end
