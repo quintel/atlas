@@ -81,9 +81,9 @@ module Atlas
       :investment_hv_net_per_turbine,
       :insulation_profile_fraction_new_houses,
       :insulation_profile_fraction_old_houses,
-      :electric_vehicle_profile_1,
-      :electric_vehicle_profile_2,
-      :electric_vehicle_profile_3
+      :electric_vehicle_profile_1_share,
+      :electric_vehicle_profile_2_share,
+      :electric_vehicle_profile_3_share
     ].each do |name|
       attribute name, Float
     end
