@@ -209,7 +209,7 @@ module Atlas
     end # capacity_distribution
 
     [1, 2, 3].each do |number|
-      describe "#electric_vehicle_profile_#{ number }_share", :focus do
+      describe "#electric_vehicle_profile_#{ number }_share" do
         let(:dataset) { Dataset.new }
         let(:meth) { "electric_vehicle_profile_#{ number }_share" }
 
@@ -229,7 +229,7 @@ module Atlas
       end
     end
 
-    describe 'electric vehicle shares', :focus do
+    describe 'electric vehicle shares' do
       let(:errors) do
         dataset.valid?
         dataset.errors[:electric_vehicle_profile_share]
