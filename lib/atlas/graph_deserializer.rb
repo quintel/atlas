@@ -20,11 +20,12 @@ module Atlas
     #     }
     #   }
     #
+
+    attr_reader :graph, :graph_hash
+
     def self.build(graph_hash)
       new(graph_hash).build_graph
     end
-
-    private_class_method :new
 
     def initialize(graph_hash)
       @graph_hash = graph_hash
@@ -50,11 +51,15 @@ module Atlas
       @graph
     end
 
+    def edges
+      @graph.nodes.map { |node| node.out_edges.to_a }.flatten
+    end
+
     private
 
     def graph_nodes
       @graph.nodes.map do |node|
-        attributes = @graph_hash.fetch(:nodes)[node.key] || {}
+        attributes = @graph_hash.fetch(:nodes)[node.key]
 
         [ node,
           attributes.except(:in, :out),
@@ -63,7 +68,7 @@ module Atlas
     end
 
     def update_slots(node, slots, attributes)
-      (attributes || {}).each_pair do |carrier, share_attributes|
+      attributes.each_pair do |carrier, share_attributes|
         slot = find_refinery_slot(slots, carrier)
 
         slot.set(:model,
@@ -83,12 +88,8 @@ module Atlas
       end
     end
 
-    def edges
-      @graph.nodes.map { |node| node.out_edges.to_a }.flatten
-    end
-
     def properties_for_edge(edge)
-      @graph_hash.fetch(:edges)[edge.properties[:model].key] || {}
+      @graph_hash.fetch(:edges)[edge.properties[:model].key]
     end
   end
 end
