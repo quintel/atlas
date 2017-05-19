@@ -275,6 +275,14 @@ describe SomeDocument do
       end
     end
 
+    context 'on an existing document' do
+      let(:doc) { SomeDocument.create!(key: 'hello') }
+
+      it 'remains persisted' do
+        expect { doc.key = 'new_name' }.to_not change { doc.persisted? }
+      end
+    end
+
     context 'when the document is at the class DIRECTORY root' do
       let(:doc) { SomeDocument.new(key: 'key') }
       before    { doc.key = 'new' }
@@ -493,6 +501,22 @@ describe SomeDocument do
         some_document = SomeDocument.new(key: 'the_king_of_pop')
         expect(some_document.save!).to be_true
       end
+
+      it 'becomes persisted' do
+        some_document = SomeDocument.new(key: 'the_king_of_pop')
+
+        expect { some_document.save! }
+          .to change { some_document.persisted? }
+          .from(false).to(true)
+      end
+
+      it 'ceases to be a new record' do
+        some_document = SomeDocument.new(key: 'the_king_of_pop')
+
+        expect { some_document.save! }
+          .to change { some_document.new_record? }
+          .from(true).to(false)
+      end
     end
 
     context 'when nothing changed' do
@@ -534,6 +558,13 @@ describe SomeDocument do
         expect { some_document.path.read }.to_not raise_error
       end
 
+      it 'remains persisted' do
+        expect do
+          some_document.key = 'foo2'
+          some_document.save!
+        end.not_to change { some_document.persisted? }.from(true)
+      end
+
       it 'works when the document is new' do
         document = SomeDocument.new(key: 'yes')
         document.key = 'no'
@@ -551,6 +582,16 @@ describe SomeDocument do
       it 'finds the new document' do
         some_document.update_attributes!(key: :foo2)
         expect(SomeDocument.find(:foo2)).to eq(some_document)
+      end
+
+      it 'is considered persisted' do
+        some_document.update_attributes!(key: :foo2)
+        expect(some_document).to be_persisted
+      end
+
+      it 'is not a new record' do
+        some_document.update_attributes!(key: :foo2)
+        expect(some_document).to_not be_new_record
       end
 
       context 'when another object with that key already exists' do
@@ -651,13 +692,23 @@ describe SomeDocument do
   end
 
   describe 'destroy!' do
-
-    it "should delete the file" do
+    it 'deletes the file' do
       path = some_document.path
       some_document.destroy!
       expect(path.exist?).to be_false
     end
 
+    it 'is no longer persited' do
+      expect { some_document.destroy! }
+        .to change { some_document.persisted? }
+        .from(true).to(false)
+    end
+
+    it 'becomes a new record' do
+      expect { some_document.destroy! }
+        .to change { some_document.new_record? }
+        .from(false).to(true)
+    end
   end
 
   describe 'inspect' do
