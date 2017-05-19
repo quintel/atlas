@@ -63,7 +63,7 @@ module Atlas
     end
 
     def update_slots(node, slots, attributes)
-      attributes.each_pair do |carrier, share_attributes|
+      (attributes || {}).each_pair do |carrier, share_attributes|
         slot = find_refinery_slot(slots, carrier)
 
         slot.set(:model,
@@ -88,7 +88,7 @@ module Atlas
     end
 
     def properties_for_edge(edge)
-      @graph_hash.fetch(:edges)[edge.properties[:model].key]
+      @graph_hash.fetch(:edges)[edge.properties[:model].key] || {}
     end
   end
 end
