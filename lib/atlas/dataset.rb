@@ -80,13 +80,14 @@ module Atlas
       :investment_hv_net_high,
       :investment_hv_net_per_turbine,
       :insulation_profile_fraction_new_houses,
-      :insulation_profile_fraction_old_houses,
-      :electric_vehicle_profile_1_share,
-      :electric_vehicle_profile_2_share,
-      :electric_vehicle_profile_3_share
+      :insulation_profile_fraction_old_houses
     ].each do |name|
       attribute name, Float
     end
+
+    attribute :electric_vehicle_profile_1_share, Float, default: 1.0
+    attribute :electric_vehicle_profile_2_share, Float, default: 0.0
+    attribute :electric_vehicle_profile_3_share, Float, default: 0.0
 
     # These attributes are relative to the size of the region. If we simulate a
     # sub-region (say, 5% of the "full" region size), these attributes can be
