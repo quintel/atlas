@@ -119,6 +119,14 @@ module Atlas
 
     validates :interconnector_capacity, numericality: true
 
+    validates_with ShareAttributeValidator,
+      group: :electric_vehicle_profile_share,
+      attributes: [
+        :electric_vehicle_profile_1_share,
+        :electric_vehicle_profile_2_share,
+        :electric_vehicle_profile_3_share
+      ]
+
     # Returns the Energy Balance for this area/dataset.
     def energy_balance
       @energy_balance ||= EnergyBalance.find(area)

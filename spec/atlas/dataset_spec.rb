@@ -207,8 +207,87 @@ module Atlas
         end
       end
     end # capacity_distribution
-  end # describe Dataset
 
+    [1, 2, 3].each do |number|
+      describe "#electric_vehicle_profile_#{ number }_share", :focus do
+        let(:dataset) { Dataset.new }
+        let(:meth) { "electric_vehicle_profile_#{ number }_share" }
+
+        it 'has an error when blank' do
+          dataset.public_send("#{ meth }=", nil)
+
+          dataset.valid?
+          expect(dataset.errors[meth.to_sym]).to include('is not a number')
+        end
+
+        it 'has no error when a valid is present' do
+          dataset.public_send("#{ meth }=", 1.0)
+
+          dataset.valid?
+          expect(dataset.errors[meth.to_sym]).to be_empty
+        end
+      end
+    end
+
+    describe 'electric vehicle shares', :focus do
+      let(:errors) do
+        dataset.valid?
+        dataset.errors[:electric_vehicle_profile_share]
+      end
+
+      context 'when the values sum to 1.0' do
+        let(:dataset) do
+          Dataset.new(
+            electric_vehicle_profile_1_share: 0.3,
+            electric_vehicle_profile_2_share: 0.4,
+            electric_vehicle_profile_3_share: 0.3
+          )
+        end
+
+        it 'has no error' do
+          expect(errors).to be_empty
+        end
+      end
+
+      context 'when the values sum to 0.8' do
+        let(:dataset) do
+          Dataset.new(
+            electric_vehicle_profile_1_share: 0.3,
+            electric_vehicle_profile_2_share: 0.2,
+            electric_vehicle_profile_3_share: 0.3
+          )
+        end
+
+        it 'has an error' do
+          dataset.valid?
+
+          expect(errors).to include(
+            'contains electric_vehicle_profile_share attributes ' \
+            'which sum to 0.8, but should sum to 1.0'
+          )
+        end
+      end
+
+      context 'when the values sum to 1.2' do
+        let(:dataset) do
+          Dataset.new(
+            electric_vehicle_profile_1_share: 0.4,
+            electric_vehicle_profile_2_share: 0.5,
+            electric_vehicle_profile_3_share: 0.3
+          )
+        end
+
+        it 'has an error' do
+          dataset.valid?
+
+          expect(errors).to include(
+            'contains electric_vehicle_profile_share attributes ' \
+            'which sum to 1.2, but should sum to 1.0'
+          )
+        end
+      end
+    end
+  end # describe Dataset
 
   describe Dataset::Derived do
     describe "#valid?" do
