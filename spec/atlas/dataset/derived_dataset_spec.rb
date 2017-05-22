@@ -85,8 +85,6 @@ module Atlas; describe Dataset::Derived do
         before do
           expect(dataset).to receive(:graph_path).at_least(:once)
             .and_return(Pathname.new("spec/fixtures/graphs/#{ graph }.yml"))
-
-          dataset.valid?
         end
 
         describe "presence of the graph.yml file" do
@@ -103,8 +101,8 @@ module Atlas; describe Dataset::Derived do
 
           it "raises an error" do
             expect(dataset.errors_on(:graph))
-              .to include("the following nodes are missing in the snapshot of"\
-                          " the graph: my_residence")
+              .to include("the following nodes are missing in the snapshot " \
+                          "of the graph: my_residence")
           end
         end
 
@@ -113,8 +111,8 @@ module Atlas; describe Dataset::Derived do
 
           it "raises an error" do
             expect(dataset.errors_on(:graph))
-              .to include("the following edges are missing in the snapshot of"\
-                          " the graph: foo-bar@coal")
+              .to include("the following edges are missing in the snapshot " \
+                          "of the graph: foo-bar@coal")
           end
         end
 
@@ -124,8 +122,8 @@ module Atlas; describe Dataset::Derived do
 
           it "raises an error" do
             expect(dataset.errors_on(:graph))
-              .to include("the following slots for fd are missing in the snapshot of"\
-                          " the graph: coal")
+              .to include("the following slots for fd are missing in the " \
+                          "snapshot of the graph: coal")
           end
         end
       end

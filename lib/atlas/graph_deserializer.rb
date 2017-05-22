@@ -52,7 +52,7 @@ module Atlas
     end
 
     def edges
-      @graph.nodes.map { |node| node.out_edges.to_a }.flatten
+      @graph.nodes.flat_map { |node| node.out_edges.to_a }
     end
 
     private

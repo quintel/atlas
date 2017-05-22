@@ -1,15 +1,12 @@
 module Atlas
-  # Scales (a copy of) the time curves of a base dataset and
-  # saves them to a derived dataset
-  #
-  # @base_dataset    - An Atlas::Dataset, whose time curves will be used as base
-  # @scaling_factor  - The time curves will be scaled down by this factor
-  # @derived_dataset - An Atlas::Dataset, into whose directory the new scaled
-  #                    time curves will be saved as csv files
   class Scaler::TimeCurveScaler
-    # Public: Scales the curves and saves them to new csv files
+    # Public: Scales (a copy of) the time curves of a base dataset and
+    # saves them to a derived dataset
     #
-    # Returns nil
+    # @base_dataset    - An Atlas::Dataset, whose time curves will be used as base
+    # @derived_dataset - An Atlas::Dataset, into whose directory the new scaled
+    #                    time curves will be saved as csv files
+    #
     def self.call(*args)
       new(*args).scale
     end
@@ -24,9 +21,9 @@ module Atlas
 
     # Public: Scales the curves and saves them to new csv files
     #
-    # Returns an array
+    # Returns an array of scaled time curves
     def scale
-      @base_dataset.time_curves.each do |key, csv|
+      @base_dataset.time_curves.map do |key, csv|
         scale_time_curve(key, csv)
       end
     end
