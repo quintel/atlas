@@ -16,20 +16,19 @@ module Atlas
 
     private_class_method :new
 
-    def initialize(base_dataset, scaling_factor, derived_dataset)
-      @base_dataset = base_dataset
-      @scaling_factor = scaling_factor
+    def initialize(base_dataset, derived_dataset)
+      @base_dataset    = base_dataset
       @derived_dataset = derived_dataset
+      @scaling_factor  = derived_dataset.scaling.factor
     end
 
     # Public: Scales the curves and saves them to new csv files
     #
-    # Returns nil
+    # Returns an array
     def scale
       @base_dataset.time_curves.each do |key, csv|
         scale_time_curve(key, csv)
       end
-      nil
     end
 
     private

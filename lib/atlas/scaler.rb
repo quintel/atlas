@@ -6,39 +6,29 @@ module Atlas
       @base_dataset         = Dataset::Full.find(base_dataset_key)
       @derived_dataset_name = derived_dataset_name
       @number_of_residences = number_of_residences
-      @base_value           = base_value
+      @base_value           = base_value || @base_dataset.number_of_residences
     end
 
     def create_scaled_dataset
-      @derived_dataset = Dataset::Derived.new(
-        @base_dataset.attributes.
-          merge(AreaAttributesScaler.call(@base_dataset, scaling_factor)).
-          merge(new_attributes))
-
+      @derived_dataset = Dataset::Derived.new(attributes)
+      @derived_dataset.attributes =
+        AreaAttributesScaler.call(@base_dataset, @derived_dataset.scaling.factor)
       @derived_dataset.save!
 
       GraphPersistor.call(
         @base_dataset,
         @derived_dataset.graph_path,
-        export_modifier: Scaler::GraphScaler.new(scaling_factor))
+        export_modifier: Scaler::GraphScaler.new(@derived_dataset.scaling.factor))
 
-      TimeCurveScaler.call(@base_dataset, scaling_factor, @derived_dataset)
+      TimeCurveScaler.call(@base_dataset, @derived_dataset)
 
       copy_etengine_data_files
     end
 
     private
 
-    def value
-      @number_of_residences
-    end
-
-    def base_value
-      @base_value || @base_dataset.number_of_residences
-    end
-
-    def scaling_factor
-      value.to_r / base_value.to_r
+    def attributes
+      @base_dataset.attributes.merge(new_attributes)
     end
 
     def new_attributes
@@ -51,8 +41,8 @@ module Atlas
         area:           @derived_dataset_name,
         base_dataset:   @base_dataset.area,
         scaling: {
-          value:          value,
-          base_value:     base_value,
+          value:          @number_of_residences,
+          base_value:     @base_value,
           area_attribute: 'number_of_residences'
         }
       }
