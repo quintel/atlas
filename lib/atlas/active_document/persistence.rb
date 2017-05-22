@@ -104,6 +104,18 @@ module Atlas
         true
       end
 
+      # Public: Returns true if this document is persisted - i.e. has been saved
+      # to storage - otherwise returns false.
+      def persisted?
+        path.file? || @last_saved_file_path && @last_saved_file_path.file?
+      end
+
+      # Public: Returns true if this record has not yet been saved - i.e. has
+      # not been saved to storage - otherwise returns false.
+      def new_record?
+        !persisted?
+      end
+
       # Public: Removes the document from the disk, effectively deleting the
       # record.
       #
