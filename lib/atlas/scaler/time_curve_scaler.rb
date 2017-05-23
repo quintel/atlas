@@ -3,9 +3,10 @@ module Atlas
     # Public: Scales (a copy of) the time curves of a base dataset and
     # saves them to a derived dataset
     #
-    # @base_dataset    - An Atlas::Dataset, whose time curves will be used as base
-    # @derived_dataset - An Atlas::Dataset, into whose directory the new scaled
-    #                    time curves will be saved as csv files
+    # base_dataset    - An Atlas::Dataset, whose time curves will be used as a
+    #                   base
+    # derived_dataset - An Atlas::Dataset, into whose directory the new scaled
+    #                   time curves will be saved as CSV files
     #
     def self.call(*args)
       new(*args).scale

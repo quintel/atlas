@@ -17,9 +17,7 @@ module Atlas
         record.new_record? || record.errors[:graph].any?
       end
 
-      # Internal: validate_nodes(record)
-      #
-      # Adds an error for all missing nodes.
+      # Internal: Adds an error for all missing nodes.
       def validate_nodes(record, graph)
         graph_nodes = graph.graph.nodes.map(&:key)
         yaml_nodes  = graph.graph_hash.fetch(:nodes).keys
@@ -44,9 +42,7 @@ module Atlas
           " graph: #{nodes.join(', ')}")
       end
 
-      # Internal: validate_edges(record)
-      #
-      # Adds an error for all missing edges.
+      # Internal: Adds an error for all missing edges.
       def validate_edges(record, graph)
         graph_edges = graph.edges.map { |e| e.properties[:model].key }
         yaml_edges  = graph.graph_hash.fetch(:edges).keys
@@ -71,9 +67,8 @@ module Atlas
           " graph: #{edges.join(', ')}")
       end
 
-      # Internal: validate_slots(record)
+      # Internal: Adds an error for every set of missing slots per node.
       #
-      # Adds an error for every set of missing slots per node.
       # Compares the carriers that are present in the GraphBuilder node to
       # the 'in', 'out' carriers for a perticular node in the 'graph.yml'.
       def validate_slots(record, graph)
