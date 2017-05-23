@@ -17,6 +17,10 @@ module Atlas
       validates :area_attribute, presence: true
       validates :value,          presence: true, numericality: true
       validates :base_value,     presence: true, numericality: true
+
+      def factor
+        value.to_r / base_value.to_r
+      end
     end
   end
 end

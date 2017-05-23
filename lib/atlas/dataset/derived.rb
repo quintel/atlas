@@ -13,6 +13,9 @@ module Atlas
     validate :validate_scaling
     validate :validate_presence_of_init_keys
     validate :validate_presence_of_init_values
+    validate :validate_presence_of_graph_file
+
+    validates_with SerializedGraphValidator
 
     validates_with ShareGroupTotalValidator,
       attribute: :init, input_class: InitializerInput
@@ -64,6 +67,12 @@ module Atlas
         unless value.present?
           errors.add(:init, "value for initializer input '#{ key }' can't be blank")
         end
+      end
+    end
+
+    def validate_presence_of_graph_file
+      if persisted? && !graph_path.file?
+        errors.add(:graph, "graph.yml file is missing")
       end
     end
   end # Dataset::Derived
