@@ -106,6 +106,16 @@ module Atlas; describe Dataset::Derived do
           end
         end
 
+        describe "missing node in the graph" do
+          let(:graph) { "graph_extra_node" }
+
+          it "raises an error" do
+            expect(dataset.errors_on(:graph))
+              .to include("the following nodes are missing in the " \
+                          "graph: my_residence_2")
+          end
+        end
+
         describe "missing edge in the graph.yml" do
           let(:graph) { "graph_missing_edges" }
 
@@ -113,6 +123,16 @@ module Atlas; describe Dataset::Derived do
             expect(dataset.errors_on(:graph))
               .to include("the following edges are missing in the snapshot " \
                           "of the graph: foo-bar@coal")
+          end
+        end
+
+        describe "missing edge in the graph" do
+          let(:graph) { "graph_extra_edge" }
+
+          it "raises an error" do
+            expect(dataset.errors_on(:graph))
+              .to include("the following edges are missing in the " \
+                          "graph: foo-my_residence@coal")
           end
         end
 
@@ -124,6 +144,17 @@ module Atlas; describe Dataset::Derived do
             expect(dataset.errors_on(:graph))
               .to include("the following slots for fd are missing in the " \
                           "snapshot of the graph: coal")
+          end
+        end
+
+        # Misses coal slot for 'fd' node
+        describe "missing slot in the graph" do
+          let(:graph) { "graph_extra_slot" }
+
+          it "raises an error" do
+            expect(dataset.errors_on(:graph))
+              .to include("the following slots for baz are missing in the " \
+                          "graph: coal")
           end
         end
       end

@@ -21,26 +21,54 @@ module Atlas
       #
       # Adds an error for all missing nodes.
       def validate_nodes(record, graph)
-        missing_nodes = (graph.graph.nodes.map(&:key) -
-                         graph.graph_hash.fetch(:nodes).keys)
+        graph_nodes = graph.graph.nodes.map(&:key)
+        yaml_nodes  = graph.graph_hash.fetch(:nodes).keys
 
-        if missing_nodes.any?
-          record.errors.add(:graph, "the following nodes are missing in the" \
-            " snapshot of the graph: #{ missing_nodes.join(", ") }")
+        compare(graph_nodes, yaml_nodes) do |nodes|
+          add_errors_for_added_nodes(record, nodes.added)
+          add_errors_for_removed_nodes(record, nodes.removed)
         end
+      end
+
+      def add_errors_for_added_nodes(record, nodes)
+        return if nodes.empty?
+
+        record.errors.add(:graph, 'the following nodes are missing in the' \
+          " snapshot of the graph: #{nodes.join(', ')}")
+      end
+
+      def add_errors_for_removed_nodes(record, nodes)
+        return if nodes.empty?
+
+        record.errors.add(:graph, 'the following nodes are missing in the' \
+          " graph: #{nodes.join(', ')}")
       end
 
       # Internal: validate_edges(record)
       #
       # Adds an error for all missing edges.
       def validate_edges(record, graph)
-        missing_edges = (graph.edges.map{ |e| e.properties[:model].key } -
-                         graph.graph_hash.fetch(:edges).keys)
+        graph_edges = graph.edges.map { |e| e.properties[:model].key }
+        yaml_edges  = graph.graph_hash.fetch(:edges).keys
 
-        if missing_edges.any?
-          record.errors.add(:graph, "the following edges are missing in the" \
-            " snapshot of the graph: #{ missing_edges.join(", ") }")
+        compare(graph_edges, yaml_edges) do |edges|
+          add_errors_for_added_edges(record, edges.added)
+          add_errors_for_removed_edges(record, edges.removed)
         end
+      end
+
+      def add_errors_for_added_edges(record, edges)
+        return if edges.empty?
+
+        record.errors.add(:graph, 'the following edges are missing in the' \
+          " snapshot of the graph: #{edges.join(', ')}")
+      end
+
+      def add_errors_for_removed_edges(record, edges)
+        return if edges.empty?
+
+        record.errors.add(:graph, 'the following edges are missing in the' \
+          " graph: #{edges.join(', ')}")
       end
 
       # Internal: validate_slots(record)
@@ -49,18 +77,39 @@ module Atlas
       # Compares the carriers that are present in the GraphBuilder node to
       # the 'in', 'out' carriers for a perticular node in the 'graph.yml'.
       def validate_slots(record, graph)
-        graph.graph.nodes.flat_map do |node|
-          if slot_hash = graph.graph_hash.fetch(:nodes)[node.key]
-            missing_slots = (node.slots.flat_map(&:to_a).map(&:carrier) -
-                             slot_hash.slice(:in, :out).values.flat_map(&:keys))
+        graph.graph.nodes.each do |node|
+          slot_hash   = graph.graph_hash.fetch(:nodes)[node.key] || {}
+          graph_slots = node.slots.flat_map(&:to_a).map(&:carrier)
+          yaml_slots  = slot_hash.slice(:in, :out).values.flat_map(&:keys)
 
-            if missing_slots.any?
-              record.errors.add(:graph, "the following slots for " \
-                "#{ node.key } are missing in the snapshot of the graph: "\
-                "#{ missing_slots.join(", ") }")
-            end
+          compare(graph_slots, yaml_slots) do |slots|
+            add_errors_for_added_slots(record, node, slots.added)
+            add_errors_for_removed_slots(record, node, slots.removed)
           end
         end
+      end
+
+      def add_errors_for_added_slots(record, node, slots)
+        return if slots.empty?
+
+        record.errors.add(:graph, 'the following slots for ' \
+          "#{node.key} are missing in the snapshot of the graph: "\
+          "#{slots.join(', ')}")
+      end
+
+      def add_errors_for_removed_slots(record, node, slots)
+        return if slots.empty?
+
+        record.errors.add(:graph, 'the following slots for ' \
+          "#{node.key} are missing in the graph: "\
+          "#{slots.join(', ')}")
+      end
+
+      def compare(graph_parts, yaml_parts)
+        yield(OpenStruct.new(
+          added:   (graph_parts - yaml_parts),
+          removed: (yaml_parts  - graph_parts)
+        ))
       end
     end
   end
