@@ -7,6 +7,7 @@ module Atlas
     NODE_ATTRIBUTES = [
       :demand,
       :max_demand,
+      :number_of_units
       # Scaling of the following two attributes is disabled for the time being -
       # see https://github.com/quintel/etengine/issues/901#issuecomment-274062242
       # :typical_input_capacity,
