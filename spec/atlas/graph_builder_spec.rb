@@ -25,6 +25,16 @@ module Atlas
             expect(graph.node(node.key).get(:model)).to be
           end
         end
+
+        it 'includes implicit slots (those defined with edges)' do
+          # baz has no defined corn input, but has a connecting edge with bar
+          expect(graph.node(:baz).slots.in.map(&:carrier)).to eq([:corn])
+        end
+
+        it 'includes explicit slots (those defined in the document)' do
+          # fd has a loss output, but no edge
+          expect(graph.node(:fd).slots.out.map(&:carrier)).to eq([:loss])
+        end
       end # nodes
 
       context 'edges' do

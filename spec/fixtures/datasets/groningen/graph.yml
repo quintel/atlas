@@ -30,7 +30,9 @@
         :share: !ruby/object:Rational
           denominator: 2
           numerator: 1
-    :out: {}
+    :out:
+      :loss:
+        :type: :elastic
   :foo:
     :in: {}
     :out:

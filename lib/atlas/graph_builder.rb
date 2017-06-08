@@ -71,7 +71,31 @@ module Atlas
     # Returns nothing.
     def add_node(graph, document)
       unless graph.node(document.key)
-        graph.add(Refinery::Node.new(document.key, model: document))
+        node = graph.add(Refinery::Node.new(document.key, model: document))
+        establish_slots(node, document)
+      end
+    end
+
+    # Internal: Adds slots to the each node whenever the slot does not already
+    # exist. This is necessary since some nodes may define a slot without
+    # connecting any edges (e.g. loss outputs).
+    #
+    # Returns nothing.
+    def establish_slots(node, document)
+      (document.out_slots + document.in_slots).each do |slot|
+        next if slot.carrier == :coupling_carrier
+
+        collection = node.slots.public_send(slot.direction)
+
+        ref_slot =
+          if collection.include?(slot.carrier)
+            collection.get(slot.carrier)
+          else
+            collection.add(slot.carrier)
+          end
+
+        ref_slot.set(:model, slot)
+        ref_slot.set(:type, :elastic) if slot.is_a?(Slot::Elastic)
       end
     end
 
