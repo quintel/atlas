@@ -3,11 +3,9 @@ module Atlas
     include ValueObject
 
     values do
-      attribute :type,           Symbol
-      attribute :group,          Symbol
-      attribute :target,         Symbol
-      attribute :demand_source,  Symbol
-      attribute :demand_profile, Symbol
+      attribute :type,   Symbol
+      attribute :group,  Symbol
+      attribute :target, Symbol
     end
   end # MeritOrderDetails
 end # Atlas
