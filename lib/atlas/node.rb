@@ -14,6 +14,7 @@ module Atlas
     attribute :output,                Hash[Symbol => Object]
     attribute :groups,                Array[Symbol]
     attribute :merit_order,           MeritOrderDetails
+    attribute :fever,                 FeverDetails
     attribute :storage,               StorageDetails
     attribute :capacity_distribution, String
 
