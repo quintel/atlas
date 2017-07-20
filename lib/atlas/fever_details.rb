@@ -5,9 +5,10 @@ module Atlas
     include ValueObject
 
     values do
-      attribute :type,  Symbol
-      attribute :group, Symbol
-      attribute :curve, Symbol, default: nil
+      attribute :type,      Symbol
+      attribute :group,     Symbol
+      attribute :curve,     Symbol,  default: nil
+      attribute :defer_for, Integer, default: 0
     end
   end
 end
