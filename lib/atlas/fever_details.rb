@@ -7,8 +7,8 @@ module Atlas
     values do
       attribute :type,      Symbol
       attribute :group,     Symbol
-      attribute :curve,     Symbol,  default: nil
-      attribute :defer_for, Integer, default: 0
+      attribute :curve,     Symbol
+      attribute :defer_for, Integer
     end
   end
 end
