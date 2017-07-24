@@ -133,7 +133,9 @@ module Atlas
         expect(nodes[:mother][:merit_order]).to eq(
           type: :rock,
           group: :'The Flower Kings',
-          target: nil
+          target: nil,
+          demand_source: nil,
+          demand_profile: nil
         )
       end
 
