@@ -335,6 +335,64 @@ describe Node do
     end # when present
   end # capacity_distribution
 
-end #describe Node 
+  describe 'fever' do
+    let(:fever) do
+      FeverDetails.new(
+        efficiency_based_on: :electricity,
+        efficiency_balanced_with: :ambient_heat
+      )
+    end
+
+    let(:attrs) do
+      { fever: fever, input: input }
+    end
+
+    let(:input) do
+      { electricity: 0.5, ambient_heat: 0.5 }
+    end
+
+    let(:node) { Node.new(fever: fever, input: input) }
+
+    context 'with an efficiency_based_on and efficiency_balanced_with' do
+      it 'has no errors' do
+        expect(node.errors_on(:fever)).to be_empty
+      end
+    end
+
+    context 'when the efficiency_based_on slot is missing' do
+      let(:input) { { ambient_heat: 0.5 } }
+
+      it 'has an error' do
+        expect(node.errors_on(:fever)).to include(
+          'fever.efficiency_based_on expects a electricity slot, but none ' \
+          'was present'
+        )
+      end
+    end
+
+    context 'when the efficiency_balanced_with slot is missing' do
+      let(:input) { { electricity: 0.5 } }
+
+      it 'has an error' do
+        expect(node.errors_on(:fever)).to include(
+          'fever.efficiency_balanced_with expects a ambient_heat slot, but ' \
+          'none was present'
+        )
+      end
+    end
+
+    context 'when the efficiency_balanced_with value is missing' do
+      let(:fever) { FeverDetails.new(efficiency_based_on: :electricity) }
+
+      it 'has an error' do
+        expect(node.errors_on(:fever)).to include(
+          'fever.efficiency_balanced_with must not be blank when ' \
+          'fever.efficiency_based_on is set'
+        )
+      end
+    end
+  end # fever
+
+end #describe Node
 
 end #module

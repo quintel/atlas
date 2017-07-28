@@ -105,6 +105,7 @@ module Atlas
       attributes: [:max_demand], allow_no_query: true
 
     validates_with Atlas::Node::CapacityDistributionValidator
+    validates_with Atlas::Node::FeverValidator
 
     validate :validate_slots
 
