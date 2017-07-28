@@ -110,15 +110,15 @@ module Atlas
 
     # ------------------------------------------------------------------------
 
-    # Public: A set containing all of the infor this node. Input slots are
-    # created by adding a key/pair of carrier/share to the node's "input"
+    # Public: A set containing all of the input slots for this node. Input slots
+    # are created by adding a key/pair of carrier/share to the node's "input"
     # attribute.
     #
     # For example
     #
     #   node.input = { gas: 0.4 }
     #   node.in_slots
-    #   # => [ #<Atlas::Slot key="node-@gas" share=0.4> ]
+    #   # => [ #<Atlas::Slot carrier="gas" direction="in" share=0.4> ]
     #
     # Returns a set containing slots.
     def in_slots
@@ -136,7 +136,7 @@ module Atlas
     #
     #   node.output = { gas: 0.4 }
     #   node.out_slots
-    #   # => [ #<Atlas::Slot key="node-@gas" share=0.4> ]
+    #   # => [ #<Atlas::Slot carrier="gas" direction="out" share=0.4> ]
     #
     # Returns a set containing slots.
     def out_slots
