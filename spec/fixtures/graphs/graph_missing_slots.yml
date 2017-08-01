@@ -37,6 +37,12 @@
     :in: {}
     :out:
       :coal: {}
+  :fever_space_heat_producer:
+    :in: {}
+    :out: {}
+  :fever_hot_water_producer:
+    :in: {}
+    :out: {}
 :edges:
   :bar-baz@corn:
     :parent_share: !ruby/object:Rational

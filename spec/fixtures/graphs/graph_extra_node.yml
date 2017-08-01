@@ -39,6 +39,12 @@
     :in: {}
     :out:
       :coal: {}
+  :fever_space_heat_producer:
+    :in: {}
+    :out: {}
+  :fever_hot_water_producer:
+    :in: {}
+    :out: {}
   :my_residence_2:
     :in: {}
     :out:

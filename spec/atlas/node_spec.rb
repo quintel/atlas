@@ -227,7 +227,7 @@ describe Node do
 
   describe '#all' do
     it 'returns all the subclasses that have been defined' do
-      expect(Node.all).to have(5).nodes
+      expect(Node.all).to have(7).nodes
     end
   end
 
@@ -391,6 +391,46 @@ describe Node do
         )
       end
     end
+
+    describe 'alias_of' do
+      context 'pointing at a non-existent node' do
+        let(:fever) { FeverDetails.new(alias_of: :no) }
+
+        it 'has an error' do
+          expect(node.errors_on(:fever)).to include(
+            'fever.alias_of must be the name of a Fever node'
+          )
+        end
+      end
+
+      context 'pointing at a non-Fever node' do
+        let(:fever) { FeverDetails.new(alias_of: :my_residence) }
+
+        it 'has an error' do
+          expect(node.errors_on(:fever)).to include(
+            'fever.alias_of must be the name of a Fever node'
+          )
+        end
+      end
+
+      context 'pointing at a space heating node' do
+        let(:fever) { FeverDetails.new(alias_of: :fever_space_heat_producer) }
+
+        it 'has an error' do
+          expect(node.errors_on(:fever)).to include(
+            'fever.alias_of must be the name of a hot water node'
+          )
+        end
+      end
+
+      context 'pointing at a hot water node' do
+        let(:fever) { FeverDetails.new(alias_of: :fever_hot_water_producer) }
+
+        it 'has no errors' do
+          expect(node.errors_on(:fever)).to be_empty
+        end
+      end
+    end # alias_of
   end # fever
 
 end #describe Node

@@ -15,6 +15,9 @@ module Atlas
       # Variable efficiency.
       attribute :efficiency_based_on,      Symbol
       attribute :efficiency_balanced_with, Symbol
+
+      # Use a producer defined on another node.
+      attribute :alias_of, Symbol
     end
   end
 end

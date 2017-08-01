@@ -9,7 +9,11 @@ module Atlas
           'fever.efficiency_balanced_with must not be blank when ' \
           'fever.efficiency_based_on is set',
         missing_slot:
-          'fever.%s expects a %s slot, but none was present'
+          'fever.%s expects a %s slot, but none was present',
+        alias_missing:
+          'fever.alias_of must be the name of a Fever node',
+        alias_invalid:
+          'fever.alias_of must be the name of a hot water node'
       }.freeze
 
       def validate(record)
@@ -18,6 +22,7 @@ module Atlas
         fever = record.fever
 
         validate_variable_efficiency(record, fever) if fever.efficiency_based_on
+        validate_alias_of(record, fever) if fever.alias_of
       end
 
       private
@@ -38,8 +43,16 @@ module Atlas
         return if record.in_slots.any? { |s| s.carrier == carrier }
 
         record.errors.add(
-          :fever, format(MESSAGES[:missing_slot],attr, carrier)
+          :fever, format(MESSAGES[:missing_slot], attr, carrier)
         )
+      end
+
+      def validate_alias_of(record, fever)
+        if !Node.exists?(fever.alias_of) || !Node.find(fever.alias_of).fever
+          record.errors.add(:fever, MESSAGES[:alias_missing])
+        elsif Node.find(fever.alias_of).fever.group != :hot_water
+          record.errors.add(:fever, MESSAGES[:alias_invalid])
+        end
       end
     end # FeverValidator
   end # Node
