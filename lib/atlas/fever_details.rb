@@ -18,6 +18,16 @@ module Atlas
 
       # Use a producer defined on another node.
       attribute :alias_of, Symbol
+
+      # Custom capacities for producers which have multiple components.
+      attribute :capacity, Hash[Symbol => Float]
+    end
+
+    def to_hash
+      hash = super
+      hash.delete(:capacity) if hash[:capacity].empty?
+
+      hash
     end
   end
 end

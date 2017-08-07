@@ -431,6 +431,41 @@ describe Node do
         end
       end
     end # alias_of
+
+    describe 'capacity' do
+      context 'on a "hybrid" node' do
+        let(:fever) { Atlas::FeverDetails.new(capacity: { electricity: 1.0 }) }
+        let(:node) { Atlas::Node.new(key: :abc_hybrid, fever: fever) }
+
+        it 'permits the attribute having a value' do
+          expect(node.errors_on(:fever)).to be_empty
+        end
+
+        it 'denies the attribute being empty' do
+          fever.capacity.delete(:electricity)
+
+          expect(node.errors_on(:fever))
+            .to include('fever.capacity must be set on a hybrid node')
+        end
+
+        it 'denies the attribute being nil' do
+          node.fever = FeverDetails.new
+
+          expect(node.errors_on(:fever))
+            .to include('fever.capacity must be set on a hybrid node')
+        end
+      end
+
+      context 'on a non-"hybrid" node' do
+        let(:fever) { Atlas::FeverDetails.new(capacity: { electricity: 1.0 }) }
+        let(:node) { Atlas::Node.new(key: :abc, fever: fever) }
+
+        it 'denies the attribute having a value' do
+          expect(node.errors_on(:fever))
+            .to include('fever.capacity must not be set on non-hybrid node')
+        end
+      end
+    end
   end # fever
 
 end #describe Node
