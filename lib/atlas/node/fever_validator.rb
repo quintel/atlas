@@ -17,7 +17,9 @@ module Atlas
         missing_capacity:
           'fever.capacity must be set on a hybrid node',
         illegal_capacity:
-          'fever.capacity must not be set on non-hybrid node'
+          'fever.capacity requires fever.efficiency_based_on to be present',
+        capacity_carrier_missing:
+          'fever.capacity.%s must not be blank'
       }.freeze
 
       def validate(record)
@@ -66,7 +68,14 @@ module Atlas
             record.errors.add(:fever, MESSAGES[:missing_capacity])
           end
         elsif fever.capacity && fever.capacity.values.any?
-          record.errors.add(:fever, MESSAGES[:illegal_capacity])
+          if !fever.efficiency_based_on
+            record.errors.add(:fever, MESSAGES[:illegal_capacity])
+          elsif !fever.capacity.key?(fever.efficiency_based_on)
+            record.errors.add(:fever, format(
+              MESSAGES[:capacity_carrier_missing],
+              fever.efficiency_based_on
+            ))
+          end
         end
       end
     end # FeverValidator

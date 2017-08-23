@@ -456,13 +456,30 @@ describe Node do
         end
       end
 
-      context 'on a non-"hybrid" node' do
+      context 'on a non-variable-efficiency node' do
         let(:fever) { Atlas::FeverDetails.new(capacity: { electricity: 1.0 }) }
         let(:node) { Atlas::Node.new(key: :abc, fever: fever) }
 
         it 'denies the attribute having a value' do
+          expect(node.errors_on(:fever)).to include(
+            'fever.capacity requires fever.efficiency_based_on to be present'
+          )
+        end
+      end
+
+      context 'when the variable-efficiency capacity is not specified' do
+        let(:fever) do
+          Atlas::FeverDetails.new(
+            capacity: { electricity: 1.0 },
+            efficiency_based_on: :network_gas
+          )
+        end
+
+        let(:node) { Atlas::Node.new(key: :abc, fever: fever) }
+
+        it 'denies the attribute having a value' do
           expect(node.errors_on(:fever))
-            .to include('fever.capacity must not be set on non-hybrid node')
+            .to include('fever.capacity.network_gas must not be blank')
         end
       end
     end
