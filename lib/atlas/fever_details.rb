@@ -16,6 +16,12 @@ module Atlas
       attribute :efficiency_based_on,      Symbol
       attribute :efficiency_balanced_with, Symbol
 
+      # The base coefficient of performance, and the COP change per degree of
+      # ambient temperature.
+      attribute :base_cop,       Float
+      attribute :cop_per_degree, Float
+      attribute :cop_cutoff,     Float
+
       # Use a producer defined on another node.
       attribute :alias_of, Symbol
 
