@@ -8,6 +8,9 @@ module Atlas
 
       # The amount by which the stored amount decreases each hour, in W.
       attribute :decay, Float, default: 0.0
+
+      # Cost per unit of volume installed.
+      attribute :cost_per_mwh, Float, default: 0.0
     end
   end # StorageDetails
 end # Atlas

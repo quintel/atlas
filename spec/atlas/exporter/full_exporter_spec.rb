@@ -140,7 +140,11 @@ module Atlas
         mother.get(:model).storage =
           Atlas::StorageDetails.new(volume: 1, decay: 0.5)
 
-        expect(nodes[:mother][:storage]).to eq(volume: 1.0, decay: 0.5)
+        expect(nodes[:mother][:storage]).to eq(
+          volume: 1.0,
+          cost_per_mwh: 0.0,
+          decay: 0.5
+        )
       end
     end # special cases
 
