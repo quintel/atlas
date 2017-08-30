@@ -16,13 +16,15 @@ module Atlas
 
     DIRECTORY = 'edges'
 
-    attribute :type,         Symbol
-    attribute :demand,       Float
-    attribute :parent_share, Float
-    attribute :child_share,  Float
-    attribute :reversed,     Boolean, default: false
-    attribute :priority,     Integer
-    attribute :groups,       Array[Symbol]
+    attribute :type,               Symbol
+    attribute :demand,             Float
+    attribute :parent_share,       Float
+    attribute :child_share,        Float
+    attribute :reversed,           Boolean, default: false
+    attribute :priority,           Integer
+    attribute :groups,             Array[Symbol]
+    attribute :initializer_inputs, Array[String]
+    attribute :transformer,        TransformerDetails
 
     attr_reader :supplier
     attr_reader :consumer
