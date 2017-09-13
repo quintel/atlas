@@ -2,7 +2,15 @@ module Atlas
   class Dataset::Derived < Dataset
     GRAPH_FILENAME             = 'graph.yml'.freeze
     INITIALIZER_INPUT_FILENAME = 'initializer_inputs.yml'.freeze
-    VALID_INITIALIZER_INPUTS   = %w(demand_setter share_setter unit_setter).freeze
+    VALID_INITIALIZER_INPUTS   = %w(
+      preset_demand_setter
+      max_demand_setter
+      demand_setter
+      share_setter
+      conversion_setter
+      reserverd_fraction_setter
+      number_of_units_setter
+    ).freeze
 
     attribute :base_dataset, String
     attribute :scaling,      Preset::Scaling
@@ -14,10 +22,12 @@ module Atlas
     validate :validate_scaling
     validate :validate_presence_of_init_keys, if: -> { persisted? }
     validate :validate_presence_of_init_values, if: -> { persisted? }
-    validate :validate_whitelisting_of_init, if: -> { persisted? }
     validate :validate_presence_of_graph_file
 
     validates_with SerializedGraphValidator
+
+    validates_with WhitelistingInitializerMethods,
+      attribute: :initializer_inputs, if: -> { persisted? }
 
     validates_with ShareGroupTotalValidator,
       attribute: :initializer_inputs, if: -> { persisted? }
@@ -32,7 +42,11 @@ module Atlas
     end
 
     def to_hash(*)
-      super.merge(initializer_inputs: initializer_inputs)
+      if persisted?
+        super.merge(initializer_inputs: initializer_inputs)
+      else
+        super
+      end
     end
 
     def graph
@@ -80,24 +94,6 @@ module Atlas
       initializer_inputs.each_pair do |key, value|
         unless value.present?
           errors.add(:initializer_inputs, "value for initializer input '#{ key }' can't be blank")
-        end
-      end
-    end
-
-    def validate_whitelisting_of_init
-      return if (errors.messages[:initializer_inputs] || []).any?
-
-      initializer_inputs.each_pair do |key, elements|
-        elements.each_key do |graph_key|
-          graph_type, graph_element = if graph_key =~ /-/
-                                        [:edge, Edge.find(graph_key)]
-                                      else
-                                        [:node, Node.find(graph_key)]
-                                      end
-
-          unless graph_element.initializer_inputs.include?(key)
-            errors.add(:initializer_inputs, "#{ graph_type } '#{ graph_key }' is not allowed to be edited by '#{ key }'")
-          end
         end
       end
     end

@@ -120,6 +120,19 @@ module Atlas; describe Dataset::Derived do
             .to include("node 'bar' is not allowed to be edited by 'demand_setter'")
         end
       end
+
+      describe "activating nodes which aren't allowed" do
+        let(:init) {
+          { 'conversion_setter' => {
+            'bar@coal' => 100.0
+          } }
+        }
+
+        it "raises an error" do
+          expect(dataset.errors_on(:initializer_inputs))
+            .to include("slot 'bar@coal' is not allowed to be edited by 'conversion_setter'")
+        end
+      end
     end
 
     describe "graph" do
