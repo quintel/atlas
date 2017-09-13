@@ -485,6 +485,17 @@ describe Node do
     end
   end # fever
 
+  describe 'transformer' do
+    describe 'sets node to editable' do
+      let(:transformer) { Atlas::TransformerDetails.new(editable: true) }
+      let(:node) { Atlas::Node.new(key: :test, transformer: transformer) }
+
+      it 'sets the details to editable and whitelisted' do
+        expect(node.transformer.whitelisted).to eq(true)
+      end
+    end
+  end
+
 end #describe Node
 
 end #module
