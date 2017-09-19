@@ -1,6 +1,7 @@
 module Atlas
   module ActiveDocument
     class WhitelistingInitializerMethods < ActiveModel::Validator
+
       def validate(record)
         return if (record.errors.messages[:initializer_inputs] || []).any?
 
@@ -32,7 +33,7 @@ module Atlas
         if graph_key =~ /-.+@/
           [:edge, Edge.find(graph_key)]
         elsif graph_key =~ /@.+/
-          [:slot, Node.find(graph_key.sub(/@.+/, ''))]
+          [:slot, Node.find(graph_key.to_s.sub(/@.+/, ''))]
         else
           [:node, Node.find(graph_key)]
         end
