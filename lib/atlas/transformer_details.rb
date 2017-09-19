@@ -10,6 +10,7 @@ module Atlas
       # Flag which tells if the node or edge should be in the route of
       # the transformation
       attribute :whitelisted, Boolean, default: -> (node,_) { node.editable? || false }
+      attribute :group, String
     end
   end # StorageDetails
 end # Atlas
