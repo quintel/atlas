@@ -16,6 +16,7 @@ module Atlas
     attribute :base_dataset, String
     attribute :scaling,      Preset::Scaling
     attribute :geo_id,       String
+    attribute :uses_deprecated_initializer_inputs, Boolean, default: false
 
     validates :scaling, presence: true
 
