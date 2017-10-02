@@ -12,6 +12,7 @@ module Atlas
       number_of_units_setter
     ).freeze
 
+    attribute :init,         Hash[Symbol => Float]
     attribute :base_dataset, String
     attribute :scaling,      Preset::Scaling
     attribute :geo_id,       String
