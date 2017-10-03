@@ -1,4 +1,4 @@
 - type = share
-- initializer_inputs = [share_setter]
+- graph_methods = [share_setter]
 - parent_share = 0.5
 - child_share = 1.0

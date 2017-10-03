@@ -1,8 +1,8 @@
 module Atlas
   class Dataset::Derived < Dataset
-    GRAPH_FILENAME             = 'graph.yml'.freeze
-    INITIALIZER_INPUT_FILENAME = 'initializer_inputs.yml'.freeze
-    VALID_INITIALIZER_INPUTS   = %w(
+    GRAPH_FILENAME        = 'graph.yml'.freeze
+    GRAPH_VALUES_FILENAME = 'graph_values.yml'.freeze
+    VALID_GRAPH_METHODS   = %w(
       preset_demand_setter
       max_demand_setter
       demand_setter
@@ -29,13 +29,13 @@ module Atlas
     validates_with SerializedGraphValidator
 
     validates_with WhitelistingInitializerMethods,
-      attribute: :initializer_inputs, if: -> { persisted? }
+      attribute: :graph_values, if: -> { persisted? }
 
     validates_with ShareGroupTotalValidator,
-      attribute: :initializer_inputs, if: -> { persisted? }
+      attribute: :graph_values, if: -> { persisted? }
 
     validates_with ShareGroupInclusionValidator,
-      attribute: :initializer_inputs, if: -> { persisted? }
+      attribute: :graph_values, if: -> { persisted? }
 
     def self.find_by_geo_id(geo_id)
       all.detect do |item|
@@ -45,7 +45,7 @@ module Atlas
 
     def to_hash(*)
       if persisted?
-        super.merge(initializer_inputs: initializer_inputs)
+        super.merge(graph_values: graph_values)
       else
         super
       end
@@ -59,12 +59,12 @@ module Atlas
       dataset_dir.join(GRAPH_FILENAME)
     end
 
-    def initializer_inputs
-      @initializer_inputs ||= YAML.load_file(initializer_input_path)
+    def graph_values
+      @graph_values ||= YAML.load_file(graph_values_path)
     end
 
-    def initializer_input_path
-      dataset_dir.join(INITIALIZER_INPUT_FILENAME)
+    def graph_values_path
+      dataset_dir.join(GRAPH_VALUES_FILENAME)
     end
 
     private
@@ -85,17 +85,17 @@ module Atlas
     end
 
     def validate_presence_of_init_keys
-      initializer_inputs.each_key do |key|
-        unless VALID_INITIALIZER_INPUTS.include?(key)
-          errors.add(:initializer_inputs, "'#{ key }' does not exist as an initializer input")
+      graph_values.each_key do |key|
+        unless VALID_GRAPH_METHODS.include?(key)
+          errors.add(:graph_values, "'#{ key }' does not exist as a graph method")
         end
       end
     end
 
     def validate_presence_of_init_values
-      initializer_inputs.each_pair do |key, value|
+      graph_values.each_pair do |key, value|
         unless value.present?
-          errors.add(:initializer_inputs, "value for initializer input '#{ key }' can't be blank")
+          errors.add(:graph_values, "value for graph method '#{ key }' can't be blank")
         end
       end
     end

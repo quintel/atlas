@@ -18,7 +18,7 @@ module Atlas
     attribute :storage,               StorageDetails
     attribute :transformer,           TransformerDetails
     attribute :capacity_distribution, String
-    attribute :initializer_inputs,    Array[String]
+    attribute :graph_methods,         Array[String]
 
     alias_method :sector,  :ns
     alias_method :sector=, :ns=

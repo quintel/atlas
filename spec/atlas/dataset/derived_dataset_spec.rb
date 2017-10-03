@@ -28,10 +28,10 @@ module Atlas; describe Dataset::Derived do
   end
 
   describe '(validations)' do
-    describe "init" do
+    describe "graph_values" do
       before do
-        expect(dataset).to receive(:initializer_inputs).at_least(:once)
-          .and_return(init)
+        expect(dataset).to receive(:graph_values).at_least(:once)
+          .and_return(graph_values)
 
         expect(dataset).to receive(:persisted?).at_least(:once)
           .and_return(true)
@@ -43,7 +43,7 @@ module Atlas; describe Dataset::Derived do
       end
 
       describe "blank" do
-        let(:init) { {} }
+        let(:graph_values) { {} }
 
         it "should be valid" do
           expect(dataset).to be_valid
@@ -51,25 +51,25 @@ module Atlas; describe Dataset::Derived do
       end
 
       describe 'with a non-existing initializer input' do
-        let(:init) { { non_existing_key: { test: 1.0 } } }
+        let(:graph_values) { { non_existing_key: { test: 1.0 } } }
 
         it "raises an error" do
-          expect(dataset.errors_on(:initializer_inputs))
-            .to include("'non_existing_key' does not exist as an initializer input")
+          expect(dataset.errors_on(:graph_values))
+            .to include("'non_existing_key' does not exist as a graph method")
         end
       end
 
       describe 'with a blank value' do
-        let(:init) { { initializer_input_mock: nil } }
+        let(:graph_values) { { input_mock: nil } }
 
         it "raises an error" do
-          expect(dataset.errors_on(:initializer_inputs))
-            .to include("value for initializer input 'initializer_input_mock' can't be blank")
+          expect(dataset.errors_on(:graph_values))
+            .to include("value for graph method 'input_mock' can't be blank")
         end
       end
 
       describe "share values don't add up to 100" do
-        let(:init) {
+        let(:graph_values) {
           { 'share_setter' => {
             'bar-baz@corn': 50.0,
             'bar-fd@coal': 49.0
@@ -77,59 +77,59 @@ module Atlas; describe Dataset::Derived do
         }
 
         it "raises an error" do
-          expect(dataset.errors_on(:initializer_inputs))
+          expect(dataset.errors_on(:graph_values))
             .to include("contains inputs belonging to the bar share group, but the values sum to 99.0, not 100")
         end
       end
 
       describe "not all share values are not defined" do
-        let(:init) {
+        let(:graph_values) {
           { 'share_setter' => {
             'bar-baz@corn': 100.0
           } }
         }
 
         it "raises an error" do
-          expect(dataset.errors_on(:initializer_inputs))
+          expect(dataset.errors_on(:graph_values))
             .to include("share group 'bar' is missing the following share(s): bar-fd@coal")
         end
       end
 
       describe "activating edges which aren't allowed" do
-        let(:init) {
+        let(:graph_values) {
           { 'share_setter' => {
             'baz-fd@corn' => 100.0
           } }
         }
 
         it "raises an error" do
-          expect(dataset.errors_on(:initializer_inputs))
+          expect(dataset.errors_on(:graph_values))
             .to include("edge 'baz-fd@corn' is not allowed to be edited by 'share_setter'")
         end
       end
 
       describe "activating nodes which aren't allowed" do
-        let(:init) {
+        let(:graph_values) {
           { 'demand_setter' => {
             'bar' => 100.0
           } }
         }
 
         it "raises an error" do
-          expect(dataset.errors_on(:initializer_inputs))
+          expect(dataset.errors_on(:graph_values))
             .to include("node 'bar' is not allowed to be edited by 'demand_setter'")
         end
       end
 
       describe "activating nodes which aren't allowed" do
-        let(:init) {
+        let(:graph_values) {
           { 'conversion_setter' => {
             'bar@coal' => 100.0
           } }
         }
 
         it "raises an error" do
-          expect(dataset.errors_on(:initializer_inputs))
+          expect(dataset.errors_on(:graph_values))
             .to include("slot 'bar@coal' is not allowed to be edited by 'conversion_setter'")
         end
       end

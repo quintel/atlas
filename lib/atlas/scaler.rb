@@ -22,7 +22,7 @@ module Atlas
 
       TimeCurveScaler.call(@base_dataset, @derived_dataset)
 
-      create_empty_initializer_inputs_file
+      create_empty_graph_values_file
       copy_etengine_data_files
     end
 
@@ -56,9 +56,9 @@ module Atlas
         @derived_dataset.dataset_dir)
     end
 
-    def create_empty_initializer_inputs_file
+    def create_empty_graph_values_file
       File.write(@derived_dataset.dataset_dir.
-        join(Dataset::Derived::INITIALIZER_INPUT_FILENAME), "--- {}")
+        join(Dataset::Derived::GRAPH_VALUES_FILENAME), "--- {}")
     end
   end # Scaler
 end # Atlas

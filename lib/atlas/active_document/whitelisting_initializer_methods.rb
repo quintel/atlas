@@ -3,14 +3,14 @@ module Atlas
     class WhitelistingInitializerMethods < ActiveModel::Validator
 
       def validate(record)
-        return if (record.errors.messages[:initializer_inputs] || []).any?
+        return if (record.errors.messages[:graph_values] || []).any?
 
-        record.initializer_inputs.each_pair do |key, elements|
+        record.graph_values.each_pair do |key, elements|
           elements.each_key do |graph_key|
             graph_type, graph_element = find_element_and_type(graph_key, record)
 
-            unless graph_element.initializer_inputs.include?(key)
-              record.errors.add(:initializer_inputs,
+            unless graph_element.graph_methods.include?(key)
+              record.errors.add(:graph_values,
                 "#{ graph_type } '#{ graph_key }' is not allowed to be edited by '#{ key }'")
             end
           end
