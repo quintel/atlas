@@ -120,6 +120,8 @@ module Atlas
 
     validates :interconnector_capacity, numericality: true
 
+    validates_with ResidencesValidator
+
     validates_with ShareAttributeValidator,
       group: :electric_vehicle_profile_share,
       attributes: [

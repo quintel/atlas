@@ -287,6 +287,29 @@ module Atlas
         end
       end
     end
+
+    describe "validate number of residences" do
+      it "validates if the number of old and new residences is set correctly" do
+        dataset = Dataset::Full.new(number_of_residences: 100,
+                                    number_of_old_residences: 5,
+                                    number_of_new_residences: 95)
+
+        dataset.valid?
+        expect(dataset.errors[:number_of_residences]).to be_empty
+      end
+
+      it "validates if the number of old and new residences is set correctly" do
+        dataset = Dataset::Full.new(number_of_residences: 100,
+                                    number_of_old_residences: 5,
+                                    number_of_new_residences: 94)
+
+        dataset.valid?
+        expect(dataset.errors[:number_of_residences]).to include(
+          "Number of old residences (5.0) and number of new residences "\
+          "(94.0) don't add up to the total number of residences (100.0)."
+        )
+      end
+    end
   end # describe Dataset
 
   describe Dataset::Derived do
