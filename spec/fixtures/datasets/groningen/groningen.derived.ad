@@ -51,6 +51,3 @@
 - area = groningen
 - number_of_existing_households = 6228292.0
 - interconnector_capacity = 5850.0
-
-- init.low_priority_input = 5.0
-- init.initializer_input_mock = 5.0
