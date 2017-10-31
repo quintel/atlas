@@ -14,10 +14,6 @@ module Atlas; describe Dataset::Derived do
     )
   }
 
-  it 'is a valid dataset' do
-    expect(dataset).to be_valid
-  end
-
   describe '#graph_path' do
     let(:dataset) {
       Dataset::Derived.new(
@@ -32,48 +28,109 @@ module Atlas; describe Dataset::Derived do
   end
 
   describe '(validations)' do
-    describe "init" do
+    describe "graph_values" do
       before do
-        dataset.init = init
+        expect(dataset).to receive(:graph_values).at_least(:once)
+          .and_return(graph_values)
+
+        expect(dataset).to receive(:persisted?).at_least(:once)
+          .and_return(true)
+
+        expect(dataset).to receive(:graph_path).at_least(:once)
+          .and_return(Pathname.new("spec/fixtures/graphs/graph.yml"))
+
         dataset.valid?
       end
 
+      describe "blank" do
+        let(:graph_values) { {} }
+
+        it "should be valid" do
+          expect(dataset).to be_valid
+        end
+      end
+
       describe 'with a non-existing initializer input' do
-        let(:init) { { non_existing_key: 1.0 } }
+        let(:graph_values) { { non_existing_key: { test: 1.0 } } }
 
         it "raises an error" do
-          expect(dataset.errors_on(:init))
-            .to include("'non_existing_key' does not exist as an initializer input")
+          expect(dataset.errors_on(:graph_values))
+            .to include("'non_existing_key' does not exist as a graph method")
         end
       end
 
       describe 'with a blank value' do
-        let(:init) { { initializer_input_mock: nil } }
+        let(:graph_values) { { input_mock: nil } }
 
         it "raises an error" do
-          expect(dataset.errors_on(:init))
-            .to include("value for initializer input 'initializer_input_mock' can't be blank")
+          expect(dataset.errors_on(:graph_values))
+            .to include("value for graph method 'input_mock' can't be blank")
         end
       end
 
       describe "share values don't add up to 100" do
-        let(:init) { {
-          households_space_heater_coal_share: 50.0,
-          households_space_heater_crude_oil_share: 49.0
-        } }
+        let(:graph_values) {
+          { 'share_setter' => {
+            'bar-baz@corn': 50.0,
+            'bar-fd@coal': 49.0
+          } }
+        }
 
         it "raises an error" do
-          expect(dataset.errors_on(:init))
-            .to include("contains inputs belonging to the test_heating_households share group, but the values sum to 99.0, not 100")
+          expect(dataset.errors_on(:graph_values))
+            .to include("contains inputs belonging to the bar share group, but the values sum to 99.0, not 100")
         end
       end
 
       describe "not all share values are not defined" do
-        let(:init) { { households_space_heater_coal_share: 100.0 } }
+        let(:graph_values) {
+          { 'share_setter' => {
+            'bar-baz@corn': 100.0
+          } }
+        }
 
         it "raises an error" do
-          expect(dataset.errors_on(:init))
-            .to include("share group 'test_heating_households' is missing the following share(s): households_space_heater_crude_oil_share")
+          expect(dataset.errors_on(:graph_values))
+            .to include("share group 'bar' is missing the following share(s): bar-fd@coal")
+        end
+      end
+
+      describe "activating edges which aren't allowed" do
+        let(:graph_values) {
+          { 'share_setter' => {
+            'baz-fd@corn' => 100.0
+          } }
+        }
+
+        it "raises an error" do
+          expect(dataset.errors_on(:graph_values))
+            .to include("edge 'baz-fd@corn' is not allowed to be edited by 'share_setter'")
+        end
+      end
+
+      describe "activating nodes which aren't allowed" do
+        let(:graph_values) {
+          { 'demand_setter' => {
+            'baz' => 100.0
+          } }
+        }
+
+        it "raises an error" do
+          expect(dataset.errors_on(:graph_values))
+            .to include("node 'baz' is not allowed to be edited by 'demand_setter'")
+        end
+      end
+
+      describe "activating nodes which aren't allowed" do
+        let(:graph_values) {
+          { 'conversion_setter' => {
+            'baz@coal' => 100.0
+          } }
+        }
+
+        it "raises an error" do
+          expect(dataset.errors_on(:graph_values))
+            .to include("slot 'baz@coal' is not allowed to be edited by 'conversion_setter'")
         end
       end
     end
@@ -97,7 +154,7 @@ module Atlas; describe Dataset::Derived do
         end
 
         describe "missing node in the graph.yml" do
-          let(:graph) { "graph" }
+          let(:graph) { "graph_missing_node" }
 
           it "raises an error" do
             expect(dataset.errors_on(:graph))

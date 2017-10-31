@@ -17,6 +17,7 @@ module Atlas
     attribute :fever,                 FeverDetails
     attribute :storage,               StorageDetails
     attribute :capacity_distribution, String
+    attribute :graph_methods,         Array[String]
 
     alias_method :sector,  :ns
     alias_method :sector=, :ns=

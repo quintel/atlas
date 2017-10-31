@@ -1,4 +1,5 @@
 module Atlas
+  # This is deprecated!
   class InitializerInput
     include ActiveDocument
     include InputHelper

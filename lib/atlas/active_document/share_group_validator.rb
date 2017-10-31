@@ -7,16 +7,22 @@ module Atlas
         options[:input_class]
       end
 
+      # The 'share group' of an edge in the case of initializer inputs
+      # will always be the name of the supplier.
       def share_groups_for(record)
         record
           .public_send(options[:attribute])
-          .each_with_object({}) do |(key, value), result|
-            input = input_class.find(key)
+          .each_with_object({}) do |(key, elements), result|
+            elements.each_pair do |graph_key, value|
+              if graph_key =~ /-.+@/
+                edge = Edge.find(graph_key)
 
-            if input.share_group
-              result[input.share_group] ||= {}
-              result[input.share_group][input] = value
+                result[edge.supplier] ||= {}
+                result[edge.supplier][graph_key] = value
+              end
             end
+
+            result
           end
       end
     end
