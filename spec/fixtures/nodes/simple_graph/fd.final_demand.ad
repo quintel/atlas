@@ -4,6 +4,7 @@
 - input.coal = 0.5
 - input.corn = 0.5
 - output.loss = elastic
+- graph_methods = [conversion_setter]
 
 ~ demand =
   EB(residential, natural_gas) * 1.00
