@@ -45,9 +45,6 @@
   :fever_hot_water_producer:
     :in: {}
     :out: {}
-  :my_residence:
-    :in: {}
-    :out: {}
 :edges:
   :bar-baz@corn:
     :parent_share: !ruby/object:Rational
