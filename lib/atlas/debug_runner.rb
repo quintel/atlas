@@ -15,7 +15,7 @@ module Atlas
 
     SECTORS = %w(
       agriculture households buildings transport
-      industry other energy environment
+      industry other bunkers energy environment
     ).map(&:upcase)
 
     # Public: Creates a new DebugRunner.
