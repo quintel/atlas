@@ -4,7 +4,6 @@ module Atlas
       def self.with_dataset(dataset)
         lambda do |refinery|
           apply_graph_methods!(refinery, dataset)
-          apply_slots!(refinery, dataset)
 
           refinery
         end
@@ -16,6 +15,10 @@ module Atlas
         refinery.nodes.each do |node|
           set_graph_methods(node, dataset)
 
+          (node.slots.in.to_a + node.slots.out.to_a).each do |slot|
+            set_graph_methods_to_slot!(node, slot, dataset)
+          end
+
           node.out_edges.each do |edge|
             set_graph_methods(edge, dataset)
           end
@@ -26,34 +29,26 @@ module Atlas
         el = element.get(:model)
 
         el.graph_methods.each do |method|
-          values = dataset.graph_values[method] || {}
-          value  = values[el.key.to_s]
+          if values = dataset.graph_values.values[el.key.to_s]
+            values.each_pair do |method, value|
+              attr = case method
+                     when 'demand'          then :demand
+                     when 'share'           then :share
+                     when 'number_of_units' then :number_of_units
+                     end
 
-          if value
-            attr = case method
-                   when 'demand'          then :demand
-                   when 'share'           then :share
-                   when 'number_of_units' then :number_of_units
-                   end
-
-            element.set(attr, value)
+              element.set(attr, value)
+            end
           end
         end
       end
 
-      def self.apply_slots!(refinery, dataset)
-        (dataset.graph_values['conversion'] || {}).each_pair do |key, value|
-          node_name, carrier = key.to_s.split(/@[-+]/)
-          slots = refinery.node(node_name.to_sym).slots
+      def self.set_graph_methods_to_slot!(node, slot, dataset)
+        direction        = slot.direction == :in ? '+' : '-'
+        graph_method_key = "#{ node.key }@#{ direction }#{ slot.carrier }"
 
-          slot = case key
-                 when /\+/ then slots.in(carrier.to_sym)
-                 when /\-/ then slots.out(carrier.to_sym)
-                 else
-                   raise ArgumentError, "missing + or -"
-                 end
-
-          slot.set(:share, value)
+        if graph_value = dataset.graph_values.values[graph_method_key]
+          slot.set(:share, graph_value['share'])
         end
       end
     end

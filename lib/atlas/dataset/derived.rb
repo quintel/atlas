@@ -1,15 +1,6 @@
 module Atlas
   class Dataset::Derived < Dataset
-    GRAPH_FILENAME      = 'graph.yml'.freeze
-    VALID_GRAPH_METHODS = %w(
-      preset_demand
-      max_demand
-      demand
-      share
-      conversion
-      reserved_fraction
-      number_of_units
-    ).freeze
+    GRAPH_FILENAME = 'graph.yml'.freeze
 
     attribute :init,         Hash[Symbol => Float]
     attribute :base_dataset, String
@@ -21,20 +12,11 @@ module Atlas
 
     validate :validate_presence_of_base_dataset
     validate :validate_scaling
-    validate :validate_presence_of_init_keys, if: -> { persisted? }
-    validate :validate_presence_of_init_values, if: -> { persisted? }
     validate :validate_presence_of_graph_file
 
+    validate :validate_graph_values, if: -> { persisted? }
+
     validates_with SerializedGraphValidator
-
-    validates_with WhitelistingInitializerMethods,
-      attribute: :graph_values, if: -> { persisted? }
-
-    validates_with ShareGroupTotalValidator,
-      attribute: :graph_values, if: -> { persisted? }
-
-    validates_with ShareGroupInclusionValidator,
-      attribute: :graph_values, if: -> { persisted? }
 
     def self.find_by_geo_id(geo_id)
       all.detect do |item|
@@ -44,7 +26,7 @@ module Atlas
 
     def to_hash(*)
       if persisted?
-        super.merge(graph_values: graph_values)
+        super.merge(graph_values: graph_values.to_h)
       else
         super
       end
@@ -59,7 +41,7 @@ module Atlas
     end
 
     def graph_values
-      @graph_values ||= GraphValues.new(self).read
+      @graph_values ||= GraphValues.new(self)
     end
 
     private
@@ -79,18 +61,10 @@ module Atlas
       end
     end
 
-    def validate_presence_of_init_keys
-      graph_values.each_key do |key|
-        unless VALID_GRAPH_METHODS.include?(key)
-          errors.add(:graph_values, "'#{ key }' does not exist as a graph method")
-        end
-      end
-    end
-
-    def validate_presence_of_init_values
-      graph_values.each_pair do |key, value|
-        unless value.present?
-          errors.add(:graph_values, "value for graph method '#{ key }' can't be blank")
+    def validate_graph_values
+      unless graph_values.valid?
+        graph_values.errors.each do |error|
+          errors.add(:graph_values, error)
         end
       end
     end
