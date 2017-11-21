@@ -70,7 +70,7 @@ module Atlas; describe Dataset::Derived do
 
       describe "share values don't add up to 100" do
         let(:graph_values) {
-          { 'share_setter' => {
+          { 'share' => {
             'bar-baz@corn': 50.0,
             'bar-fd@coal': 49.0
           } }
@@ -84,7 +84,7 @@ module Atlas; describe Dataset::Derived do
 
       describe "not all share values are not defined" do
         let(:graph_values) {
-          { 'share_setter' => {
+          { 'share' => {
             'bar-baz@corn': 100.0
           } }
         }
@@ -97,40 +97,40 @@ module Atlas; describe Dataset::Derived do
 
       describe "activating edges which aren't allowed" do
         let(:graph_values) {
-          { 'share_setter' => {
+          { 'share' => {
             'baz-fd@corn' => 100.0
           } }
         }
 
         it "raises an error" do
           expect(dataset.errors_on(:graph_values))
-            .to include("edge 'baz-fd@corn' is not allowed to be edited by 'share_setter'")
+            .to include("edge 'baz-fd@corn' is not allowed to be edited by 'share'")
         end
       end
 
       describe "activating nodes which aren't allowed" do
         let(:graph_values) {
-          { 'demand_setter' => {
+          { 'demand' => {
             'baz' => 100.0
           } }
         }
 
         it "raises an error" do
           expect(dataset.errors_on(:graph_values))
-            .to include("node 'baz' is not allowed to be edited by 'demand_setter'")
+            .to include("node 'baz' is not allowed to be edited by 'demand'")
         end
       end
 
       describe "activating nodes which aren't allowed" do
         let(:graph_values) {
-          { 'conversion_setter' => {
+          { 'conversion' => {
             'baz@coal' => 100.0
           } }
         }
 
         it "raises an error" do
           expect(dataset.errors_on(:graph_values))
-            .to include("slot 'baz@coal' is not allowed to be edited by 'conversion_setter'")
+            .to include("slot 'baz@coal' is not allowed to be edited by 'conversion'")
         end
       end
     end

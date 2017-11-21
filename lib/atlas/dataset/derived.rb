@@ -2,13 +2,13 @@ module Atlas
   class Dataset::Derived < Dataset
     GRAPH_FILENAME      = 'graph.yml'.freeze
     VALID_GRAPH_METHODS = %w(
-      preset_demand_setter
-      max_demand_setter
-      demand_setter
-      share_setter
-      conversion_setter
-      reserved_fraction_setter
-      number_of_units_setter
+      preset_demand
+      max_demand
+      demand
+      share
+      conversion
+      reserved_fraction
+      number_of_units
     ).freeze
 
     attribute :init,         Hash[Symbol => Float]

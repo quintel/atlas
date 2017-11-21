@@ -1,12 +1,12 @@
-demand_setter:
+demand:
   bar: 5.0
 
-number_of_units_setter:
+number_of_units:
   bar: 1.0
 
-conversion_setter:
+conversion:
   bar@-coal: 0.4
   fd@+corn: 0.4
 
-share_setter:
+share:
   bar-baz@corn: 0.5
