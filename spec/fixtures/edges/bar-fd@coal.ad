@@ -1,4 +1,4 @@
 - type = share
-- graph_methods = [share_setter]
+- graph_methods = [share]
 - parent_share = 0.5
 - child_share = 1.0

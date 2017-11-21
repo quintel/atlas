@@ -31,9 +31,9 @@ module Atlas
 
           if value
             attr = case method
-                   when 'demand_setter'          then :demand
-                   when 'share_setter'           then :share
-                   when 'number_of_units_setter' then :number_of_units
+                   when 'demand'          then :demand
+                   when 'share'           then :share
+                   when 'number_of_units' then :number_of_units
                    end
 
             element.set(attr, value)
@@ -42,7 +42,7 @@ module Atlas
       end
 
       def self.apply_slots!(refinery, dataset)
-        (dataset.graph_values['conversion_setter'] || {}).each_pair do |key, value|
+        (dataset.graph_values['conversion'] || {}).each_pair do |key, value|
           node_name, carrier = key.to_s.split(/@[-+]/)
           slots = refinery.node(node_name.to_sym).slots
 
