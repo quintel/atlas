@@ -3,15 +3,15 @@ module Atlas
     class WhitelistingInitializerMethods < ActiveModel::Validator
 
       def validate(record)
-        return if (record.errors.messages[:graph_values] || []).any?
+        return if (record.errors.messages[:values] || []).any?
 
-        record.graph_values.each_pair do |key, elements|
-          elements.each_key do |graph_key|
-            graph_type, graph_element = find_element_and_type(graph_key, record)
+        record.values.each_pair do |element, methods|
+          graph_type, graph_element = find_element_and_type(element)
 
-            unless graph_element.graph_methods.include?(key)
-              record.errors.add(:graph_values,
-                "#{ graph_type } '#{ graph_key }' is not allowed to be edited by '#{ key }'")
+          methods.keys.each do |method|
+            unless graph_element.graph_methods.include?(method)
+              record.errors.add(:values,
+                "#{ graph_type } '#{ element }' is not allowed to be edited by '#{ method }'")
             end
           end
         end
@@ -29,7 +29,7 @@ module Atlas
       #
       # Therefor, we'll allow any slot to be edited from every node.
       #
-      def find_element_and_type(graph_key, record)
+      def find_element_and_type(graph_key)
         if graph_key =~ /-.+@/
           [:edge, Edge.find(graph_key)]
         elsif graph_key =~ /@.+/
