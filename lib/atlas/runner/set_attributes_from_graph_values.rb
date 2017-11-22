@@ -13,43 +13,39 @@ module Atlas
 
       def self.apply_graph_methods!(refinery, dataset)
         refinery.nodes.each do |node|
-          set_graph_methods(node, dataset)
+          set_graph_methods(dataset, node)
 
           (node.slots.in.to_a + node.slots.out.to_a).each do |slot|
-            set_graph_methods_to_slot!(node, slot, dataset)
+            set_graph_methods_to_slot!(dataset, node, slot)
           end
 
           node.out_edges.each do |edge|
-            set_graph_methods(edge, dataset)
+            set_graph_methods(dataset, edge)
           end
         end
       end
 
-      def self.set_graph_methods(element, dataset)
-        el = element.get(:model)
+      # Private: set_graph_methods
+      #
+      # el = Atlas element either a Slot, Edge or Node
+      # dataset = an Atlas::Datset::Derived
+      def self.set_graph_methods(dataset, refinery_element, atlas_element = nil)
+        atlas_element = atlas_element || refinery_element.get(:model)
 
-        el.graph_methods.each do |method|
-          if values = dataset.graph_values.values[el.key.to_s]
-            values.each_pair do |method, value|
-              attr = case method
-                     when 'demand'          then :demand
-                     when 'share'           then :share
-                     when 'number_of_units' then :number_of_units
-                     end
-
-              element.set(attr, value)
-            end
+        (dataset.graph_values.for(atlas_element) || {})
+          .each_pair do |method, val|
+            refinery_element.set(method.to_sym, val)
           end
-        end
       end
 
-      def self.set_graph_methods_to_slot!(node, slot, dataset)
-        direction        = slot.direction == :in ? '+' : '-'
-        graph_method_key = "#{ node.key }@#{ direction }#{ slot.carrier }"
+      def self.set_graph_methods_to_slot!(dataset, node, slot)
+        atlas_slot = Atlas::Slot.slot_for(
+          node.get(:model),
+          slot.direction,
+          slot.carrier
+        )
 
-        if graph_value = dataset.graph_values.values[graph_method_key]
-          slot.set(:share, graph_value['share'])
-        end
+        set_graph_methods(dataset, slot, atlas_slot)
       end
     end
   end

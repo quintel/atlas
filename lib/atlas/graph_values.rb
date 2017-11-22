@@ -6,6 +6,8 @@ module Atlas
     VALID_GRAPH_METHODS   = %w(
       demand
       share
+      child_share
+      parent_share
       conversion
       reserved_fraction
       number_of_units
@@ -31,6 +33,16 @@ module Atlas
 
     def values
       @values ||= YAML.load_file(graph_values_path)
+    end
+
+    def for(element, attribute = nil)
+      attributes = values[element.key.to_s]
+
+      if attribute
+        attributes.fetch(attribute.to_s)
+      else
+        attributes
+      end
     end
 
     def set(element, attribute, value)
