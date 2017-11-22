@@ -16,6 +16,37 @@ module Atlas; describe GraphValues do
 
   let(:graph_values) { GraphValues.new(dataset) }
 
+  describe "setting a value" do
+    before do
+      expect(graph_values).to receive(:values).once
+        .and_return(values)
+    end
+
+    context "of a node" do
+      let(:values) { {} }
+
+      it "(demand)" do
+        node = Atlas::Node.find(:bar)
+
+        graph_values.set(node, :demand, 50.0)
+
+        expect(graph_values.to_h[:bar][:demand]).to eq(50.0)
+      end
+    end
+
+    context "of an existing node" do
+      let(:values) { { bar: { demand: 20.0 } } }
+
+      it "(demand)" do
+        node = Atlas::Node.find(:bar)
+
+        graph_values.set(node, :demand, 50.0)
+
+        expect(graph_values.to_h[:bar][:demand]).to eq(50.0)
+      end
+    end
+  end
+
   describe "(validations)" do
     describe "graph_values" do
       before do
