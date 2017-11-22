@@ -24,14 +24,6 @@ module Atlas
       end
     end
 
-    def to_hash(*)
-      if persisted?
-        super.merge(graph_values: graph_values.to_h)
-      else
-        super
-      end
-    end
-
     def graph
       @graph ||= GraphDeserializer.build(YAML.load_file(graph_path))
     end
@@ -65,8 +57,8 @@ module Atlas
       return if uses_deprecated_initializer_inputs
 
       unless graph_values.valid?
-        graph_values.errors.each do |error|
-          errors.add(:graph_values, error)
+        graph_values.errors.each do |_, message|
+          errors.add(:graph_values, message)
         end
       end
     end
