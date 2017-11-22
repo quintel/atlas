@@ -2,10 +2,10 @@ bar:
   demand: 5.0
   number_of_units: 1.0
 
-bar@-coal:
+bar-@coal:
   share: 0.4
 
-fd@+corn:
+fd+@corn:
   share: 0.4
 
 bar-baz@corn:

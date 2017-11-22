@@ -16,6 +16,26 @@ module Atlas; describe GraphValues do
 
   let(:graph_values) { GraphValues.new(dataset) }
 
+  describe "getting a value" do
+    before do
+      expect(graph_values).to receive(:values).once
+        .and_return(values)
+    end
+
+    context "of a node" do
+      let(:values) { { 'bar' => { 'demand' => 20.0 } } }
+      let(:node)   { Atlas::Node.find(:bar) }
+
+      it "all" do
+        expect(graph_values.for(node)).to eq('demand' => 20.0)
+      end
+
+      it "specific attributes" do
+        expect(graph_values.for(node, :demand)).to eq(20.0)
+      end
+    end
+  end
+
   describe "setting a value" do
     before do
       expect(graph_values).to receive(:values).once
@@ -124,12 +144,12 @@ module Atlas; describe GraphValues do
 
       describe "activating nodes which aren't allowed" do
         let(:values) {
-          { 'baz@coal' => { 'share' => 100.0 } }
+          { 'baz-@coal' => { 'share' => 100.0 } }
         }
 
         it "raises an error" do
           expect(graph_values.errors_on(:values))
-            .to include("slot 'baz@coal' is not allowed to be edited by 'share'")
+            .to include("slot 'baz-@coal' is not allowed to be edited by 'share'")
         end
       end
     end

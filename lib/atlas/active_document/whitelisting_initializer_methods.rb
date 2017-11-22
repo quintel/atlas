@@ -33,7 +33,7 @@ module Atlas
         if graph_key =~ /-.+@/
           [:edge, Edge.find(graph_key)]
         elsif graph_key =~ /@.+/
-          [:slot, Node.find(graph_key.to_s.sub(/@.+/, ''))]
+          [:slot, Node.find(graph_key.sub(/[-+]@.+/, ''))]
         else
           [:node, Node.find(graph_key)]
         end
