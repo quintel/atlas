@@ -30,19 +30,21 @@ module Atlas; describe GraphValues do
 
         graph_values.set(node, :demand, 50.0)
 
-        expect(graph_values.to_h[:bar][:demand]).to eq(50.0)
+        expect(graph_values.to_h['bar']['demand']).to eq(50.0)
       end
     end
 
     context "of an existing node" do
-      let(:values) { { bar: { demand: 20.0 } } }
+      let(:values) {
+        { 'bar' => { 'demand' => 20.0 } }
+      }
 
       it "(demand)" do
         node = Atlas::Node.find(:bar)
 
         graph_values.set(node, :demand, 50.0)
 
-        expect(graph_values.to_h[:bar][:demand]).to eq(50.0)
+        expect(graph_values.to_h['bar']['demand']).to eq(50.0)
       end
     end
   end

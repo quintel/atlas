@@ -4,8 +4,6 @@ module Atlas
 
     GRAPH_VALUES_FILENAME = 'graph_values.yml'.freeze
     VALID_GRAPH_METHODS   = %w(
-      preset_demand
-      max_demand
       demand
       share
       conversion
@@ -37,8 +35,8 @@ module Atlas
 
     def set(element, attribute, value)
       previous = values
-      previous[element.key] ||= {}
-      previous[element.key][attribute] = value
+      previous[element.key.to_s] ||= {}
+      previous[element.key.to_s][attribute.to_s] = value
 
       save(previous.to_yaml)
     end
