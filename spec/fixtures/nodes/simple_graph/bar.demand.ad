@@ -1,5 +1,6 @@
 # Comment about this Converter
 
+- graph_methods = [demand, number_of_units, conversion]
 - preset_demand = 1000
 ~ output.coal = 0.5
 ~ output.corn = 0.5

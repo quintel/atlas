@@ -24,9 +24,9 @@ module Atlas
     #
     # Returns the calculated Graph.
     def calculate(with = Refinery::Catalyst::Calculators)
-      refinery_catalysts = [with, Refinery::Catalyst::Validation]
+      refinery_catalysts = [precursor, with, Refinery::Catalyst::Validation]
 
-      refinery_catalysts.reduce(refinery_graph) do |result, catalyst|
+      refinery_catalysts.compact.reduce(refinery_graph) do |result, catalyst|
         catalyst.call(result)
       end
     end
@@ -55,6 +55,12 @@ module Atlas
     end
 
     private
+
+    def precursor
+      if precomputed_graph? && !@dataset.uses_deprecated_initializer_inputs
+        SetAttributesFromGraphValues.with_dataset(@dataset)
+      end
+    end
 
     def refinery_scope
       precomputed_graph? ? :import : :all
