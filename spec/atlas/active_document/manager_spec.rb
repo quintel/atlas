@@ -279,5 +279,55 @@ module Atlas::ActiveDocument
         expect { SomeDocument.find(:abc) }.to raise_error(/abc\.suffix/)
       end
     end # with a containing invalid content
+
+
+    context 'saving an document whose to_hash contains non-attribute keys' do
+      let(:klass) do
+        Class.new(SomeDocument) do
+          attribute :nested, self
+
+          def self.name
+            'WithNonAttribute'
+          end
+
+          def to_hash(*)
+            super.merge(nope: 1)
+          end
+        end
+      end
+
+      context 'with a simple document' do
+        let(:document) { klass.new(key: 'with_nonattr', unit: '%') }
+        before { document.save! }
+
+        it 'does not persist the non-attribute' do
+          expect(document.path.read).to_not include('- nope =')
+        end
+
+        it 'does persists attributes' do
+          expect(document.path.read).to include('- unit = %')
+        end
+      end
+
+      context 'with a nested attribute, containing non-attribute keys' do
+        let(:document) do
+          klass.new(key: 'non_attr', unit: '%', nested: klass.new(unit: '#'))
+        end
+
+        before { document.save! }
+
+        it 'does not persist the non-attribute' do
+          expect(document.path.read).to_not include('- nope =')
+        end
+
+        it 'does not persist the nested attribute' do
+          expect(document.path.read).to include('- nested.unit =')
+        end
+
+        it 'does not persist the nested non-attribute' do
+          expect(document.path.read).to_not include('- nested.nope =')
+        end
+      end
+    end # saving an document whose to_hash contains non-attribute keys
   end # Manager
 end # Atlas::ActiveDocument

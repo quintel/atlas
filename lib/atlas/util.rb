@@ -77,6 +77,13 @@ module Atlas
       expanded
     end
 
+    # A hash of attributes and values from a document which can be persisted.
+    #
+    # Returns a Hash.
+    def serializable_attributes(attributes)
+      attributes.reject { |_, value| value.nil? }
+    end
+
     # Public: Rounds the given number to the nearest integer, but only
     # if it is already very close (1e-6) to this integer (which is not 0)
     def round_computation_errors(float)
