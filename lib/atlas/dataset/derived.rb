@@ -14,7 +14,14 @@ module Atlas
     validate :validate_scaling
     validate :validate_presence_of_graph_file
 
-    validate :validate_graph_values, if: -> { persisted? }
+    validate :validate_presence_of_init_keys,
+      if: -> { uses_deprecated_initializer_inputs }
+
+    validate :validate_presence_of_init_values,
+      if: -> { uses_deprecated_initializer_inputs }
+
+    validate :validate_graph_values,
+      if: -> { persisted? && !uses_deprecated_initializer_inputs }
 
     validates_with SerializedGraphValidator
 
@@ -53,9 +60,23 @@ module Atlas
       end
     end
 
-    def validate_graph_values
-      return if uses_deprecated_initializer_inputs
+    def validate_presence_of_init_keys
+      init.each_key do |key|
+        unless InitializerInput.exists?(key)
+          errors.add(:init, "'#{ key }' does not exist as an initializer input")
+        end
+      end
+    end
 
+    def validate_presence_of_init_values
+      init.each_pair do |key, value|
+        unless value.present?
+          errors.add(:init, "value for initializer input '#{ key }' can't be blank")
+        end
+      end
+    end
+
+    def validate_graph_values
       unless graph_values.valid?
         graph_values.errors.each do |_, message|
           errors.add(:graph_values, message)
