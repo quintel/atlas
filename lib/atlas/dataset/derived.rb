@@ -62,6 +62,8 @@ module Atlas
     end
 
     def validate_graph_values
+      return if uses_deprecated_initializer_inputs
+
       unless graph_values.valid?
         graph_values.errors.each do |error|
           errors.add(:graph_values, error)

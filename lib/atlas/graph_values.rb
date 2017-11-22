@@ -35,10 +35,18 @@ module Atlas
       @values ||= YAML.load_file(graph_values_path)
     end
 
+    def set(element, attribute, value)
+      previous = values
+      previous[element.key] ||= {}
+      previous[element.key][attribute] = value
+
+      save(previous.to_yaml)
+    end
+
     alias_method :to_h, :values
 
-    def create
-      File.write(graph_values_path, "--- {}")
+    def save(yaml = "--- {}")
+      File.write(graph_values_path, yaml)
     end
 
     private
