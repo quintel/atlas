@@ -38,7 +38,7 @@ module Atlas; describe GraphValues do
 
   describe "setting a value" do
     before do
-      expect(graph_values).to receive(:values).once
+      expect(graph_values).to receive(:values).at_least(:once)
         .and_return(values)
     end
 
@@ -49,6 +49,7 @@ module Atlas; describe GraphValues do
         node = Atlas::Node.find(:bar)
 
         graph_values.set(node, :demand, 50.0)
+        graph_values.save
 
         expect(graph_values.to_h['bar']['demand']).to eq(50.0)
       end
@@ -63,6 +64,7 @@ module Atlas; describe GraphValues do
         node = Atlas::Node.find(:bar)
 
         graph_values.set(node, :demand, 50.0)
+        graph_values.save
 
         expect(graph_values.to_h['bar']['demand']).to eq(50.0)
       end

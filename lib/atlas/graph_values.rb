@@ -49,13 +49,16 @@ module Atlas
       previous = values
       previous[element.key.to_s] ||= {}
       previous[element.key.to_s][attribute.to_s] = value
-
-      save(previous.to_yaml)
+      previous
     end
 
     alias_method :to_h, :values
 
-    def save(yaml = "--- {}")
+    def create!
+      save("--- {}")
+    end
+
+    def save(yaml = values.to_yaml)
       File.write(graph_values_path, yaml)
     end
 
