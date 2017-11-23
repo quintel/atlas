@@ -45,10 +45,10 @@ module Atlas
       end
     end
 
-    def set(element, attribute, value)
+    def set(element_key, attribute, value)
       previous = values
-      previous[element.key.to_s] ||= {}
-      previous[element.key.to_s][attribute.to_s] = value
+      previous[element_key.to_s] ||= {}
+      previous[element_key.to_s][attribute.to_s] = value
       previous
     end
 

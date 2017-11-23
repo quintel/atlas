@@ -48,7 +48,7 @@ module Atlas; describe GraphValues do
       it "(demand)" do
         node = Atlas::Node.find(:bar)
 
-        graph_values.set(node, :demand, 50.0)
+        graph_values.set(node.key.to_s, :demand, 50.0)
         graph_values.save
 
         expect(graph_values.to_h['bar']['demand']).to eq(50.0)
@@ -63,7 +63,7 @@ module Atlas; describe GraphValues do
       it "(demand)" do
         node = Atlas::Node.find(:bar)
 
-        graph_values.set(node, :demand, 50.0)
+        graph_values.set(node.key.to_s, :demand, 50.0)
         graph_values.save
 
         expect(graph_values.to_h['bar']['demand']).to eq(50.0)
