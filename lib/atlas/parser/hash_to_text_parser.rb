@@ -106,7 +106,11 @@ module Atlas
       hash.each_with_object({}) do |(key, value), cast|
         cast[key] = case value
           when Virtus::Model::Core
-            Hash[value.to_hash.sort_by(&:first)]
+            Hash[
+              Atlas::Util
+                .serializable_attributes(value.attributes)
+                .sort_by(&:first)
+            ]
           when Hash
             Hash[value.sort_by(&:first)]
           else

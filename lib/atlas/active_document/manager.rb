@@ -98,7 +98,7 @@ module Atlas
         path = document.path
 
         content = Atlas::HashToTextParser.new(
-          document.to_hash.merge(queries: document.queries)
+          serializable_attributes(document)
         ).to_text
 
         # Ensure the directory exists.
@@ -182,6 +182,15 @@ module Atlas
             map[ key_from_path(path) ] = path
           end
         end
+      end
+
+      # Internal: A hash of attributes and values which can be persisted.
+      #
+      # Returns a Hash.
+      def serializable_attributes(document)
+        Atlas::Util.serializable_attributes(document.attributes.merge(
+          comments: document.comments, queries: document.queries
+        ))
       end
 
       # Internal: Loads a document from disk by its +key+.
