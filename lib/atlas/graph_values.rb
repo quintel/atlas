@@ -8,8 +8,6 @@ module Atlas
       share
       child_share
       parent_share
-      conversion
-      reserved_fraction
       number_of_units
     ).freeze
 
