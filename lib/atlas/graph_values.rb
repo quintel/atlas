@@ -9,6 +9,8 @@ module Atlas
       child_share
       parent_share
       number_of_units
+      input
+      output
     ).freeze
 
     attr_accessor :values

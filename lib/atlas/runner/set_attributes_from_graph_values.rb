@@ -15,10 +15,6 @@ module Atlas
         refinery.nodes.each do |node|
           set_graph_methods(dataset, node)
 
-          (node.slots.in.to_a + node.slots.out.to_a).each do |slot|
-            set_graph_methods_to_slot!(dataset, node, slot)
-          end
-
           node.out_edges.each do |edge|
             set_graph_methods(dataset, edge)
           end
@@ -34,18 +30,20 @@ module Atlas
 
         (dataset.graph_values.for(atlas_element) || {})
           .each_pair do |method, val|
-            refinery_element.set(method.to_sym, val)
+            if %w(input output).include?(method)
+              set_graph_methods_to_slot!(refinery_element, method, val)
+            else
+              refinery_element.set(method.to_sym, val)
+            end
           end
       end
 
-      def self.set_graph_methods_to_slot!(dataset, node, slot)
-        atlas_slot = Atlas::Slot.slot_for(
-          node.get(:model),
-          slot.direction,
-          slot.carrier
-        )
-
-        set_graph_methods(dataset, slot, atlas_slot)
+      def self.set_graph_methods_to_slot!(node, method, values)
+        values.each_pair do |carrier, share|
+          node.slots
+            .public_send(method.sub(/put/, ''), carrier.to_sym)
+            .set(:share, share)
+        end
       end
     end
   end

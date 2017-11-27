@@ -146,12 +146,12 @@ module Atlas; describe GraphValues do
 
       describe "activating nodes which aren't allowed" do
         let(:values) {
-          { 'baz-@coal' => { 'share' => 100.0 } }
+          { 'baz' => { 'input' => { 'corn' => 100.0 } } }
         }
 
         it "raises an error" do
           expect(graph_values.errors_on(:values))
-            .to include("slot 'baz-@coal' is not allowed to be edited by 'share'")
+            .to include("node 'baz' is not allowed to be edited by 'input'")
         end
       end
     end
