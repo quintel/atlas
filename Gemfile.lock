@@ -25,18 +25,18 @@ PATH
   remote: .
   specs:
     atlas (1.0.0)
-      activemodel (>= 4.0)
-      activesupport (>= 4.0)
+      activemodel (>= 4.1.14.1)
+      activesupport (>= 4.1.14.1)
       turbine-graph (>= 0.1)
       virtus (~> 1.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (4.1.0)
-      activesupport (= 4.1.0)
+    activemodel (4.1.14.1)
+      activesupport (= 4.1.14.1)
       builder (~> 3.1)
-    activesupport (4.1.0)
+    activesupport (4.1.14.1)
       i18n (~> 0.6, >= 0.6.9)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
@@ -159,4 +159,4 @@ DEPENDENCIES
   term-ansicolor (>= 1.2.0)
 
 BUNDLED WITH
-   1.14.3
+   1.14.6
