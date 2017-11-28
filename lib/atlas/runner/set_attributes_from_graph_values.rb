@@ -30,7 +30,8 @@ module Atlas
 
         (dataset.graph_values.for(atlas_element) || {})
           .each_pair do |method, val|
-            if %w(input output).include?(method)
+            case method
+            when 'input', 'output'
               set_graph_methods_to_slot!(refinery_element, method, val)
             else
               refinery_element.set(method.to_sym, val)
