@@ -2,26 +2,28 @@ module Atlas
   class Dataset::Derived < Dataset
     GRAPH_FILENAME = 'graph.yml'.freeze
 
+    attribute :init,         Hash[Symbol => Float]
     attribute :base_dataset, String
     attribute :scaling,      Preset::Scaling
-    attribute :init,         Hash[Symbol => Float]
     attribute :geo_id,       String
+    attribute :uses_deprecated_initializer_inputs, Boolean, default: false
 
     validates :scaling, presence: true
 
     validate :validate_presence_of_base_dataset
     validate :validate_scaling
-    validate :validate_presence_of_init_keys
-    validate :validate_presence_of_init_values
     validate :validate_presence_of_graph_file
 
+    validate :validate_presence_of_init_keys,
+      if: -> { uses_deprecated_initializer_inputs }
+
+    validate :validate_presence_of_init_values,
+      if: -> { uses_deprecated_initializer_inputs }
+
+    validate :validate_graph_values,
+      if: -> { persisted? && !uses_deprecated_initializer_inputs }
+
     validates_with SerializedGraphValidator
-
-    validates_with ShareGroupTotalValidator,
-      attribute: :init, input_class: InitializerInput
-
-    validates_with ShareGroupInclusionValidator,
-      attribute: :init, input_class: InitializerInput
 
     def self.find_by_geo_id(geo_id)
       all.detect do |item|
@@ -35,6 +37,10 @@ module Atlas
 
     def graph_path
       dataset_dir.join(GRAPH_FILENAME)
+    end
+
+    def graph_values
+      @graph_values ||= GraphValues.new(self)
     end
 
     private
@@ -66,6 +72,14 @@ module Atlas
       init.each_pair do |key, value|
         unless value.present?
           errors.add(:init, "value for initializer input '#{ key }' can't be blank")
+        end
+      end
+    end
+
+    def validate_graph_values
+      unless graph_values.valid?
+        graph_values.errors.each do |_, message|
+          errors.add(:graph_values, message)
         end
       end
     end
