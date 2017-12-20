@@ -52,7 +52,8 @@ module Atlas
     def copy_etengine_data_files
       FileUtils.cp_r(
         UNSCALED_ETENGINE_DATA_FILES.
-          map { |subdir| File.join(@base_dataset.dataset_dir, subdir) },
+          map    { |subdir| File.join(@base_dataset.dataset_dir, subdir) }.
+          select { |subdir| File.directory?(subdir) },
         @derived_dataset.dataset_dir)
     end
 
