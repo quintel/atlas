@@ -55,6 +55,7 @@ module Atlas
       :buildings_insulation_employment_constant,
       :co2_emission_1990_aviation_bunkers,
       :co2_emission_1990_marine_bunkers,
+      :co2_emissions_of_imported_electricity_g_per_kwh,
       :co2_percentage_free,
       :co2_price,
       :economic_multiplier,
