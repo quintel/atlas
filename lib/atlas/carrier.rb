@@ -12,6 +12,7 @@ module Atlas
     attribute :potential_co2_conversion_per_mj, Float
     attribute :typical_production_per_km2,      Float
     attribute :kg_per_liter,                    Float
+    attribute :kg_per_mol,                      Float
     attribute :graphviz_color,                  Symbol
 
     attribute :co2_conversion_per_mj,           Float
