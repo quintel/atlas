@@ -20,11 +20,6 @@ module Atlas
         AreaAttributesScaler.call(@base_dataset, @derived_dataset.scaling.factor)
       @derived_dataset.save!
 
-      GraphPersistor.call(
-        @base_dataset,
-        @derived_dataset.graph_path,
-        export_modifier: Scaler::GraphScaler.new(@derived_dataset.scaling.factor))
-
       TimeCurveScaler.call(@base_dataset, @derived_dataset)
 
       create_empty_graph_values_file

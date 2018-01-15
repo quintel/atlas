@@ -51,3 +51,6 @@
 - area = groningen
 - number_of_existing_households = 6228292.0
 - interconnector_capacity = 5850.0
+- scaling.area_attribute = number_of_residences
+- scaling.value = 1
+- scaling.base_value = 1000

@@ -5,7 +5,6 @@ module Atlas
     let(:dataset) { Dataset.find(:groningen) }
     let(:catalyst) {
       Runner::SetAttributesFromGraphValues.with_dataset(dataset)
-
     }
 
     context "with a graph" do

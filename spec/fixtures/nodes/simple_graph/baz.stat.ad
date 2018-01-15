@@ -1,3 +1,4 @@
 # E.g. households final energy demand
 
 - expected_demand = 400
+- scaling_exempt = true
