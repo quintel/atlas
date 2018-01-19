@@ -1,6 +1,11 @@
 module Atlas
   class Scaler
-    UNSCALED_ETENGINE_DATA_FILES = %w( fce load_profiles network ).freeze
+    UNSCALED_ETENGINE_DATA_FOLDERS = %w(
+      fce
+      load_profiles
+      network
+      curves
+    ).freeze
 
     def initialize(base_dataset_key, derived_dataset_name, number_of_residences, base_value = nil)
       @base_dataset         = Dataset::Full.find(base_dataset_key)
@@ -23,7 +28,7 @@ module Atlas
       TimeCurveScaler.call(@base_dataset, @derived_dataset)
 
       create_empty_graph_values_file
-      copy_etengine_data_files
+      symlink_etengine_data_files
     end
 
     private
@@ -49,12 +54,14 @@ module Atlas
       }
     end
 
-    def copy_etengine_data_files
-      FileUtils.cp_r(
-        UNSCALED_ETENGINE_DATA_FILES.
-          map    { |subdir| File.join(@base_dataset.dataset_dir, subdir) }.
-          select { |subdir| File.directory?(subdir) },
-        @derived_dataset.dataset_dir)
+    def symlink_etengine_data_files
+      UNSCALED_ETENGINE_DATA_FOLDERS.each do |folder|
+        base = @base_dataset.dataset_dir.join(folder)
+
+        if File.directory?(base)
+          FileUtils.ln_s(base, @derived_dataset.dataset_dir)
+        end
+      end
     end
 
     def create_empty_graph_values_file
