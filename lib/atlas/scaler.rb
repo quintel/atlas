@@ -59,7 +59,10 @@ module Atlas
         base = @base_dataset.dataset_dir.join(folder)
 
         if File.directory?(base)
-          FileUtils.ln_s(base, @derived_dataset.dataset_dir)
+          FileUtils.ln_s(
+            base.relative_path_from(@derived_dataset.dataset_dir),
+            @derived_dataset.dataset_dir
+          )
         end
       end
     end
