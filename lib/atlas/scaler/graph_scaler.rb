@@ -14,13 +14,6 @@ module Atlas
       # :electricity_output_capacity
     ].freeze
 
-    # Maps top-level keys from the dumped graph to arrays of attributes which
-    # need to be scaled.
-    SCALED_ATTRIBUTES = {
-      edges: EDGE_ATTRIBUTES,
-      nodes: NODE_ATTRIBUTES
-    }.freeze
-
     def initialize(scaling_factor)
       @scaling_factor = scaling_factor
     end
@@ -31,14 +24,35 @@ module Atlas
     #
     # Returns the modified graph hash itself.
     def call(graph)
-      SCALED_ATTRIBUTES.each do |graph_key, attributes|
-        graph[graph_key].each_value do |record|
-          attributes.each do |attr|
-            record[attr] = @scaling_factor * record[attr] if record[attr]
-          end
+      graph.nodes.each do |node|
+        scale_node!(node)
+        node.edges(:out).each { |edge| scale_object!(edge, EDGE_ATTRIBUTES) }
+      end
+
+      graph
+    end
+
+    private
+
+    # Internal: Scales attributes of a node, unless the `scaling_exempt` flag is
+    # set.
+    #
+    # Returns nothing.
+    def scale_node!(node)
+      unless node.get(:model).scaling_exempt
+        scale_object!(node, NODE_ATTRIBUTES)
+      end
+    end
+
+    # Internal: Scales the `attributes` of the `object`.
+    #
+    # Returns nothing.
+    def scale_object!(object, attributes)
+      attributes.each do |attribute|
+        if (value = object.get(attribute))
+          object.set(attribute, value * @scaling_factor)
         end
       end
-      graph
     end
   end # Scaler::GraphScaler
 end # Atlas
