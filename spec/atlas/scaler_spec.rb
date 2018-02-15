@@ -66,6 +66,49 @@ module Atlas; describe Scaler do
       it 'dumps a graph.yml' do
         expect(derived_dataset.graph).to_not be_blank
       end
+
+      describe 'graph.yml' do
+        it 'scales down demand of node :a' do
+          expect(derived_dataset.graph.node(:a).demand)
+            .to eq(25 * scaling_factor)
+        end
+
+        it 'scales down demand of node :b' do
+          expect(derived_dataset.graph.node(:b).demand)
+            .to eq(10 * scaling_factor)
+        end
+
+        it 'scales down demand of edge :a->:b' do
+          expect(
+            derived_dataset.graph.node(:a).edges(:out).first.demand
+          ).to eq(10 * scaling_factor)
+        end
+      end
+
+      context 'with scaling_exempt set on node :b' do
+        let(:graph) do
+          super().tap do |gr|
+            gr.node(:b).get(:model).scaling_exempt = true
+          end
+        end
+
+        describe 'graph.yml' do
+          it 'scales down demand of node :a' do
+            expect(derived_dataset.graph.node(:a).demand)
+              .to eq(25 * scaling_factor)
+          end
+
+          it 'retains the original demand of node :b' do
+            expect(derived_dataset.graph.node(:b).demand).to eq(10)
+          end
+
+          it 'scales down demand of edge :a->:b' do
+            expect(
+              derived_dataset.graph.node(:a).edges(:out).first.demand
+            ).to eq(10 * scaling_factor)
+          end
+        end
+      end
     end
 
     context 'with scaling value nil' do
@@ -80,17 +123,16 @@ module Atlas; describe Scaler do
 
 
   describe Scaler::GraphScaler do
-    let(:graph_data) { EssentialExporter.dump(graph) }
+    let(:scaled) { graph }
 
-    before { Scaler::GraphScaler.new(scaling_factor).call(graph_data) }
+    before { Scaler::GraphScaler.new(scaling_factor).call(scaled) }
 
     it 'exports the correct demand 25 * scaling_factor for node :a' do
-      expect(graph_data[:nodes][:a][:demand]).
-        to eql(25.to_r * scaling_factor)
+      expect(scaled.node(:a).demand).to eql(25.to_r * scaling_factor)
     end
 
     it 'exports the correct demand 10 * scaling_factor for edge :a->:b' do
-      expect(graph_data[:edges][:'a-b@a_b'][:demand]).
+      expect(scaled.node(:a).edges(:out).first.demand).
         to eql(10.to_r * scaling_factor)
     end
   end # GraphScaler

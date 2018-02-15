@@ -6,6 +6,7 @@ module Atlas
 
     attribute :use,                   String
     attribute :has_loss,              Boolean
+    attribute :scaling_exempt,        Boolean
     attribute :energy_balance_group,  String
     attribute :demand,                Float
     attribute :max_demand,            Float

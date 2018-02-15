@@ -7,8 +7,11 @@ module Atlas
     #
     # Returns a Hash
   GraphPersistor = lambda do |dataset, path, export_modifier: nil|
-    data = EssentialExporter.dump(Runner.new(dataset).refinery_graph(:export))
-    export_modifier.call(data) if export_modifier
+    graph = Runner.new(dataset).refinery_graph(:export)
+
+    export_modifier.call(graph) if export_modifier
+
+    data = EssentialExporter.dump(graph)
     File.write(path, data.to_yaml)
     data
   end
