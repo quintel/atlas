@@ -69,6 +69,23 @@ module Atlas; describe GraphValues do
         expect(graph_values.to_h['bar']['demand']).to eq(50.0)
       end
     end
+
+    context "of a slot share" do
+      let(:values) {
+        { 'bar' => { 'input' => { 'gas' => 0.5 } } }
+      }
+
+      it "(electricity)" do
+        node = Atlas::Node.find(:bar)
+
+        graph_values.set(node.key.to_s, 'input', { 'electricity' => 0.5 })
+        graph_values.save
+
+        expect(graph_values.to_h['bar']['input']).to eq({
+          'gas' => 0.5, 'electricity' => 0.5
+        })
+      end
+    end
   end
 
   describe "(validations)" do

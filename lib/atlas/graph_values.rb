@@ -46,10 +46,8 @@ module Atlas
     end
 
     def set(element_key, attribute, value)
-      previous = values
-      previous[element_key.to_s] ||= {}
-      previous[element_key.to_s][attribute.to_s] = value
-      previous
+      values[element_key.to_s] ||= {}
+      values[element_key.to_s].deep_merge!(Hash[attribute.to_s, value])
     end
 
     alias_method :to_h, :values
