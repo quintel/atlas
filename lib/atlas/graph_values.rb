@@ -53,6 +53,7 @@ module Atlas
     alias_method :to_h, :values
 
     def create!
+      remove_instance_variable(:@values) if @values
       save("--- {}")
     end
 
