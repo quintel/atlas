@@ -35,9 +35,9 @@ module Atlas
     # missing attributes.
     #
     # Returns a Turbine::Graph.
-    def refinery_graph(which = refinery_scope)
+    def refinery_graph
       @refinery ||= begin
-        catalysts(which).reduce(graph) do |result, catalyst|
+        catalysts.reduce(graph) do |result, catalyst|
           catalyst.call(result)
         end
       end
@@ -47,11 +47,11 @@ module Atlas
     #
     # Returns an Atlas::Runtime.
     def runtime
-      @runtime ||= Runtime.new(dataset, graph)
+      @runtime ||= Runtime.new(precomputed_graph? ? dataset.parent : dataset, graph)
     end
 
     def graph
-      @graph ||= precomputed_graph? ? dataset.graph : GraphBuilder.build
+      @graph ||= GraphBuilder.build
     end
 
     private
@@ -62,28 +62,13 @@ module Atlas
       end
     end
 
-    def refinery_scope
-      precomputed_graph? ? :import : :all
-    end
-
-    def catalysts(which)
-      if which == :all
-        transformations.values.flatten
-      else
-        transformations.fetch(which)
-      end
-    end
-
-    def transformations
-      {
-        export: [
-          SetRubelAttributes.with_queryable(method(:query)),
-          SetSlotSharesFromEfficiency.with_queryable(method(:query))
-        ],
-        import: [
-          ZeroDisabledSectors.with_dataset(dataset)
-        ]
-      }
+    def catalysts
+      [
+        SetRubelAttributes.with_queryable(method(:query)),
+        SetSlotSharesFromEfficiency.with_queryable(method(:query)),
+        ScaleAttributes.with_dataset(dataset),
+        ZeroDisabledSectors.with_dataset(dataset)
+      ]
     end
 
     # Internal: Executes the given Rubel query +string+, returning the
