@@ -19,7 +19,7 @@ module Atlas
     #
     # data - A hash containing production data for the nodes and edges. This
     #        will typically be a +MessagePack.unpack+'ed copy of the output from
-    #        the +FullExporter+.
+    #        the +Exporter+.
     #
     # Returns a ProductionMode
     def initialize(data)
