@@ -32,7 +32,7 @@ module Atlas
     # Returns an Array.
     def self.curve(path)
       CSV.read(
-        path.to_s, converters: [YEAR_NORMALIZER, :all]
+        path.to_s, converters: [YEAR_NORMALIZER, :float]
       ).map(&:first).compact
     end
 
@@ -51,7 +51,7 @@ module Atlas
         @table = CSV::Table.new([CSV::Row.new(@headers, @headers, true)])
       else
         @table = CSV.table(@path.to_s, {
-          converters: [YEAR_NORMALIZER, :all],
+          converters: [YEAR_NORMALIZER, :float],
           header_converters: [KEY_NORMALIZER],
           # Needed to retrieve the headers in case
           # of an otherwise empty csv file
