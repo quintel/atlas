@@ -8,6 +8,7 @@ module Atlas
     attribute :area,      String
     attribute :id,        Integer
     attribute :parent_id, Integer
+    attribute :group,     Symbol, default: :unsorted
 
     # Set to false in the document to disable the region in ETModel.
     attribute :enabled,   Hash[Symbol => Boolean],
