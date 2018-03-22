@@ -117,7 +117,11 @@ module Atlas
       :offshore_suitable_for_wind,
       :onshore_suitable_for_wind,
       :residences_roof_surface_available_for_pv,
-      :buildings_roof_surface_available_for_pv
+      :buildings_roof_surface_available_for_pv,
+      :other_emission_agriculture,
+      :other_emission_built_environment,
+      :other_emission_transport,
+      :other_emission_industry_energy
     ].each do |name|
       attribute name, Float, proportional: true
     end
