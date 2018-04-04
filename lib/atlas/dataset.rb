@@ -84,7 +84,29 @@ module Atlas
       :investment_hv_net_high,
       :investment_hv_net_per_turbine,
       :insulation_profile_fraction_new_houses,
-      :insulation_profile_fraction_old_houses
+      :insulation_profile_fraction_old_houses,
+      :lv_net_spare_capacity,
+      :lv_net_total_costs_present,
+      :lv_net_costs_per_capacity_step,
+      :lv_net_capacity_per_step,
+      :mv_net_spare_capacity,
+      :mv_net_total_costs_present,
+      :mv_net_costs_per_capacity_step,
+      :mv_net_capacity_per_step,
+      :hv_net_spare_capacity,
+      :hv_net_total_costs_present,
+      :hv_net_costs_per_capacity_step,
+      :hv_net_capacity_per_step,
+      :lv_mv_trafo_spare_capacity,
+      :lv_mv_trafo_total_costs_present,
+      :lv_mv_trafo_costs_per_capacity_step,
+      :lv_mv_trafo_capacity_per_step,
+      :mv_hv_trafo_spare_capacity,
+      :mv_hv_trafo_total_costs_present,
+      :mv_hv_trafo_costs_per_capacity_step,
+      :mv_hv_trafo_capacity_per_step,
+      :interconnection_net_costs_present,
+      :offshore_net_costs_present
     ].each do |name|
       attribute name, Float
     end
