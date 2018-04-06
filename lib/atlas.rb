@@ -53,6 +53,7 @@ require_relative 'atlas/active_document'
 require_relative 'atlas/collection'
 require_relative 'atlas/value_object'
 
+require_relative 'atlas/config'
 require_relative 'atlas/edge'
 require_relative 'atlas/input_helper'
 require_relative 'atlas/input'
