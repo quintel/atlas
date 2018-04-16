@@ -13,6 +13,6 @@ module Atlas
     end
 
     validates :type, inclusion: %i[consumer dispatchable flex must_run volatile]
-    validates :level, inclusion: %i[lv mv hv]
+    validates :level, inclusion: %i[lv mv hv omit]
   end # MeritOrderDetails
 end # Atlas
