@@ -104,6 +104,7 @@ require_relative 'atlas/term/reporter'
 
 require_relative 'atlas/production_mode'
 require_relative 'atlas/scenario_reconciler'
+require_relative 'atlas/sparse_graph_query'
 
 ActiveSupport::Inflector.inflections do |inflect|
   # Otherwise "loss".classify => "Los"
