@@ -11,10 +11,20 @@ module Atlas
     attribute :query, String
 
     validate :validate_part
-    validates_inclusion_of :graph_method, in: GraphValues::VALID_GRAPH_METHODS
+    validates_inclusion_of :graph_method,
+      in: GraphValues::VALID_GRAPH_METHODS,
+      if: Proc.new{|s| s.graph_part? }
+
+    validates_inclusion_of :graph_method,
+      in: Dataset::Derived.attribute_set.map(&:name),
+      if: Proc.new{|s| !s.graph_part? }
 
     def key
       :"#{part}+#{graph_method}"
+    end
+
+    def graph_part?
+      Node.exists?(part) || Edge.exists?(part)
     end
 
     private
@@ -33,9 +43,7 @@ module Atlas
     end
 
     def validate_part
-      return if Node.exists?(part) ||
-                Edge.exists?(part) ||
-                part == 'area'
+      return if graph_part? || part == 'area'
 
       errors.add(:part, "no such node, edge or scope exists: #{part}")
     end

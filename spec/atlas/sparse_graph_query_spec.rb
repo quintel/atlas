@@ -32,6 +32,15 @@ module Atlas
               .to include('is not included in the list')
           end
         end
+
+        describe 'area attribute' do
+          let(:attributes) { { key: 'area+not_allowed' } }
+
+          it 'is invalid' do
+            expect(query.errors_on(:graph_method))
+              .to include('is not included in the list')
+          end
+        end
       end
 
       describe 'a valid' do
