@@ -20,8 +20,8 @@ module Atlas
 
       describe 'invalid' do
         it 'graph key when it does not exist' do
-          expect(query.errors_on(:graph_part))
-            .to include('no such node or edge exists: test')
+          expect(query.errors_on(:part))
+            .to include('no such node, edge or scope exists: test')
         end
 
         describe 'graph attribute' do

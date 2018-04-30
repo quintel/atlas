@@ -5,16 +5,16 @@ module Atlas
     DIRECTORY = 'sparse_graph_queries'
     VALID_NAME = /^[\w_@-]+\+[\w_]+$/
 
-    attr_accessor :graph_part
+    attr_accessor :part
     attr_accessor :graph_method
 
     attribute :query, String
 
-    validate :validate_graph_part
+    validate :validate_part
     validates_inclusion_of :graph_method, in: GraphValues::VALID_GRAPH_METHODS
 
     def key
-      :"#{graph_part}+#{graph_method}"
+      :"#{part}+#{graph_method}"
     end
 
     private
@@ -24,18 +24,20 @@ module Atlas
         fail InvalidKeyError.new(name)
       end
 
-      graph_part, graph_method = name.split('+')
+      part, graph_method = name.split('+')
 
       {
-        graph_part: graph_part,
+        part: part,
         graph_method: graph_method
       }
     end
 
-    def validate_graph_part
-      return if Node.exists?(graph_part) || Edge.exists?(graph_part)
+    def validate_part
+      return if Node.exists?(part) ||
+                Edge.exists?(part) ||
+                part == 'area'
 
-      errors.add(:graph_part, "no such node or edge exists: #{graph_part}")
+      errors.add(:part, "no such node, edge or scope exists: #{part}")
     end
   end
 end
