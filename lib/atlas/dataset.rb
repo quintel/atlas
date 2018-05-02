@@ -272,6 +272,14 @@ module Atlas
         dataset_dir.join('central_producers.csv'))
     end
 
+    # Public: A set of demands required for use inside ETlocal
+    #
+    # Returns a CSVDocument
+    def parent_values
+      @parent_values ||= CSVDocument.new(
+        dataset_dir.join('parent_values.csv'))
+    end
+
     # Public: Retrieves demand and max demand data for the region. Expects to
     # load a file at datasets/AREA/primary_production.csv.
     #
