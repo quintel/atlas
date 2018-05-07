@@ -99,6 +99,10 @@ module Atlas
       dataset.primary_production.get(node_key, attribute)
     end
 
+    def PARENT_VALUE(node_key, attribute)
+      dataset.parent_values.get(node_key, attribute)
+    end
+
     # Public: Given a key from the time curves file, retrieves the associated
     # value.
     #

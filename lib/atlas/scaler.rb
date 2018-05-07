@@ -1,6 +1,7 @@
 module Atlas
   class Scaler
     UNSCALED_ETENGINE_DATA_FOLDERS = %w(
+      demands
       fce
       load_profiles
       network
