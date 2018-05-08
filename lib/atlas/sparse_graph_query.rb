@@ -16,7 +16,7 @@ module Atlas
       if: Proc.new{|s| s.graph_part? }
 
     validates_inclusion_of :graph_method,
-      in: Dataset::Derived.attribute_set.map(&:name),
+      in: Dataset::Derived.attribute_set.map {|a| a.name.to_s },
       if: Proc.new{|s| !s.graph_part? }
 
     def key
