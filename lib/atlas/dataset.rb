@@ -331,5 +331,13 @@ module Atlas
     def dataset_dir
       path.parent
     end
+
+    # Public: Removes the dataset and all associated files.
+    #
+    # Returns true or false.
+    def destroy!
+      super
+      FileUtils.rm_rf(dataset_dir)
+    end
   end # Dataset
 end # Atlas

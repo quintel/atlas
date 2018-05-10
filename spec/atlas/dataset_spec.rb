@@ -310,6 +310,16 @@ module Atlas
         )
       end
     end
+
+    describe '#destroy!', :focus do
+      let(:dataset) { Dataset.find(:nl) }
+
+      it 'removes the directory' do
+        expect { dataset.destroy! }
+          .to change { dataset.dataset_dir.exist? }
+          .from(true).to(false)
+      end
+    end
   end # describe Dataset
 
   describe Dataset::Derived do
