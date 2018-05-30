@@ -116,6 +116,9 @@ module Atlas
     attribute :electric_vehicle_profile_2_share, Float, default: 0.0
     attribute :electric_vehicle_profile_3_share, Float, default: 0.0
 
+    attribute :solar_pv_profile_1_share, Float, default: 1.0
+    attribute :solar_pv_profile_2_share, Float, default: 0.0
+
     # These attributes are relative to the size of the region. If we simulate a
     # sub-region (say, 5% of the "full" region size), these attributes can be
     # reduced in proportion to the sub-region size.
