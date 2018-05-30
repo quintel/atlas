@@ -311,7 +311,7 @@ module Atlas
       end
     end
 
-    describe '#destroy!', :focus do
+    describe '#destroy!' do
       let(:dataset) { Dataset.find(:nl) }
 
       it 'removes the directory' do
