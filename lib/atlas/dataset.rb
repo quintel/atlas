@@ -107,7 +107,8 @@ module Atlas
       :mv_hv_trafo_costs_per_capacity_step,
       :mv_hv_trafo_capacity_per_step,
       :interconnection_net_costs_present,
-      :offshore_net_costs_present
+      :offshore_net_costs_present,
+      :flh_solar_pv_solar_radiation_max
     ].each do |name|
       attribute name, Float
     end
