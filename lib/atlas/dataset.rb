@@ -64,6 +64,7 @@ module Atlas
       :employment_fraction_production,
       :employment_local_fraction,
       :export_electricity_primary_demand_factor,
+      :flh_solar_pv_solar_radiation_max,
       :import_electricity_primary_demand_factor,
       :insulation_level_buildings_max,
       :insulation_level_buildings_min,
@@ -116,6 +117,9 @@ module Atlas
     attribute :electric_vehicle_profile_2_share, Float, default: 0.0
     attribute :electric_vehicle_profile_3_share, Float, default: 0.0
 
+    attribute :solar_pv_profile_1_share, Float, default: 1.0
+    attribute :solar_pv_profile_2_share, Float, default: 0.0
+
     # These attributes are relative to the size of the region. If we simulate a
     # sub-region (say, 5% of the "full" region size), these attributes can be
     # reduced in proportion to the sub-region size.
@@ -159,6 +163,12 @@ module Atlas
         :electric_vehicle_profile_1_share,
         :electric_vehicle_profile_2_share,
         :electric_vehicle_profile_3_share
+      ]
+
+      group: :solar_pv_profile_share,
+      attributes: [
+        :solar_pv_profile_1_share,
+        :solar_pv_profile_2_share
       ]
 
     # Returns the Energy Balance for this area/dataset.
