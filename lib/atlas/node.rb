@@ -4,21 +4,20 @@ module Atlas
 
     DIRECTORY = 'nodes'
 
-    attribute :use,                   String
-    attribute :has_loss,              Boolean
-    attribute :scaling_exempt,        Boolean
-    attribute :energy_balance_group,  String
-    attribute :demand,                Float
-    attribute :max_demand,            Float
+    attribute :use,                  String
+    attribute :has_loss,             Boolean
+    attribute :scaling_exempt,       Boolean
+    attribute :energy_balance_group, String
+    attribute :demand,               Float
+    attribute :max_demand,           Float
 
-    attribute :input,                 Hash[Symbol => Object]
-    attribute :output,                Hash[Symbol => Object]
-    attribute :groups,                Array[Symbol]
-    attribute :merit_order,           MeritOrderDetails
-    attribute :fever,                 FeverDetails
-    attribute :storage,               StorageDetails
-    attribute :capacity_distribution, String
-    attribute :graph_methods,         Array[String]
+    attribute :input,                Hash[Symbol => Object]
+    attribute :output,               Hash[Symbol => Object]
+    attribute :groups,               Array[Symbol]
+    attribute :merit_order,          MeritOrderDetails
+    attribute :fever,                FeverDetails
+    attribute :storage,              StorageDetails
+    attribute :graph_methods,        Array[String]
 
     alias_method :sector,  :ns
     alias_method :sector=, :ns=
@@ -42,21 +41,6 @@ module Atlas
       :expected_demand,
       :average_effective_output_of_nominal_capacity_over_lifetime,
       :sustainability_share
-    ].each do |name|
-      attribute name, Float
-    end
-
-    # (Numeric) attributes that are required for the network queries to work
-    [ :network_capacity_available_in_mw,
-      :network_capacity_used_in_mw,
-      :network_expansion_costs_in_euro_per_mw,
-      :simult_sd,
-      :simult_se,
-      :simult_wd,
-      :simult_we,
-      :peak_load_units,
-      :peak_load_units_present,
-      :simult_supply
     ].each do |name|
       attribute name, Float
     end
@@ -106,7 +90,6 @@ module Atlas
     validates_with QueryValidator,
       attributes: [:max_demand], allow_no_query: true
 
-    validates_with Atlas::Node::CapacityDistributionValidator
     validates_with Atlas::Node::FeverValidator
 
     validate :validate_slots

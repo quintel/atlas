@@ -186,28 +186,6 @@ module Atlas
       end # when Merit has not been loaded
     end # load_profile
 
-    describe '#capacity_distribution' do
-      let(:dataset) { Dataset.find(:nl) }
-
-      context 'with a real cap. dist.' do
-        let(:dist) do
-          dataset.capacity_distribution(:network_hv_mv_trafo_distribution)
-        end
-
-        it 'returns an array of values' do
-          expect(dist).to eq([0.0, 0.09, 0.13, 0.16])
-        end
-      end
-
-      context 'when the cap. dist. does not exist' do
-        let(:dist) { dataset.capacity_distribution(:nope) }
-
-        it 'raises an error' do
-          expect { dist }.to raise_error(Errno::ENOENT)
-        end
-      end
-    end # capacity_distribution
-
     [1, 2, 3].each do |number|
       describe "#electric_vehicle_profile_#{ number }_share" do
         let(:dataset) { Dataset.new }

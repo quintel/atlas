@@ -315,20 +315,6 @@ module Atlas
           dataset_dir.join("demands/#{ key }.csv"))
     end
 
-    # Public: Retrieves the capacity distribution data for the file whose name
-    # matches +key+.
-    #
-    # key - The name of the capacity distribution file to load.
-    #
-    # For example:
-    #   dataset.shares(:trucks).get(:gasoline) # => 0.4
-    #
-    # Returns an CSVDocument::OneDimensional.
-    def capacity_distribution(key)
-      (@cap_distributions ||= {})[key.to_sym] ||=
-        CSVDocument.curve(dataset_dir.join("network/#{ key }.csv"))
-    end
-
     # Public: Path to the directory in which the dataset specific data is
     # stored.
     #
