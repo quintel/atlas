@@ -17,6 +17,7 @@ module Atlas
     attribute :area_code,          String
     attribute :user_values,        Hash[Symbol => Float]
     attribute :scaling,            Scaling
+    attribute :flexibility_order,  Array[Symbol]
 
     validates :title,       presence: true
     validates :area_code,   presence: true
