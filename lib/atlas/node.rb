@@ -18,6 +18,7 @@ module Atlas
     attribute :merit_order,          MeritOrderDetails
     attribute :fever,                FeverDetails
     attribute :storage,              StorageDetails
+    attribute :hydrogen,             HydrogenDetails
     attribute :graph_methods,        Array[String]
 
     alias_method :sector,  :ns

@@ -81,6 +81,7 @@ require_relative 'atlas/scaler/area_attributes_scaler'
 require_relative 'atlas/scaler/time_curve_scaler'
 
 require_relative 'atlas/fever_details'
+require_relative 'atlas/hydrogen_details'
 require_relative 'atlas/merit_order_details'
 require_relative 'atlas/storage_details'
 
