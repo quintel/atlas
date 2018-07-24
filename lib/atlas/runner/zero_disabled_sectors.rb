@@ -7,7 +7,7 @@ module Atlas
     module ZeroDisabledSectors
       # Maps boolean flags on the dataset to node groups which should be
       # disabled if the flag is false.
-      FEATURE_MAP = { has_metal: :metal_industry }
+      FEATURE_MAP = { has_metal: :steel_alu_prod }
 
       # Public: Creates a proc which can be used by Refinery to zero-out any
       # disabled subsectors.
