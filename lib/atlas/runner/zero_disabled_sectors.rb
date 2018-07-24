@@ -45,6 +45,10 @@ module Atlas
         end
 
         node.set(:demand, 0)
+
+        # Temporary coupling_carrier slot shares.
+        node.set(:cc_in, 0)
+        node.set(:cc_out, 0)
       end
     end # ZeroDisabledSectors
   end # Runner
