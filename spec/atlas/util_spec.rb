@@ -149,7 +149,6 @@ module Atlas
       end # when the hash contains three levels
     end # expand_dotted_hash
 
-
     describe '.round_computation_errors' do
       let(:rounded) { Atlas::Util.round_computation_errors(@value) }
 
@@ -183,5 +182,47 @@ module Atlas
         expect(rounded).to eq(@value)
       end
     end # round_computation_errors
+
+    describe 'serializable_attributes' do
+      let(:serialized) do
+        Atlas::Util.serializable_attributes({
+          int: 1,
+          blank_str: ' ',
+          non_blank_str: 'a',
+          empty_arr: [],
+          non_empty_arr: %w(a),
+          empty_hash: {},
+          non_empty_hash: { a: 1 },
+        })
+      end
+
+      it 'includes non-nil values' do
+        expect(serialized[:int]).to eq(1)
+      end
+
+      it 'omits blank strings' do
+        expect(serialized).to_not have_key(:blank_str)
+      end
+
+      it 'includes non-blank strings' do
+        expect(serialized[:non_blank_str]).to eq('a')
+      end
+
+      it 'omits empty arrays' do
+        expect(serialized).to_not have_key(:empty_arr)
+      end
+
+      it 'includes non-empty arrays' do
+        expect(serialized[:non_empty_arr]).to eq(%w(a))
+      end
+
+      it 'omits empty hashes' do
+        expect(serialized).to_not have_key(:empty_hash)
+      end
+
+      it 'includes non-empty hashes' do
+        expect(serialized[:non_empty_hash]).to eq(a: 1)
+      end
+    end
   end # Util
 end # Atlas
