@@ -7,7 +7,7 @@ module Atlas
       attribute :type,           Symbol
       attribute :group,          Symbol
       attribute :level,          Symbol, default: :hv
-      attribute :target,         Symbol
+      attribute :delegate,       Symbol
       attribute :demand_source,  Symbol
       attribute :demand_profile, Symbol
     end
