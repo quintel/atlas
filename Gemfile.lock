@@ -6,8 +6,8 @@ GIT
 
 GIT
   remote: https://github.com/quintel/refinery.git
-  revision: 90cc27ef67e620d8d26e80097d8408a31fbce3fb
-  ref: 90cc27e
+  revision: 333ffc7f8203f6fd2c77b3042c0b65f24d9f2088
+  ref: 333ffc7
   specs:
     refinery (0.0.1)
       ruby-graphviz
@@ -130,7 +130,7 @@ GEM
     turbine-graph (0.1.3)
     tzinfo (1.1.0)
       thread_safe (~> 0.1)
-    unicode-display_width (1.3.2)
+    unicode-display_width (1.4.0)
     url (0.3.2)
     virtus (1.0.5)
       axiom-types (~> 0.1)
@@ -161,4 +161,4 @@ DEPENDENCIES
   term-ansicolor (>= 1.2.0)
 
 BUNDLED WITH
-   1.16.1
+   1.16.3
