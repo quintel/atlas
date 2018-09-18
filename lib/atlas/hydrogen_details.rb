@@ -6,8 +6,9 @@ module Atlas
     include ActiveModel::Validations
 
     values do
-      attribute :type,    Symbol, writer: :public
-      attribute :profile, Symbol, writer: :public
+      attribute :type,     Symbol, writer: :public
+      attribute :profile,  Symbol, writer: :public
+      attribute :behavior, Symbol, writer: :public
     end
 
     validates :type, inclusion: %i[consumer producer storage]
