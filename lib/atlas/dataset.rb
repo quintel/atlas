@@ -109,7 +109,7 @@ module Atlas
       :interconnection_net_costs_present,
       :offshore_net_costs_present,
       :flh_solar_pv_solar_radiation_max,
-      :hydrogen_electrolysis_solar_capacity_share
+      :hydrogen_electrolysis_solar_pv_capacity_ratio
     ].each do |name|
       attribute name, Float
     end
