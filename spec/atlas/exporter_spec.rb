@@ -132,6 +132,7 @@ module Atlas
 
         expect(nodes[:mother][:merit_order]).to eq(
           type: :rock,
+          subtype: :generic,
           group: :'The Flower Kings',
           level: :hv
         )
