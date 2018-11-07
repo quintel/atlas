@@ -149,7 +149,13 @@ module Atlas
       :other_emission_agriculture,
       :other_emission_built_environment,
       :other_emission_transport,
-      :other_emission_industry_energy
+      :other_emission_industry_energy,
+      :number_of_detached_houses_thousands,
+      :number_of_apartments_thousands,
+      :number_of_semi_detached_houses_thousands,
+      :number_of_corner_houses_thousands,
+      :number_of_terraced_houses_thousands,
+      :useful_heat_demand_per_detached_house_low_insulation
     ].each do |name|
       attribute name, Float, proportional: true
     end
