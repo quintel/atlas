@@ -109,7 +109,27 @@ module Atlas
       :interconnection_net_costs_present,
       :offshore_net_costs_present,
       :flh_solar_pv_solar_radiation_max,
-      :hydrogen_electrolysis_solar_pv_capacity_ratio
+      :hydrogen_electrolysis_solar_pv_capacity_ratio,
+      :insulation_detached_houses_low_share,
+      :insulation_detached_houses_medium_share,
+      :insulation_detached_houses_high_share,
+      :insulation_apartments_low_share,
+      :insulation_apartments_medium_share,
+      :insulation_apartments_high_share,
+      :insulation_semi_detached_houses_low_share,
+      :insulation_semi_detached_houses_medium_share,
+      :insulation_semi_detached_houses_high_share,
+      :insulation_corner_houses_low_share,
+      :insulation_corner_houses_medium_share,
+      :insulation_corner_houses_high_share,
+      :insulation_terraced_houses_low_share,
+      :insulation_terraced_houses_medium_share,
+      :insulation_terraced_houses_high_share,
+      :insulation_detached_houses_start_value,
+      :insulation_semi_detached_houses_start_value,
+      :insulation_apartments_start_value,
+      :insulation_corner_houses_start_value,
+      :insulation_terraced_houses_start_value
     ].each do |name|
       attribute name, Float
     end
@@ -154,13 +174,7 @@ module Atlas
       :number_of_apartments,
       :number_of_semi_detached_houses,
       :number_of_corner_houses,
-      :number_of_terraced_houses,
-      :useful_heat_demand_per_detached_house_low_insulation,
-      :insulation_detached_houses,
-      :insulation_semi_detached_houses,
-      :insulation_apartments,
-      :insulation_corner_houses,
-      :insulation_terraced_houses
+      :number_of_terraced_houses
     ].each do |name|
       attribute name, Float, proportional: true
     end
