@@ -3,24 +3,6 @@ module Atlas
     attr_reader :path
     attr_reader :table
 
-    # A lambda which converts strings to a consistent format for keys in
-    # CSV files.
-    KEY_NORMALIZER = lambda do |key|
-      case key
-      when Numeric, nil
-        # nils never happen here in Ruby >= 2.3 since nils
-        # skip the normalizer.
-        key
-      else
-        key.to_s.downcase.strip
-          .gsub(/(?:\s+|-)/, '_')
-          .gsub(/[^a-zA-Z0-9_]+/, '')
-          .gsub(/_+/, '_')
-          .gsub(/_$/, '')
-          .to_sym
-      end
-    end
-
     # Columns called "year" will be converted to an integer.
     YEAR_NORMALIZER = lambda do |value, info|
       info.header == :year ? value.to_f.to_i : value
@@ -36,6 +18,8 @@ module Atlas
       ).map(&:first).compact
     end
 
+    # A lambda which converts strings to a consistent format for keys in
+    # CSV files.
     # Public: Creates a new CSV document instance which will read data from a
     # CSV file on disk. Documents are read-write.
     #
@@ -47,16 +31,17 @@ module Atlas
 
       if headers
         raise(ExistingCSVHeaderError, path) if @path.file?
-        @headers = headers.map(&KEY_NORMALIZER)
+        @headers = headers.map { |header| normalize_key(header) }
         @table = CSV::Table.new([CSV::Row.new(@headers, @headers, true)])
       else
-        @table = CSV.table(@path.to_s, {
-          converters: [YEAR_NORMALIZER, :float],
-          header_converters: [KEY_NORMALIZER],
+        @table = CSV.table(
+          @path.to_s,
+          converters: value_converters,
+          header_converters: [->(header) { normalize_key(header) }],
           # Needed to retrieve the headers in case
           # of an otherwise empty csv file
           return_headers: true
-        })
+        )
 
         @headers = table.headers
 
@@ -161,7 +146,27 @@ module Atlas
     #
     # Returns a Symbol.
     def normalize_key(key)
-      KEY_NORMALIZER.call(key)
+      case key
+      when Numeric, nil
+        # nils never happen here in Ruby >= 2.3 since nils
+        # skip the normalizer.
+        key
+      else
+        key.to_s.downcase.strip
+          .gsub(/(?:\s+|-)/, '_')
+          .gsub(/[^a-zA-Z0-9_]+/, '')
+          .gsub(/_+/, '_')
+          .gsub(/_$/, '')
+          .to_sym
+      end
+    end
+
+    # Internal: Procs passed to the CSV::Table describing how to convert values
+    # from the CSV to Ruby types.
+    #
+    # Returns an Array of Procs or Symbols.
+    def value_converters
+      [YEAR_NORMALIZER, :float]
     end
 
     # Internal: Raises unless the named column exists in the file.

@@ -186,6 +186,31 @@ module Atlas
       end # when Merit has not been loaded
     end # load_profile
 
+    describe '#insulation_costs' do
+      let(:dataset) { Dataset.find(:nl) }
+
+      context 'with "existing_apartments"' do
+        it 'loads the upgrade costs for apartments' do
+          expect(dataset.insulation_costs('existing_apartments'))
+            .to be_a(Atlas::Dataset::InsulationCostCSV)
+        end
+      end
+
+      context 'with "new_builds"' do
+        it 'loads the new build costs for apartments' do
+          expect(dataset.insulation_costs(:new_builds))
+            .to be_a(Atlas::Dataset::InsulationCostCSV)
+        end
+      end
+
+      context 'with "nope"' do
+        it 'raises an error' do
+          expect { dataset.insulation_costs('nope') }
+            .to raise_error(Errno::ENOENT)
+        end
+      end
+    end
+
     [1, 2, 3].each do |number|
       describe "#electric_vehicle_profile_#{ number }_share" do
         let(:dataset) { Dataset.new }

@@ -259,6 +259,17 @@ module Atlas
       @time_curves ||= {}
     end
 
+    # Public: Gets the InsulationCostCSV for the given house type. The CSV is a
+    # matrix of present and future insulation levels and the associated cost of
+    # upgrading a household or building from one level to another.
+    #
+    # Returns a Dataset::InsulationCostCSV.
+    def insulation_costs(type)
+      (@insulation_costs ||= {})[type.to_sym] ||= InsulationCostCSV.new(
+        dataset_dir.join("real_estate/insulation_costs_#{type}.csv")
+      )
+    end
+
     # Public: Retrieves the load profile data for the file whose name matches
     # the given +key+.
     #

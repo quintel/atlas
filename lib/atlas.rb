@@ -76,6 +76,7 @@ require_relative 'atlas/preset'
 require_relative 'atlas/dataset'
 require_relative 'atlas/dataset/derived'
 require_relative 'atlas/dataset/full'
+require_relative 'atlas/dataset/insulation_cost_csv'
 
 require_relative 'atlas/scaler'
 require_relative 'atlas/scaler/area_attributes_scaler'
