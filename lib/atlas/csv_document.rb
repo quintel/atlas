@@ -126,7 +126,16 @@ module Atlas
     #
     # Returns a CSV::Row or nil.
     def safe_row(key)
-      table.find { |row| normalize_key(row[0]) == key }
+      keyed_table[key]
+    end
+
+    # Internal: Precomputes the normalized key of each row for faster lookups.
+    #
+    # Returns a Hash of CSV::Row.
+    def keyed_table
+      @keyed_table ||= table.each_with_object({}) do |row, hash|
+        hash[normalize_key(row[0])] = row
+      end
     end
 
     # Internal: Finds the row by the given +key+ or creates it if no such
@@ -137,6 +146,8 @@ module Atlas
       safe_row(key) || begin
         row = CSV::Row.new(@headers, [key])
         table << row
+        @keyed_table = nil
+
         safe_row(key)
       end
     end
