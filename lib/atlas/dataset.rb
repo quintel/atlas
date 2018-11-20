@@ -129,7 +129,27 @@ module Atlas
       :insulation_semi_detached_houses_start_value,
       :insulation_apartments_start_value,
       :insulation_corner_houses_start_value,
-      :insulation_terraced_houses_start_value
+      :insulation_terraced_houses_start_value,
+      :typical_roof_surface_corner_house_available_for_pv,
+      :typical_roof_surface_terraced_house_available_for_pv,
+      :typical_roof_surface_detached_house_available_for_pv,
+      :typical_roof_surface_semi_detached_house_available_for_pv,
+      :typical_roof_surface_apartment_available_for_pv,
+      :typical_useful_demand_space_heating_corner_house,
+      :typical_useful_demand_space_heating_detached_house,
+      :typical_useful_demand_space_heating_semi_detached_house,
+      :typical_useful_demand_space_heating_terraced_house,
+      :typical_useful_demand_space_heating_apartment,
+      :heat_demand_reduction_medium_insulation_corner_house,
+      :heat_demand_reduction_medium_insulation_detached_house,
+      :heat_demand_reduction_medium_insulation_semi_detached_house,
+      :heat_demand_reduction_medium_insulation_terraced_house,
+      :heat_demand_reduction_medium_insulation_apartment,
+      :heat_demand_reduction_high_insulation_corner_house,
+      :heat_demand_reduction_high_insulation_detached_house,
+      :heat_demand_reduction_high_insulation_semi_detached_house,
+      :heat_demand_reduction_high_insulation_terraced_house,
+      :heat_demand_reduction_high_insulation_apartment,
     ].each do |name|
       attribute name, Float
     end
