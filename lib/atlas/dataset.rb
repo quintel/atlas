@@ -40,8 +40,7 @@ module Atlas
     attribute :use_merit_order_demands,  Boolean, default: true
     attribute :has_aggregated_chemical_industry,  Boolean, default:true
     attribute :has_detailed_chemical_industry,    Boolean, default:false
-    attribute :has_aggregated_other_industry,     Boolean, default:true
-    attribute :has_detailed_other_industry,       Boolean, default:false
+    attribute :has_coal_oil_for_heating_built_environment, Boolean, default:false
 
     # Numeric Data
     # ------------
