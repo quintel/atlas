@@ -143,12 +143,12 @@ module Atlas
       :heat_demand_reduction_medium_insulation_detached_house,
       :heat_demand_reduction_medium_insulation_semi_detached_house,
       :heat_demand_reduction_medium_insulation_terraced_house,
-      :heat_demand_reduction_medium_insulation_apartment,
+      :heat_demand_reduction_medium_insulation_apartments,
       :heat_demand_reduction_high_insulation_corner_house,
       :heat_demand_reduction_high_insulation_detached_house,
       :heat_demand_reduction_high_insulation_semi_detached_house,
       :heat_demand_reduction_high_insulation_terraced_house,
-      :heat_demand_reduction_high_insulation_apartment,
+      :heat_demand_reduction_high_insulation_apartments,
     ].each do |name|
       attribute name, Float
     end
