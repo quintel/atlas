@@ -190,14 +190,29 @@ module Atlas
           blank_str: ' ',
           non_blank_str: 'a',
           empty_arr: [],
-          non_empty_arr: %w(a),
+          non_empty_arr: %w[a],
           empty_hash: {},
           non_empty_hash: { a: 1 },
+          true_value: true,
+          false_value: false,
+          nil_value: nil
         })
       end
 
       it 'includes non-nil values' do
         expect(serialized[:int]).to eq(1)
+      end
+
+      it 'includes true' do
+        expect(serialized[:true_value]).to be(true)
+      end
+
+      it 'includes false' do
+        expect(serialized[:false_value]).to be(false)
+      end
+
+      it 'omits nil' do
+        expect(serialized).to_not have_key(:nil_value)
       end
 
       it 'omits blank strings' do
