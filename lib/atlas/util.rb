@@ -81,7 +81,7 @@ module Atlas
     #
     # Returns a Hash.
     def serializable_attributes(attributes)
-      attributes.reject { |_, value| value.blank? }
+      attributes.reject { |_, value| value != false && value.blank? }
     end
 
     # Public: Rounds the given number to the nearest integer, but only
