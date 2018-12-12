@@ -132,6 +132,34 @@ module Atlas
       dataset.demands(file_key).get(attribute)
     end
 
+    # Public: Retrieves a value from an FCE file.
+    #
+    # file_key  - The name of the FCE file to read.
+    # carrier   - The carrier whose data to read.
+    # attribute - The attribute to be read.
+    #
+    # For example, if there exists a carrier file "bio_ethanol.yml" with the
+    # following data:
+    #
+    #   :sugar_beets:
+    #     :co2_conversion_per_mj: 0.0
+    #     :start_value: 0.6
+    #   :sugar_cane:
+    #     :co2_conversion_per_mj: 0.0
+    #     :start_value: 0.4
+    #
+    # Retrieving the sugar beets start value would be achieved by calling:
+    #
+    #   FCE(bio_ethanol, sugar_beets, start_value)
+    #
+    # Returns a numeric.
+    #
+    # Raises Errno::ENOENT if the file does not exist or KeyError if the carrier
+    # or attribute does not exist.
+    def FCE(file_key, carrier, attribute)
+      dataset.fce(file_key).fetch(carrier.to_sym).fetch(attribute.to_sym)
+    end
+
     #######
     private
     #######
