@@ -351,6 +351,19 @@ module Atlas
           dataset_dir.join("demands/#{ key }.csv"))
     end
 
+    # Public: Retrieves the FCE data for the file matching +key+.
+    #
+    # key - The name of the FCE file to load.
+    #
+    # Returns a hash.
+    def fce(key)
+      key = key.to_sym
+
+      (@fce ||= {})[key] ||=
+        YAML.load_file(dataset_dir.join("fce/#{key}.yml"))
+          .symbolize_keys.transform_values(&:symbolize_keys)
+    end
+
     # Public: Path to the directory in which the dataset specific data is
     # stored.
     #
