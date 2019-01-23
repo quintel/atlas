@@ -291,25 +291,39 @@ module Atlas
       end
     end
 
-    describe "validate number of residences" do
-      it "validates if the number of old and new residences is set correctly" do
-        dataset = Dataset::Full.new(number_of_residences: 100,
-                                    number_of_old_residences: 5,
-                                    number_of_new_residences: 95)
+    describe 'validate number of residences' do
+      it 'is valid when the number of residence types is set correctly' do
+        dataset = Dataset::Full.new(
+          number_of_residences: 100,
+          number_of_detached_houses: 20,
+          number_of_apartments: 20,
+          number_of_semi_detached_houses: 20,
+          number_of_corner_houses: 20,
+          number_of_terraced_houses: 20
+        )
 
         dataset.valid?
         expect(dataset.errors[:number_of_residences]).to be_empty
       end
 
-      it "validates if the number of old and new residences is set correctly" do
-        dataset = Dataset::Full.new(number_of_residences: 100,
-                                    number_of_old_residences: 5,
-                                    number_of_new_residences: 94)
+      it 'is invalid when the number of residence types does not sum to number of residences' do
+        dataset = Dataset::Full.new(
+          number_of_residences: 100,
+          number_of_detached_houses: 19,
+          number_of_apartments: 20,
+          number_of_semi_detached_houses: 20,
+          number_of_corner_houses: 20,
+          number_of_terraced_houses: 20
+        )
 
         dataset.valid?
         expect(dataset.errors[:number_of_residences]).to include(
-          "Number of old residences (5.0) and number of new residences "\
-          "(94.0) don't add up to the total number of residences (100.0)."
+          <<~ERROR.gsub(/\s+/, ' ').strip
+            Number of apartments (20.0) Number of terraced houses (20.0) Number
+            of corner houses (20.0) Number of detached houses (19.0) Number of
+            semi detached houses (20.0) don't add up to the total number of
+            residences (100.0).
+          ERROR
         )
       end
     end
