@@ -7,6 +7,7 @@ module Atlas
       insulation
       load_profiles
       network
+      real_estate
     ].freeze
 
     def initialize(base_dataset_key, derived_dataset_name, number_of_residences, base_value = nil)
