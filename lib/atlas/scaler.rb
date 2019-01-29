@@ -1,12 +1,13 @@
 module Atlas
   class Scaler
-    UNSCALED_ETENGINE_DATA_FOLDERS = %w(
+    UNSCALED_ETENGINE_DATA_FOLDERS = %w[
+      curves
       demands
       fce
       load_profiles
       network
-      curves
-    ).freeze
+      real_estate
+    ].freeze
 
     def initialize(base_dataset_key, derived_dataset_name, number_of_residences, base_value = nil)
       @base_dataset         = Dataset::Full.find(base_dataset_key)

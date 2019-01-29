@@ -40,8 +40,7 @@ module Atlas
     attribute :use_merit_order_demands,  Boolean, default: true
     attribute :has_aggregated_chemical_industry,  Boolean, default:true
     attribute :has_detailed_chemical_industry,    Boolean, default:false
-    attribute :has_aggregated_other_industry,     Boolean, default:true
-    attribute :has_detailed_other_industry,       Boolean, default:false
+    attribute :has_coal_oil_for_heating_built_environment, Boolean, default:false
 
     # Numeric Data
     # ------------
@@ -50,10 +49,8 @@ module Atlas
     # of whether we're calculating the entire region, or simulating a smaller
     # sub-region.
 
-    [ :buildings_insulation_constant_1,
-      :buildings_insulation_constant_2,
-      :buildings_insulation_cost_constant,
-      :buildings_insulation_employment_constant,
+    [ :buildings_insulation_employment_constant,
+      :households_insulation_employment_constant,
       :co2_emission_1990_aviation_bunkers,
       :co2_emission_1990_marine_bunkers,
       :co2_emissions_of_imported_electricity_g_per_kwh,
@@ -65,27 +62,10 @@ module Atlas
       :employment_local_fraction,
       :export_electricity_primary_demand_factor,
       :import_electricity_primary_demand_factor,
-      :insulation_level_buildings_max,
-      :insulation_level_buildings_min,
-      :insulation_level_new_houses_max,
-      :insulation_level_new_houses_min,
-      :insulation_level_old_houses_max,
-      :insulation_level_old_houses_min,
-      :new_houses_insulation_constant_1,
-      :new_houses_insulation_constant_2,
-      :new_houses_insulation_cost_constant,
-      :new_houses_insulation_employment_constant,
-      :old_houses_insulation_constant_1,
-      :old_houses_insulation_constant_2,
-      :old_houses_insulation_cost_constant,
-      :old_houses_insulation_employment_constant,
       :man_hours_per_man_year,
-      :technical_lifetime_insulation,
       :investment_hv_net_low,
       :investment_hv_net_high,
       :investment_hv_net_per_turbine,
-      :insulation_profile_fraction_new_houses,
-      :insulation_profile_fraction_old_houses,
       :lv_net_spare_capacity,
       :lv_net_total_costs_present,
       :lv_net_costs_per_capacity_step,
@@ -109,7 +89,49 @@ module Atlas
       :interconnection_net_costs_present,
       :offshore_net_costs_present,
       :flh_solar_pv_solar_radiation_max,
-      :hydrogen_electrolysis_solar_pv_capacity_ratio
+      :hydrogen_electrolysis_solar_pv_capacity_ratio,
+      :insulation_detached_houses_low_share,
+      :insulation_detached_houses_medium_share,
+      :insulation_detached_houses_high_share,
+      :insulation_apartments_low_share,
+      :insulation_apartments_medium_share,
+      :insulation_apartments_high_share,
+      :insulation_semi_detached_houses_low_share,
+      :insulation_semi_detached_houses_medium_share,
+      :insulation_semi_detached_houses_high_share,
+      :insulation_corner_houses_low_share,
+      :insulation_corner_houses_medium_share,
+      :insulation_corner_houses_high_share,
+      :insulation_terraced_houses_low_share,
+      :insulation_terraced_houses_medium_share,
+      :insulation_terraced_houses_high_share,
+      :insulation_detached_houses_start_value,
+      :insulation_semi_detached_houses_start_value,
+      :insulation_apartments_start_value,
+      :insulation_corner_houses_start_value,
+      :insulation_terraced_houses_start_value,
+      :insulation_buildings_start_value,
+      :typical_roof_surface_corner_house_available_for_pv,
+      :typical_roof_surface_terraced_house_available_for_pv,
+      :typical_roof_surface_detached_house_available_for_pv,
+      :typical_roof_surface_semi_detached_house_available_for_pv,
+      :typical_roof_surface_apartment_available_for_pv,
+      :typical_useful_demand_space_heating_corner_house,
+      :typical_useful_demand_space_heating_detached_house,
+      :typical_useful_demand_space_heating_semi_detached_house,
+      :typical_useful_demand_space_heating_terraced_house,
+      :typical_useful_demand_space_heating_apartment,
+      :heat_demand_reduction_medium_insulation_corner_house,
+      :heat_demand_reduction_medium_insulation_detached_house,
+      :heat_demand_reduction_medium_insulation_semi_detached_house,
+      :heat_demand_reduction_medium_insulation_terraced_house,
+      :heat_demand_reduction_medium_insulation_apartments,
+      :heat_demand_reduction_high_insulation_corner_house,
+      :heat_demand_reduction_high_insulation_detached_house,
+      :heat_demand_reduction_high_insulation_semi_detached_house,
+      :heat_demand_reduction_high_insulation_terraced_house,
+      :heat_demand_reduction_high_insulation_apartments,
+      :heat_demand_reduction_high_insulation_buildings
     ].each do |name|
       attribute name, Float
     end
@@ -139,9 +161,6 @@ module Atlas
       :number_of_cars,
       :number_of_residences,
       :number_of_inhabitants,
-      :number_of_existing_households,
-      :number_of_new_residences,
-      :number_of_old_residences,
       :offshore_suitable_for_wind,
       :onshore_suitable_for_wind,
       :residences_roof_surface_available_for_pv,
@@ -149,7 +168,12 @@ module Atlas
       :other_emission_agriculture,
       :other_emission_built_environment,
       :other_emission_transport,
-      :other_emission_industry_energy
+      :other_emission_industry_energy,
+      :number_of_detached_houses,
+      :number_of_apartments,
+      :number_of_semi_detached_houses,
+      :number_of_corner_houses,
+      :number_of_terraced_houses
     ].each do |name|
       attribute name, Float, proportional: true
     end
@@ -232,6 +256,17 @@ module Atlas
       end
 
       @time_curves ||= {}
+    end
+
+    # Public: Gets the InsulationCostCSV for the given house type. The CSV is a
+    # matrix of present and future insulation levels and the associated cost of
+    # upgrading a household or building from one level to another.
+    #
+    # Returns a Dataset::InsulationCostCSV.
+    def insulation_costs(type)
+      (@insulation_costs ||= {})[type.to_sym] ||= InsulationCostCSV.new(
+        dataset_dir.join("real_estate/insulation_costs_#{type}.csv")
+      )
     end
 
     # Public: Retrieves the load profile data for the file whose name matches
