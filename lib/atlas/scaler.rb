@@ -4,7 +4,6 @@ module Atlas
       curves
       demands
       fce
-      insulation
       load_profiles
       network
       real_estate
