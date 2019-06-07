@@ -281,11 +281,11 @@ module Atlas
     #
     # For example:
     #   dataset.load_profile_path(:river)
-    #   # => #<Pathname .../nl/load_profiles/river.csv>
+    #   # => #<Pathname .../nl/curves/river.csv>
     #
     # Returns a Pathname.
     def load_profile_path(key)
-      dataset_dir.join("load_profiles/#{ key }.csv")
+      dataset_dir.join("curves/#{ key }.csv")
     end
 
     # Public: If the Merit library has been loaded, returns the
