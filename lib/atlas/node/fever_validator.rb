@@ -57,7 +57,7 @@ module Atlas
       def validate_alias_of(record, fever)
         if !Node.exists?(fever.alias_of) || !Node.find(fever.alias_of).fever
           record.errors.add(:fever, MESSAGES[:alias_missing])
-        elsif Node.find(fever.alias_of).fever.group != :hot_water
+        elsif !Node.find(fever.alias_of).fever.group.to_s.match?(/hot_water/)
           record.errors.add(:fever, MESSAGES[:alias_invalid])
         end
       end
