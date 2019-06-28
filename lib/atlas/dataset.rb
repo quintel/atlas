@@ -139,6 +139,8 @@ module Atlas
     attribute :electric_vehicle_profile_1_share, Float, default: 1.0
     attribute :electric_vehicle_profile_2_share, Float, default: 0.0
     attribute :electric_vehicle_profile_3_share, Float, default: 0.0
+    attribute :electric_vehicle_profile_4_share, Float, default: 0.0
+    attribute :electric_vehicle_profile_5_share, Float, default: 0.0
 
     attribute :solar_pv_profile_1_share, Float, default: 1.0
     attribute :solar_pv_profile_2_share, Float, default: 0.0
@@ -188,7 +190,9 @@ module Atlas
       attributes: [
         :electric_vehicle_profile_1_share,
         :electric_vehicle_profile_2_share,
-        :electric_vehicle_profile_3_share
+        :electric_vehicle_profile_3_share,
+        :electric_vehicle_profile_4_share,
+        :electric_vehicle_profile_5_share,
       ]
 
     # Returns the Energy Balance for this area/dataset.
