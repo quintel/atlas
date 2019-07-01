@@ -243,7 +243,9 @@ module Atlas
           Dataset.new(
             electric_vehicle_profile_1_share: 0.3,
             electric_vehicle_profile_2_share: 0.4,
-            electric_vehicle_profile_3_share: 0.3
+            electric_vehicle_profile_3_share: 0.3,
+            electric_vehicle_profile_4_share: 0.0,
+            electric_vehicle_profile_5_share: 0.0
           )
         end
 
@@ -257,7 +259,9 @@ module Atlas
           Dataset.new(
             electric_vehicle_profile_1_share: 0.3,
             electric_vehicle_profile_2_share: 0.2,
-            electric_vehicle_profile_3_share: 0.3
+            electric_vehicle_profile_3_share: 0.3,
+            electric_vehicle_profile_4_share: 0.0,
+            electric_vehicle_profile_5_share: 0.0
           )
         end
 
@@ -276,7 +280,9 @@ module Atlas
           Dataset.new(
             electric_vehicle_profile_1_share: 0.4,
             electric_vehicle_profile_2_share: 0.5,
-            electric_vehicle_profile_3_share: 0.3
+            electric_vehicle_profile_3_share: 0.3,
+            electric_vehicle_profile_4_share: 0.0,
+            electric_vehicle_profile_5_share: 0.0
           )
         end
 
