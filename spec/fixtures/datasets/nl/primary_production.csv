@@ -5,7 +5,7 @@ energy_production_bio_oil,0.00,
 energy_production_biogenic_waste,36627.97,36628.00
 energy_production_non_biogenic_waste,31202.00,31203.00
 energy_production_wood_pellets,,
-energy_production_woody_biomass,,
+energy_production_dry_biomass,,
 energy_production_manure,,
 energy_production_corn,,
 energy_production_algae_diesel,0.00,

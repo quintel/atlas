@@ -242,7 +242,7 @@ module Atlas
     # key - The name of the time curve file to load.
     #
     # For example:
-    #   dataset.time_curve(woody_biomass).get(2011, :max_demand) # => 34.0
+    #   dataset.time_curve(dry_biomass).get(2011, :max_demand) # => 34.0
     #
     # Returns a CSVDocument.
     def time_curve(key)

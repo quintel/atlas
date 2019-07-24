@@ -93,18 +93,18 @@ module Atlas; describe Scaler do
     end
 
     it 'scales the time curves' do
-      expect(derived_dataset.time_curve(:woody_biomass).get(2030, :max_demand)).
+      expect(derived_dataset.time_curve(:dry_biomass).get(2030, :max_demand)).
         to be_within(0.001).of(9.73488372100000E+04 * scaling_factor)
     end
 
     it 'has the same columns as original file' do
-      expect(derived_dataset.time_curve(:woody_biomass).column_keys).
-        to eql(base_dataset.time_curve(:woody_biomass).column_keys)
+      expect(derived_dataset.time_curve(:dry_biomass).column_keys).
+        to eql(base_dataset.time_curve(:dry_biomass).column_keys)
     end
 
     it 'has a row for each year in the original file' do
-      expect(derived_dataset.time_curve(:woody_biomass).row_keys).
-        to eql(base_dataset.time_curve(:woody_biomass).row_keys)
+      expect(derived_dataset.time_curve(:dry_biomass).row_keys).
+        to eql(base_dataset.time_curve(:dry_biomass).row_keys)
     end
   end # TimeCurveScaler
 end; end # Atlas::Scaler
