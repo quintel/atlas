@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 module Atlas
   module Parser
+    # Identifies lines from a document.
     class Identifier
-
       ATTR_PREFIX    = '-'
       QUERY_PREFIX   = '~'
       COMMENT_PREFIX = '#'
 
-      COMMENT_LINE   = /^#{ COMMENT_PREFIX }(.*)/
-      ATTR_LINE      = /^#{ ATTR_PREFIX }\s(.+)\s=(?:\s*(.*))/
-      QUERY_LINE     = /^#{ QUERY_PREFIX }\s(.+)\s=/
-      INNER_BLOCK    = /^\s\s(.+)/
+      COMMENT_LINE   = /^#{COMMENT_PREFIX}(.*)/.freeze
+      ATTR_LINE      = /^#{ATTR_PREFIX}\s(.+)\s=(?:\s*(.*))/.freeze
+      QUERY_LINE     = /^#{QUERY_PREFIX}\s(.+)\s=/.freeze
+      INNER_BLOCK    = /^\s\s(.+)/.freeze
 
       def self.type(string)
         # Branches are ordered depending on how often we expect to encounter
