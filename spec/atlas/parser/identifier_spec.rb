@@ -37,7 +37,7 @@ module Atlas
         context 'non-identifiable strings' do
 
           it 'raises an error' do
-            expect { Identifier.type(nil) }.to raise_error CannotIdentifyError
+            expect { Identifier.type('!') }.to raise_error CannotIdentifyError
           end
 
         end
