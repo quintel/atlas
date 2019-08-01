@@ -199,8 +199,18 @@ module Atlas
       def load(key)
         (path = lookup_map[key]) || return
 
-        relative_path = path.relative_path_from(@directory)
-        without_ext   = relative_path.basename.sub_ext('').to_s
+        # This is ugly, but significantly faster than relative_path_from and we
+        # know that the path is prefixed exactly with the directory path.
+        relative_path = path.to_s.delete_prefix("#{@directory}/")
+
+        basename =
+          if (dir_index = relative_path.rindex('/'))
+            relative_path[dir_index..-1]
+          else
+            relative_path
+          end
+
+        without_ext = basename.delete_suffix(".#{@klass::FILE_SUFFIX}")
 
         if without_ext.include?('.')
           subclass = without_ext.split('.').last
