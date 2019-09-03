@@ -5,6 +5,7 @@ module Atlas
     GRAPH_VALUES_FILENAME = 'graph_values.yml'.freeze
     VALID_GRAPH_METHODS   = %w(
       demand
+      max_demand
       share
       child_share
       parent_share
