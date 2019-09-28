@@ -166,25 +166,16 @@ module Atlas
       let(:dataset) { Dataset.find(:nl) }
       let(:profile) { dataset.load_profile(:total_demand) }
 
-      describe 'when Merit has been loaded' do
-        before do
-          profile_const = double('LoadProfile')
-          allow(profile_const).to receive(:load).and_return('my profile')
+      it 'loads the curve with Util.load_curve' do
+        allow(Atlas::Util).to(
+          receive(:load_curve)
+            .with(dataset.load_profile_path(:total_demand))
+            .and_return('1.0')
+        )
 
-          stub_const('Merit::LoadProfile', profile_const)
-        end
-
-        it 'returns the load profile' do
-          expect(profile).to eq('my profile')
-        end
-      end # when Merit has been loaded
-
-      describe 'when Merit has not been loaded' do
-        it 'raises a MeritRequired error' do
-          expect { profile }.to raise_error(Atlas::MeritRequired)
-        end
-      end # when Merit has not been loaded
-    end # load_profile
+        expect(dataset.load_profile(:total_demand)).to eq('1.0')
+      end
+    end
 
     describe '#insulation_costs' do
       let(:dataset) { Dataset.find(:nl) }

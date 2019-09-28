@@ -239,5 +239,54 @@ module Atlas
         expect(serialized[:non_empty_hash]).to eq(a: 1)
       end
     end
+
+    describe '.load_curve' do
+      context 'when Merit is loaded' do
+        # rubocop:disable RSpec/VerifiedDoubles
+        let(:curve_const) { double('Merit::Curve') }
+        # rubocop:enable RSpec/VerifiedDoubles
+
+        before do
+          stub_const('Merit::LoadProfile', curve_const)
+        end
+
+        context 'when the file exists' do
+          let(:path) { Pathname.new(Tempfile.new('curve.csv')) }
+
+          after { path.unlink }
+
+          it 'reads the file' do
+            path.write('1.0')
+
+            allow(curve_const).to(
+              receive(:load)
+                .with(path)
+                .and_return { |path| File.read(path) }
+            )
+
+            expect(Util.load_curve(path)).to eq('1.0')
+          end
+        end
+
+        context 'when the file does not exist' do
+          it 'raises an error' do
+            allow(curve_const).to(
+              receive(:load)
+                .with('nope.csv')
+                .and_return { |path| File.read(path) }
+            )
+
+            expect { Util.load_curve('nope.csv') }.to raise_error(Errno::ENOENT)
+          end
+        end
+      end
+
+      describe 'with Merit is not loaded' do
+        it 'raises an error' do
+          expect { Util.load_curve('hi.csv') }
+            .to raise_error(Atlas::MeritRequired)
+        end
+      end
+    end
   end # Util
 end # Atlas
