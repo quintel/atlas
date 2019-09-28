@@ -297,9 +297,15 @@ module Atlas
     #
     # Returns a Merit::Curve.
     def load_profile(key)
-      Merit::Curve.load_file(load_profile_path(key))
-    rescue NameError => e
-      raise(e.message.match?(/Merit$/) ? MeritRequired.new : e)
+      Util.load_curve(load_profile_path(key))
+    end
+
+    # Public: A collection containing all of the curve sets which belong to the
+    # dataset.
+    #
+    # Returns a CurveSetCollection.
+    def curve_sets
+      @curve_sets ||= CurveSetCollection.at_path(dataset_dir.join('curves'))
     end
 
     # Public: Retrieves demand and full load hours data for the region.
