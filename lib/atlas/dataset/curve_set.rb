@@ -18,6 +18,8 @@ module Atlas
     # The `CurveSet` is called "heat", and has two `Variant`s, each containing
     # a curve_one.csv and curve_two.csv.
     class CurveSet
+      include Enumerable
+
       # Public: Pathname to the curve set.
       attr_reader :path
 
@@ -41,9 +43,25 @@ module Atlas
         variants[name.to_s]
       end
 
-      # Public: Returns the `Variant`s in an array.
+      # Public: Returns the `Variant`s in an array. If a variant called
+      # "default" exists, it will always be the first member of the array.
       def to_a
-        variants.values
+        if variant?('default')
+          [variant('default'), *variants.values].uniq
+        else
+          variants.values
+        end
+      end
+
+      # Public: Yields each variant in the curve set in alphanumeric order, with
+      # exception of the "default" variant (if present), which is always yielded
+      # first.
+      #
+      # Returns nothing.
+      def each
+        return enum_for(:each) unless block_given?
+
+        to_a.each { |variant| yield(variant) }
       end
 
       def inspect
@@ -54,11 +72,16 @@ module Atlas
 
       def variants
         @variants ||=
-          @path.children.select(&:directory?)
-            .each_with_object({}) do |child, map|
-              variant = Variant.new(child)
-              map[variant.name] = variant
-            end
+          if @path.directory?
+            @path.children.select(&:directory?)
+              .sort_by(&:basename)
+              .each_with_object({}) do |child, map|
+                variant = Variant.new(child)
+                map[variant.name] = variant
+              end
+          else
+            {}
+          end
       end
 
       # Describes a single variant of the CurveSet. Contains curves which may be

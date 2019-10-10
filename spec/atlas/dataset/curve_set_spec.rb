@@ -93,4 +93,37 @@ describe Atlas::Dataset::CurveSet do
       expect(set.variant?('variant_three')).to be(false)
     end
   end
+
+  context 'with an "a", "b", and "default" subdirectories' do
+    before do
+      path.join('a').mkdir
+      path.join('b').mkdir
+      path.join('default').mkdir
+    end
+
+    describe '#to_a' do
+      let(:array) { set.to_a }
+
+      it 'has three members' do
+        expect(array.length).to eq(3)
+      end
+
+      it 'has the "default" set as the first element' do
+        expect(array[0].name).to eq('default')
+      end
+
+      it 'has the "a" set as the second element' do
+        expect(array[1].name).to eq('a')
+      end
+
+      it 'has the "b" set as the third element' do
+        expect(array[2].name).to eq('b')
+      end
+    end
+
+    it 'enumerates with "default" first' do
+      names = set.map.with_index { |v, index| [index, v.name] }
+      expect(names).to eq([[0, 'default'], [1, 'a'], [2, 'b']])
+    end
+  end
 end
