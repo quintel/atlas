@@ -4,6 +4,8 @@ module Atlas
   class Dataset
     # Contains one or more `CurveSet`s belonging to a `Dataset`.
     class CurveSetCollection
+      include Enumerable
+
       # Public: Given a path to a directory containing zero or more curve set
       # directories, instantiates the CurveSet instances and returns a
       # collection.
@@ -26,14 +28,28 @@ module Atlas
       end
 
       # Public: Returns if a curve set matching `name` exists.
-      def curve_set?(name)
+      def key?(name)
         @sets.key?(name.to_s)
       end
 
       # Public: Returns the curve set matching `name` or nil if the set does not
       # exist.
-      def curve_set(name)
+      def get(name)
         @sets[name.to_s]
+      end
+
+      alias_method :[], :get
+
+      # Public: Returns all of the CurveSets in an array.
+      def to_a
+        @sets.values
+      end
+
+      # Public: Yields each CurveSet in the collection.
+      def each
+        return enum_for(:each) unless block_given?
+
+        @sets.each { |_, set| yield(set) }
       end
 
       def length

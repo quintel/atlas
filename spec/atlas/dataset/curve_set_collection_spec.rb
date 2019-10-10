@@ -20,11 +20,11 @@ RSpec.describe Atlas::Dataset::CurveSetCollection do
       end
 
       it 'contains the first set' do
-        expect(collection.curve_set?('first_set')).to be(true)
+        expect(collection.key?('first_set')).to be(true)
       end
 
       it 'contains the second set' do
-        expect(collection.curve_set?('second_set')).to be(true)
+        expect(collection.key?('second_set')).to be(true)
       end
     end
 
@@ -54,27 +54,42 @@ RSpec.describe Atlas::Dataset::CurveSetCollection do
     end
 
     it 'has a set called "set_1"' do
-      expect(collection.curve_set?('set_1')).to be(true)
+      expect(collection.key?('set_1')).to be(true)
     end
 
     it 'can retrieve "set_1"' do
-      expect(collection.curve_set('set_1')).to eq(set_1)
+      expect(collection.get('set_1')).to eq(set_1)
+    end
+
+    it 'can retrieve sets with #[]' do
+      expect(collection['set_1']).to eq(set_1)
     end
 
     it 'has a set called "set_2"' do
-      expect(collection.curve_set?('set_2')).to be(true)
+      expect(collection.key?('set_2')).to be(true)
     end
 
     it 'can retrieve "set_2"' do
-      expect(collection.curve_set('set_2')).to eq(set_2)
+      expect(collection.get('set_2')).to eq(set_2)
     end
 
     it 'does not have a set called "set_3"' do
-      expect(collection.curve_set?('set_3')).to be(false)
+      expect(collection.key?('set_3')).to be(false)
     end
 
     it 'returns nil when retrieving "set_3"' do
-      expect(collection.curve_set('set_3')).to be_nil
+      expect(collection.get('set_3')).to be_nil
+    end
+
+    it 'can yield each set with Enumerable' do
+      expect(collection.map.with_index { |s, i| [i, s] }).to eq([
+        [0, set_1],
+        [1, set_2]
+      ])
+    end
+
+    it 'can provide a list of each sets with #to_a' do
+      expect(collection.to_a).to eq([set_1, set_2])
     end
   end
 end
