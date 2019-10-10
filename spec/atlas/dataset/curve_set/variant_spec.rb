@@ -41,6 +41,13 @@ RSpec.describe Atlas::Dataset::CurveSet::Variant do
       expect(variant.curve('c1')).to eq('1.0')
     end
 
+    it 'provides each curve path in #curves' do
+      expect(variant.curves).to eq([
+        path.join('c1.csv'),
+        path.join('c2.csv')
+      ])
+    end
+
     describe 'curve paths' do
       it 'looks for .csv files only' do
         expect(variant.curve_path('c1.csv').to_s)

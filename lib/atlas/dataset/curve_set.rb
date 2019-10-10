@@ -102,6 +102,10 @@ module Atlas
           path.children.count { |child| child.file? && child.extname == '.csv' }
         end
 
+        def curves
+          Pathname.glob(@path.join('*.csv')).sort
+        end
+
         def curve?(name)
           curve_path(name).file?
         end
