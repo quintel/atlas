@@ -73,5 +73,20 @@ module Atlas
         expect(group).to include(Input.find(:grouped_two))
       end
     end
+
+    describe '.min_value_gql' do
+      it 'must be present if unit is "enum"' do
+        input = Input.new(unit: 'enum')
+
+        expect(input.errors_on(:min_value_gql)).to include(
+          'must not be blank when the unit is "enum"'
+        )
+      end
+
+      it 'is permitted when the unit is "enum"' do
+        input = Input.new(unit: 'enum', min_value_gql: '1')
+        expect(input.errors_on(:min_value_gql)).to be_empty
+      end
+    end
   end # Input
 end # ETSource
