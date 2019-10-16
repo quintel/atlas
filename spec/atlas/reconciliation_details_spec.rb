@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-RSpec.describe Atlas::HydrogenDetails do
-  let(:details) { Atlas::HydrogenDetails.new(attrs) }
+RSpec.describe Atlas::ReconciliationDetails do
+  let(:details) { described_class.new(attrs) }
 
   context 'with no type' do
     let(:attrs) { {} }

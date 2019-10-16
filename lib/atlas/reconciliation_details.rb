@@ -1,9 +1,13 @@
+# frozen_string_literal: true
+
 module Atlas
   # Contains information about a nodes participantion in the time-resolved
-  # hydrogen calculation.
-  class HydrogenDetails
+  # balanced supply/demand calculation.
+  class ReconciliationDetails
     include ValueObject
     include ActiveModel::Validations
+
+    attr_reader :carrier
 
     values do
       attribute :type,     Symbol, writer: :public
@@ -13,7 +17,7 @@ module Atlas
 
     validates :type, inclusion: %i[consumer producer storage]
 
-    validates :profile, presence: true, if: ->(hd) { hd.type != :storage }
-    validates :profile, absence: true,  if: ->(hd) { hd.type == :storage }
+    validates :profile, presence: true, if: ->(rd) { rd.type != :storage }
+    validates :profile, absence: true,  if: ->(rd) { rd.type == :storage }
   end
 end
