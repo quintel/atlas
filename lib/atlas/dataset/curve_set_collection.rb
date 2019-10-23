@@ -38,6 +38,13 @@ module Atlas
         @sets[name.to_s]
       end
 
+      # Public: Returns the curve set matching `name`, or raises a
+      # MissingCurveSetError if no such variant exists.
+      def get!(name)
+        get(name) ||
+          raise(MissingCurveSetError.new(to_a.first&.path&.dirname, name))
+      end
+
       alias_method :[], :get
 
       # Public: Returns all of the CurveSets in an array.

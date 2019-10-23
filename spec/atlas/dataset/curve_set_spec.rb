@@ -69,6 +69,19 @@ describe Atlas::Dataset::CurveSet do
         expect(variant.curve?('c2')).to be(false)
       end
     end
+
+    describe '#get!' do
+      it 'returns a variant which exists' do
+        expect(set.variant!('variant_one')).not_to be_nil
+      end
+
+      it 'raises an error when the variant does not exist' do
+        expect { set.variant!('nope') }.to raise_error(
+          Atlas::MissingCurveSetVariantError,
+          %(No curve set variant called "nope" found at "#{path}")
+        )
+      end
+    end
   end
 
   context 'with a "variant_one" and "variant_two" subdirectories' do

@@ -43,6 +43,12 @@ module Atlas
         variants[name.to_s]
       end
 
+      # Public: Returns the `Variant` matching `name`, or raises a
+      # MissingCurveSetVariantError if no such variant exists.
+      def variant!(name)
+        variant(name) || raise(MissingCurveSetVariantError.new(@path, name))
+      end
+
       # Public: Returns the `Variant`s in an array. If a variant called
       # "default" exists, it will always be the first member of the array.
       def to_a

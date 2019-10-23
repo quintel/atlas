@@ -214,6 +214,19 @@ module Atlas
     "Column headers provided although CSV file #{path} already exists"
   end
 
+  # Curve Set Errors ---------------------------------------------------------
+
+  MissingCurveSetError =
+    error_class do |base_path, name|
+      "No curve set called #{name.inspect} found at " \
+      "#{base_path&.to_s&.inspect || '(unknown path)'}"
+    end
+
+  MissingCurveSetVariantError =
+    error_class do |base_path, name|
+      "No curve set variant called #{name.inspect} found at " \
+      "#{base_path.to_s.inspect}"
+    end
 
   # Parser Errors ------------------------------------------------------------
 

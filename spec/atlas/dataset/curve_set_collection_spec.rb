@@ -43,6 +43,23 @@ RSpec.describe Atlas::Dataset::CurveSetCollection do
     end
   end
 
+  context 'with no sets' do
+    let(:collection) { described_class.new([]) }
+
+    it 'has 0 sets' do
+      expect(collection.length).to eq(0)
+    end
+
+    describe '#get!' do
+      it 'raises an error' do
+        expect { collection.get!('nope') }.to raise_error(
+          Atlas::MissingCurveSetError,
+          'No curve set called "nope" found at (unknown path)'
+        )
+      end
+    end
+  end
+
   context 'with sets called "set_1" and "set_2"' do
     let(:set_1) { Atlas::Dataset::CurveSet.new(Pathname.new('set_1')) }
     let(:set_2) { Atlas::Dataset::CurveSet.new(Pathname.new('set_2')) }
@@ -90,6 +107,19 @@ RSpec.describe Atlas::Dataset::CurveSetCollection do
 
     it 'can provide a list of each sets with #to_a' do
       expect(collection.to_a).to eq([set_1, set_2])
+    end
+
+    describe '#get!' do
+      it 'fetches a set which exists' do
+        expect(collection.get!('set_1')).to eq(set_1)
+      end
+
+      it 'raises an error when the set does not exist' do
+        expect { collection.get!('nope') }.to raise_error(
+          Atlas::MissingCurveSetError,
+          'No curve set called "nope" found at "."'
+        )
+      end
     end
   end
 end
