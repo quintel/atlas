@@ -11,12 +11,12 @@ module Atlas
     describe 'share_group' do
       it 'may be nil' do
         input = Input.new(share_group: nil)
-        expect(input).to have(:no).errors_on(:share_group)
+        expect(input.errors_on(:share_group).length).to eq(0)
       end
 
       it 'may have a value' do
         input = Input.new(share_group: :my_group)
-        expect(input).to have(:no).errors_on(:share_group)
+        expect(input.errors_on(:share_group).length).to eq(0)
       end
 
       it 'coerces strings to a symbol' do
@@ -25,7 +25,7 @@ module Atlas
 
       it 'may not be a zero-length value' do
         input = Input.new(share_group: '')
-        expect(input).to have(1).error_on(:share_group)
+        expect(input.errors_on(:share_group).length).to eq(1)
       end
     end
 
@@ -35,20 +35,20 @@ module Atlas
         let(:other) { Input.find(:grouped_two) }
 
         it 'may be present' do
-          expect(input).to have(:no).errors_on(:query)
+          expect(input.errors_on(:query).length).to eq(0)
         end
 
         it 'may be omitted if all other inputs in the group have a query' do
           input.query = nil
-          expect(input).to have(:no).errors_on(:query)
+          expect(input.errors_on(:query).length).to eq(0)
         end
 
         it 'may not be omitted if any other input in the group omits a query' do
           input.query = nil
           other.query = nil
 
-          expect(input).to have(1).errors_on(:query)
-          expect(other).to have(1).errors_on(:query)
+          expect(input.errors_on(:query).length).to eq(1)
+          expect(other.errors_on(:query).length).to eq(1)
 
           expect(input.errors[:query]).to eq(["can't be blank"])
         end
@@ -68,7 +68,7 @@ module Atlas
       it 'returns an array of each input in each share group' do
         group = Input.by_share_group[:my_group]
 
-        expect(group).to have(2).inputs
+        expect(group.length).to eq(2)
         expect(group).to include(Input.find(:grouped_one))
         expect(group).to include(Input.find(:grouped_two))
       end

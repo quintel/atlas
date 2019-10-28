@@ -14,7 +14,7 @@ describe Node do
       let(:node) { Node.new(key: :a, output: { gas: 0.4 }) }
 
       it 'contains a single slot' do
-        expect(node.out_slots).to have(1).slots
+        expect(node.out_slots.length).to eq(1)
       end
 
       it 'sets the slot direction' do
@@ -50,7 +50,7 @@ describe Node do
       let(:node) { Node.new(key: :a, output: { gas: 0.3, oil: 0.7 }) }
 
       it 'contains two slots' do
-        expect(node.out_slots).to have(2).slots
+        expect(node.out_slots.length).to eq(2)
       end
 
       it 'sets the gas slot direction' do
@@ -106,7 +106,7 @@ describe Node do
       end
 
       it 'adds slots which were added' do
-        expect(node.out_slots).to have(2).slots
+        expect(node.out_slots.length).to eq(2)
 
         new_slot = node.out_slots.to_a.last
 
@@ -127,7 +127,7 @@ describe Node do
       let(:node) { Node.new(key: :a, input: { gas: 0.4 }) }
 
       it 'contains a single slot' do
-        expect(node.in_slots).to have(1).slots
+        expect(node.in_slots.length).to eq(1)
       end
 
       it 'sets the slot direction' do
@@ -159,7 +159,7 @@ describe Node do
       let(:node) { Node.new(key: :a, input: { gas: 0.3, oil: 0.7 }) }
 
       it 'contains two slots' do
-        expect(node.in_slots).to have(2).slots
+        expect(node.in_slots.length).to eq(2)
       end
 
       it 'sets the gas slot direction' do
@@ -215,7 +215,7 @@ describe Node do
       end
 
       it 'adds slots which were added' do
-        expect(node.in_slots).to have(2).slots
+        expect(node.in_slots.length).to eq(2)
 
         new_slot = node.in_slots.to_a.last
 
@@ -227,7 +227,7 @@ describe Node do
 
   describe '#all' do
     it 'returns all the subclasses that have been defined' do
-      expect(Node.all).to have(7).nodes
+      expect(Node.all.length).to eq(7)
     end
   end
 

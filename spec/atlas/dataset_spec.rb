@@ -124,7 +124,7 @@ module Atlas
 
       describe 'when no curves have been loaded' do
         it 'loads all the time curves' do
-          expect(dataset.time_curves).to have(2).csv_documents
+          expect(dataset.time_curves.length).to eq(2)
         end
 
         it "doesn't include the 'time_curve' suffix in each key" do
@@ -140,7 +140,7 @@ module Atlas
         let!(:loaded) { dataset.time_curve(:woody_biomass) }
 
         it 'loads all the time curves' do
-          expect(dataset.time_curves).to have(2).csv_documents
+          expect(dataset.time_curves.length).to eq(2)
         end
 
         it "reuses the already-loaded curve" do

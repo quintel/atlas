@@ -11,7 +11,7 @@ module Atlas
 
       context 'nodes' do
         it 'are all added to the graph' do
-          expect(graph).to have(Node.all.length).nodes
+          expect(graph.nodes.length).to eq(Node.all.length)
         end
 
         it 'sets the key on each node' do
@@ -44,10 +44,10 @@ module Atlas
         let(:fd_edges)  { graph.node(:fd).out_edges.to_a  }
 
         it 'are all established' do
-          expect(foo_edges).to have(1).edge
-          expect(bar_edges).to have(2).edges
-          expect(baz_edges).to have(1).edge
-          expect(fd_edges).to have(:no).edges
+          expect(foo_edges.length).to eq(1)
+          expect(bar_edges.length).to eq(2)
+          expect(baz_edges.length).to eq(1)
+          expect(fd_edges.length).to eq(0)
         end
 
         it 'have the correct type' do
@@ -79,7 +79,7 @@ module Atlas
         let(:edge)      { t_node.in_edges.first }
 
         it 'adds a single incoming edge' do
-          expect(t_node.in_edges.to_a).to have(1).edge
+          expect(t_node.in_edges.to_a.length).to eq(1)
         end
 
         it 'sets no edge type' do
@@ -95,7 +95,7 @@ module Atlas
         end
 
         it 'sets the :reversed property to false' do
-          expect(edge.get(:reversed)).to be_false
+          expect(edge.get(:reversed)).to be(false)
         end
 
         it 'sets the :model attribute' do
@@ -112,11 +112,11 @@ module Atlas
         let(:edge)      { t_node.in_edges.first }
 
         it 'adds a single incoming edge' do
-          expect(t_node.in_edges.to_a).to have(1).edge
+          expect(t_node.in_edges.to_a.length).to eq(1)
         end
 
         it 'sets the :reversed property to true' do
-          expect(edge.get(:reversed)).to be_true
+          expect(edge.get(:reversed)).to be(true)
         end
 
         it 'does not set an edge type' do

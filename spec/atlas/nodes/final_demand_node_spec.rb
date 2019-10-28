@@ -7,7 +7,7 @@ describe Node::FinalDemand do
 
   describe '#all' do
     it "finds existing stuff" do
-      expect(Node::FinalDemand.all).to have_at_least(1).nodes
+      expect(Node::FinalDemand.all.length).not_to eq(0)
     end
 
     it 'removes the subclass from the key' do

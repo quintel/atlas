@@ -33,7 +33,7 @@ module Atlas::Parser::TextToHash
     describe '#blocks' do
       it 'has content' do
         base = Base.new(content)
-        expect(base.blocks).to have(3).blocks
+        expect(base.blocks.length).to eq(3)
       end
     end # blocks
 

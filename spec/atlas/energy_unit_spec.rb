@@ -47,7 +47,8 @@ describe EnergyUnit do
     context 'non-existing unit' do
 
       it 'raises an error' do
-        expect { eu.to_unit(:jamie_foxx) }.to raise_error
+        expect { eu.to_unit(:jamie_foxx) }
+          .to raise_error(Atlas::UnknownUnitError)
       end
 
     end

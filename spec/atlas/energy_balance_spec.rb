@@ -29,21 +29,21 @@ module Atlas
 
     describe '#get' do
       it 'returns correct value for NL when asked for a specific attribute' do
-        eb.stub(:cell).and_return 6
+        allow(eb).to receive(:cell).and_return(6)
         expect(eb.get('Residential','coal_and_peat')).to eql 6.0
       end
 
       it 'works with other units' do
         eb.unit = :twh
-        eb.stub(:cell).and_return 6
+        allow(eb).to receive(:cell).and_return(6)
 
         expect(eb.get('Residential','coal_and_peat')).
           to eql(EnergyUnit.new(6, :tj).to_unit(:twh))
       end
 
-      it 'raises an error when an unknown unit is requested' do 
+      it 'raises an error when an unknown unit is requested' do
         eb.unit = :i_do_not_exist
-        eb.stub(:cell).and_return 6
+        allow(eb).to receive(:cell).and_return(6)
         expect(->{ eb.get('Residential','coal_and_peat') }).to \
           raise_error UnknownUnitError
       end

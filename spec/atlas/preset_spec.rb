@@ -30,7 +30,7 @@ module Atlas
       context 'with grouped inputs' do
         it 'ignores inputs which belong to no share group' do
           preset = Preset.new(user_values: { pj_of_heat_import: 5.0 })
-          expect(preset).to have(:no).errors_on(:user_values)
+          expect(preset.errors_on(:user_values).length).to eq(0)
         end
 
         it 'permits a sum of 99.99' do
@@ -38,7 +38,7 @@ module Atlas
             grouped_one: 50.0, grouped_two: 49.99
           })
 
-          expect(preset).to have(:no).errors_on(:user_values)
+          expect(preset.errors_on(:user_values).length).to eq(0)
         end
 
         it 'permits a sum of 100' do
@@ -46,7 +46,7 @@ module Atlas
             grouped_one: 50.0, grouped_two: 50.0
           })
 
-          expect(preset).to have(:no).errors_on(:user_values)
+          expect(preset.errors_on(:user_values).length).to eq(0)
         end
 
         it 'permits a sum of 100.01' do
@@ -54,12 +54,12 @@ module Atlas
             grouped_one: 50.0, grouped_two: 50.01
           })
 
-          expect(preset).to have(:no).errors_on(:user_values)
+          expect(preset.errors_on(:user_values).length).to eq(0)
         end
 
         it 'ignores any missing inputs' do
           preset = Preset.new(user_values: { grouped_one: 100.0 })
-          expect(preset).to have(:no).errors_on(:user_values)
+          expect(preset.errors_on(:user_values).length).to eq(0)
         end
 
         it 'does not permit sums of less than 99.99' do
@@ -67,9 +67,7 @@ module Atlas
             grouped_one: 50.0, grouped_two: 49.989
           })
 
-          expect(preset).to have(1).error_on(:user_values)
-
-          expect(preset.errors[:user_values]).
+          expect(preset.errors_on(:user_values)).
             to include("contains inputs belonging to the my_group share " \
                        "group, but the values sum to 99.989, not 100")
         end
@@ -79,9 +77,7 @@ module Atlas
             grouped_one: 50.0, grouped_two: 50.011
           })
 
-          expect(preset).to have(1).error_on(:user_values)
-
-          expect(preset.errors[:user_values]).
+          expect(preset.errors_on(:user_values)).
             to include("contains inputs belonging to the my_group share " \
                        "group, but the values sum to 100.011, not 100")
         end

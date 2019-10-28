@@ -60,14 +60,14 @@ module Atlas
       end
 
       it 'does not return the document when given the new key' do
-        expect(collection.key?(:new)).to be_false
+        expect(collection.key?(:new)).to be(false)
       end
 
       context 'with a refreshed collection' do
         let(:refreshed) { collection.refresh }
 
         it 'does not return the document when given the old key' do
-          expect(refreshed.key?(:one)).to be_false
+          expect(refreshed.key?(:one)).to be(false)
         end
 
         it 'does returns the document when given the new key' do

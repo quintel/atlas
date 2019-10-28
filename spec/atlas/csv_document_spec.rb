@@ -40,7 +40,7 @@ module Atlas
         let(:doc) { CSVDocument.new(path.to_s, headers) }
 
         it 'does not save the new file to disk' do
-          expect(File.exist?(doc.path)).to be_false
+          expect(File.exist?(doc.path)).to be(false)
         end
 
         it 'raises when the file already exists' do
@@ -142,7 +142,7 @@ module Atlas
         let(:doc) { CSVDocument.new(Atlas.data_dir.join('doesnotexistbefore.csv'), %i( yes no maybe\ baby )) }
         it 'creates a new csv file' do
           doc.save!
-          expect(File.file?(doc.path)).to be_true
+          expect(File.file?(doc.path)).to be(true)
         end
 
         it 'creates a normalized header row in the csv file' do

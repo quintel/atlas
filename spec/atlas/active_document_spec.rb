@@ -38,7 +38,7 @@ describe SomeDocument do
     context 'given a path' do
       it 'creates a new document' do
         some_document = SomeDocument.new(path: 'my_map1/new')
-        expect(some_document.save!).to be_true
+        expect(some_document.save!).to be(true)
         expect(some_document.key).to eql(:new)
       end
 
@@ -163,16 +163,16 @@ describe SomeDocument do
 
   describe '.exists?' do
     it 'returns true when a matching document exists' do
-      expect(Atlas::SomeDocument.exists?(:foo)).to be_true
+      expect(Atlas::SomeDocument.exists?(:foo)).to be(true)
     end
 
     it 'returns false when no matching document exists' do
-      expect(Atlas::SomeDocument.exists?(:nope)).to be_false
+      expect(Atlas::SomeDocument.exists?(:nope)).to be(false)
     end
 
     it 'returns false when no SAVED document exists' do
       Atlas::SomeDocument.new(key: :nope)
-      expect(Atlas::SomeDocument.exists?(:nope)).to be_false
+      expect(Atlas::SomeDocument.exists?(:nope)).to be(false)
     end
   end
 
@@ -190,7 +190,7 @@ describe SomeDocument do
       end
 
       it 'saves the document' do
-        expect(document.path.file?).to be_true
+        expect(document.path.file?).to be(true)
       end
 
       it 'has no errors' do
@@ -210,7 +210,7 @@ describe SomeDocument do
       end
 
       it 'does not save the document' do
-        expect(document.path.file?).to be_false
+        expect(document.path.file?).to be(false)
       end
 
       it 'has an error' do
@@ -233,7 +233,7 @@ describe SomeDocument do
       end
 
       it 'saves the document' do
-        expect(document.path.file?).to be_true
+        expect(document.path.file?).to be(true)
       end
 
       it 'has no errors' do
@@ -410,42 +410,42 @@ describe SomeDocument do
   end # ns
 
   describe 'ns=' do
-    subject        { SomeDocument.new(path: 'one/abc') }
+    let(:document) { SomeDocument.new(path: 'one/abc') }
     let(:dir)      { SomeDocument.directory }
 
     context 'given nil' do
-      before { subject.ns = nil }
+      before { document.ns = nil }
 
-      its(:ns)    { should be_nil }
-      its(:path) { should eq(dir.join('abc.suffix')) }
+      it { expect(document.ns).to be_nil }
+      it { expect(document.path).to eq(dir.join('abc.suffix')) }
     end # given nil
 
     context 'given ""' do
-      before { subject.ns = '' }
+      before { document.ns = '' }
 
-      its(:ns)    { should be_nil }
-      its(:path) { should eq(dir.join('abc.suffix')) }
+      it { expect(document.ns).to be_nil }
+      it { expect(document.path).to eq(dir.join('abc.suffix')) }
     end # given ''
 
     context 'given "two"' do
-      before { subject.ns = 'two' }
+      before { document.ns = 'two' }
 
-      its(:ns)   { should eq('two') }
-      its(:path) { should eq(dir.join('two/abc.suffix')) }
+      it { expect(document.ns).to eq('two') }
+      it { expect(document.path).to eq(dir.join('two/abc.suffix')) }
     end # given "two"
 
     context 'given "two.three"' do
-      before { subject.ns = 'two.three' }
+      before { document.ns = 'two.three' }
 
-      its(:ns)   { should eq('two.three') }
-      its(:path) { should eq(dir.join('two/three/abc.suffix')) }
+      it { expect(document.ns).to eq('two.three') }
+      it { expect(document.path).to eq(dir.join('two/three/abc.suffix')) }
     end # given "two.three"
 
     context 'given "two/three"' do
-      before { subject.ns = 'two/three' }
+      before { document.ns = 'two/three' }
 
-      its(:ns)   { should eq('two.three') }
-      its(:path) { should eq(dir.join('two/three/abc.suffix')) }
+      it { expect(document.ns).to eq('two.three') }
+      it { expect(document.path).to eq(dir.join('two/three/abc.suffix')) }
     end # given "two/three"
   end # ns=
 
@@ -453,19 +453,19 @@ describe SomeDocument do
     let(:document) { SomeDocument.new(key: 'abc', ns: 'one.two.three') }
 
     it 'matches when given the full namespace' do
-      expect(document.ns?('one.two.three')).to be_true
+      expect(document.ns?('one.two.three')).to be(true)
     end
 
     it 'matches when given a partial namespace' do
-      expect(document.ns?('one.two')).to be_true
+      expect(document.ns?('one.two')).to be(true)
     end
 
     it 'does not match when given a non-matching namespace' do
-      expect(document.ns?('four')).to be_false
+      expect(document.ns?('four')).to be(false)
     end
 
     it 'does not match when given a non-matching final segment' do
-      expect(document.ns?('one.two.four')).to be_false
+      expect(document.ns?('one.two.four')).to be(false)
     end
   end # ns?
 
@@ -499,7 +499,7 @@ describe SomeDocument do
     context 'new file' do
       it 'writes to disk' do
         some_document = SomeDocument.new(key: 'the_king_of_pop')
-        expect(some_document.save!).to be_true
+        expect(some_document.save!).to be(true)
       end
 
       it 'becomes persisted' do
@@ -549,7 +549,7 @@ describe SomeDocument do
         old_path = some_document.path
         some_document.key = "foo2"
         some_document.save!
-        expect { old_path.read }.to raise_error
+        expect { old_path.read }.to raise_error(Errno::ENOENT)
       end
 
       it "should create a new file" do
@@ -597,12 +597,12 @@ describe SomeDocument do
       context 'when another object with that key already exists' do
 
         it 'raises error' do
-          pending 'Pending re-introduction of duplicate-key check' do
-            # Was temporarily removed due to stack overflows with the
-            # ETengine specs.
-            expect(-> { some_document.key = 'bar'}).
-              to raise_error(DuplicateKeyError)
-          end
+          pending 'Pending re-introduction of duplicate-key check'
+
+          # Was temporarily removed due to stack overflows with the
+          # ETengine specs.
+          expect(-> { some_document.key = 'bar'}).
+            to raise_error(DuplicateKeyError)
         end
 
       end
@@ -620,7 +620,7 @@ describe SomeDocument do
       end
 
       it 'returns true' do
-        expect(result).to be_true
+        expect(result).to be(true)
       end
 
       it 'updates given attributes' do
@@ -655,7 +655,7 @@ describe SomeDocument do
   describe '#all' do
     context 'on a "leaf" class' do
       it 'returns only members of that class' do
-        expect(SomeDocument::FinalDocument.all).to have(1).document
+        expect(SomeDocument::FinalDocument.all.length).to eq(1)
       end
     end
 
@@ -663,7 +663,7 @@ describe SomeDocument do
       it "returns members of that class, and it's subclasses" do
         classes = SomeDocument::OtherDocument.all.map(&:class).uniq
 
-        expect(classes).to have(2).elements
+        expect(classes.length).to eq(2)
 
         expect(classes).to include(SomeDocument::OtherDocument)
         expect(classes).to include(SomeDocument::FinalDocument)
@@ -695,7 +695,7 @@ describe SomeDocument do
     it 'deletes the file' do
       path = some_document.path
       some_document.destroy!
-      expect(path.exist?).to be_false
+      expect(path.exist?).to be(false)
     end
 
     it 'is no longer persited' do

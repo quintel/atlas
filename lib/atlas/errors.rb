@@ -28,23 +28,21 @@ module Atlas
 
   # Raised when an error occurs executing a Rubel query.
   class QueryError < AtlasError
-    def initialize(exception, query)
-      @exception = exception
-      @query     = query
-    end
+    attr_reader :original
 
-    def ==(other)
-      super || @exception.is_a?(other)
+    def initialize(original, query)
+      @original = original
+      @query    = query
     end
 
     def backtrace
-      @exception.backtrace
+      @original.backtrace
     end
 
     def message
       "Error executing query:\n" +
-      "#{ @exception.message }\n" +
-      "#{ query }\n"
+      "#{@original.message}\n" +
+      "#{query}\n"
     end
 
     # The query which failed to execute. If we can find the line which failed,

@@ -41,7 +41,7 @@ module Atlas
       model.has_loss = false
       model.groups   = %w( bomber life drg innovation jaedong )
 
-      expect(nodes[:mother][:has_loss]).to be_false
+      expect(nodes[:mother][:has_loss]).to be(false)
       expect(nodes[:mother][:groups]).to eq(model.groups)
     end
 

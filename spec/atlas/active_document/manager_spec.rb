@@ -38,26 +38,26 @@ module Atlas::ActiveDocument
 
     describe '#all' do
       it 'returns all the documents' do
-        expect(manager.all).to have(5).documents
+        expect(manager.all.length).to eq(5)
       end
     end # all
 
     describe '#key?' do
       it 'given a symbol, is true if a matching key exists' do
-        expect(manager.key?(SomeDocument.all.first.key)).to be_true
+        expect(manager.key?(SomeDocument.all.first.key)).to be(true)
       end
 
       it 'given a string, is true if a matching key exists' do
-        expect(manager.key?(SomeDocument.all.first.key.to_s)).to be_true
+        expect(manager.key?(SomeDocument.all.first.key.to_s)).to be(true)
       end
 
       it 'is false if a document with no matching key exists' do
-        expect(manager.key?(:no)).to be_false
+        expect(manager.key?(:no)).to be(false)
       end
 
       it 'is false if an unsaved document with a matching key exists' do
         SomeDocument.new(key: :hello)
-        expect(manager.key?(:hello)).to be_false
+        expect(manager.key?(:hello)).to be(false)
       end
     end # key?
 

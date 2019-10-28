@@ -5,21 +5,23 @@ module Atlas
     let(:node) { Node.new(key: :foo) }
 
     describe 'Creating a input slot' do
-      subject { Slot.new(node: node, direction: :in, carrier: :gas) }
+      let(:slot) { Slot.new(node: node, direction: :in, carrier: :gas) }
 
-      its(:node) { should eql(node) }
-      its(:direction) { should eql(:in) }
-      its(:carrier) { should eql(:gas) }
-      its(:key) { should eql(:'foo+@gas') }
+      it { expect(slot.node).to eq(node) }
+      it { expect(slot.direction).to eq(:in) }
+      it { expect(slot.carrier).to eq(:gas) }
+      it { expect(slot.key).to eq(:'foo+@gas') }
     end # Creating an input slot
 
     describe 'Creating a output slot' do
-      subject { Slot.new(node: node, direction: :out, carrier: :electricity) }
+      let(:slot) do
+        Slot.new(node: node, direction: :out, carrier: :electricity)
+      end
 
-      its(:node) { should eql(node) }
-      its(:direction) { should eql(:out) }
-      its(:carrier) { should eql(:electricity) }
-      its(:key) { should eql(:'foo-@electricity') }
+      it { expect(slot.node).to eq(node) }
+      it { expect(slot.direction).to eq(:out) }
+      it { expect(slot.carrier).to eq(:electricity) }
+      it { expect(slot.key).to eq(:'foo-@electricity') }
     end # Creating an output slot
 
     describe 'setting the node' do

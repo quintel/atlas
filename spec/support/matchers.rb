@@ -32,10 +32,10 @@ module ::ActiveModel::Validations
   #
   # @example
   #
-  #     expect(model).to have(:no).errors_on(:attribute)
-  #     expect(model).to have(1).error_on(:attribute)
-  #     expect(model).to have(n).errors_on(:attribute)
-  #     expect(model).to have(n).errors_on(:attribute, :context => :create)
+  #     expect(model.errors_on(:attribute).length).to eq(0)
+  #     expect(model.length).to eq(1)
+  #     expect(model.length).to eq(n)
+  #     expect(model.length).to eq(n)
   #
   #     expect(model.errors_on(:attribute)).to include("can't be blank")
   def errors_on(attribute, options = {})

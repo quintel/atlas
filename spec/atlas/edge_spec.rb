@@ -12,18 +12,18 @@ module Atlas
       valid_types.each do |type|
         it "is permitted to be #{ type.inspect }" do
           edge = Edge.new(key: 'a-b@gas', type: type)
-          expect(edge).to have(:no).errors_on(:type)
+          expect(edge.errors_on(:type).length).to eq(0)
         end
       end
 
       it 'may not be blank' do
         edge = Edge.new(key: 'a-b@gas', type: nil)
-        expect(edge).to have(1).error_on(:type)
+        expect(edge.errors_on(:type).length).to eq(1)
       end
 
       it 'may not be any other value' do
         edge = Edge.new(key: 'a-b@gas', type: :nope)
-        expect(edge).to have(1).error_on(:type)
+        expect(edge.errors_on(:type).length).to eq(1)
       end
     end # type
 
@@ -136,7 +136,7 @@ module Atlas
       end
 
       context 'changing the consumer node only' do
-        before { edge.key = 'other-right@gas' } 
+        before { edge.key = 'other-right@gas' }
 
         it { expect(edge.key).to eq(:'other-right@gas') }
         it { expect(edge.supplier).to eq(:other) }
@@ -145,7 +145,7 @@ module Atlas
       end
 
       context 'changing the carrier only' do
-        before { edge.key = 'left-right@electricity' } 
+        before { edge.key = 'left-right@electricity' }
 
         it { expect(edge.key).to eq(:'left-right@electricity') }
         it { expect(edge.supplier).to eq(:left) }

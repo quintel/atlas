@@ -46,8 +46,9 @@ module Atlas
       end
 
       it 'raises an error if the SHARE data is missing' do
-        expect { runtime.execute('SHARE(cars, nope)') }.
-          to raise_error(UnknownCSVRowError)
+        expect { runtime.execute('SHARE(cars, nope)') }.to(
+          raise_error { |e| expect(e.original).to be_a(UnknownCSVRowError) }
+        )
       end
     end
 
@@ -58,8 +59,9 @@ module Atlas
       end
 
       it 'raises an error if the EFFICIENCY data is missing' do
-        expect { runtime.execute('EFFICIENCY(transformation, a, b)') }.
-          to raise_error(UnknownCSVRowError)
+        expect { runtime.execute('EFFICIENCY(transformation, a, b)') }.to(
+          raise_error { |e| expect(e.original).to be_a(UnknownCSVRowError) }
+        )
       end
     end
 
@@ -83,8 +85,9 @@ module Atlas
       end
 
       it 'raises an error if the production data is missing' do
-        expect { runtime.execute('CENTRAL_PRODUCTION(nope)') }.
-          to raise_error(UnknownCSVRowError)
+        expect { runtime.execute('CENTRAL_PRODUCTION(nope)') }.to(
+          raise_error { |e| expect(e.original).to be_a(UnknownCSVRowError) }
+        )
       end
     end
 
@@ -96,8 +99,9 @@ module Atlas
       end
 
       it 'raises an error if the production data is missing' do
-        expect { runtime.execute('PARENT_VALUE(a_node, nope)') }.
-          to raise_error(Atlas::QueryError)
+        expect { runtime.execute('PARENT_VALUE(a_node, nope)') }.to(
+          raise_error { |e| expect(e.original).to be_a(UnknownCSVCellError) }
+        )
       end
     end
 
@@ -109,15 +113,19 @@ module Atlas
       end
 
       it "raises an error if you don't provide a column name" do
-        expect {
+        expect do
           runtime.execute(
-            "PRIMARY_PRODUCTION(energy_production_non_biogenic_waste)")
-        }.to raise_error(ArgumentError)
+            "PRIMARY_PRODUCTION(energy_production_non_biogenic_waste)"
+          )
+        end.to(
+          raise_error { |e| expect(e.original).to be_a(ArgumentError) }
+        )
       end
 
       it 'raises an error if the production data is missing' do
-        expect { runtime.execute('PRIMARY_PRODUCTION(nope, demand)') }.
-          to raise_error(UnknownCSVRowError)
+        expect { runtime.execute('PRIMARY_PRODUCTION(nope, demand)') }.to(
+          raise_error { |e| expect(e.original).to be_a(UnknownCSVRowError) }
+        )
       end
     end
 
@@ -129,20 +137,21 @@ module Atlas
       end
 
       it "raises an error if you don't provide a node key" do
-        expect {
-          runtime.execute("DEMAND(industry)")
-        }.to raise_error(ArgumentError)
+        expect { runtime.execute("DEMAND(industry)") }.to(
+          raise_error { |e| expect(e.original).to be_a(ArgumentError) }
+        )
       end
 
       it "raises an error if you don't provide an invalid node key" do
-        expect {
-          runtime.execute("DEMAND(industry, not_there)")
-        }.to raise_error(UnknownCSVRowError)
+        expect { runtime.execute("DEMAND(industry, not_there)") }.to(
+          raise_error { |e| expect(e.original).to be_a(UnknownCSVRowError) }
+        )
       end
 
       it 'raises an error if the named file is missing' do
-        expect { runtime.execute('DEMAND(nope, demand)') }.
-          to raise_error(Errno::ENOENT)
+        expect { runtime.execute('DEMAND(nope, demand)') }.to(
+          raise_error { |e| expect(e.original).to be_a(Errno::ENOENT) }
+        )
       end
     end
 
