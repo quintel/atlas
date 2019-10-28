@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   # Acts as a controller for building the fully-calculated graph.
   #
@@ -36,11 +38,10 @@ module Atlas
     #
     # Returns a Turbine::Graph.
     def refinery_graph
-      @refinery ||= begin
+      @refinery_graph ||=
         catalysts.reduce(graph) do |result, catalyst|
           catalyst.call(result)
         end
-      end
     end
 
     # Public: The runtime used by the Runner to calculate Rubel attributes.
@@ -77,17 +78,17 @@ module Atlas
       result = runtime.execute(string)
 
       unless result.is_a?(Numeric) || PERMITTED_NON_NUMERICS.include?(result)
-        fail NonNumericQueryError.new(result)
+        raise NonNumericQueryError, result
       end
 
       result == :infinity ? Float::INFINITY : result
-    rescue RuntimeError => ex
-      ex.message.gsub!(/$/, " (executing: #{ string.inspect })")
-      raise ex
+    rescue RuntimeError => e
+      e.message.gsub!(/$/, " (executing: #{string.inspect})")
+      raise e
     end
 
     def precomputed_graph?
       dataset.is_a?(Dataset::Derived)
     end
-  end # Runner
-end # Atlas
+  end
+end

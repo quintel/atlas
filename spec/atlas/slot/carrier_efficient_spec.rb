@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Atlas
   describe Slot::CarrierEfficient do
     let(:node) do
       Node.new(
-        key:    :a,
-        input:  { gas: 0.4, oil: 0.6 },
+        key: :a,
+        input: { gas: 0.4, oil: 0.6 },
         output: { electricity: { gas: 0.5, oil: 0.4 }, loss: :elastic }
       )
     end
@@ -39,17 +41,17 @@ module Atlas
       end
 
       it 'fails validation' do
-        expect(slot).to_not be_valid
+        expect(slot).not_to be_valid
       end
 
       it 'informs the user of the error' do
         slot.valid?
 
-        expect(slot.errors.full_messages).
-          to include('electricity slot lacks efficiency ' \
+        expect(slot.errors.full_messages)
+          .to include('electricity slot lacks efficiency ' \
                      'data for oil')
       end
-    end # when the slot lacks efficiencies
+    end
 
     context 'when the slot lacks input shares' do
       before do
@@ -58,16 +60,16 @@ module Atlas
       end
 
       it 'fails validation' do
-        expect(slot).to_not be_valid
+        expect(slot).not_to be_valid
       end
 
       it 'informs the user of the error' do
         node.valid?
 
-        expect(slot.errors.full_messages).
-          to include('electricity slot lacks input shares ' \
+        expect(slot.errors.full_messages)
+          .to include('electricity slot lacks input shares ' \
                      'for oil')
       end
-    end # when the slot lacks input shares
-  end # Slot::CarrierEfficient
-end # Atlas
+    end
+  end
+end

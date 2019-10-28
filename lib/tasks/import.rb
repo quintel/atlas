@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 desc <<-DESC
   Import ETDataset CSVs from ../etdataset
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class Runner
     class SetRubelAttributes
@@ -23,9 +25,9 @@ module Atlas
       def self.calculate_rubel_attributes!(element, query)
         model = element.get(:model)
 
-        model.queries && model.queries.each do |attribute, rubel_string|
+        model.queries&.each do |attribute, rubel_string|
           # Skip slot shares.
-          unless attribute.match(/^(?:in|out)put\./)
+          unless attribute =~ /^(?:in|out)put\./
             element.set(attribute, query.call(rubel_string))
           end
         end

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Atlas
   describe Runner, :fixtures do
-    shared_examples "runner" do |with_calculate = true|
+    shared_examples 'runner' do |with_calculate = true|
       it 'exposes a graph' do
         expect(runner.graph).to be_a(Turbine::Graph)
       end
@@ -47,17 +49,17 @@ module Atlas
             expect(graph.node(:bar).slots.out(:corn).get(:share)).to eq(0.5)
           end
         end
-      end # calculate
-    end # runner
+      end
+    end
 
     context 'for a Full' do
       let(:runner) do
         Runner.new(Dataset.find(:nl))
       end
 
-      it_behaves_like "runner", 898
-
       let(:graph) { runner.refinery_graph }
+
+      it_behaves_like 'runner', 898
 
       describe '#calculate' do
         let(:edge)  { Edge.find('bar-baz@corn') }
@@ -90,13 +92,14 @@ module Atlas
 
           bar = Node.find(:bar)
 
-          bar.update_attributes!(queries: bar.queries.merge({
-            :'output.corn' => ratio.to_f.to_s,
-            :'output.coal' => i_ratio.to_f.to_s
-          }))
+          bar.update_attributes!(queries: bar.queries.merge(
+            'output.corn': ratio.to_f.to_s,
+            'output.coal': i_ratio.to_f.to_s
+          ))
 
           Node.find(:fd).update_attributes!(
-            input: { corn: ratio, coal: i_ratio })
+            input: { corn: ratio, coal: i_ratio }
+          )
 
           expect(t_edge.get(:demand)).to eq(5.0)
         end
@@ -141,7 +144,7 @@ module Atlas
         Runner.new(dataset)
       end
 
-      it_behaves_like "runner", false
+      it_behaves_like 'runner', false
     end
-  end # Runner
-end # Atlas
+  end
+end

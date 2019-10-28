@@ -1,12 +1,15 @@
+# frozen_string_literal: true
+
 module Atlas
   class CSVDocument
     attr_reader :path
     attr_reader :table
 
     # Columns called "year" will be converted to an integer.
-    YEAR_NORMALIZER = lambda do |value, info|
-      info.header == :year ? value.to_f.to_i : value
-    end
+    YEAR_NORMALIZER =
+      lambda do |value, info|
+        info.header == :year ? value.to_f.to_i : value
+      end
 
     # Public: Reads a CSV file whose contents is a simple list of values with
     # no headers.
@@ -31,6 +34,7 @@ module Atlas
 
       if headers
         raise(ExistingCSVHeaderError, path) if @path.file?
+
         @headers = headers.map { |header| normalize_key(header) }
         @table = CSV::Table.new([CSV::Row.new(@headers, @headers, true)])
       else
@@ -90,9 +94,7 @@ module Atlas
       @headers.map(&method(:normalize_key))
     end
 
-    #######
     private
-    #######
 
     # Internal: Finds the value of a cell, raising an UnknownCSVRowError if no
     # such row exists.
@@ -119,7 +121,7 @@ module Atlas
     # Returns a CSV::Row or raises an UnknownCSVRowError if no such row exists
     # in the file.
     def row(key)
-      safe_row(key) || fail(UnknownCSVRowError.new(self, key))
+      safe_row(key) || raise(UnknownCSVRowError.new(self, key))
     end
 
     # Internal: Finds the row by the given +key+.
@@ -133,9 +135,10 @@ module Atlas
     #
     # Returns a Hash of CSV::Row.
     def keyed_table
-      @keyed_table ||= table.each_with_object({}) do |row, hash|
-        hash[normalize_key(row[0])] = row
-      end
+      @keyed_table ||=
+        table.each_with_object({}) do |row, hash|
+          hash[normalize_key(row[0])] = row
+        end
     end
 
     # Internal: Finds the row by the given +key+ or creates it if no such
@@ -186,10 +189,10 @@ module Atlas
     # Returns true or false.
     def assert_header(key)
       unless key.is_a?(Numeric) || @headers.nil? || @headers.include?(key)
-        fail UnknownCSVCellError.new(self, key)
+        raise UnknownCSVCellError.new(self, key)
       end
     end
-  end # CSVDocument
+  end
 
   # A special case of CSVDocument where the file contains only two columns;
   # one with a "key" for the row, and one with a value. The name of the
@@ -203,5 +206,5 @@ module Atlas
     def get(row)
       cell(normalize_key(row), 1)
     end
-  end # CSVDocument::OneDimensional
-end # Atlas
+  end
+end

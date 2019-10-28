@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   # Given a graph, exports its data as a Hash for serialization.
   #
@@ -55,7 +57,7 @@ module Atlas
 
         if model.max_demand
           attributes[:max_demand] = model.max_demand
-        elsif ! model.queries.key?(:max_demand)
+        elsif !model.queries.key?(:max_demand)
           # Keep the Refinery value if it was set by a query.
           attributes.delete(:max_demand)
         end
@@ -75,22 +77,23 @@ module Atlas
     #
     # Returns a Hash.
     def edges_hash(edges)
-      data = edges.each_with_object({}) do |edge, hash|
-        model      = edge.get(:model)
+      data =
+        edges.each_with_object({}) do |edge, hash|
+          model = edge.get(:model)
 
-        attributes = model.to_hash
-        attributes[:child_share] = edge.child_share.to_f
+          attributes = model.to_hash
+          attributes[:child_share] = edge.child_share.to_f
 
-        if model.type == :constant
-          attributes[:demand] = edge.demand.to_f
-        elsif model.type == :share && model.reversed?
-          attributes[:parent_share] = edge.parent_share.to_f
+          if model.type == :constant
+            attributes[:demand] = edge.demand.to_f
+          elsif model.type == :share && model.reversed?
+            attributes[:parent_share] = edge.parent_share.to_f
+          end
+
+          attributes.delete(:queries)
+
+          hash[model.key] = attributes
         end
-
-        attributes.delete(:queries)
-
-        hash[model.key] = attributes
-      end
 
       # Yay coupling carrier special cases!
       Edge.all.each do |edge|
@@ -111,22 +114,24 @@ module Atlas
       node      = slots.node
       direction = slots.direction
 
-      from_slots = slots.each_with_object({}) do |slot, hash|
-        if slot.get(:model).is_a?(Atlas::Slot::Elastic)
-          hash[slot.carrier] = :elastic
-        else
-          hash[slot.carrier] = slot.share.to_f
+      from_slots =
+        slots.each_with_object({}) do |slot, hash|
+          hash[slot.carrier] =
+            if slot.get(:model).is_a?(Atlas::Slot::Elastic)
+              :elastic
+            else
+              slot.share.to_f
+            end
         end
-      end
 
       if slots.any?
         # Find any temporarily stored coupling carrier conversion.
-        if cc_share = node.get(:"cc_#{ direction }")
+        if (cc_share = node.get(:"cc_#{ direction }"))
           from_slots[:coupling_carrier] = cc_share
         end
       end
 
       from_slots
     end
-  end # Exporter
-end # Atlas
+  end
+end

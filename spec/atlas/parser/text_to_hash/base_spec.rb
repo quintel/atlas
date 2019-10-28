@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Atlas::Parser::TextToHash
@@ -20,7 +22,7 @@ module Atlas::Parser::TextToHash
           expect(base.lines[2].to_s).to eql '- unit = kg'
         end
       end
-    end # new
+    end
 
     describe '#lines' do
       it 'can append lines' do
@@ -28,64 +30,64 @@ module Atlas::Parser::TextToHash
         expect(base.add_line(line)).to eql line
         expect(base.lines[0]).to eql line
       end
-    end # lines
+    end
 
     describe '#blocks' do
       it 'has content' do
         base = Base.new(content)
         expect(base.blocks.length).to eq(3)
       end
-    end # blocks
+    end
 
     describe '#comments' do
       it 'contains the comments' do
         base = Base.new(content)
-        expect(base.comments).to eql( "a\nb" )
+        expect(base.comments).to eql("a\nb")
       end
 
       it 'returns nil when there aint none' do
         base = Base.new('- unit = kg')
         expect(base.comments).to be_nil
       end
-    end # comments
+    end
 
     describe '#properties' do
       it 'contains only fixed' do
         base = Base.new(content)
-        expect(base.properties).to eql({ unit: 'kg' })
+        expect(base.properties).to eql(unit: 'kg')
       end
 
       it 'supports numbers' do
         base = Base.new('- foo = 123.4')
-        expect(base.properties).to eql({ foo: 123.4 })
+        expect(base.properties).to eql(foo: 123.4)
       end
 
       it 'returns nil when there aint none' do
         base = Base.new("~ demand =\n  SUM(1,2)")
         expect(base.properties).to eql({})
       end
-    end # properties
+    end
 
     describe '#dynamic_attributes' do
       it 'contains only dynamic ones' do
         base = Base.new(content)
-        expect(base.queries).to eql({ demand: 'SUM(1,2)' })
+        expect(base.queries).to eql(demand: 'SUM(1,2)')
       end
 
       it 'returns nil when there aint none' do
-        base = Base.new("")
+        base = Base.new('')
         expect(base.queries).to eql({})
       end
-    end # dynamic_attributes
+    end
 
     describe '#to_hash' do
       it 'has everything' do
         base = Base.new(content)
         hash = { comments: "a\nb",
-                 unit:     "kg",
-                 queries:  { demand: "SUM(1,2)" } }
+                 unit: 'kg',
+                 queries: { demand: 'SUM(1,2)' } }
         expect(base.to_hash).to eql hash
       end
-    end # to_hash
-  end # Base
-end # Atlas::Parser::TextToHash
+    end
+  end
+end

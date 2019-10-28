@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Atlas
@@ -9,74 +11,74 @@ module Atlas
         let(:hash) { { a: 1, b: 2 } }
 
         it 'adds the first value' do
-          expect(dotted[:a]).to eql(1)
+          expect(dotted[:a]).to be(1)
         end
 
         it 'adds the second value' do
-          expect(dotted[:b]).to eql(2)
+          expect(dotted[:b]).to be(2)
         end
-      end # when the hash only contains one level
+      end
 
       context 'when the hash contains two levels' do
         let(:hash) { { a: 1, b: { c: 3 } } }
 
         it 'adds the first value' do
-          expect(dotted[:a]).to eql(1)
+          expect(dotted[:a]).to be(1)
         end
 
         it 'adds the second value' do
-          expect(dotted['b.c']).to eql(3)
+          expect(dotted['b.c']).to be(3)
         end
 
         it 'does not have a key for the first-level hash' do
-          expect(dotted).to_not have_key(:b)
+          expect(dotted).not_to have_key(:b)
         end
 
         it 'does not have a key for the second-level value' do
-          expect(dotted).to_not have_key(:c)
+          expect(dotted).not_to have_key(:c)
         end
-      end # when the hash contains two levels
+      end
 
       context 'when the hash contains three levels' do
         let(:hash) { { a: 1, b: { c: { d: 4 } } } }
 
         it 'adds the first value' do
-          expect(dotted[:a]).to eql(1)
+          expect(dotted[:a]).to be(1)
         end
 
         it 'adds the second value' do
-          expect(dotted['b.c.d']).to eql(4)
+          expect(dotted['b.c.d']).to be(4)
         end
 
         it 'does not have a key for the first-level hash' do
-          expect(dotted).to_not have_key(:b)
+          expect(dotted).not_to have_key(:b)
         end
 
         it 'does not have a key for the second-level hash' do
-          expect(dotted).to_not have_key('b.c')
+          expect(dotted).not_to have_key('b.c')
         end
 
         it 'does not have a key for the second-level value' do
-          expect(dotted).to_not have_key(:c)
+          expect(dotted).not_to have_key(:c)
         end
 
         it 'does not have a key for the third-level value' do
-          expect(dotted).to_not have_key(:d)
+          expect(dotted).not_to have_key(:d)
         end
-      end # when the hash contains three levels
+      end
 
       context 'when one of the values is an array' do
         context 'with only scalar values' do
           let(:hash) { { a: 1, b: [2, 3] } }
 
           it 'adds the scalar value' do
-            expect(dotted[:a]).to eql(1)
+            expect(dotted[:a]).to be(1)
           end
 
           it 'adds the array value' do
             expect(dotted[:b]).to eql([2, 3])
           end
-        end # with only scalar values
+        end
 
         context 'with a hash as a value' do
           let(:hash) { { a: 1, b: [{ c: 2 }, 3] } }
@@ -84,9 +86,9 @@ module Atlas
           it 'raises an IllegalNestedHashError' do
             expect { dotted }.to raise_error(IllegalNestedHashError)
           end
-        end # with a hash as a value
-      end # when one of the values is an array
-    end # flatten_dotted_hash
+        end
+      end
+    end
 
     describe '.expand_dotted_hash' do
       let(:expanded) { Atlas::Util.expand_dotted_hash(hash) }
@@ -101,7 +103,7 @@ module Atlas
         it 'adds the second value' do
           expect(expanded).to include(b: 2)
         end
-      end # when the hash contains only one level
+      end
 
       context 'when the hash contains two levels' do
         let(:hash) { { 'a' => 1, 'b.c' => 3 } }
@@ -119,9 +121,9 @@ module Atlas
         end
 
         it 'does not add the dotted key' do
-          expect(expanded).to_not have_key(:'b.c')
+          expect(expanded).not_to have_key(:'b.c')
         end
-      end # when the hash contains two levels
+      end
 
       context 'when the hash contains three levels' do
         let(:hash) { { 'a' => 1, 'b.c.d' => 4 } }
@@ -143,11 +145,11 @@ module Atlas
         end
 
         it 'does not add the dotted key' do
-          expect(expanded).to_not have_key(:'b.c')
-          expect(expanded).to_not have_key(:'b.c.d')
+          expect(expanded).not_to have_key(:'b.c')
+          expect(expanded).not_to have_key(:'b.c.d')
         end
-      end # when the hash contains three levels
-    end # expand_dotted_hash
+      end
+    end
 
     describe '.round_computation_errors' do
       let(:rounded) { Atlas::Util.round_computation_errors(@value) }
@@ -181,11 +183,11 @@ module Atlas
         @value = -0.000000001
         expect(rounded).to eq(@value)
       end
-    end # round_computation_errors
+    end
 
     describe 'serializable_attributes' do
       let(:serialized) do
-        Atlas::Util.serializable_attributes({
+        Atlas::Util.serializable_attributes(
           int: 1,
           blank_str: ' ',
           non_blank_str: 'a',
@@ -196,7 +198,7 @@ module Atlas
           true_value: true,
           false_value: false,
           nil_value: nil
-        })
+        )
       end
 
       it 'includes non-nil values' do
@@ -212,11 +214,11 @@ module Atlas
       end
 
       it 'omits nil' do
-        expect(serialized).to_not have_key(:nil_value)
+        expect(serialized).not_to have_key(:nil_value)
       end
 
       it 'omits blank strings' do
-        expect(serialized).to_not have_key(:blank_str)
+        expect(serialized).not_to have_key(:blank_str)
       end
 
       it 'includes non-blank strings' do
@@ -224,20 +226,20 @@ module Atlas
       end
 
       it 'omits empty arrays' do
-        expect(serialized).to_not have_key(:empty_arr)
+        expect(serialized).not_to have_key(:empty_arr)
       end
 
       it 'includes non-empty arrays' do
-        expect(serialized[:non_empty_arr]).to eq(%w(a))
+        expect(serialized[:non_empty_arr]).to eq(%w[a])
       end
 
       it 'omits empty hashes' do
-        expect(serialized).to_not have_key(:empty_hash)
+        expect(serialized).not_to have_key(:empty_hash)
       end
 
       it 'includes non-empty hashes' do
         expect(serialized[:non_empty_hash]).to eq(a: 1)
       end
     end
-  end # Util
-end # Atlas
+  end
+end

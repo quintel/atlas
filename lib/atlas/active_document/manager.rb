@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   module ActiveDocument
     # Responsible for loading documents from disk, and creating instances of
@@ -82,7 +84,7 @@ module Atlas
       # Returns a string.
       def inspect
         relative = @directory.relative_path_from(Atlas.data_dir)
-        "#<#{ self.class.name } (#{ @klass.name } at ./#{ relative })>"
+        "#<#{self.class.name} (#{@klass.name} at ./#{relative})>"
       end
 
       # Internal: Writes a given document to disk.
@@ -92,7 +94,7 @@ module Atlas
       # Returns true or false.
       def write(document)
         if key?(document.key) && get(document.key) != document
-          fail Atlas::DuplicateKeyError.new(document.key)
+          raise Atlas::DuplicateKeyError, document.key
         end
 
         path = document.path
@@ -162,26 +164,25 @@ module Atlas
       #
       # Returns nothing.
       def self.clear_all!
-        @managers.each(&:clear!) if @managers
+        @managers&.each(&:clear!)
         nil
       end
 
-      #######
       private
-      #######
 
       # Internal: A hash connecting the document keys with the path to the
       # file.
       #
       # Returns an array of Symbol keys and Pathname values.
       def lookup_map
-        @lookup_map ||= begin
-          gpath = @directory.join("**/*.#{ @klass::FILE_SUFFIX }")
+        @lookup_map ||=
+          begin
+            gpath = @directory.join("**/*.#{@klass::FILE_SUFFIX}")
 
-          Pathname.glob(gpath).each_with_object({}) do |path, map|
-            map[ key_from_path(path) ] = path
+            Pathname.glob(gpath).each_with_object({}) do |path, map|
+              map[key_from_path(path)] = path
+            end
           end
-        end
       end
 
       # Internal: A hash of attributes and values which can be persisted.
@@ -216,9 +217,9 @@ module Atlas
           subclass = without_ext.split('.').last
 
           begin
-            klass = "#{ @klass.name }::#{ subclass.camelize }".constantize
-          rescue NameError => ex
-            fail Atlas::NoSuchDocumentClassError.new(subclass, relative_path)
+            klass = "#{@klass.name}::#{subclass.camelize}".constantize
+          rescue NameError
+            raise Atlas::NoSuchDocumentClassError.new(subclass, relative_path)
           end
         else
           klass = @klass
@@ -229,9 +230,9 @@ module Atlas
         klass.new(attributes).tap do |doc|
           doc.manager = self
         end
-      rescue ParserError => ex
-        ex.path = path
-        raise ex
+      rescue ParserError => e
+        e.path = path
+        raise e
       end
 
       # Internal: Given a document path or key, retrieves the attributes for
@@ -241,11 +242,11 @@ module Atlas
       # key  - The unique key which identifies the document.
       #
       # Returns a hash.
-      def load_attributes(path, key)
+      def load_attributes(path, _key)
         Atlas::Parser::TextToHash::Base.new(path.read).to_hash
-      rescue Atlas::ParserError => ex
-        ex.path = path
-        fail ex
+      rescue Atlas::ParserError => e
+        e.path = path
+        raise e
       end
 
       # Internal: Given a path, returns the key of the document.
@@ -254,6 +255,6 @@ module Atlas
       def key_from_path(path)
         path.basename.to_s.split('.', 2).first.to_sym
       end
-    end # Manager
-  end # IO
-end # Atlas
+    end
+  end
+end

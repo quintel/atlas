@@ -1,5 +1,6 @@
-namespace :preset do
+# frozen_string_literal: true
 
+namespace :preset do
   desc <<-DESC
     Take a scenario_id from a server and convert it to an
     ActiveDocument Preset.
@@ -26,7 +27,7 @@ namespace :preset do
     server = ENV['SERVER'] || 'et-engine.com'
     id     = ENV['ID']     || 'please provide which (scenario) ID!'
 
-    puts "Retrieving data from #{ server } for scenario_id=#{ id }"
+    puts "Retrieving data from #{server} for scenario_id=#{id}"
 
     data = retrieve_preset_data!(server, id).with_indifferent_access
 
@@ -37,23 +38,22 @@ namespace :preset do
     preset = Atlas::Preset.new(data)
     preset.save!
 
-    puts "Scenario saved in #{ preset.path }"
-    puts "Done!"
+    puts "Scenario saved in #{preset.path}"
+    puts 'Done!'
   end
 
   def retrieve_preset_data!(server_path, scenario_id)
-    url = "http://#{ server_path }/api/v3/scenarios/#{ scenario_id }?detailed=true"
+    url = "http://#{server_path}/api/v3/scenarios/#{scenario_id}?detailed=true"
     HTTParty.get(url)
   end
 
   def prune_user_values(user_values)
-    user_values.inject({}) do |memory, (key, value)|
+    user_values.each_with_object({}) do |(key, value), memory|
       if Atlas::Input.manager.key?(key)
         memory[key] = value
       else
-        puts "WARNING: #{ key } not found in Inputs and has been DROPPED!!!"
+        puts "WARNING: #{key} not found in Inputs and has been DROPPED!!!"
       end
-      memory
     end
   end
 
@@ -80,7 +80,7 @@ namespace :preset do
 
     Preset.all.each do |preset|
       defaults = YAML.load_file(
-        Atlas.root.join("tmp/input_values/#{ preset.area_code }.yml")
+        Atlas.root.join("tmp/input_values/#{preset.area_code}.yml")
       )
 
       original_values = preset.user_values
@@ -88,13 +88,13 @@ namespace :preset do
       recon      = ScenarioReconciler.new(original_values, defaults)
       new_values = recon.to_h
 
-      if original_values != new_values
-        path = preset.path.relative_path_from(Atlas.data_dir)
-        puts "Fixed inputs in #{ path }"
+      next unless original_values != new_values
 
-        preset.user_values = new_values
-        preset.save!
-      end
+      path = preset.path.relative_path_from(Atlas.data_dir)
+      puts "Fixed inputs in #{path}"
+
+      preset.user_values = new_values
+      preset.save!
     end
-  end # :fix
-end # :preset
+  end
+end

@@ -1,12 +1,15 @@
-MANIP_CLASS_NAMES = %w( Carrier Edge Gquery Input Node )
+# frozen_string_literal: true
+
+MANIP_CLASS_NAMES = %w[Carrier Edge Gquery Input Node].freeze
 
 namespace :manip do
   # Given an Atlas document class, returns the properties which a user may set
   # on it using environment variables.
   def property_names(klass)
-    props = klass.public_instance_methods.select do |name|
-      name.to_s.match(/^[a-z]/) && name.to_s[-1] == '='
-    end
+    props =
+      klass.public_instance_methods.select do |name|
+        name.to_s.match(/^[a-z]/) && name.to_s[-1] == '='
+      end
 
     props.map { |name| name.to_s[0..-2] }
   end
@@ -27,29 +30,29 @@ namespace :manip do
         attrs = ENV.to_h.slice(*keys)
 
         # Temporary workaround for the custom edge key format.
-        if klass == Atlas::Edge && ! attrs.key?('key')
+        if klass == Atlas::Edge && !attrs.key?('key')
           attrs[:key] = Atlas::Edge.key(ENV['from'], ENV['to'], ENV['carrier'])
         end
 
         doc = klass.create!(attrs)
 
-        puts "Saved to #{ doc.path.relative_path_from(Atlas.data_dir) }"
-      end # create
+        puts "Saved to #{doc.path.relative_path_from(Atlas.data_dir)}"
+      end
 
       task delete: :environment do
         klass(class_name).find(ENV['key']).destroy!
-      end # create
-    end # namespace class_name
-  end # Carrier, Edge, ...
-end # namespace :manip
+      end
+    end
+  end
+end
 
 # Top-level tasks for each class.
 MANIP_CLASS_NAMES.each do |class_name|
   namespace class_name.downcase do
-    desc "Create a new #{ class_name.downcase }"
-    task create: ["manip:#{ class_name.downcase }:create"]
+    desc "Create a new #{class_name.downcase}"
+    task create: ["manip:#{class_name.downcase}:create"]
 
-    desc "Delete a #{ class_name.downcase }"
-    task destroy: ["manip:#{ class_name.downcase }:destroy"]
-  end # namespace class_name
+    desc "Delete a #{class_name.downcase}"
+    task destroy: ["manip:#{class_name.downcase}:destroy"]
+  end
 end

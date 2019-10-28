@@ -1,14 +1,14 @@
+# frozen_string_literal: true
+
 module Atlas
   module Parser
     module TextToHash
-
       class SingleLineBlock < Block
-
         # TODO: Integrate with Regex from Line?
-        LINE = /^[-~]\s([a-z0-9_.]*)\s+=(?:\s*(.*))$/
+        LINE = /^[-~]\s([a-z0-9_.]*)\s+=(?:\s*(.*))$/.freeze
 
-        ARR_START = '['.freeze
-        ARR_END   = ']'.freeze
+        ARR_START = '['
+        ARR_END   = ']'
 
         def valid?
           line.to_s.match(LINE)
@@ -37,12 +37,10 @@ module Atlas
           end
         end
 
-        #######
         private
-        #######
 
         def validate!
-          fail CannotParseError.new(line, self) unless valid?
+          raise CannotParseError.new(line, self) unless valid?
         end
 
         def cast_scalar(text)
@@ -57,9 +55,7 @@ module Atlas
             text
           end
         end
-
       end
-
     end
   end
 end

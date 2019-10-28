@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Atlas::ActiveDocument
   describe ProductionManager do
     let(:manager) do
-      ProductionManager.new(Atlas::Node, { foo: {
+      ProductionManager.new(Atlas::Node, foo: {
         demand: 50,
         output: { coal: 0.812 }
-      }})
+      })
     end
 
     let(:production_node) { manager.get(:foo) }
@@ -33,29 +35,30 @@ module Atlas::ActiveDocument
 
     it 'loads calculated slot data' do
       slot = production_node.out_slots.find { |n| n.carrier == :coal }
-      expect(slot.share).to eql(0.812)
+      expect(slot.share).to be(0.812)
     end
 
     it 'loads edge data' do
-      data = { :'foo-bar@coal' => {
-        demand: 20, parent_share: 0.385, child_share: 0.411 } }
+      data = { 'foo-bar@coal': {
+        demand: 20, parent_share: 0.385, child_share: 0.411
+      } }
 
       edge = ProductionManager.new(Atlas::Edge, data).get(:'foo-bar@coal')
 
       expect(edge.demand).to eq(20)
-      expect(edge.parent_share).to eql(0.385)
-      expect(edge.child_share).to eql(0.411)
+      expect(edge.parent_share).to be(0.385)
+      expect(edge.child_share).to be(0.411)
     end
 
     it 'disallows editing the document' do
       expect { production_node.save }.to raise_error(Atlas::ReadOnlyError)
 
-      expect { production_node.update_attributes!(demand: 0) }.
-        to raise_error(Atlas::ReadOnlyError)
+      expect { production_node.update_attributes!(demand: 0) }
+        .to raise_error(Atlas::ReadOnlyError)
     end
 
     it 'disallows deleting the document' do
       expect { production_node.destroy! }.to raise_error(Atlas::ReadOnlyError)
     end
-  end # ProductionManager
-end # Atlas::ActiveDocument
+  end
+end

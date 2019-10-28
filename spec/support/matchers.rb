@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # From rspec-rails.
 #
 # (The MIT License)
@@ -40,10 +42,10 @@ module ::ActiveModel::Validations
   #     expect(model.errors_on(:attribute)).to include("can't be blank")
   def errors_on(attribute, options = {})
     valid_args = [options[:context]].compact
-    self.valid?(*valid_args)
+    valid?(*valid_args)
 
-    [self.errors[attribute]].flatten.compact
+    [errors[attribute]].flatten.compact
   end
 
-  alias :error_on :errors_on
+  alias_method :error_on, :errors_on
 end

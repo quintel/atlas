@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   # Describes optional information for setting up the node within a Fever
   # calculation.

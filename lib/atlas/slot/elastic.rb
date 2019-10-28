@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class Slot
     # Elastic slots fill whatever share is left by the other slots. For
@@ -16,9 +18,7 @@ module Atlas
         nil
       end
 
-      #######
       private
-      #######
 
       # Internal: The sibling slots (those on the same "side" of the node)
       # which are not elastic.
@@ -44,6 +44,6 @@ module Atlas
       def self.elastic?(share)
         share == :elastic || share == ELASTIC_STR
       end
-    end # Elastic
-  end # Slot
-end # Atlas
+    end
+  end
+end

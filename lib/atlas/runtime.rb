@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class Runtime < ::Rubel::Base
     attr_reader :dataset
@@ -21,8 +23,8 @@ module Atlas
       else
         instance_exec(&string)
       end
-    rescue ::StandardError, ::ScriptError => ex
-      ::Kernel.raise(QueryError.new(ex, string))
+    rescue ::StandardError, ::ScriptError => e
+      ::Kernel.raise(QueryError.new(e, string))
     end
 
     alias_method :query, :execute
@@ -76,7 +78,7 @@ module Atlas
       direction == :input  if direction == :in
       direction == :output if direction == :out
 
-      dataset.efficiencies(file_key).get("#{ direction }.#{ carrier }")
+      dataset.efficiencies(file_key).get("#{direction}.#{carrier}")
     end
 
     # Public: Given the key of a node, retrieves the production (energy
@@ -160,9 +162,7 @@ module Atlas
       dataset.fce(file_key).fetch(carrier.to_sym).fetch(attribute.to_sym)
     end
 
-    #######
     private
-    #######
 
     # Helpers ----------------------------------------------------------------
 
@@ -172,6 +172,5 @@ module Atlas
     def energy_balance
       dataset.energy_balance
     end
-
-  end # Runtime
-end # Atlas
+  end
+end

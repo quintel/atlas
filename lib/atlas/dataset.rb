@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class Dataset
     include ActiveDocument
@@ -11,8 +13,8 @@ module Atlas
     attribute :group,     Symbol, default: :unsorted
 
     # Set to false in the document to disable the region in ETModel.
-    attribute :enabled,   Hash[Symbol => Boolean],
-                          default: { etengine: true, etmodel: true }
+    attribute :enabled, Hash[Symbol => Boolean],
+      default: { etengine: true, etmodel: true }
 
     attribute :analysis_year, Integer, default: 2011
 
@@ -38,9 +40,9 @@ module Atlas
     attribute :has_import_export,        Boolean, default: true
     attribute :use_network_calculations, Boolean, default: true
     attribute :use_merit_order_demands,  Boolean, default: true
-    attribute :has_aggregated_chemical_industry,  Boolean, default:true
-    attribute :has_detailed_chemical_industry,    Boolean, default:false
-    attribute :has_coal_oil_for_heating_built_environment, Boolean, default:false
+    attribute :has_aggregated_chemical_industry,  Boolean, default: true
+    attribute :has_detailed_chemical_industry,    Boolean, default: false
+    attribute :has_coal_oil_for_heating_built_environment, Boolean, default: false
 
     # Numeric Data
     # ------------
@@ -49,89 +51,90 @@ module Atlas
     # of whether we're calculating the entire region, or simulating a smaller
     # sub-region.
 
-    [ :buildings_insulation_employment_constant,
-      :households_insulation_employment_constant,
-      :co2_emission_1990_aviation_bunkers,
-      :co2_emission_1990_marine_bunkers,
-      :co2_emissions_of_imported_electricity_g_per_kwh,
-      :co2_percentage_free,
-      :co2_price,
-      :ccs_cost_in_industry,
-      :economic_multiplier,
-      :employment_fraction_production,
-      :employment_local_fraction,
-      :export_electricity_primary_demand_factor,
-      :import_electricity_primary_demand_factor,
-      :man_hours_per_man_year,
-      :investment_hv_net_low,
-      :investment_hv_net_high,
-      :investment_hv_net_per_turbine,
-      :lv_net_spare_capacity,
-      :lv_net_total_costs_present,
-      :lv_net_costs_per_capacity_step,
-      :lv_net_capacity_per_step,
-      :mv_net_spare_capacity,
-      :mv_net_total_costs_present,
-      :mv_net_costs_per_capacity_step,
-      :mv_net_capacity_per_step,
-      :hv_net_spare_capacity,
-      :hv_net_total_costs_present,
-      :hv_net_costs_per_capacity_step,
-      :hv_net_capacity_per_step,
-      :lv_mv_trafo_spare_capacity,
-      :lv_mv_trafo_total_costs_present,
-      :lv_mv_trafo_costs_per_capacity_step,
-      :lv_mv_trafo_capacity_per_step,
-      :mv_hv_trafo_spare_capacity,
-      :mv_hv_trafo_total_costs_present,
-      :mv_hv_trafo_costs_per_capacity_step,
-      :mv_hv_trafo_capacity_per_step,
-      :interconnection_net_costs_present,
-      :offshore_net_costs_present,
-      :flh_solar_pv_solar_radiation_max,
-      :hydrogen_electrolysis_solar_pv_capacity_ratio,
-      :insulation_detached_houses_low_share,
-      :insulation_detached_houses_medium_share,
-      :insulation_detached_houses_high_share,
-      :insulation_apartments_low_share,
-      :insulation_apartments_medium_share,
-      :insulation_apartments_high_share,
-      :insulation_semi_detached_houses_low_share,
-      :insulation_semi_detached_houses_medium_share,
-      :insulation_semi_detached_houses_high_share,
-      :insulation_corner_houses_low_share,
-      :insulation_corner_houses_medium_share,
-      :insulation_corner_houses_high_share,
-      :insulation_terraced_houses_low_share,
-      :insulation_terraced_houses_medium_share,
-      :insulation_terraced_houses_high_share,
-      :insulation_detached_houses_start_value,
-      :insulation_semi_detached_houses_start_value,
-      :insulation_apartments_start_value,
-      :insulation_corner_houses_start_value,
-      :insulation_terraced_houses_start_value,
-      :insulation_buildings_start_value,
-      :typical_roof_surface_corner_house_available_for_pv,
-      :typical_roof_surface_terraced_house_available_for_pv,
-      :typical_roof_surface_detached_house_available_for_pv,
-      :typical_roof_surface_semi_detached_house_available_for_pv,
-      :typical_roof_surface_apartment_available_for_pv,
-      :typical_useful_demand_space_heating_corner_house,
-      :typical_useful_demand_space_heating_detached_house,
-      :typical_useful_demand_space_heating_semi_detached_house,
-      :typical_useful_demand_space_heating_terraced_house,
-      :typical_useful_demand_space_heating_apartment,
-      :heat_demand_reduction_medium_insulation_corner_house,
-      :heat_demand_reduction_medium_insulation_detached_house,
-      :heat_demand_reduction_medium_insulation_semi_detached_house,
-      :heat_demand_reduction_medium_insulation_terraced_house,
-      :heat_demand_reduction_medium_insulation_apartments,
-      :heat_demand_reduction_high_insulation_corner_house,
-      :heat_demand_reduction_high_insulation_detached_house,
-      :heat_demand_reduction_high_insulation_semi_detached_house,
-      :heat_demand_reduction_high_insulation_terraced_house,
-      :heat_demand_reduction_high_insulation_apartments,
-      :heat_demand_reduction_high_insulation_buildings
+    %i[
+      buildings_insulation_employment_constant
+      households_insulation_employment_constant
+      co2_emission_1990_aviation_bunkers
+      co2_emission_1990_marine_bunkers
+      co2_emissions_of_imported_electricity_g_per_kwh
+      co2_percentage_free
+      co2_price
+      ccs_cost_in_industry
+      economic_multiplier
+      employment_fraction_production
+      employment_local_fraction
+      export_electricity_primary_demand_factor
+      import_electricity_primary_demand_factor
+      man_hours_per_man_year
+      investment_hv_net_low
+      investment_hv_net_high
+      investment_hv_net_per_turbine
+      lv_net_spare_capacity
+      lv_net_total_costs_present
+      lv_net_costs_per_capacity_step
+      lv_net_capacity_per_step
+      mv_net_spare_capacity
+      mv_net_total_costs_present
+      mv_net_costs_per_capacity_step
+      mv_net_capacity_per_step
+      hv_net_spare_capacity
+      hv_net_total_costs_present
+      hv_net_costs_per_capacity_step
+      hv_net_capacity_per_step
+      lv_mv_trafo_spare_capacity
+      lv_mv_trafo_total_costs_present
+      lv_mv_trafo_costs_per_capacity_step
+      lv_mv_trafo_capacity_per_step
+      mv_hv_trafo_spare_capacity
+      mv_hv_trafo_total_costs_present
+      mv_hv_trafo_costs_per_capacity_step
+      mv_hv_trafo_capacity_per_step
+      interconnection_net_costs_present
+      offshore_net_costs_present
+      flh_solar_pv_solar_radiation_max
+      hydrogen_electrolysis_solar_pv_capacity_ratio
+      insulation_detached_houses_low_share
+      insulation_detached_houses_medium_share
+      insulation_detached_houses_high_share
+      insulation_apartments_low_share
+      insulation_apartments_medium_share
+      insulation_apartments_high_share
+      insulation_semi_detached_houses_low_share
+      insulation_semi_detached_houses_medium_share
+      insulation_semi_detached_houses_high_share
+      insulation_corner_houses_low_share
+      insulation_corner_houses_medium_share
+      insulation_corner_houses_high_share
+      insulation_terraced_houses_low_share
+      insulation_terraced_houses_medium_share
+      insulation_terraced_houses_high_share
+      insulation_detached_houses_start_value
+      insulation_semi_detached_houses_start_value
+      insulation_apartments_start_value
+      insulation_corner_houses_start_value
+      insulation_terraced_houses_start_value
+      insulation_buildings_start_value
+      typical_roof_surface_corner_house_available_for_pv
+      typical_roof_surface_terraced_house_available_for_pv
+      typical_roof_surface_detached_house_available_for_pv
+      typical_roof_surface_semi_detached_house_available_for_pv
+      typical_roof_surface_apartment_available_for_pv
+      typical_useful_demand_space_heating_corner_house
+      typical_useful_demand_space_heating_detached_house
+      typical_useful_demand_space_heating_semi_detached_house
+      typical_useful_demand_space_heating_terraced_house
+      typical_useful_demand_space_heating_apartment
+      heat_demand_reduction_medium_insulation_corner_house
+      heat_demand_reduction_medium_insulation_detached_house
+      heat_demand_reduction_medium_insulation_semi_detached_house
+      heat_demand_reduction_medium_insulation_terraced_house
+      heat_demand_reduction_medium_insulation_apartments
+      heat_demand_reduction_high_insulation_corner_house
+      heat_demand_reduction_high_insulation_detached_house
+      heat_demand_reduction_high_insulation_semi_detached_house
+      heat_demand_reduction_high_insulation_terraced_house
+      heat_demand_reduction_high_insulation_apartments
+      heat_demand_reduction_high_insulation_buildings
     ].each do |name|
       attribute name, Float
     end
@@ -149,32 +152,33 @@ module Atlas
     # sub-region (say, 5% of the "full" region size), these attributes can be
     # reduced in proportion to the sub-region size.
 
-    [ :annual_infrastructure_cost_electricity,
-      :annual_infrastructure_cost_gas,
-      :areable_land,
-      :capacity_buffer_decentral_in_mj_s,
-      :capacity_buffer_in_mj_s,
-      :co2_emission_1990,
-      :co2_emission_2009,
-      :coast_line,
-      :interconnector_capacity,
-      :total_land_area,
-      :number_of_buildings,
-      :number_of_cars,
-      :number_of_residences,
-      :number_of_inhabitants,
-      :offshore_suitable_for_wind,
-      :residences_roof_surface_available_for_pv,
-      :buildings_roof_surface_available_for_pv,
-      :other_emission_agriculture,
-      :other_emission_built_environment,
-      :other_emission_transport,
-      :other_emission_industry_energy,
-      :number_of_detached_houses,
-      :number_of_apartments,
-      :number_of_semi_detached_houses,
-      :number_of_corner_houses,
-      :number_of_terraced_houses
+    %i[
+      annual_infrastructure_cost_electricity
+      annual_infrastructure_cost_gas
+      areable_land
+      capacity_buffer_decentral_in_mj_s
+      capacity_buffer_in_mj_s
+      co2_emission_1990
+      co2_emission_2009
+      coast_line
+      interconnector_capacity
+      total_land_area
+      number_of_buildings
+      number_of_cars
+      number_of_residences
+      number_of_inhabitants
+      offshore_suitable_for_wind
+      residences_roof_surface_available_for_pv
+      buildings_roof_surface_available_for_pv
+      other_emission_agriculture
+      other_emission_built_environment
+      other_emission_transport
+      other_emission_industry_energy
+      number_of_detached_houses
+      number_of_apartments
+      number_of_semi_detached_houses
+      number_of_corner_houses
+      number_of_terraced_houses
     ].each do |name|
       attribute name, Float, proportional: true
     end
@@ -185,12 +189,12 @@ module Atlas
 
     validates_with ShareAttributeValidator,
       group: :electric_vehicle_profile_share,
-      attributes: [
-        :electric_vehicle_profile_1_share,
-        :electric_vehicle_profile_2_share,
-        :electric_vehicle_profile_3_share,
-        :electric_vehicle_profile_4_share,
-        :electric_vehicle_profile_5_share,
+      attributes: %i[
+        electric_vehicle_profile_1_share
+        electric_vehicle_profile_2_share
+        electric_vehicle_profile_3_share
+        electric_vehicle_profile_4_share
+        electric_vehicle_profile_5_share
       ]
 
     # Returns the Energy Balance for this area/dataset.
@@ -211,7 +215,8 @@ module Atlas
 
       (@shares ||= {})[key] ||=
         CSVDocument::OneDimensional.new(
-          dataset_dir.join("shares/#{ key }.csv"))
+          dataset_dir.join("shares/#{key}.csv")
+        )
     end
 
     # Public: Retrieves the efficiency data from the named file.
@@ -225,7 +230,8 @@ module Atlas
     def efficiencies(key)
       (@efficiencies ||= {})[key.to_sym] ||=
         CSVDocument::OneDimensional.new(
-          dataset_dir.join("efficiencies/#{ key }_efficiency.csv"))
+          dataset_dir.join("efficiencies/#{key}_efficiency.csv")
+        )
     end
 
     def time_curves_dir
@@ -233,7 +239,7 @@ module Atlas
     end
 
     def time_curve_path(key)
-      time_curves_dir.join("#{ key }_time_curve.csv")
+      time_curves_dir.join("#{key}_time_curve.csv")
     end
 
     # Public: Retrieves the time curve data for the file whose name matches
@@ -287,7 +293,7 @@ module Atlas
     #
     # Returns a Pathname.
     def load_profile_path(key)
-      dataset_dir.join("curves/#{ key }.csv")
+      dataset_dir.join("curves/#{key}.csv")
     end
 
     # Public: If the Merit library has been loaded, returns the
@@ -313,7 +319,8 @@ module Atlas
     # Returns a CSVDocument.
     def central_producers
       @cental_prod ||= CSVDocument.new(
-        dataset_dir.join('central_producers.csv'))
+        dataset_dir.join('central_producers.csv')
+      )
     end
 
     # Public: A set of demands required for use inside ETlocal
@@ -321,7 +328,8 @@ module Atlas
     # Returns a CSVDocument
     def parent_values
       @parent_values ||= CSVDocument.new(
-        dataset_dir.join('demands').join('parent_values.csv'))
+        dataset_dir.join('demands').join('parent_values.csv')
+      )
     end
 
     # Public: Retrieves demand and max demand data for the region. Expects to
@@ -335,7 +343,8 @@ module Atlas
     # Returns a CSVDocument.
     def primary_production
       @primary_prod ||= CSVDocument.new(
-        dataset_dir.join('primary_production.csv'))
+        dataset_dir.join('primary_production.csv')
+      )
     end
 
     # Public: Retrieves the demand data for the file whose name matches +key+.
@@ -351,7 +360,8 @@ module Atlas
 
       (@demands ||= {})[key] ||=
         CSVDocument::OneDimensional.new(
-          dataset_dir.join("demands/#{ key }.csv"))
+          dataset_dir.join("demands/#{key}.csv")
+        )
     end
 
     # Public: Retrieves the FCE data for the file matching +key+.
@@ -382,5 +392,5 @@ module Atlas
       super
       FileUtils.rm_rf(dataset_dir)
     end
-  end # Dataset
-end # Atlas
+  end
+end

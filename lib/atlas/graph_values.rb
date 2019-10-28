@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Atlas
   class GraphValues
     include ActiveModel::Validations
 
-    GRAPH_VALUES_FILENAME = 'graph_values.yml'.freeze
-    VALID_GRAPH_METHODS   = %w(
+    GRAPH_VALUES_FILENAME = 'graph_values.yml'
+    VALID_GRAPH_METHODS   = %w[
       demand
       max_demand
       share
@@ -12,7 +14,7 @@ module Atlas
       number_of_units
       input
       output
-    ).freeze
+    ].freeze
 
     attr_accessor :values
 
@@ -55,7 +57,7 @@ module Atlas
 
     def create!
       remove_instance_variable(:@values) if @values
-      save("--- {}")
+      save('--- {}')
     end
 
     def save(yaml = values.to_yaml)
@@ -70,7 +72,7 @@ module Atlas
 
         values.each_pair do |method, _|
           unless VALID_GRAPH_METHODS.include?(method)
-            errors.add(:values, "'#{ method }' does not exist as a graph method")
+            errors.add(:values, "'#{method}' does not exist as a graph method")
           end
         end
       end
@@ -79,15 +81,14 @@ module Atlas
     def validate_presence_of_init_values
       values.each_pair do |key, value|
         unless value.present?
-          errors.add(:values, "value for node/edge/slot '#{ key }' can't be blank")
+          errors.add(:values, "value for node/edge/slot '#{key}' can't be blank")
         end
       end
     end
 
-
     def graph_values_path
-      @derived_dataset.dataset_dir.
-        join(GRAPH_VALUES_FILENAME)
+      @derived_dataset.dataset_dir
+        .join(GRAPH_VALUES_FILENAME)
     end
   end
 end

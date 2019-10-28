@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class Runner
     # Iterates through each node in the graph, converting the "efficiency"
@@ -23,11 +25,12 @@ module Atlas
                 next
               end
 
-              if collection.include?(slot.carrier)
-                ref_slot = collection.get(slot.carrier)
-              else
-                ref_slot = collection.add(slot.carrier)
-              end
+              ref_slot =
+                if collection.include?(slot.carrier)
+                  collection.get(slot.carrier)
+                else
+                  collection.add(slot.carrier)
+                                        end
 
               ref_slot.set(:model, slot)
               ref_slot.set(:type, :elastic) if slot.is_a?(Slot::Elastic)
@@ -43,6 +46,6 @@ module Atlas
           refinery
         end
       end
-    end # SetSlotSharesFromEfficiency
-  end # Runner
-end # Atlas
+    end
+  end
+end

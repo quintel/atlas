@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class SomeDocument
     include ActiveDocument
@@ -20,4 +22,4 @@ module Atlas
   class SomeDocument::FinalDocument < SomeDocument::OtherDocument
     attribute :sets, String
   end
-end # Atlas
+end

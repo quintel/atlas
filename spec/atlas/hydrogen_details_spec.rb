@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Atlas::HydrogenDetails do
-  let(:details) { Atlas::HydrogenDetails.new(attrs) }
+  let(:details) { described_class.new(attrs) }
 
   context 'with no type' do
     let(:attrs) { {} }

@@ -35,9 +35,10 @@ module Atlas
     # Float keys are truncated to Integers.
     class InsulationCostCSV < CSVDocument
       # Values in the "present" column are converted to Symbols.
-      LEVEL_VALUE_NORMALIZER = lambda do |value, info|
-        info.header == :present ? Integer(value).to_s.to_sym : value
-      end
+      LEVEL_VALUE_NORMALIZER =
+        lambda do |value, info|
+          info.header == :present ? Integer(value).to_s.to_sym : value
+        end
 
       private
 

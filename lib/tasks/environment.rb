@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A task which sets up Atlas for use in Rake tasks.
 task :environment, [:data_dir] do |_, args|
   $LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/..'))
@@ -8,4 +10,4 @@ task :environment, [:data_dir] do |_, args|
   require 'active_support/core_ext/hash/indifferent_access'
 
   Atlas.data_dir = args.data_dir || '../etsource'
-end # environment
+end

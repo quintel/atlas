@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   module Parser
     module TextToHash
@@ -22,7 +24,8 @@ module Atlas
 
         def properties
           Atlas::Util.expand_dotted_hash(
-            blocks_to_hash(blocks { |b| b.type == :static_variable }))
+            blocks_to_hash(blocks { |b| b.type == :static_variable })
+          )
         end
 
         def queries
@@ -48,9 +51,7 @@ module Atlas
           line
         end
 
-        #######
         private
-        #######
 
         def parse_chunk_to_lines(chunk)
           chunk.split("\n").each do |line_content|
@@ -67,7 +68,6 @@ module Atlas
             hash.merge!(block.to_hash)
           end
         end
-
       end
     end
   end

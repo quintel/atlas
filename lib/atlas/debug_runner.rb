@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   # Wraps around the Runner to provide feedback to the CLI on the progress
   # of the calculation process. Optionally outputs before and after diagrams
@@ -11,12 +13,12 @@ module Atlas
       'Something, something, graph',
       'Searching for lost house keys',
       'Creating the universe'
-    ]
+    ].freeze
 
-    SECTORS = %w(
+    SECTORS = %w[
       agriculture households buildings transport
       industry other bunkers energy environment
-    ).map(&:upcase)
+    ].map(&:upcase)
 
     # Public: Creates a new DebugRunner.
     #
@@ -37,7 +39,8 @@ module Atlas
 
       if directory
         @directory = Pathname.new(directory).join(
-          "debug-#{ Time.now.strftime('%s') }")
+          "debug-#{Time.now.strftime('%s')}"
+        )
       end
 
       if @directory.nil? && @diagrams.any?
@@ -60,7 +63,7 @@ module Atlas
     #
     # Returns the calculated graph.
     def run!
-      puts "Debug output will be saved to #{ @directory }"
+      puts "Debug output will be saved to #{@directory}"
 
       graph_setup!
       calculate!
@@ -70,22 +73,20 @@ module Atlas
       bar.total = bar.progress
 
       @runner.refinery_graph
-    rescue Refinery::RefineryError => ex
-      @error = ex
+    rescue Refinery::RefineryError => e
+      @error = e
 
       post_calculation!
 
       bar.title = 'INSUFFICIENT DATA FOR A MEANINGFUL ANSWER'
       bar.total = bar.progress
 
-      puts ; puts @error
+      puts; puts @error
 
       @runner.refinery_graph
     end
 
-    #######
     private
-    #######
 
     # Internal: Creates the thread which loads the graph structure, and runs
     # the queries.
@@ -141,14 +142,15 @@ module Atlas
 
     # Internal: Runs a block in a thread, while showing an animated progress
     # bar to the user.
-    def with_animated_bar(&block)
-      main = Thread.new do
-        begin
-          block.call
-        ensure
-          @animation.terminate if @animation && @animation.alive?
+    def with_animated_bar
+      main =
+        Thread.new do
+          begin
+            yield
+          ensure
+            @animation.terminate if @animation&.alive?
+          end
         end
-      end
 
       [main, bar_animation_thread].each(&:join)
     end
@@ -157,55 +159,55 @@ module Atlas
     # 100ms. This is used to animate the bar when we don't know how long a
     # task will take to complete.
     def bar_animation_thread
-      @animation = Thread.new do
-        bar.total = nil
+      @animation =
+        Thread.new do
+          bar.total = nil
 
-        while true do
-          bar.increment
-          sleep(0.1)
+          loop do
+            bar.increment
+            sleep(0.1)
+          end
         end
-      end
     end
 
     # Internal: Draws each of the diagrams requested by the user.
     def draw_diagrams(klass, name)
-      title = "Creating #{ name } diagrams (%d of #{ @diagrams.length })"
+      title = "Creating #{name} diagrams (%d of #{@diagrams.length})"
 
       @diagrams.each.with_index do |filter, index|
-        bar.title = sprintf(title, index + 1)
+        bar.title = format(title, index + 1)
         draw_diagram(klass, filter, name)
       end
     end
 
     # Internal: Draws an individual diagram requested by the users.
     def draw_diagram(klass, filter, name)
-      filters = filter.split('+').map do |str|
-        if str.match(/^[A-Z]+$/)
-          # Namespace (sector) filter.
-          namespace = str.downcase
-          ->(node) { node.get(:model).ns?(namespace) }
-        else
-          # Node key filter.
-          key = str.to_sym
-          ->(node) { node.key == key }
+      filters =
+        filter.split('+').map do |str|
+          if str =~ /^[A-Z]+$/
+            # Namespace (sector) filter.
+            namespace = str.downcase
+            ->(node) { node.get(:model).ns?(namespace) }
+          else
+            # Node key filter.
+            key = str.to_sym
+            ->(node) { node.key == key }
+          end
         end
-      end
 
       FileUtils.mkdir_p(@directory)
 
-      klass.new(@runner.refinery_graph, {
-        format_demand: ->(value) {
+      klass.new(@runner.refinery_graph,
+        format_demand: lambda { |value|
           value / 1000
         },
-        cluster_by: ->(node) {
+        cluster_by: lambda { |node|
           node.get(:model).ns
         },
-        filter_by: ->(edge) {
+        filter_by: lambda { |edge|
           filters.any? { |filter| filter.call(edge.from) } ||
           filters.any? { |filter| filter.call(edge.to) }
-        }
-      }).draw_to(@directory.join("#{ filter.downcase[0..50] }.#{ name }.png"))
+        }).draw_to(@directory.join("#{filter.downcase[0..50]}.#{name}.png"))
     end
-
-  end # DebugRunner
-end # Atlas
+  end
+end

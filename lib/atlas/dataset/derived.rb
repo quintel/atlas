@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class Dataset::Derived < Dataset
     attribute :init,         Hash[Symbol => Float]
@@ -54,7 +56,7 @@ module Atlas
     def validate_presence_of_init_keys
       init.each_key do |key|
         unless InitializerInput.exists?(key)
-          errors.add(:init, "'#{ key }' does not exist as an initializer input")
+          errors.add(:init, "'#{key}' does not exist as an initializer input")
         end
       end
     end
@@ -62,7 +64,7 @@ module Atlas
     def validate_presence_of_init_values
       init.each_pair do |key, value|
         unless value.present?
-          errors.add(:init, "value for initializer input '#{ key }' can't be blank")
+          errors.add(:init, "value for initializer input '#{key}' can't be blank")
         end
       end
     end
@@ -74,5 +76,5 @@ module Atlas
         end
       end
     end
-  end # Dataset::Derived
-end # Atlas
+  end
+end

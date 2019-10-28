@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   module Config
     # Public: Reads a YAML config file from the ETSource config directory.

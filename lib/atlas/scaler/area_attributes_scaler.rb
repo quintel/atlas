@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class Scaler::AreaAttributesScaler
     # Only attributes common to Full and Derived
@@ -20,10 +22,10 @@ module Atlas
       result = {}
       SCALEABLE_AREA_ATTRS.map do |attr|
         if value = @base_dataset[attr]
-          result[attr] = Util::round_computation_errors(value * @scaling_factor)
+          result[attr] = Util.round_computation_errors(value * @scaling_factor)
         end
       end
       result
     end
-  end # Scaler::AreaAttributesScaler
-end # Atlas
+  end
+end

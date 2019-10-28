@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   module ActiveDocument
     module Subclassing
@@ -40,14 +42,11 @@ module Atlas
         def topmost_document_class
           topmost = self
 
-          while topmost.subclassed_document?
-            topmost = topmost.superclass
-          end
+          topmost = topmost.superclass while topmost.subclassed_document?
 
           topmost
         end
-      end # ClassMethods
-
-    end # Subclassing
-  end # ActiveDocument
-end # Atlas
+      end
+    end
+  end
+end

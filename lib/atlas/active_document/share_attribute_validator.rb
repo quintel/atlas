@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   module ActiveDocument
     # Asserts that a document has values set for several attributes whose values
@@ -20,8 +22,8 @@ module Atlas
         unless sum.between?(0.99, 1.01)
           record.errors.add(
             options.fetch(:group),
-            "contains #{ options.fetch(:group) } attributes which sum to " \
-            "#{ sum }, but should sum to 1.0"
+            "contains #{options.fetch(:group)} attributes which sum to " \
+            "#{sum}, but should sum to 1.0"
           )
         end
       end

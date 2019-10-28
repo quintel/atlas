@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class Scaler::TimeCurveScaler
     # Public: Scales (a copy of) the time curves of a base dataset and
@@ -52,5 +54,5 @@ module Atlas
         end
       end
     end
-  end # Scaler::TimeCurveScaler
-end # Atlas
+  end
+end

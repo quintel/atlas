@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Atlas
   module Parser
     module TextToHash
       describe Block do
-
         let(:block) { Block.new }
         let(:line1) { Line.new('# hello') }
         let(:line2) { Line.new('# world') }
@@ -26,7 +27,7 @@ module Atlas
 
         describe '#type' do
           it 'knows the type' do
-            expect(block.type).to eql :comment
+            expect(block.type).to be :comment
           end
         end
 
@@ -35,12 +36,10 @@ module Atlas
             allow(block).to receive(:key).and_return(:foo)
             allow(block).to receive(:value).and_return('bar!')
 
-            expect(block.to_hash).to eql({ foo: 'bar!' })
+            expect(block.to_hash).to eql(foo: 'bar!')
           end
         end
-
       end
     end
   end
 end
-

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Atlas
@@ -12,9 +14,9 @@ module Atlas
 
     describe '(validations)' do
       let(:attributes) { {} }
-      let(:query) {
+      let(:query) do
         SparseGraphQuery.new({ key: 'test+demand' }.merge(attributes))
-      }
+      end
 
       before { query.valid? }
 

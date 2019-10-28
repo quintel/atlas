@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :debug do
   task :check do
     abort "'rake debug:check' has been replaced. " \
@@ -7,19 +9,20 @@ namespace :debug do
   task :graph do
     abort "'rake debug:graph' has been replaced. " \
           "You should now run 'rake debug'."
-  end # task :graph
+  end
 
   task debug: :environment do
     env     = Hash[ENV.map { |key, val| [key.upcase, val] }]
     dataset = Atlas::Dataset.find(env['DATASET'] || :nl)
 
-    if env['FAST']
-      filters = []
-    elsif env['FILTER']
-      filters = env['FILTER'].split(',')
-    else
-      filters = Atlas::DebugRunner::SECTORS
-    end
+    filters =
+      if env['FAST']
+        []
+      elsif env['FILTER']
+        env['FILTER'].split(',')
+      else
+        Atlas::DebugRunner::SECTORS
+      end
 
     graph = Atlas::DebugRunner.new(dataset, 'tmp', filters).run!
 
@@ -28,8 +31,7 @@ namespace :debug do
       binding.pry
     end
   end
-end # namespace :debug
-
+end
 
 desc 'Output before and after diagrams of all the subgraphs.'
 task debug: ['debug:debug']

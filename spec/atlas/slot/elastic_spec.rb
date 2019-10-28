@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Atlas
@@ -11,15 +13,15 @@ module Atlas
       end
 
       it 'fails validation' do
-        expect(slot).to_not be_valid
+        expect(slot).not_to be_valid
       end
 
       it 'informs the user of the error' do
         slot.valid?
 
-        expect(slot.errors.full_messages).
-          to include('cannot have more than one elastic slot')
+        expect(slot.errors.full_messages)
+          .to include('cannot have more than one elastic slot')
       end
-    end # when the node has multiple elastic slots
-  end # Slot::Elastic
-end # Atlas
+    end
+  end
+end

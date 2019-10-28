@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 module Atlas
   class SparseGraphQuery
     include ActiveDocument
 
     DIRECTORY = 'sparse_graph_queries'
-    VALID_NAME = /^[\w_@-]+\+[\w_]+$/
+    VALID_NAME = /^[\w_@-]+\+[\w_]+$/.freeze
 
     attr_accessor :part
     attr_accessor :graph_method
@@ -13,11 +15,11 @@ module Atlas
     validate :validate_part
     validates_inclusion_of :graph_method,
       in: GraphValues::VALID_GRAPH_METHODS,
-      if: Proc.new{|s| s.graph_part? }
+      if: proc { |s| s.graph_part? }
 
     validates_inclusion_of :graph_method,
-      in: Dataset::Derived.attribute_set.map {|a| a.name.to_s },
-      if: Proc.new{|s| !s.graph_part? }
+      in: Dataset::Derived.attribute_set.map { |a| a.name.to_s },
+      if: proc { |s| !s.graph_part? }
 
     def key
       :"#{part}+#{graph_method}"
@@ -30,9 +32,7 @@ module Atlas
     private
 
     def attributes_from_basename(name)
-      if name.nil? || !name.match(VALID_NAME)
-        fail InvalidKeyError.new(name)
-      end
+      raise InvalidKeyError, name if name.nil? || !name.match(VALID_NAME)
 
       part, graph_method = name.split('+')
 

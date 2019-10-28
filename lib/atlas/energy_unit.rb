@@ -1,5 +1,6 @@
-module Atlas
+# frozen_string_literal: true
 
+module Atlas
   # EnergyUnit is a lightweight container to convert one unit to the other.
   #
   # Example:
@@ -7,18 +8,17 @@ module Atlas
   #   => 121
   #
   class EnergyUnit
-
     JOULES = {
-      toe:  41.868 * 10**9,
+      toe: 41.868 * 10**9,
       ktoe: 41.868 * 10**12,
 
-      kwh:   3.600 * 10**6,
-      twh:   3.600 * 10**15,
+      kwh: 3.600 * 10**6,
+      twh: 3.600 * 10**15,
 
-      mj:    1.000 * 10**9,
-      tj:    1.000 * 10**12,
-      pj:    1.000 * 10**15
-    }
+      mj: 1.000 * 10**9,
+      tj: 1.000 * 10**12,
+      pj: 1.000 * 10**15
+    }.freeze
 
     attr_reader :unit, :value
 
@@ -29,19 +29,16 @@ module Atlas
 
     # Returns a Float for the energy value for that particular unit.
     def to_unit(unit)
-      fail UnknownUnitError.new(unit) unless JOULES[unit]
+      raise UnknownUnitError, unit unless JOULES[unit]
+
       joule / JOULES[unit]
     end
 
-    #######
     private
-    #######
 
     # Returns the energy content in Joule.
     def joule
       JOULES[unit] * value
     end
-
   end
-
 end

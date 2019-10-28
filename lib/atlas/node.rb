@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class Node
     include ActiveDocument
@@ -25,50 +27,53 @@ module Atlas
     alias_method :sector=, :ns=
 
     # Numeric attributes.
-    [ :availability,
-      :free_co2_factor,
-      :demand_expected_value,
-      :forecasting_error,
-      :full_load_hours,
-      :households_supplied_per_unit,
-      :land_use_per_unit,
-      :takes_part_in_ets,
-      :part_load_efficiency_penalty,
-      :part_load_operating_point,
-      :electricity_output_capacity,
-      :heat_output_capacity,
-      :typical_input_capacity,
-      :number_of_units,
-      :preset_demand,
-      :expected_demand,
-      :average_effective_output_of_nominal_capacity_over_lifetime,
-      :sustainability_share
+    %i[
+      availability
+      free_co2_factor
+      demand_expected_value
+      forecasting_error
+      full_load_hours
+      households_supplied_per_unit
+      land_use_per_unit
+      takes_part_in_ets
+      part_load_efficiency_penalty
+      part_load_operating_point
+      electricity_output_capacity
+      heat_output_capacity
+      typical_input_capacity
+      number_of_units
+      preset_demand
+      expected_demand
+      average_effective_output_of_nominal_capacity_over_lifetime
+      sustainability_share
     ].each do |name|
       attribute name, Float
     end
 
     # (Numeric) attributes for costs
-    [  :initial_investment,
-       :ccs_investment,
-       :cost_of_installing,
-       :decommissioning_costs,
-       :residual_value,
-       :fixed_operation_and_maintenance_costs_per_year,
-       :variable_operation_and_maintenance_costs_per_full_load_hour,
-       :variable_operation_and_maintenance_costs_for_ccs_per_full_load_hour,
-       :construction_time,
-       :technical_lifetime,
-       :wacc
+    %i[
+      initial_investment
+      ccs_investment
+      cost_of_installing
+      decommissioning_costs
+      residual_value
+      fixed_operation_and_maintenance_costs_per_year
+      variable_operation_and_maintenance_costs_per_full_load_hour
+      variable_operation_and_maintenance_costs_for_ccs_per_full_load_hour
+      construction_time
+      technical_lifetime
+      wacc
     ].each do |name|
       attribute name, Float
     end
 
     # (Numeric) attributes for employment
-    [  :hours_prep_nl,
-       :hours_prod_nl,
-       :hours_place_nl,
-       :hours_maint_nl,
-       :hours_remov_nl
+    %i[
+      hours_prep_nl
+      hours_prod_nl
+      hours_place_nl
+      hours_maint_nl
+      hours_remov_nl
     ].each do |name|
       attribute name, Float
     end
@@ -113,7 +118,8 @@ module Atlas
       @in_slots ||= Set.new(
         input.merge(dynamic_slots(:input)).map do |carrier, _|
           Slot.slot_for(self, :in, carrier)
-        end)
+        end
+      )
     end
 
     # Public: A set containing all of the output slots for this node. Output
@@ -131,7 +137,8 @@ module Atlas
       @out_slots ||= Set.new(
         output.merge(dynamic_slots(:output)).map do |carrier, _|
           Slot.slot_for(self, :out, carrier)
-        end)
+        end
+      )
     end
 
     # Public: Sets the input share data for the node. This controls how demand
@@ -164,9 +171,7 @@ module Atlas
       @out_slots = nil
     end
 
-    #######
     private
-    #######
 
     # Internal: Asserts the input and output slot data is in a valid format.
     #
@@ -192,6 +197,5 @@ module Atlas
         .select { |key, _| key.to_s.start_with?(direction) }
         .map { |key, _| [key.to_s.split('.', 2).last.to_sym, nil] } ]
     end
-
-  end # Node
-end # Atlas
+  end
+end

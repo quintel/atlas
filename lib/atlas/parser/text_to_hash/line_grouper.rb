@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 module Atlas
   module Parser
     module TextToHash
       class LineGrouper
-
         attr_reader :lines, :blocks
 
         def initialize(lines)
@@ -11,20 +12,14 @@ module Atlas
           parse_to_blocks!
         end
 
-        #######
         private
-        #######
 
         def parse_to_blocks!
-
           in_comment_block = nil
 
           lines.each_with_index do |line, index|
-
             if line.type == :empty_line
-              if @blocks.last.is_a?(MultiLineBlock)
-                @blocks.last.lines << line
-              end
+              @blocks.last.lines << line if @blocks.last.is_a?(MultiLineBlock)
 
               next
             end
@@ -42,17 +37,17 @@ module Atlas
               in_comment_block = true
             end
 
-            if lines[index + 1] && lines[index + 1].type == :inner_block
-              @blocks << MultiLineBlock.new([line])
-            elsif line.type == :comment
-              @blocks << CommentBlock.new([line])
-            else
-              @blocks << SingleLineBlock.new([line])
-            end
+            @blocks.push(
+              if lines[index + 1] && lines[index + 1].type == :inner_block
+                MultiLineBlock.new([line])
+              elsif line.type == :comment
+                CommentBlock.new([line])
+              else
+                SingleLineBlock.new([line])
+              end
+            )
           end
-
         end
-
       end
     end
   end

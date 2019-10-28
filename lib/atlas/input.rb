@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class Input
     include ActiveDocument
@@ -27,13 +29,16 @@ module Atlas
     attribute :default_unit,    String
     attribute :dependent_on,    String
 
-    validates_presence_of :query, if: ->{ share_group.blank? }
+    validates_presence_of :query, if: -> { share_group.blank? }
 
     validate :validate_query_within_group,
-      if: ->{ ! share_group.blank? && ! query }
+      if: -> { !share_group.blank? && !query }
 
-    validates_presence_of :share_group, allow_nil: true,
+    validates_presence_of :share_group,
+      allow_nil: true,
       message: 'must be blank, or have a value of non-zero length'
+
+    private
 
     # Internal: Asserts that a query is defined on the Input.
     #
@@ -46,7 +51,5 @@ module Atlas
         errors.add(:query, :blank)
       end
     end
-
-    private :validate_query_within_group
-  end # Input
-end # Atlas
+  end
+end

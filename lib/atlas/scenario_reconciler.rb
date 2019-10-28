@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   # Given user values from an Atlas::Preset, or an object which behaves like
   # one (such as an ETEngine scenario), examines the user values and suggests
@@ -12,7 +14,7 @@ module Atlas
     #
     # Returns a ScenarioReconciler.
     def initialize(values, defaults)
-      fail OsmosisRequired.new(self.class) unless defined?(::Osmosis)
+      raise OsmosisRequired, self.class unless defined?(::Osmosis)
 
       @values   = values
       @defaults = defaults
@@ -41,43 +43,43 @@ module Atlas
         # Skip any unchanged groups.
         next if input_keys.all? { |key| merged[key] == @values[key] }
 
-        info = input_keys.map do |key|
-          if changes.key?(key) && ! @values.key?(key)
-            '+ %s :: (missing) -> %f' % [key, changes[key]]
-          elsif changes[key] != @values[key]
-            '~ %s :: %f -> %f' % [key, @values[key], changes[key]]
-          else
-            '  %s :: %f' % [key, @values[key]]
+        info =
+          input_keys.map do |key|
+            if changes.key?(key) && !@values.key?(key)
+              format('+ %s :: (missing) -> %f', key, changes[key])
+            elsif changes[key] != @values[key]
+              format('~ %s :: %f -> %f', key, @values[key], changes[key])
+            else
+              format('  %s :: %f', key, @values[key])
+            end
           end
-        end
 
         <<-INFO.gsub(/^ {10}/, '')
-          #{ group_key }
-          #{ '-' * group_key.to_s.length }
-          #{ info.join("\n") }
-          = #{ group_sum(group_key, merged).to_f }
+          #{group_key}
+          #{'-' * group_key.to_s.length}
+          #{info.join("\n")}
+          = #{group_sum(group_key, merged).to_f}
         INFO
       end.compact
 
       # Inputs changed based on their extrema.
       if (corrected = corrected_values).any?
-        corrected_list = corrected.map do |key, value|
-          '~ %s :: %f -> %f' % [key, @values[key], corrected[key]]
-        end
+        corrected_list =
+          corrected.map do |key, _value|
+            format('~ %s :: %f -> %f', key, @values[key], corrected[key])
+          end
 
         string.unshift(<<-CORRECTED.gsub(/^ {10}/, ''))
           Corrected Values
           ----------------
-          #{ corrected_list.join("\n") }
+          #{corrected_list.join("\n")}
         CORRECTED
       end
 
       string.join("\n")
     end
 
-    #######
     private
-    #######
 
     # Internal: Returns a hash containing new values for any input whose value
     # is too high or too low.
@@ -103,7 +105,7 @@ module Atlas
         input_keys   = group(group_key).map(&:key)
         missing_keys = input_keys.reject { |key| @values.key?(key) }
 
-        missing_keys.each do |input_key, data|
+        missing_keys.each do |input_key, _data|
           missing[input_key] = @defaults[input_key][:start]
         end
       end
@@ -120,17 +122,18 @@ module Atlas
 
         osmosis_data = osmosis_data_for(group_key, values)
 
-        balanced = begin
-          # The first balance attempt will be performed while keeping the user's
-          # original values unchanged. This seeks to preserve the intent of the
-          # user when they created their scenario.
-          Osmosis.balance(osmosis_data, 100.0)
-        rescue Osmosis::CannotBalanceError, Osmosis::NoVariablesError
-          # We couldn't balance the group while preserving the user values.
-          # Therefore we'll have to alter those values.
-          osmosis_data.each { |_, data| data[:static] = false }
-          Osmosis.balance(osmosis_data, 100.0)
-        end
+        balanced =
+          begin
+            # The first balance attempt will be performed while keeping the
+            # users original values unchanged. This seeks to preserve the intent
+            # of the user when they created their scenario.
+            Osmosis.balance(osmosis_data, 100.0)
+          rescue Osmosis::CannotBalanceError, Osmosis::NoVariablesError
+            # We couldn't balance the group while preserving the user values.
+            # Therefore we'll have to alter those values.
+            osmosis_data.each { |_, data| data[:static] = false }
+            Osmosis.balance(osmosis_data, 100.0)
+          end
 
         balanced.each do |key, value|
           if value.abs <= 1.0e-7
@@ -180,13 +183,13 @@ module Atlas
     # Osmosis for balancing.
     def osmosis_data_for(group_key, values)
       Hash[ group(group_key).map(&:key).map do |input_key|
-        [ input_key, {
-          min:    @defaults[input_key][:min],
-          max:    @defaults[input_key][:max],
-          value:  values[input_key],
+        [input_key, {
+          min: @defaults[input_key][:min],
+          max: @defaults[input_key][:max],
+          value: values[input_key],
           static: @values.key?(input_key)
-        } ]
+        }]
       end ]
     end
-  end # ScenarioReconciler
-end # Atlas
+  end
+end

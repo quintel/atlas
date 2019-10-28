@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   module ActiveDocument
     # A Manager which loads documents but sets extra attribute values by
@@ -19,17 +21,15 @@ module Atlas
       end
 
       # Production-mode documents may not be changed.
-      %w( delete write delete_path ).each do |method|
+      %w[delete write delete_path].each do |method|
         class_eval <<-RUBY, __FILE__, __LINE__ + 1
-          def #{ method }(*)
+          def #{method}(*)
             raise ReadOnlyError.new
           end
         RUBY
       end
 
-      #######
       private
-      #######
 
       # Internal: Returns the static, exported values for the document
       # matching the given key.
@@ -48,9 +48,9 @@ module Atlas
       # key  - The unique key which identifies the document.
       #
       # Returns a hash.
-      def load_attributes(path, key)
+      def load_attributes(_path, key)
         exported_data_for(key)
       end
     end
-  end # ActiveDocument
-end # Atlas
+  end
+end

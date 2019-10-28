@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Atlas
@@ -6,7 +8,7 @@ module Atlas
       it 'defaults to zero' do
         expect(Input.new(key: 'ohnoes').priority).to eq(0)
       end
-    end # priority
+    end
 
     describe 'share_group' do
       it 'may be nil' do
@@ -73,5 +75,5 @@ module Atlas
         expect(group).to include(Input.find(:grouped_two))
       end
     end
-  end # Input
-end # ETSource
+  end
+end

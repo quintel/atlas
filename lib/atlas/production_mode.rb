@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   # A special way to load nodes and edges with pre-calculated demands and
   # shares. This is used in ETEngine since it isn't possible to perform the
@@ -32,7 +34,8 @@ module Atlas
     # Returns an array of nodes.
     def nodes
       @nodes ||= Collection.new(
-        ActiveDocument::ProductionManager.new(Node, @data[:nodes]).all)
+        ActiveDocument::ProductionManager.new(Node, @data[:nodes]).all
+      )
     end
 
     # Public: An array containing all of the edges with the pre-calculated
@@ -41,7 +44,8 @@ module Atlas
     # Returns an array of edges.
     def edges
       @edges ||= Collection.new(
-        ActiveDocument::ProductionManager.new(Edge, @data[:edges]).all)
+        ActiveDocument::ProductionManager.new(Edge, @data[:edges]).all
+      )
     end
-  end # ProductionMode
-end # Atlas
+  end
+end

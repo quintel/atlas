@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   module ActiveDocument
     module Naming
@@ -5,7 +7,7 @@ module Atlas
 
       # A subdirectory path which is meaningless, and thus gets converted to
       # nil instead.
-      NO_DIR = '.'.freeze
+      NO_DIR = '.'
 
       included do
         # Public: The unique key used to identify the document.
@@ -26,9 +28,7 @@ module Atlas
       #
       # Returns whatever you gave.
       def key=(new_key)
-        if new_key.nil? || ! new_key.match(/\S/)
-          fail InvalidKeyError.new(new_key)
-        end
+        raise InvalidKeyError, new_key if new_key.nil? || !new_key.match(/\S/)
 
         @key = new_key.to_sym
         set_attributes_from_key!(@key)
@@ -52,7 +52,7 @@ module Atlas
         document_dir = path.dirname
 
         if document_dir != directory
-          document_dir.relative_path_from(directory).to_s.gsub('/', '.')
+          document_dir.relative_path_from(directory).to_s.tr('/', '.')
         end
       end
 
@@ -75,8 +75,8 @@ module Atlas
       def ns=(namespace)
         new_path = directory
 
-        unless namespace.nil? || namespace.length == 0
-          new_path = new_path.join(namespace.gsub('.', '/'))
+        unless namespace.nil? || namespace.empty?
+          new_path = new_path.join(namespace.tr('.', '/'))
         end
 
         self.path = new_path.join(key.to_s)
@@ -102,7 +102,7 @@ module Atlas
       #
       # Returns true or false.
       def ns?(namespace)
-        !! ns.match(/^#{ Regexp.escape(namespace.to_s) }(?:\.|$)/)
+        ns.match?(/^#{ Regexp.escape(namespace.to_s) }(?:\.|$)/)
       end
 
       # Public: Compares this document with another, so that they may be
@@ -113,9 +113,7 @@ module Atlas
         key <=> other.key
       end
 
-      #######
       private
-      #######
 
       # Internal: When the key is updated, we also update any attributes whose
       # values are stored as part of the key.
@@ -141,7 +139,7 @@ module Atlas
       # This can be overridden to provide more complex file naming.
       #
       # Returns a hash.
-      def attributes_from_basename(filename)
+      def attributes_from_basename(_filename)
         {}
       end
 
@@ -151,7 +149,7 @@ module Atlas
       #
       # Returns nothing.
       def set_attributes_from_filename!(path)
-        fail InvalidKeyError.new(path) if path.to_s[0] == '/'
+        raise InvalidKeyError, path if path.to_s[0] == '/'
 
         relative = directory.join(path.to_s).relative_path_from(directory)
         name     = relative.basename.to_s.split('.', 2).first
@@ -161,7 +159,6 @@ module Atlas
 
         self.key = name
       end
-
-    end # Naming
-  end # ActiveDocument
-end # Atlas
+    end
+  end
+end

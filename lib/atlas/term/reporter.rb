@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   module Term
     class Reporter
@@ -41,9 +43,9 @@ module Atlas
         refresh!(true)
 
         result
-      rescue Exception => ex
+      rescue Exception => e
         refresh!(true) # Clear any output.
-        fail ex
+        raise e
       end
 
       # Public: Increments the counter for the given +group_name+ and updates
@@ -62,21 +64,19 @@ module Atlas
       def result
         visible_groups.map do |name, color|
           ::Term::ANSIColor.public_send(color) do
-            "#{ @counters[name] } #{ name }"
+            "#{@counters[name]} #{name}"
           end
         end.join(', ')
       end
 
-      #######
       private
-      #######
 
       # Internal: Refreshes the report to the user by erasing the previous
       # report line and showing the latest counters. Outputs to $stdout.
       #
       # Returns nothing.
       def refresh!(final = false)
-        $stdout.print "#{ @title }: #{ result }"
+        $stdout.print "#{@title}: #{result}"
 
         # If this is not the final report, a carriage return will tell the
         # terminal to overwrite the line we just printed the next time a
@@ -95,5 +95,5 @@ module Atlas
         @groups.reject { |name, *| @counters[name].zero? }
       end
     end
-  end # Term
-end # Atlas
+  end
+end

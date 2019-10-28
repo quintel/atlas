@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   # This is deprecated!
   class InitializerInput

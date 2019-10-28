@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   module Util
     module_function
@@ -20,14 +22,14 @@ module Atlas
       dotted = {}
 
       hash.each do |key, value|
-        full_key = ns ? "#{ ns }.#{ key }" : key
+        full_key = ns ? "#{ns}.#{key}" : key
 
         case value
         when Hash
           dotted.merge!(flatten_dotted_hash(value, full_key))
         when Array, Set
           if value.any? { |element| element.is_a?(Hash) }
-            fail IllegalNestedHashError.new(value)
+            raise IllegalNestedHashError, value
           end
 
           dotted[full_key] = value
@@ -57,7 +59,7 @@ module Atlas
           head  = split.first.to_sym
           rest  = split[1..-1].map(&:to_sym)
 
-          hval  = expanded[head] ||= Hash.new
+          hval  = expanded[head] ||= {}
 
           rest.to_enum.with_index.reduce(hval) do |parent, (segment, index)|
             if rest[index + 1].nil?
@@ -66,7 +68,7 @@ module Atlas
             else
               # We're in a middle segment (i.e., not the first not the last:
               # given "one.two.three.four" -> "two" and "three").
-              parent[segment] ||= Hash.new
+              parent[segment] ||= {}
             end
           end
         else
@@ -94,6 +96,5 @@ module Atlas
         float
       end
     end
-
-  end # Util
-end # Atlas
+  end
+end

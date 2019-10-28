@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   # Contains information about a nodes participantion in the time-resolved
   # hydrogen calculation.

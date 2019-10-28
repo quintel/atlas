@@ -1,11 +1,11 @@
+# frozen_string_literal: true
+
 desc <<-DESC
   Whitelists all nodes edges based on a sparse graph
 DESC
 
 def add_method(el, method)
-  unless el.graph_methods.include?(method)
-    el.graph_methods << method
-  end
+  el.graph_methods << method unless el.graph_methods.include?(method)
 end
 
 task auto_whitelist: :environment do
@@ -17,41 +17,29 @@ task auto_whitelist: :environment do
 
     node.slots.each do |slots|
       slots.each do |slot|
-        if slot.get(:share)
-          method = (slot.direction == :in ? "input" : "output")
+        next unless slot.get(:share)
 
-          add_method(model, method)
-        end
+        method = (slot.direction == :in ? 'input' : 'output')
+
+        add_method(model, method)
       end
     end
 
-    if node.get(:demand)
-      add_method(model, 'demand')
-    end
+    add_method(model, 'demand') if node.get(:demand)
 
-    if node.get(:number_of_units)
-      add_method(model, 'number_of_units')
-    end
+    add_method(model, 'number_of_units') if node.get(:number_of_units)
 
-    if model.graph_methods.any?
-      model.save
-    end
+    model.save if model.graph_methods.any?
 
     # Edges
     node.edges(:out).each do |edge|
       model = edge.get(:model)
 
-      if edge.get(:child_share)
-        add_method(model, 'child_share')
-      end
+      add_method(model, 'child_share') if edge.get(:child_share)
 
-      if edge.get(:parent_share)
-        add_method(model, 'parent_share')
-      end
+      add_method(model, 'parent_share') if edge.get(:parent_share)
 
-      if model.graph_methods.any?
-        model.save
-      end
+      model.save if model.graph_methods.any?
     end
   end
 end

@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 module Atlas
   module ActiveDocument
     class WhitelistingInitializerMethods < ActiveModel::Validator
-
       def validate(record)
         return if (record.errors.messages[:values] || []).any?
 
@@ -11,7 +12,7 @@ module Atlas
           methods.keys.each do |method|
             unless graph_element.graph_methods.include?(method)
               record.errors.add(:values,
-                "#{ graph_type } '#{ element }' is not allowed to be edited by '#{ method }'")
+                "#{graph_type} '#{element}' is not allowed to be edited by '#{method}'")
             end
           end
         end

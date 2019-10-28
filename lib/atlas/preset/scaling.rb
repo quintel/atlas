@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class Preset
     # Describes scenarios which are to be scaled down to a smaller region size.

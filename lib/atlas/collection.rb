@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   # Contains ActiveDocuments, providing a nice way to look up specific
   # documents. It caches the keys of each document after the first call to
@@ -5,7 +7,6 @@ module Atlas
   # changes, you need to create a new collection. This is simplified for you
   # with +refresh+.
   class Collection < SimpleDelegator
-
     # Public: Given a +key+, returns the document with the matching key.
     #
     # key - The key to look for.
@@ -13,7 +14,7 @@ module Atlas
     # Returns the element from the collection, or nil if none matched.
     def find(key)
       table[key.to_sym] ||
-        fail(DocumentNotFoundError.new(key, document_class))
+        raise(DocumentNotFoundError.new(key, document_class))
     end
 
     # Public: Tries each of the +keys+ in turn, until a document is found
@@ -24,7 +25,7 @@ module Atlas
     # Returns the document from the dollection, or nil if none matched.
     def fetch(*keys)
       (key = keys.flatten.find { |k| key?(k) }) && find(key) ||
-        fail(DocumentNotFoundError.new(keys, document_class))
+        raise(DocumentNotFoundError.new(keys, document_class))
     end
 
     # Public: Given a +key+, returns if a document with that key is contained
@@ -49,21 +50,20 @@ module Atlas
     #
     # Returns a string.
     def inspect
-      "#<#{ self.class.name } (#{ length } x #{ document_class.name })>"
+      "#<#{self.class.name} (#{length} x #{document_class.name})>"
     end
 
-    #######
     private
-    #######
 
     # Internal: Builds a table of document keys and the documents. Memoizes
     # the result after the first call.
     #
     # Returns a Hash.
     def table
-      @table ||= __getobj__.each_with_object(Hash.new) do |document, table|
-        table[document.key] = document
-      end
+      @table ||=
+        __getobj__.each_with_object({}) do |document, table|
+          table[document.key] = document
+        end
     end
 
     # Internal: Tries to determine what type of document is stored in the
@@ -72,9 +72,8 @@ module Atlas
     # Returns an ActiveDocument class, or nil/false.
     def document_class
       table.any? &&
-       (klass = table.first.last.class) &&
+        (klass = table.first.last.class) &&
         klass.topmost_document_class
     end
-
-  end # Collection
-end # Atlas
+  end
+end

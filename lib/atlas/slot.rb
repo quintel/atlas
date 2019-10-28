@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   # Slots aggregate multiple edges of the same carrier on a node. Nodes have
   # input slots - slots through which energy flows into the node - and output
@@ -6,7 +8,7 @@ module Atlas
     include Virtus.model
     include ActiveModel::Validations
 
-    KEY_FORMAT = /^(?<node>[\w_]+)(?<direction>[+-])@(?<carrier>[\w_]+)$/
+    KEY_FORMAT = /^(?<node>[\w_]+)(?<direction>[+-])@(?<carrier>[\w_]+)$/.freeze
 
     attribute :node,      Atlas::Node
     attribute :direction, Symbol
@@ -16,8 +18,8 @@ module Atlas
     #
     # Returns a string.
     def inspect
-      "#<#{ self.class.name } node=#{ node.key } " \
-        "carrier=#{ carrier } direction=#{ direction }>"
+      "#<#{self.class.name} node=#{node.key} " \
+        "carrier=#{carrier} direction=#{direction}>"
     end
 
     # Public: Given the +node+ key, +direction+, and +carrier+, returns the
@@ -77,7 +79,7 @@ module Atlas
     #
     # Returns true or false.
     def out?
-      ! in?
+      !in?
     end
 
     # Public: The proportion of energy which enters or leaves the node through
@@ -102,13 +104,13 @@ module Atlas
     #
     # Returns a hash.
     def self.attributes_from_key(key)
-      if key.nil? || ! (data = key.to_s.match(KEY_FORMAT))
-        fail InvalidKeyError.new(key)
+      if key.nil? || !(data = key.to_s.match(KEY_FORMAT))
+        raise InvalidKeyError, key
       end
 
-      { node:      data[:node].to_sym,
+      { node: data[:node].to_sym,
         direction: data[:direction] == '+' ? :in : :out,
-        carrier:   data[:carrier].to_sym }
+        carrier: data[:carrier].to_sym }
     end
-  end # Slot
-end # Atlas
+  end
+end

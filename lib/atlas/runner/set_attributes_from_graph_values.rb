@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class Runner
     module SetAttributesFromGraphValues
@@ -26,7 +28,7 @@ module Atlas
       # el = Atlas element either a Slot, Edge or Node
       # dataset = an Atlas::Datset::Derived
       def self.set_graph_methods(dataset, refinery_element, atlas_element = nil)
-        atlas_element = atlas_element || refinery_element.get(:model)
+        atlas_element ||= refinery_element.get(:model)
 
         (dataset.graph_values.for(atlas_element) || {})
           .each_pair do |method, val|

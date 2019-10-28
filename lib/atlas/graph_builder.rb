@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class GraphBuilder
     # Public: Creates a Turbine::Graph containing all the nodes in the data
@@ -21,9 +23,7 @@ module Atlas
       @graph
     end
 
-    #######
     private
-    #######
 
     # Internal: Creates a new GraphBuilder. Use GraphBuilder.build rather than
     # creating this yourself.
@@ -33,18 +33,19 @@ module Atlas
       @nodes = Collection.new(Node.all.select(&filter(sector)))
       @graph = Turbine::Graph.new
 
-      @edges = if sector
-        Collection.new(Edge.all.select do |edge|
-          # For the moment, we test the sector of the node on each end of the
-          # edge, rather than the namespace of the edge; edges currently use
-          # the same namespace as the parent node. Because of this, testing
-          # only the namespace would raise a DocumentNotFoundError when trying
-          # to connect "bridge" edges which cross from one sector to another.
-          @nodes.key?(edge.supplier) || @nodes.key?(edge.consumer)
-        end)
-      else
-        Edge.all
-      end
+      @edges =
+        if sector
+          Collection.new(Edge.all.select do |edge|
+            # For the moment, we test the sector of the node on each end of the
+            # edge, rather than the namespace of the edge; edges currently use
+            # the same namespace as the parent node. Because of this, testing
+            # only the namespace would raise a DocumentNotFoundError when trying
+            # to connect "bridge" edges which cross from one sector to another.
+            @nodes.key?(edge.supplier) || @nodes.key?(edge.consumer)
+          end)
+        else
+          Edge.all
+        end
     end
 
     # Internal: Adds the ActiveDocument nodes to the Turbine graph.
@@ -105,7 +106,7 @@ module Atlas
     # edge - An Edge (ActiveDocument) instance.
     #
     # Returns the Turbine::Edge which was created.
-    def self.establish_edge(edge, graph, nodes)
+    def self.establish_edge(edge, graph, _nodes)
       parent  = graph.node(edge.supplier)
       child   = graph.node(edge.consumer)
       carrier = Carrier.find(edge.carrier)
@@ -124,8 +125,8 @@ module Atlas
         props[:type] = :flexible
       end
 
-      fail DocumentNotFoundError.new(edge.supplier, Node) if parent.nil?
-      fail DocumentNotFoundError.new(edge.consumer, Node) if child.nil?
+      raise DocumentNotFoundError.new(edge.supplier, Node) if parent.nil?
+      raise DocumentNotFoundError.new(edge.consumer, Node) if child.nil?
 
       parent.connect_to(child, carrier.key, props)
     end
@@ -139,10 +140,10 @@ module Atlas
     def filter(sector)
       if sector
         regex = /^#{ Regexp.escape(sector.to_s) }\.?/
-        ->(el) { el.ns && el.ns.match(regex) }
+        ->(el) { el.ns&.match(regex) }
       else
-        ->(el) { true }
+        ->(_el) { true }
       end
     end
-  end # GraphBuilder
-end # Atlas
+  end
+end

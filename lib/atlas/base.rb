@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   # Parent directory where all the 'models' live
   # such as inputs, gqueries etc.
@@ -45,4 +47,4 @@ module Atlas
   ensure
     self.data_dir = previous
   end
-end # Atlas
+end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class Runner
     # Given a dataset, returns a proc which will "zero-out" sub-sectors which
@@ -7,21 +9,22 @@ module Atlas
     module ZeroDisabledSectors
       # Maps boolean flags on the dataset to node groups which should be
       # disabled if the flag is false.
-      FEATURE_MAP = { has_metal: :steel_alu_prod }
+      FEATURE_MAP = { has_metal: :steel_alu_prod }.freeze
 
       # Public: Creates a proc which can be used by Refinery to zero-out any
       # disabled subsectors.
       def self.with_dataset(dataset)
         # Create an array of namespaces which have been disabled in the
         # given dataset.
-        disabled_groups = FEATURE_MAP.reject do |ds_attribute, group|
+        disabled_groups = FEATURE_MAP.reject do |ds_attribute, _group|
           dataset.send(ds_attribute)
         end.map(&:last)
 
         lambda do |refinery|
-          disabled_nodes = refinery.nodes.select do |node|
-            (node.get(:model).groups & disabled_groups).any?
-          end
+          disabled_nodes =
+            refinery.nodes.select do |node|
+              (node.get(:model).groups & disabled_groups).any?
+            end
 
           disabled_nodes.each(&method(:zero!))
 
@@ -50,7 +53,6 @@ module Atlas
         node.set(:cc_in, 0)
         node.set(:cc_out, 0)
       end
-    end # ZeroDisabledSectors
-  end # Runner
-
-end # Atlas
+    end
+  end
+end

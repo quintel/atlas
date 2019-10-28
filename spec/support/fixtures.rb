@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   module Spec
     # Included into RSpec examples and groups when they ask for it. Changes
@@ -20,15 +22,15 @@ module Atlas
       def self.included(klass)
         dir = Atlas::Spec::Fixtures.working_dir
 
-        klass.around(:each) do |example|
+        klass.around do |example|
           Atlas.with_data_dir(dir) { example.run }
         end
 
-        klass.before(:each) do
+        klass.before do
           dir.children.each { |subdir| FileUtils.rm_rf(subdir) }
           FileUtils.cp_r(Atlas.root.join('spec/fixtures/.'), dir)
         end
       end
-    end # Fixtures
-  end # Spec
-end # Atlas
+    end
+  end
+end

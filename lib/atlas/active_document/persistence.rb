@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   module ActiveDocument
     module Persistence
@@ -48,14 +50,15 @@ module Atlas
       def path=(path)
         path = Pathname.new(path)
 
-        if path.absolute?
-          relative = path.relative_path_from(directory)
-        else
-          relative = path
-        end
+        relative =
+          if path.absolute?
+            path.relative_path_from(directory)
+          else
+            path
+          end
 
         if relative.to_s.include?('..')
-          fail IllegalDirectoryError.new(path, directory)
+          raise IllegalDirectoryError.new(path, directory)
         end
 
         set_attributes_from_filename!(relative)
@@ -87,7 +90,7 @@ module Atlas
       #
       # Returns true, or false if the validation failed.
       def save(validate = true)
-        return false if validate && ! valid?
+        return false if validate && !valid?
 
         if @last_saved_file_path != path && @last_saved_file_path.file?
           manager.delete_path(@last_saved_file_path)
@@ -100,14 +103,15 @@ module Atlas
       #
       # Returns true, or raises an error if the save fails.
       def save!
-        fail(InvalidDocumentError.new(self)) unless save
+        raise InvalidDocumentError, self unless save
+
         true
       end
 
       # Public: Returns true if this document is persisted - i.e. has been saved
       # to storage - otherwise returns false.
       def persisted?
-        path.file? || @last_saved_file_path && @last_saved_file_path.file?
+        path.file? || @last_saved_file_path&.file?
       end
 
       # Public: Returns true if this record has not yet been saved - i.e. has
@@ -125,16 +129,12 @@ module Atlas
       end
 
       def manager=(manager)
-        if @manager
-          fail AtlasError, "You may not change a document's manager"
-        end
+        raise AtlasError, "You may not change a document's manager" if @manager
 
         @manager = manager
       end
 
-      #######
       private
-      #######
 
       # Internal: The thing.
       def manager
@@ -182,8 +182,7 @@ module Atlas
         def create!(attributes)
           new(attributes).tap(&:save!)
         end
-      end # ClassMethods
-
-    end # Persistence
-  end # ActiveDocument
-end # Atlas
+      end
+    end
+  end
+end

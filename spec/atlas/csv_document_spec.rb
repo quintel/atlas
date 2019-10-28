@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Atlas
@@ -29,13 +31,13 @@ module Atlas
           path = Atlas.data_dir.join('blank.csv')
           path.open('w') { |f| f.puts(",yes\nyes,1") }
 
-          expect { CSVDocument.new(path.to_s) }.
-            to raise_error(BlankCSVHeaderError)
+          expect { CSVDocument.new(path.to_s) }
+            .to raise_error(BlankCSVHeaderError)
         end
       end
 
       context 'with specified headers' do
-        let(:headers) { %i( yes no maybe ) }
+        let(:headers) { %i[yes no maybe] }
         let(:path) { Atlas.data_dir.join('new.csv') }
         let(:doc) { CSVDocument.new(path.to_s, headers) }
 
@@ -45,15 +47,14 @@ module Atlas
 
         it 'raises when the file already exists' do
           doc.save!
-          expect { CSVDocument.new(path.to_s, %i( hello world )) }.
-            to raise_error(ExistingCSVHeaderError)
+          expect { CSVDocument.new(path.to_s, %i[hello world]) }
+            .to raise_error(ExistingCSVHeaderError)
         end
 
         it 'sets the headers / column_keys' do
           expect(doc.column_keys).to eq(headers)
         end
       end
-
     end
 
     describe '#get' do
@@ -98,13 +99,13 @@ module Atlas
       end
 
       it 'does not raise an error if a cell is blank' do
-        expect { doc.get('blank', 'no') }.to_not raise_error
+        expect { doc.get('blank', 'no') }.not_to raise_error
       end
 
       it 'does not raise an error if the column is named by its index' do
-        expect { doc.get('blank', 1) }.to_not raise_error
+        expect { doc.get('blank', 1) }.not_to raise_error
       end
-    end # get
+    end
 
     describe '#set' do
       it 'sets a given value for given row and column' do
@@ -120,7 +121,7 @@ module Atlas
       it 'raises an error when column header is not known' do
         expect { doc.set('yes', 'nope', 99) }.to raise_error(UnknownCSVCellError)
       end
-    end # set
+    end
 
     describe '#save!' do
       it 'saves the CSVDocument content to disk' do
@@ -139,7 +140,8 @@ module Atlas
       end
 
       context 'when the file did not exist before' do
-        let(:doc) { CSVDocument.new(Atlas.data_dir.join('doesnotexistbefore.csv'), %i( yes no maybe\ baby )) }
+        let(:doc) { CSVDocument.new(Atlas.data_dir.join('doesnotexistbefore.csv'), %i[yes no maybe\ baby]) }
+
         it 'creates a new csv file' do
           doc.save!
           expect(File.file?(doc.path)).to be(true)
@@ -151,7 +153,7 @@ module Atlas
         end
       end
     end
-  end # CSVDocument
+  end
 
   describe CSVDocument::OneDimensional do
     let(:doc) do
@@ -176,8 +178,8 @@ module Atlas
       it 'does not get the value of a header row' do
         expect { doc.get(:carrier) }.to raise_error(UnknownCSVRowError)
       end
-    end # get
-  end # CSVDocument::OneDimensional
+    end
+  end
 
   describe CSVDocument, '.curve' do
     context' with a simple list of values' do
@@ -202,9 +204,9 @@ module Atlas
       it 'contains all the values' do
         expect(doc.to_a).to eq([0.0, 0.2, 0.3])
       end
-    end # with a simple list of values
+    end
 
-    context' with a lines ending in a comma' do
+    context ' with a lines ending in a comma' do
       let(:doc) do
         path = Atlas.data_dir.join('curve.csv')
 
@@ -222,9 +224,9 @@ module Atlas
       it 'contains all the values' do
         expect(doc.to_a).to eq([0.0, 0.2, 0.3])
       end
-    end # with a lines ending in a comma
+    end
 
-    context' with an empty file' do
+    context ' with an empty file' do
       let(:doc) do
         path = Atlas.data_dir.join('curve.csv')
         path.open('w') { |f| f.puts('') }
@@ -233,8 +235,8 @@ module Atlas
       end
 
       it 'has no values' do
-        expect(doc.to_a).to eq([])#be_empty
+        expect(doc.to_a).to eq([]) # be_empty
       end
-    end # with a lines ending in a comma
-  end # CSVDocument.curve
-end # Atlas
+    end
+  end
+end

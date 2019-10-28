@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   # Presets are saved scenarios whose results we want to make available in the
   # ETModel front-end.
@@ -45,7 +47,7 @@ module Atlas
         errors.add(
           :user_values,
           "contains input keys which don't exist: " \
-          "#{ intersection.sort.inspect }"
+          "#{intersection.sort.inspect}"
         )
       end
     end
@@ -54,8 +56,8 @@ module Atlas
       return if scaling.valid?
 
       scaling.errors.each do |key, messages|
-        errors.add("scaling.#{ key }", messages)
+        errors.add("scaling.#{key}", messages)
       end
     end
-  end # Preset
-end # Atlas
+  end
+end

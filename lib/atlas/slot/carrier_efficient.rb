@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class Slot
     # Calculates the share of an output slot dynamically, according to the
@@ -25,7 +27,7 @@ module Atlas
       validate :validate_data
 
       ERRORS = {
-        inputs:       '%s slot lacks input shares for %s',
+        inputs: '%s slot lacks input shares for %s',
         efficiencies: '%s slot lacks efficiency data for %s'
       }.freeze
 
@@ -39,9 +41,7 @@ module Atlas
         end.sum
       end
 
-      #######
       private
-      #######
 
       # Internal: Asserts that the data required to perform carrier-efficiency
       # calculations is preset.
@@ -68,8 +68,8 @@ module Atlas
       #
       # Returns a string.
       def error_msg(message, keys1, keys2)
-        sprintf(ERRORS[message], carrier, (keys1 - keys2).to_a.join(', '))
+        format(ERRORS[message], carrier, (keys1 - keys2).to_a.join(', '))
       end
-    end # CarrierEfficient
-  end # Slot
-end # Atlas
+    end
+  end
+end

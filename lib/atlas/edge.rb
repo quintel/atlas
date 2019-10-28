@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   # Edges connect two Nodes so that energy may flow from one to another. Each
   # edge has a carrier, which determines the type of energy flowing (e.g. gas,
@@ -34,10 +36,11 @@ module Atlas
     validates :carrier,  presence: true
 
     validates :type, inclusion:
-      { in: [:share, :flexible, :constant, :inversed_flexible, :dependent] }
+      { in: %i[share flexible constant inversed_flexible dependent] }
 
-    validates_with QueryValidator, allow_no_query: true,
-      attributes: [:child_share, :parent_share, :demand]
+    validates_with QueryValidator,
+      allow_no_query: true,
+      attributes: %i[child_share parent_share demand]
 
     validate :validate_associated_documents
 
@@ -57,7 +60,7 @@ module Atlas
     #
     # Returns the key.
     def consumer=(consumer)
-      @consumer = consumer && consumer.to_sym
+      @consumer = consumer&.to_sym
     end
 
     # Public: Sets the key of the supplier ("parent" or "right") node.
@@ -66,7 +69,7 @@ module Atlas
     #
     # Returns the key.
     def supplier=(supplier)
-      @supplier = supplier && supplier.to_sym
+      @supplier = supplier&.to_sym
     end
 
     # Public: Sets the name of the carrier; the type of energy which passes
@@ -76,7 +79,7 @@ module Atlas
     #
     # Returns the key.
     def carrier=(carrier)
-      @carrier = carrier && carrier.to_sym
+      @carrier = carrier&.to_sym
     end
 
     # Public: Given +consumer+ and +supplier+ keys, and a +carrier+, returns
@@ -91,9 +94,7 @@ module Atlas
       :"#{ supplier }-#{ consumer }@#{ carrier }"
     end
 
-    #######
     private
-    #######
 
     # Internal: Given the name of the ActiveDocument file, without a
     # subclass suffix or file extension, creates a hash of the attributes
@@ -101,28 +102,27 @@ module Atlas
     #
     # Returns a hash.
     def attributes_from_basename(name)
-      if name.nil? || ! name.match(/^[\w_]+-[\w_]+@[\w_]+$/)
-        fail InvalidKeyError.new(name)
+      if name.nil? || !name.match(/^[\w_]+-[\w_]+@[\w_]+$/)
+        raise InvalidKeyError, name
       end
 
       values = name.split(/[-@]/).map(&:to_sym)
 
-      Hash[[:supplier, :consumer, :carrier].zip(values)]
+      Hash[%i[supplier consumer carrier].zip(values)]
     end
 
     def validate_associated_documents
-      if carrier && ! Carrier.manager.key?(carrier)
+      if carrier && !Carrier.manager.key?(carrier)
         errors.add(:carrier, 'does not exist')
       end
 
-      if supplier && ! Node.manager.key?(supplier)
+      if supplier && !Node.manager.key?(supplier)
         errors.add(:supplier, 'does not exist')
       end
 
-      if consumer && ! Node.manager.key?(consumer)
+      if consumer && !Node.manager.key?(consumer)
         errors.add(:consumer, 'does not exist')
       end
     end
-
-  end # Edge
-end # Atlas
+  end
+end

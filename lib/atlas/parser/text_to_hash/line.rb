@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 module Atlas
   module Parser
     module TextToHash
       class Line
-
         def initialize(string)
           @string = string
         end
@@ -14,7 +15,6 @@ module Atlas
         def type
           Atlas::Parser::Identifier.type(@string)
         end
-
       end
     end
   end

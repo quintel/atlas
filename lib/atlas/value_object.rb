@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   module ValueObject
     def self.included(base)
@@ -20,5 +22,5 @@ module Atlas
         attrs
       end
     end
-  end # ValueObject
-end # Atlas
+  end
+end

@@ -1,5 +1,6 @@
-module Atlas
+# frozen_string_literal: true
 
+module Atlas
   # This class contains the EnergyBalance of a certain Area.
   # The EnergyBalance contains per energy carrier how much is produced
   # tranformed, used (finaly demand) etc.
@@ -19,8 +20,8 @@ module Atlas
     end
 
     # Loads a stored energy balance
-    def self.find(key, year = nil)
-      key ? new(key) : fail(InvalidKeyError.new(key))
+    def self.find(key, _year = nil)
+      key ? new(key) : raise(InvalidKeyError, key)
     end
 
     # Returns the energy balance item in the correct unit
@@ -35,9 +36,7 @@ module Atlas
       get(params.first, params.last)
     end
 
-    #######
     private
-    #######
 
     # Internal: Given a value extracted from the CSV file, converts it to the
     # unit used by the EnergyBalance instance.
@@ -47,9 +46,9 @@ module Atlas
       if value.is_a?(Numeric)
         EnergyUnit.new(value, ORIGINAL_UNIT).to_unit(unit)
       else
-        puts "WARNING: Discarding non-numeric #{ value.inspect }"
+        puts "WARNING: Discarding non-numeric #{value.inspect}"
         0.0
       end
     end
-  end # EnergyBalance
-end # Atlas
+  end
+end

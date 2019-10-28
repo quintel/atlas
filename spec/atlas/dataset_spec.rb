@@ -1,39 +1,41 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Atlas
   describe Dataset do
-    describe "#new" do
-      it "sets key" do
+    describe '#new' do
+      it 'sets key' do
         dataset = Dataset.new(key: :nl)
-        expect(dataset.key).to eql(:nl)
+        expect(dataset.key).to be(:nl)
       end
-    end # describe #new
+    end
 
-    describe "#find" do
-      it "finds the Dutch dataset from file" do
+    describe '#find' do
+      it 'finds the Dutch dataset from file' do
         dataset = Dataset.find(:nl)
         expect(dataset).to be_a(Dataset)
         expect(dataset).to be_a(Dataset::Full)
-        expect(dataset.key).to eql(:nl)
+        expect(dataset.key).to be(:nl)
       end
 
-      it "finds the UK dataset from file" do
+      it 'finds the UK dataset from file' do
         dataset = Dataset.find(:uk)
         expect(dataset).to be_a(Dataset)
         expect(dataset).to be_a(Dataset::Full)
-        expect(dataset.key).to eql(:uk)
+        expect(dataset.key).to be(:uk)
       end
 
-      it "finds the Groningen dataset from file" do
+      it 'finds the Groningen dataset from file' do
         dataset = Dataset.find(:groningen)
         expect(dataset).to be_a(Dataset)
         expect(dataset).to be_a(Dataset::Derived)
-        expect(dataset.key).to eql(:groningen)
+        expect(dataset.key).to be(:groningen)
       end
-    end # describe #load
+    end
 
     describe '#dataset_dir' do
-      describe "for a key" do
+      describe 'for a key' do
         let(:dataset) { Dataset.new(key: :kr) }
 
         it 'includes the data directory' do
@@ -45,8 +47,8 @@ module Atlas
         end
       end
 
-      describe "with a path" do
-        let(:dataset) { Dataset.new(path: "test/test/kr") }
+      describe 'with a path' do
+        let(:dataset) { Dataset.new(path: 'test/test/kr') }
 
         it 'includes the data directory' do
           expect(dataset.dataset_dir.to_s).to include(Atlas.data_dir.to_s)
@@ -58,8 +60,8 @@ module Atlas
       end
     end
 
-    describe "#energy_balance" do
-      it "has a energy_balance" do
+    describe '#energy_balance' do
+      it 'has a energy_balance' do
         dataset = Dataset.find(:nl)
         expect(dataset.energy_balance).to be_a(EnergyBalance)
       end
@@ -80,7 +82,7 @@ module Atlas
       it 'raises an error when no shares data exists' do
         expect { Dataset.find(:nl).shares(:nope) }.to raise_error(Errno::ENOENT)
       end
-    end # shares
+    end
 
     describe '#efficiencies' do
       let(:dataset)      { Dataset.find(:nl) }
@@ -91,15 +93,15 @@ module Atlas
       end
 
       it 'sets the file path' do
-        expect(efficiencies.path.to_s).
-          to end_with('nl/efficiencies/transformation_efficiency.csv')
+        expect(efficiencies.path.to_s)
+          .to end_with('nl/efficiencies/transformation_efficiency.csv')
       end
 
       it 'raises an error when no shares data exists' do
-        expect { Dataset.find(:nl).efficiencies(:nope) }.
-          to raise_error(Errno::ENOENT)
+        expect { Dataset.find(:nl).efficiencies(:nope) }
+          .to raise_error(Errno::ENOENT)
       end
-    end # efficiencies
+    end
 
     describe '#time_curve' do
       let(:dataset) { Dataset.find(:nl) }
@@ -110,14 +112,14 @@ module Atlas
       end
 
       it 'sets the file path' do
-        expect(curves.path.to_s).
-          to end_with('nl/time_curves/woody_biomass_time_curve.csv')
+        expect(curves.path.to_s)
+          .to end_with('nl/time_curves/woody_biomass_time_curve.csv')
       end
 
       it 'raises an error when no time curve data exists' do
         expect { Dataset.find(:nl).time_curve(:nope) }.to raise_error(Errno::ENOENT)
       end
-    end # time_curve
+    end
 
     describe '#time_curves' do
       let(:dataset) { Dataset.find(:nl) }
@@ -134,7 +136,7 @@ module Atlas
           expect(keys).to include(:woody_biomass)
           expect(keys).to include(:coal)
         end
-      end # when no curves have been loaded
+      end
 
       describe 'when a curve has already been loaded' do
         let!(:loaded) { dataset.time_curve(:woody_biomass) }
@@ -143,11 +145,11 @@ module Atlas
           expect(dataset.time_curves.length).to eq(2)
         end
 
-        it "reuses the already-loaded curve" do
+        it 'reuses the already-loaded curve' do
           expect(dataset.time_curves.values).to include(loaded)
         end
-      end # when a curves has already been loaded
-    end # time_curves
+      end
+    end
 
     describe '#load_profile_path' do
       let(:dataset) { Dataset.find(:nl) }
@@ -160,7 +162,7 @@ module Atlas
       it 'includes the dataset directory' do
         expect(profile.to_s).to start_with(dataset.dataset_dir.to_s)
       end
-    end # load_profile_path
+    end
 
     describe '#load_profile' do
       let(:dataset) { Dataset.find(:nl) }
@@ -177,14 +179,14 @@ module Atlas
         it 'returns the load profile' do
           expect(profile).to eq('my profile')
         end
-      end # when Merit has been loaded
+      end
 
       describe 'when Merit has not been loaded' do
         it 'raises a MeritRequired error' do
           expect { profile }.to raise_error(Atlas::MeritRequired)
         end
-      end # when Merit has not been loaded
-    end # load_profile
+      end
+    end
 
     describe '#insulation_costs' do
       let(:dataset) { Dataset.find(:nl) }
@@ -212,19 +214,19 @@ module Atlas
     end
 
     [1, 2, 3].each do |number|
-      describe "#electric_vehicle_profile_#{ number }_share" do
+      describe "#electric_vehicle_profile_#{number}_share" do
         let(:dataset) { Dataset.new }
-        let(:meth) { "electric_vehicle_profile_#{ number }_share" }
+        let(:meth) { "electric_vehicle_profile_#{number}_share" }
 
         it 'has an error when blank' do
-          dataset.public_send("#{ meth }=", nil)
+          dataset.public_send("#{meth}=", nil)
 
           dataset.valid?
           expect(dataset.errors[meth.to_sym]).to include('is not a number')
         end
 
         it 'has no error when a valid is present' do
-          dataset.public_send("#{ meth }=", 1.0)
+          dataset.public_send("#{meth}=", 1.0)
 
           dataset.valid?
           expect(dataset.errors[meth.to_sym]).to be_empty
@@ -343,21 +345,21 @@ module Atlas
           .from(true).to(false)
       end
     end
-  end # describe Dataset
+  end
 
   describe Dataset::Derived do
-    describe "#valid?" do
-      it "validates the existence of the base_dataset" do
+    describe '#valid?' do
+      it 'validates the existence of the base_dataset' do
         dataset = Dataset::Derived.new(key: :ameland, base_dataset: :fantasia)
         dataset.valid?
         expect(dataset.errors[:base_dataset]).to include('does not exist')
       end
 
-      it "validates the existence of the scaling" do
+      it 'validates the existence of the scaling' do
         dataset = Dataset::Derived.new(key: :ameland, base_dataset: :fantasia)
         dataset.valid?
         expect(dataset.errors[:scaling]).to include("can't be blank")
       end
-    end # describe #new
-  end # describe Dataset::Derived
-end # Atlas
+    end
+  end
+end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   class Runner
     module ScaleAttributes
@@ -23,10 +25,11 @@ module Atlas
       }.freeze
 
       def scale!(obj, scaling_factor)
-        scope = case obj
-                when Refinery::Node then :nodes
-                when Refinery::Edge then :edges
-                end
+        scope =
+          case obj
+          when Refinery::Node then :nodes
+          when Refinery::Edge then :edges
+          end
 
         obj.properties
           .slice(*SCALED_ATTRIBUTES[scope])

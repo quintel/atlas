@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Atlas
@@ -6,11 +8,11 @@ module Atlas
     it { expect(Edge.new(key: 'a-b@gas')).to validate_presence_of(:supplier) }
 
     describe 'type' do
-      valid_types = [ :share, :flexible, :constant,
-                      :inversed_flexible, :dependent ]
+      valid_types = %i[share flexible constant
+                       inversed_flexible dependent]
 
       valid_types.each do |type|
-        it "is permitted to be #{ type.inspect }" do
+        it "is permitted to be #{type.inspect}" do
           edge = Edge.new(key: 'a-b@gas', type: type)
           expect(edge.errors_on(:type).length).to eq(0)
         end
@@ -25,7 +27,7 @@ module Atlas
         edge = Edge.new(key: 'a-b@gas', type: :nope)
         expect(edge.errors_on(:type).length).to eq(1)
       end
-    end # type
+    end
 
     describe 'when creating a new Edge' do
       let(:edge) { Edge.new(path: 'left-right@gas.ad') }
@@ -47,9 +49,9 @@ module Atlas
       end
 
       it 'sets the filename' do
-        expect(edge.path.to_s).to match(%r{left-right@gas\.ad$})
+        expect(edge.path.to_s).to match(/left-right@gas\.ad$/)
       end
-    end # when creating a new Edge
+    end
 
     context 'creating an edge with supplier, consumer, and carrier' do
       let(:edge) do
@@ -76,7 +78,7 @@ module Atlas
       it 'sets the path' do
         expect(edge.path.to_s).to match(%r{/listen/here-there@talk\.ad$})
       end
-    end # creating an edge with supplier, consumer, and carrier
+    end
 
     context 'validation of associated documents' do
       it 'has an error when the carrier does not exist' do
@@ -93,11 +95,11 @@ module Atlas
         edge = Edge.new(key: 'a-b@nope').tap(&:valid?)
         expect(edge.errors[:consumer]).to include('does not exist')
       end
-    end # validation of associated documents
+    end
 
     describe 'creating an Edge with an invalid key' do
       it 'does not raise an error when the key is nil' do
-        expect { Edge.new(key: nil) }.to_not raise_error
+        expect { Edge.new(key: nil) }.not_to raise_error
       end
 
       it 'raises an error when the key is blank' do
@@ -119,7 +121,7 @@ module Atlas
       it 'raises an error when providing only the carrier' do
         expect { Edge.new(key: '@gas') }.to raise_error(InvalidKeyError)
       end
-    end # creating an Edge with an invalid key
+    end
 
     describe 'changing the key on an Edge' do
       let(:edge) { Edge.new(key: 'left-right@gas') }
@@ -131,8 +133,10 @@ module Atlas
         it { expect(edge.supplier).to eq(:left) }
         it { expect(edge.consumer).to eq(:other) }
         it { expect(edge.carrier).to eq(:gas) }
-        it { expect(edge.path.to_s).
-               to match(%{left-other@gas\.ad$}) }
+        it {
+          expect(edge.path.to_s)
+            .to match(%(left-other@gas\.ad$))
+        }
       end
 
       context 'changing the consumer node only' do
@@ -141,7 +145,7 @@ module Atlas
         it { expect(edge.key).to eq(:'other-right@gas') }
         it { expect(edge.supplier).to eq(:other) }
         it { expect(edge.consumer).to eq(:right) }
-        it { expect(edge.path.to_s).to match(%{other-right@gas\.ad$}) }
+        it { expect(edge.path.to_s).to match(%(other-right@gas\.ad$)) }
       end
 
       context 'changing the carrier only' do
@@ -151,8 +155,10 @@ module Atlas
         it { expect(edge.supplier).to eq(:left) }
         it { expect(edge.consumer).to eq(:right) }
         it { expect(edge.carrier).to eq(:electricity) }
-        it { expect(edge.path.to_s).
-               to match(%{left-right@electricity\.ad$}) }
+        it {
+          expect(edge.path.to_s)
+            .to match(%(left-right@electricity\.ad$))
+        }
       end
 
       context 'changing both nodes with a string' do
@@ -162,8 +168,10 @@ module Atlas
         it { expect(edge.supplier).to eq(:one) }
         it { expect(edge.consumer).to eq(:two) }
         it { expect(edge.carrier).to eq(:electricity) }
-        it { expect(edge.path.to_s).
-               to match(%{one-two@electricity\.ad$}) }
+        it {
+          expect(edge.path.to_s)
+            .to match(%(one-two@electricity\.ad$))
+        }
       end
 
       context 'changing both nodes using a symbol' do
@@ -173,7 +181,7 @@ module Atlas
         it { expect(edge.supplier).to eq(:one) }
         it { expect(edge.consumer).to eq(:two) }
         it { expect(edge.carrier).to eq(:gas) }
-        it { expect(edge.path.to_s).to match(%{one-two@gas\.ad$}) }
+        it { expect(edge.path.to_s).to match(%(one-two@gas\.ad$)) }
       end
 
       context 'changing one of the key components' do
@@ -181,7 +189,7 @@ module Atlas
 
         it { expect(edge.key).to eq(:'nine-right@gas') }
         it { expect(edge.supplier).to eq(:nine) }
-        it { expect(edge.path.to_s).to match(%{nine-right@gas\.ad$}) }
+        it { expect(edge.path.to_s).to match(%(nine-right@gas\.ad$)) }
       end
 
       it 'raises an error when omitting the supplier key' do
@@ -211,10 +219,11 @@ module Atlas
       it 'raises an error if the key is nil' do
         expect { edge.key = nil }.to raise_error(InvalidKeyError)
       end
-    end # changing the key on an Edge
+    end
 
     describe 'changing the filename' do
       let(:edge) { Edge.new(key: 'left-right@gas') }
+
       before { edge.path = 'no-yes@electricity.ad' }
 
       it 'updates the file path' do
@@ -222,21 +231,21 @@ module Atlas
       end
 
       it 'updates the supplier node' do
-        expect(edge.supplier).to eql(:no)
+        expect(edge.supplier).to be(:no)
       end
 
       it 'updates the consumer node' do
-        expect(edge.consumer).to eql(:yes)
+        expect(edge.consumer).to be(:yes)
       end
 
       it 'updates the carrier' do
-        expect(edge.carrier).to eql(:electricity)
+        expect(edge.carrier).to be(:electricity)
       end
 
       it 'updates the key' do
-        expect(edge.key).to eql(:'no-yes@electricity')
+        expect(edge.key).to be(:'no-yes@electricity')
       end
-    end # changing the filename
+    end
 
     describe 'parsing an AD file' do
       let(:edge) { Edge.find('foo-bar@coal') }
@@ -254,7 +263,7 @@ module Atlas
       end
 
       it 'sets the type' do
-        expect(edge.type).to eql(:share)
+        expect(edge.type).to be(:share)
       end
 
       it 'sets the parent share' do
@@ -267,8 +276,8 @@ module Atlas
 
       it 'sets the query when one is present' do
         expect(Edge.find('bar-baz@corn').queries[:parent_share]).to eq \
-          "SHARE(cars, gasoline)"
+          'SHARE(cars, gasoline)'
       end
-    end # parsing an AD file
-  end # Edge
-end # Atlas
+    end
+  end
+end

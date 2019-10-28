@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Atlas
@@ -39,7 +41,7 @@ module Atlas
       model = mother.get(:model)
 
       model.has_loss = false
-      model.groups   = %w( bomber life drg innovation jaedong )
+      model.groups   = %w[bomber life drg innovation jaedong]
 
       expect(nodes[:mother][:has_loss]).to be(false)
       expect(nodes[:mother][:groups]).to eq(model.groups)
@@ -96,7 +98,7 @@ module Atlas
       it 'writes [C]+@child share' do
         expect(nodes[:child][:input][:child]).to eq(1)
       end
-    end # saving a three-node, multiple carrier graph
+    end
 
     # ------------------------------------------------------------------------
 
@@ -148,7 +150,7 @@ module Atlas
           decay: 0.5
         )
       end
-    end # special cases
+    end
 
     describe 'max demand' do
       it 'is exported when specified in the document' do
@@ -161,7 +163,7 @@ module Atlas
       it 'is not exported when not specified in the document' do
         mother.set(:max_demand, 50)
 
-        expect(nodes[:mother]).to_not have_key(:max_demand)
+        expect(nodes[:mother]).not_to have_key(:max_demand)
       end
 
       it 'is exported as :recursive when the original value is :recursive' do
@@ -177,7 +179,7 @@ module Atlas
 
         expect(nodes[:mother][:max_demand]).to eq('recursive')
       end
-    end # max demand
+    end
 
     describe 'coupling carrier' do
       it 'is exported as an output slot share' do
@@ -196,10 +198,9 @@ module Atlas
 
         edge.save!
 
-        expect(edges[key]).
-          to include(share: 1.0, reversed: false, type: :share)
+        expect(edges[key])
+          .to include(share: 1.0, reversed: false, type: :share)
       end
-    end # coupling carrier
-
-  end # Exporter
-end # Atlas
+    end
+  end
+end

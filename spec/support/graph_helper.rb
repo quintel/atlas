@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Atlas
   module GraphHelper
     def make_node(key, attributes = {})

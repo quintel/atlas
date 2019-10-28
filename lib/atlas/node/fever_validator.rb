@@ -67,7 +67,7 @@ module Atlas
           if !fever.capacity || fever.capacity.values.none?
             record.errors.add(:fever, MESSAGES[:missing_capacity])
           end
-        elsif fever.capacity && fever.capacity.values.any?
+        elsif fever.capacity&.values&.any?
           if !fever.efficiency_based_on
             record.errors.add(:fever, MESSAGES[:illegal_capacity])
           elsif !fever.capacity.key?(fever.efficiency_based_on)
@@ -78,6 +78,6 @@ module Atlas
           end
         end
       end
-    end # FeverValidator
-  end # Node
-end # Atlas
+    end
+  end
+end

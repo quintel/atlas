@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Atlas
@@ -23,8 +25,8 @@ module Atlas
 
         preset.valid?
 
-        expect(preset.errors[:user_values]).
-          to include("contains input keys which don't exist: [:invalid]")
+        expect(preset.errors[:user_values])
+          .to include("contains input keys which don't exist: [:invalid]")
       end
 
       context 'with grouped inputs' do
@@ -67,9 +69,9 @@ module Atlas
             grouped_one: 50.0, grouped_two: 49.989
           })
 
-          expect(preset.errors_on(:user_values)).
-            to include("contains inputs belonging to the my_group share " \
-                       "group, but the values sum to 99.989, not 100")
+          expect(preset.errors_on(:user_values))
+            .to include('contains inputs belonging to the my_group share ' \
+                       'group, but the values sum to 99.989, not 100')
         end
 
         it 'does not permit sums of more than 100.01' do
@@ -77,21 +79,22 @@ module Atlas
             grouped_one: 50.0, grouped_two: 50.011
           })
 
-          expect(preset.errors_on(:user_values)).
-            to include("contains inputs belonging to the my_group share " \
-                       "group, but the values sum to 100.011, not 100")
+          expect(preset.errors_on(:user_values))
+            .to include('contains inputs belonging to the my_group share ' \
+                       'group, but the values sum to 100.011, not 100')
         end
       end
-    end # user values
+    end
 
     describe 'scaling' do
       it 'may be blank' do
         preset = Preset.new(scaling: nil)
         preset.valid?
 
-        error_keys = preset.errors.keys.select do |key|
-          key.to_s.start_with?('scaling.')
-        end
+        error_keys =
+          preset.errors.keys.select do |key|
+            key.to_s.start_with?('scaling.')
+          end
 
         expect(error_keys).to be_empty
       end
@@ -100,12 +103,13 @@ module Atlas
         preset = Preset.new(scaling: {})
         preset.valid?
 
-        error_keys = preset.errors.keys.select do |key|
-          key.to_s.start_with?('scaling.')
-        end
+        error_keys =
+          preset.errors.keys.select do |key|
+            key.to_s.start_with?('scaling.')
+          end
 
         expect(error_keys).not_to be_empty
       end
     end
-  end # Preset
-end # Atlas
+  end
+end

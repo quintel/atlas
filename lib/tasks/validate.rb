@@ -1,5 +1,6 @@
-namespace :validate do
+# frozen_string_literal: true
 
+namespace :validate do
   # Given an ActiveDocument class, runs the validations on all of the
   # documents and reports the success or failure thereof.
   class ValidationRunner
@@ -34,9 +35,7 @@ namespace :validate do
       failures.any? ? puts : puts("\n\n")
     end
 
-    #######
     private
-    #######
 
     # Internal: A nice human-readable version of the +@klass+ name.
     #
@@ -71,25 +70,26 @@ namespace :validate do
     def print_failures(failures)
       if failures.any?
         puts "\n\n"
-        puts "Failures: (#{ failures.length })\n"
+        puts "Failures: (#{failures.length})\n"
       end
 
       failures.each_with_index do |document, index|
         puts
-        print "  #{ index + 1 }) #{ class_name(document.class) }: "
-        puts "#{ document.key }"
-        puts Term::ANSIColor.cyan { "    ./#{ rel_path(document) }" }
+        print "  #{index + 1}) #{class_name(document.class)}: "
+        puts document.key.to_s
+        puts Term::ANSIColor.cyan { "    ./#{rel_path(document)}" }
         puts
 
-        errors = document.errors.map do |attr, error|
-          # Add white space to all lines.
-          "- #{ attr } #{ error }".gsub(/^/, '    ')
-        end
+        errors =
+          document.errors.map do |attr, error|
+            # Add white space to all lines.
+            "- #{attr} #{error}".gsub(/^/, '    ')
+          end
 
         puts Term::ANSIColor.red { errors.join("\n") }
       end
     end
-  end # ValidationRunner
+  end
 
   # --------------------------------------------------------------------------
 
@@ -108,11 +108,11 @@ namespace :validate do
 
   task all: :setup do
     ValidationRunner.new(
-      Atlas::Carrier, Atlas::Dataset, Atlas::Edge,   Atlas::Gquery,
+      Atlas::Carrier, Atlas::Dataset, Atlas::Edge, Atlas::Gquery,
       Atlas::Input,   Atlas::Node,    Atlas::Preset
     ).run
   end
-end # :validate
+end
 
 desc 'Runs the validations on all of the documents'
-task :validate, [:dir] => ['validate:all'] 
+task :validate, [:dir] => ['validate:all']
