@@ -168,10 +168,10 @@ module Atlas
 
       describe 'when Merit has been loaded' do
         before do
-          profile_const = double('LoadProfile')
-          allow(profile_const).to receive(:load).and_return('my profile')
+          profile_const = double('Curve')
+          allow(profile_const).to receive(:load_file).and_return('my profile')
 
-          stub_const('Merit::LoadProfile', profile_const)
+          stub_const('Merit::Curve', profile_const)
         end
 
         it 'returns the load profile' do

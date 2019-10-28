@@ -295,11 +295,11 @@ module Atlas
     #
     # key - The name of the load curve file path to read.
     #
-    # Returns a Merit::LoadProfile.
+    # Returns a Merit::Curve.
     def load_profile(key)
-      Merit::LoadProfile.load(load_profile_path(key))
-    rescue NameError => ex
-      raise(ex.message.match(/Merit$/) ? MeritRequired.new : ex)
+      Merit::Curve.load_file(load_profile_path(key))
+    rescue NameError => e
+      raise(e.message.match?(/Merit$/) ? MeritRequired.new : e)
     end
 
     # Public: Retrieves demand and full load hours data for the region.
