@@ -128,7 +128,7 @@ module Atlas
 
       it 'exports merit order data as a hash' do
         mother.get(:model).merit_order =
-          Atlas::NodeAttributes::MeritOrder.new(
+          Atlas::NodeAttributes::ElectricityMeritOrder.new(
             type: :rock,
             group: 'The Flower Kings'
           )
