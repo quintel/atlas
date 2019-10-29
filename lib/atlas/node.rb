@@ -15,11 +15,11 @@ module Atlas
     attribute :output,               Hash[Symbol => Object]
     attribute :groups,               Array[Symbol]
     attribute :presentation_group,   Symbol
-    attribute :merit_order,          MeritOrderDetails
-    attribute :fever,                FeverDetails
-    attribute :storage,              StorageDetails
-    attribute :hydrogen,             ReconciliationDetails
-    attribute :network_gas,          ReconciliationDetails
+    attribute :merit_order,          NodeAttributes::MeritOrder
+    attribute :fever,                NodeAttributes::Fever
+    attribute :storage,              NodeAttributes::Storage
+    attribute :hydrogen,             NodeAttributes::Reconciliation
+    attribute :network_gas,          NodeAttributes::Reconciliation
     attribute :graph_methods,        Array[String]
 
     alias_method :sector,  :ns

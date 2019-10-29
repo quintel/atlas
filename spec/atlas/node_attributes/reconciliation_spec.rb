@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Atlas::ReconciliationDetails do
+RSpec.describe Atlas::NodeAttributes::Reconciliation do
   let(:details) { described_class.new(attrs) }
 
   context 'with no type' do
@@ -39,7 +39,7 @@ RSpec.describe Atlas::ReconciliationDetails do
     end
 
     it 'must not have an subordinate_to_output value' do
-      details.subordinate_to_output = :ueable_heat
+      details.subordinate_to_output = :useable_heat
 
       expect(details.errors_on(:subordinate_to_output))
         .to include('must be blank')
