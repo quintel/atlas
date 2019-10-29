@@ -47,4 +47,14 @@ RSpec.describe Atlas::NodeAttributes::MeritOrder do
       end
     end
   end
+
+  describe '#delegate' do
+    it 'returns nil' do
+      expect(described_class.new.delegate).to be_nil
+    end
+
+    it 'returns nil, even when initialized with a value' do
+      expect(described_class.new(delegate: :hi).delegate).to be_nil
+    end
+  end
 end

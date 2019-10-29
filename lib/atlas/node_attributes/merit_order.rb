@@ -7,17 +7,12 @@ module Atlas
       include ActiveModel::Validations
 
       values do
-        attribute :type,           Symbol
-        attribute :subtype,        Symbol, default: :generic
-        attribute :group,          Symbol
-        attribute :level,          Symbol, default: :hv
-        attribute :delegate,       Symbol
-        attribute :demand_source,  Symbol
-        attribute :demand_profile, Symbol
+        attribute :type,    Symbol
+        attribute :subtype, Symbol, default: :generic
+        attribute :group,   Symbol
       end
 
       validates :type, inclusion: %i[consumer flex producer]
-      validates :level, inclusion: %i[lv mv hv omit]
 
       # Producer subtypes.
       validates :subtype,
@@ -33,6 +28,10 @@ module Atlas
         in: ->(_mod) { Array(Config.read?('flexibility_order')).map(&:to_sym) },
         if: ->(mod) { mod.type == :flex },
         message: 'is not a permitted flexibility order option'
+
+      def delegate
+        super if self.class.attribute_set[:delegate]
+      end
     end
   end
 end
