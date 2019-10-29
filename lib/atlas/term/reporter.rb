@@ -67,9 +67,7 @@ module Atlas
         end.join(', ')
       end
 
-      #######
       private
-      #######
 
       # Internal: Refreshes the report to the user by erasing the previous
       # report line and showing the latest counters. Outputs to $stdout.

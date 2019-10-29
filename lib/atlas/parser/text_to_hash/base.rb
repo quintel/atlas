@@ -48,9 +48,7 @@ module Atlas
           line
         end
 
-        #######
         private
-        #######
 
         def parse_chunk_to_lines(chunk)
           chunk.split("\n").each do |line_content|

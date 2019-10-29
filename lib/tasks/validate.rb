@@ -34,9 +34,7 @@ namespace :validate do
       failures.any? ? puts : puts("\n\n")
     end
 
-    #######
     private
-    #######
 
     # Internal: A nice human-readable version of the +@klass+ name.
     #
@@ -115,4 +113,4 @@ namespace :validate do
 end # :validate
 
 desc 'Runs the validations on all of the documents'
-task :validate, [:dir] => ['validate:all'] 
+task :validate, [:dir] => ['validate:all']

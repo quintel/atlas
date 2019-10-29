@@ -83,9 +83,7 @@ module Atlas
       @runner.refinery_graph
     end
 
-    #######
     private
-    #######
 
     # Internal: Creates the thread which loads the graph structure, and runs
     # the queries.

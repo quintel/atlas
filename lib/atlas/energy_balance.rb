@@ -35,9 +35,7 @@ module Atlas
       get(params.first, params.last)
     end
 
-    #######
     private
-    #######
 
     # Internal: Given a value extracted from the CSV file, converts it to the
     # unit used by the EnergyBalance instance.

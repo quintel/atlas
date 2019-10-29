@@ -160,9 +160,7 @@ module Atlas
       dataset.fce(file_key).fetch(carrier.to_sym).fetch(attribute.to_sym)
     end
 
-    #######
     private
-    #######
 
     # Helpers ----------------------------------------------------------------
 

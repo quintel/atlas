@@ -27,9 +27,7 @@ module Atlas
         RUBY
       end
 
-      #######
       private
-      #######
 
       # Internal: Returns the static, exported values for the document
       # matching the given key.

@@ -90,9 +90,7 @@ module Atlas
       @headers.map(&method(:normalize_key))
     end
 
-    #######
     private
-    #######
 
     # Internal: Finds the value of a cell, raising an UnknownCSVRowError if no
     # such row exists.

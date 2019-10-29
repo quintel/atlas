@@ -16,9 +16,7 @@ module Atlas
         nil
       end
 
-      #######
       private
-      #######
 
       # Internal: The sibling slots (those on the same "side" of the node)
       # which are not elastic.

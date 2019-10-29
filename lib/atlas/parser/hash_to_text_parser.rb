@@ -41,9 +41,7 @@ module Atlas
       content
     end
 
-    #######
     private
-    #######
 
     def comment_block
       return nil unless @comments

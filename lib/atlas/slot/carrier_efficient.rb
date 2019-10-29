@@ -39,9 +39,7 @@ module Atlas
         end.sum
       end
 
-      #######
       private
-      #######
 
       # Internal: Asserts that the data required to perform carrier-efficiency
       # calculations is preset.

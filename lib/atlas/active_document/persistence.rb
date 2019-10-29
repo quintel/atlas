@@ -132,9 +132,7 @@ module Atlas
         @manager = manager
       end
 
-      #######
       private
-      #######
 
       # Internal: The thing.
       def manager

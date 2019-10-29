@@ -33,9 +33,7 @@ module Atlas
       joule / JOULES[unit]
     end
 
-    #######
     private
-    #######
 
     # Returns the energy content in Joule.
     def joule

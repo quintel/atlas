@@ -166,9 +166,7 @@ module Atlas
         nil
       end
 
-      #######
       private
-      #######
 
       # Internal: A hash connecting the document keys with the path to the
       # file.

@@ -11,9 +11,7 @@ module Atlas
           parse_to_blocks!
         end
 
-        #######
         private
-        #######
 
         def parse_to_blocks!
 

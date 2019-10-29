@@ -37,9 +37,7 @@ module Atlas
           end
         end
 
-        #######
         private
-        #######
 
         def validate!
           fail CannotParseError.new(line, self) unless valid?

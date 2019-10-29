@@ -21,9 +21,7 @@ module Atlas
       @graph
     end
 
-    #######
     private
-    #######
 
     # Internal: Creates a new GraphBuilder. Use GraphBuilder.build rather than
     # creating this yourself.

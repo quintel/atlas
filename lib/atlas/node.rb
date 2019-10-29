@@ -164,9 +164,7 @@ module Atlas
       @out_slots = nil
     end
 
-    #######
     private
-    #######
 
     # Internal: Asserts the input and output slot data is in a valid format.
     #

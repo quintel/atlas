@@ -113,9 +113,7 @@ module Atlas
         key <=> other.key
       end
 
-      #######
       private
-      #######
 
       # Internal: When the key is updated, we also update any attributes whose
       # values are stored as part of the key.

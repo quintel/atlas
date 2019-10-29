@@ -91,9 +91,7 @@ module Atlas
       :"#{ supplier }-#{ consumer }@#{ carrier }"
     end
 
-    #######
     private
-    #######
 
     # Internal: Given the name of the ActiveDocument file, without a
     # subclass suffix or file extension, creates a hash of the attributes

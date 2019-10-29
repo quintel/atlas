@@ -29,9 +29,7 @@ module Atlas
       @fce.key?(region) ? @fce[region] : @fce[region] = load_fce_values(region)
     end
 
-    #######
     private
-    #######
 
     def load_fce_values(region)
       path = Atlas::Dataset.find(region).dataset_dir.join("fce/#{ key }.yml")

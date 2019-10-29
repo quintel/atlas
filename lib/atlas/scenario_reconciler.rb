@@ -75,9 +75,7 @@ module Atlas
       string.join("\n")
     end
 
-    #######
     private
-    #######
 
     # Internal: Returns a hash containing new values for any input whose value
     # is too high or too low.

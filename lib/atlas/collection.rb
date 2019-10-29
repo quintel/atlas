@@ -52,9 +52,7 @@ module Atlas
       "#<#{ self.class.name } (#{ length } x #{ document_class.name })>"
     end
 
-    #######
     private
-    #######
 
     # Internal: Builds a table of document keys and the documents. Memoizes
     # the result after the first call.
