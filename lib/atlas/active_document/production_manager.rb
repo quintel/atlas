@@ -50,5 +50,5 @@ module Atlas
         exported_data_for(key)
       end
     end
-  end # ActiveDocument
-end # Atlas
+  end
+end

@@ -47,8 +47,8 @@ module Atlas
             expect(graph.node(:bar).slots.out(:corn).get(:share)).to eq(0.5)
           end
         end
-      end # calculate
-    end # runner
+      end
+    end
 
     context 'for a Full' do
       let(:runner) do
@@ -143,5 +143,5 @@ module Atlas
 
       it_behaves_like "runner", false
     end
-  end # Runner
-end # Atlas
+  end
+end

@@ -11,7 +11,7 @@ module Atlas
       it { expect(slot.direction).to eq(:in) }
       it { expect(slot.carrier).to eq(:gas) }
       it { expect(slot.key).to eq(:'foo+@gas') }
-    end # Creating an input slot
+    end
 
     describe 'Creating a output slot' do
       let(:slot) do
@@ -22,7 +22,7 @@ module Atlas
       it { expect(slot.direction).to eq(:out) }
       it { expect(slot.carrier).to eq(:electricity) }
       it { expect(slot.key).to eq(:'foo-@electricity') }
-    end # Creating an output slot
+    end
 
     describe 'setting the node' do
       let(:slot)     { Slot.new(node: node, direction: :out, carrier: :gas) }
@@ -37,7 +37,7 @@ module Atlas
       it 'changes the key' do
         expect(slot.key).to eql(:'bar-@gas')
       end
-    end # setting the node
+    end
 
     describe 'setting the direction' do
       describe 'to in' do
@@ -51,7 +51,7 @@ module Atlas
         it 'changes the key' do
           expect(slot.key).to eql(:'foo+@gas')
         end
-      end # to in
+      end
 
       describe 'to out' do
         let(:slot) { Slot.new(node: node, direction: :in, carrier: :gas) }
@@ -64,7 +64,7 @@ module Atlas
         it 'changes the key' do
           expect(slot.key).to eql(:'foo-@gas')
         end
-      end # to in
-    end # setting the direction
-  end # Slot
-end # Atlas
+      end
+    end
+  end
+end

@@ -7,7 +7,7 @@ module Atlas
         dataset = Dataset.new(key: :nl)
         expect(dataset.key).to eql(:nl)
       end
-    end # describe #new
+    end
 
     describe "#find" do
       it "finds the Dutch dataset from file" do
@@ -30,7 +30,7 @@ module Atlas
         expect(dataset).to be_a(Dataset::Derived)
         expect(dataset.key).to eql(:groningen)
       end
-    end # describe #load
+    end
 
     describe '#dataset_dir' do
       describe "for a key" do
@@ -80,7 +80,7 @@ module Atlas
       it 'raises an error when no shares data exists' do
         expect { Dataset.find(:nl).shares(:nope) }.to raise_error(Errno::ENOENT)
       end
-    end # shares
+    end
 
     describe '#efficiencies' do
       let(:dataset)      { Dataset.find(:nl) }
@@ -99,7 +99,7 @@ module Atlas
         expect { Dataset.find(:nl).efficiencies(:nope) }.
           to raise_error(Errno::ENOENT)
       end
-    end # efficiencies
+    end
 
     describe '#time_curve' do
       let(:dataset) { Dataset.find(:nl) }
@@ -117,7 +117,7 @@ module Atlas
       it 'raises an error when no time curve data exists' do
         expect { Dataset.find(:nl).time_curve(:nope) }.to raise_error(Errno::ENOENT)
       end
-    end # time_curve
+    end
 
     describe '#time_curves' do
       let(:dataset) { Dataset.find(:nl) }
@@ -134,7 +134,7 @@ module Atlas
           expect(keys).to include(:woody_biomass)
           expect(keys).to include(:coal)
         end
-      end # when no curves have been loaded
+      end
 
       describe 'when a curve has already been loaded' do
         let!(:loaded) { dataset.time_curve(:woody_biomass) }
@@ -146,8 +146,8 @@ module Atlas
         it "reuses the already-loaded curve" do
           expect(dataset.time_curves.values).to include(loaded)
         end
-      end # when a curves has already been loaded
-    end # time_curves
+      end
+    end
 
     describe '#load_profile_path' do
       let(:dataset) { Dataset.find(:nl) }
@@ -160,7 +160,7 @@ module Atlas
       it 'includes the dataset directory' do
         expect(profile.to_s).to start_with(dataset.dataset_dir.to_s)
       end
-    end # load_profile_path
+    end
 
     describe '#load_profile' do
       let(:dataset) { Dataset.find(:nl) }
@@ -177,14 +177,14 @@ module Atlas
         it 'returns the load profile' do
           expect(profile).to eq('my profile')
         end
-      end # when Merit has been loaded
+      end
 
       describe 'when Merit has not been loaded' do
         it 'raises a MeritRequired error' do
           expect { profile }.to raise_error(Atlas::MeritRequired)
         end
-      end # when Merit has not been loaded
-    end # load_profile
+      end
+    end
 
     describe '#insulation_costs' do
       let(:dataset) { Dataset.find(:nl) }
@@ -343,7 +343,7 @@ module Atlas
           .from(true).to(false)
       end
     end
-  end # describe Dataset
+  end
 
   describe Dataset::Derived do
     describe "#valid?" do
@@ -358,6 +358,6 @@ module Atlas
         dataset.valid?
         expect(dataset.errors[:scaling]).to include("can't be blank")
       end
-    end # describe #new
-  end # describe Dataset::Derived
-end # Atlas
+    end
+  end
+end

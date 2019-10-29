@@ -22,6 +22,6 @@ describe Node::FinalDemand do
     end
   end
 
-end # FinalDemand
+end
 
-end # module
+end

@@ -8,4 +8,4 @@ task :environment, [:data_dir] do |_, args|
   require 'active_support/core_ext/hash/indifferent_access'
 
   Atlas.data_dir = args.data_dir || '../etsource'
-end # environment
+end

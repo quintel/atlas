@@ -96,7 +96,7 @@ module Atlas
       it 'writes [C]+@child share' do
         expect(nodes[:child][:input][:child]).to eq(1)
       end
-    end # saving a three-node, multiple carrier graph
+    end
 
     # ------------------------------------------------------------------------
 
@@ -148,7 +148,7 @@ module Atlas
           decay: 0.5
         )
       end
-    end # special cases
+    end
 
     describe 'max demand' do
       it 'is exported when specified in the document' do
@@ -177,7 +177,7 @@ module Atlas
 
         expect(nodes[:mother][:max_demand]).to eq('recursive')
       end
-    end # max demand
+    end
 
     describe 'coupling carrier' do
       it 'is exported as an output slot share' do
@@ -199,7 +199,7 @@ module Atlas
         expect(edges[key]).
           to include(share: 1.0, reversed: false, type: :share)
       end
-    end # coupling carrier
+    end
 
-  end # Exporter
-end # Atlas
+  end
+end

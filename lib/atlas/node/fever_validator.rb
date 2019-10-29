@@ -78,6 +78,6 @@ module Atlas
           end
         end
       end
-    end # FeverValidator
-  end # Node
-end # Atlas
+    end
+  end
+end

@@ -128,5 +128,5 @@ module Atlas
 
       from_slots
     end
-  end # Exporter
-end # Atlas
+  end
+end

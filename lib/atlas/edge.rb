@@ -122,5 +122,5 @@ module Atlas
       end
     end
 
-  end # Edge
-end # Atlas
+  end
+end

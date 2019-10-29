@@ -42,6 +42,6 @@ module Atlas
       def self.elastic?(share)
         share == :elastic || share == ELASTIC_STR
       end
-    end # Elastic
-  end # Slot
-end # Atlas
+    end
+  end
+end

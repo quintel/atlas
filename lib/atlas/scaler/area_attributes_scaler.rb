@@ -25,5 +25,5 @@ module Atlas
       end
       result
     end
-  end # Scaler::AreaAttributesScaler
-end # Atlas
+  end
+end

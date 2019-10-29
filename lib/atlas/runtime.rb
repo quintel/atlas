@@ -171,5 +171,5 @@ module Atlas
       dataset.energy_balance
     end
 
-  end # Runtime
-end # Atlas
+  end
+end

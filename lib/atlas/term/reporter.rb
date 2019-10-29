@@ -93,5 +93,5 @@ module Atlas
         @groups.reject { |name, *| @counters[name].zero? }
       end
     end
-  end # Term
-end # Atlas
+  end
+end

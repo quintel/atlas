@@ -7,7 +7,7 @@ namespace :debug do
   task :graph do
     abort "'rake debug:graph' has been replaced. " \
           "You should now run 'rake debug'."
-  end # task :graph
+  end
 
   task debug: :environment do
     env     = Hash[ENV.map { |key, val| [key.upcase, val] }]
@@ -28,7 +28,7 @@ namespace :debug do
       binding.pry
     end
   end
-end # namespace :debug
+end
 
 
 desc 'Output before and after diagrams of all the subgraphs.'

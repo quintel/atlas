@@ -46,8 +46,8 @@ module Atlas
 
           topmost
         end
-      end # ClassMethods
+      end
 
-    end # Subclassing
-  end # ActiveDocument
-end # Atlas
+    end
+  end
+end

@@ -10,7 +10,7 @@ describe SomeDocument do
       it 'does not raise an error' do
         expect { SomeDocument.new({}) }.to_not raise_error
       end
-    end # given no key or path
+    end
 
     context 'given a dumb key' do
       it 'creates a new document' do
@@ -33,7 +33,7 @@ describe SomeDocument do
         expect(-> { SomeDocument.new(key: 'foo') } ).to \
           raise_error DuplicateKeyError
       end
-    end # given a dumb key
+    end
 
     context 'given a path' do
       it 'creates a new document' do
@@ -67,8 +67,8 @@ describe SomeDocument do
         expect(-> { SomeDocument.new(path: 'my_map2/new') } ).to \
           raise_error DuplicateKeyError
       end
-    end # given a file path
-  end # new
+    end
+  end
 
   describe 'queries' do
 
@@ -196,7 +196,7 @@ describe SomeDocument do
       it 'has no errors' do
         expect(document.errors).to be_empty
       end
-    end # when the document is valid
+    end
 
     context 'when the document is invalid' do
       let(:document) do
@@ -216,8 +216,8 @@ describe SomeDocument do
       it 'has an error' do
         expect(document.errors).to_not be_empty
       end
-    end # when the document is invalid
-  end # .create
+    end
+  end
 
   describe '.create!' do
     context 'when the document is valid' do
@@ -239,7 +239,7 @@ describe SomeDocument do
       it 'has no errors' do
         expect(document.errors).to be_empty
       end
-    end # when the document is valid
+    end
 
     context 'when the document is invalid' do
       let(:document) do
@@ -249,8 +249,8 @@ describe SomeDocument do
       it 'sets the given attributes' do
         expect { document }.to raise_error(Atlas::InvalidDocumentError)
       end
-    end # when the document is invalid
-  end # .create
+    end
+  end
 
   describe "key" do
     it "returns just the key part" do
@@ -337,7 +337,7 @@ describe SomeDocument do
         expect(doc.path.to_s).to include('.final_document')
       end
     end
-  end # key=
+  end
 
   context '#path=' do
     context 'on a "base" class instance' do
@@ -367,7 +367,7 @@ describe SomeDocument do
         expect { document.path = '../omg' }.
           to raise_error(IllegalDirectoryError)
       end
-    end # on a "base" class instance
+    end
 
     context 'with an absolute path' do
       let(:document) { SomeDocument.new(path: 'abc') }
@@ -381,7 +381,7 @@ describe SomeDocument do
         expect { document.path = document.directory.dirname.join('efg') }.
           to raise_error(IllegalDirectoryError)
       end
-    end # with an absolute path
+    end
 
     context 'on a subclass instance' do
       let(:document) { SomeDocument::FinalDocument.new(key: 'abc') }
@@ -392,8 +392,8 @@ describe SomeDocument do
         expect(document.path.to_s).to     include('final_document')
         expect(document.path.to_s).to_not include('other_document')
       end
-    end # on a subclass instance
-  end # path=
+    end
+  end
 
   describe 'ns' do
     it 'returns nil when the document is in the root' do
@@ -407,7 +407,7 @@ describe SomeDocument do
     it 'returns "one.two" when the document is in "one/two" subdirectory' do
       expect(SomeDocument.new(path: 'one/two/abc').ns).to eq('one.two')
     end
-  end # ns
+  end
 
   describe 'ns=' do
     let(:document) { SomeDocument.new(path: 'one/abc') }
@@ -418,36 +418,36 @@ describe SomeDocument do
 
       it { expect(document.ns).to be_nil }
       it { expect(document.path).to eq(dir.join('abc.suffix')) }
-    end # given nil
+    end
 
     context 'given ""' do
       before { document.ns = '' }
 
       it { expect(document.ns).to be_nil }
       it { expect(document.path).to eq(dir.join('abc.suffix')) }
-    end # given ''
+    end
 
     context 'given "two"' do
       before { document.ns = 'two' }
 
       it { expect(document.ns).to eq('two') }
       it { expect(document.path).to eq(dir.join('two/abc.suffix')) }
-    end # given "two"
+    end
 
     context 'given "two.three"' do
       before { document.ns = 'two.three' }
 
       it { expect(document.ns).to eq('two.three') }
       it { expect(document.path).to eq(dir.join('two/three/abc.suffix')) }
-    end # given "two.three"
+    end
 
     context 'given "two/three"' do
       before { document.ns = 'two/three' }
 
       it { expect(document.ns).to eq('two.three') }
       it { expect(document.path).to eq(dir.join('two/three/abc.suffix')) }
-    end # given "two/three"
-  end # ns=
+    end
+  end
 
   describe 'ns?' do
     let(:document) { SomeDocument.new(key: 'abc', ns: 'one.two.three') }
@@ -467,7 +467,7 @@ describe SomeDocument do
     it 'does not match when given a non-matching final segment' do
       expect(document.ns?('one.two.four')).to be(false)
     end
-  end # ns?
+  end
 
   describe "path" do
     it "should change when the key has changed" do
@@ -609,7 +609,7 @@ describe SomeDocument do
 
     end
 
-  end # describe save!
+  end
 
   describe '#update_attributes!' do
     let(:document) { SomeDocument.find('foo') }
@@ -650,7 +650,7 @@ describe SomeDocument do
         expect { result }.to raise_error(Atlas::InvalidDocumentError, /Query/)
       end
     end
-  end # update_attributes!
+  end
 
   describe '#all' do
     context 'on a "leaf" class' do
@@ -669,7 +669,7 @@ describe SomeDocument do
         expect(classes).to include(SomeDocument::FinalDocument)
       end
     end
-  end # all
+  end
 
   describe 'changing the key on subclassed documents' do
     let(:doc) do
@@ -737,7 +737,7 @@ describe SomeDocument do
     it 'is 1 when the node has a "later" key' do
       expect(Node.new(key: 'z') <=> node).to eql(1)
     end
-  end # <=>
+  end
 
   describe 'path normalization' do
     context 'given a path which includes the DIRECTORY' do
@@ -807,7 +807,7 @@ describe SomeDocument do
         expect { node }.to raise_error(IllegalDirectoryError)
       end
     end
-  end # path normalization
-end #describe SomeDocument
+  end
+end
 
-end #module
+end

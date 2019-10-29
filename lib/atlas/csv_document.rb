@@ -187,7 +187,7 @@ module Atlas
         fail UnknownCSVCellError.new(self, key)
       end
     end
-  end # CSVDocument
+  end
 
   # A special case of CSVDocument where the file contains only two columns;
   # one with a "key" for the row, and one with a value. The name of the
@@ -201,5 +201,5 @@ module Atlas
     def get(row)
       cell(normalize_key(row), 1)
     end
-  end # CSVDocument::OneDimensional
-end # Atlas
+  end
+end

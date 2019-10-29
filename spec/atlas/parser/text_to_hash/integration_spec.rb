@@ -47,7 +47,7 @@ module Atlas::Parser::TextToHash; describe '(integration)' do
     it 'has no comments' do
       expect(hash).to include(comments: nil)
     end
-  end # with a document containing only static attributes
+  end
 
   # --------------------------------------------------------------------------
 
@@ -83,7 +83,7 @@ module Atlas::Parser::TextToHash; describe '(integration)' do
     it 'does not have any queries' do
       expect(hash).to include(queries: {})
     end
-  end # with a document containing a comment
+  end
 
   # --------------------------------------------------------------------------
 
@@ -118,7 +118,7 @@ module Atlas::Parser::TextToHash; describe '(integration)' do
         Contribute to your hunting skills and natural defenses.
       EOF
     end
-  end # with a document containing a multi-line attribute
+  end
 
   # --------------------------------------------------------------------------
 
@@ -137,7 +137,7 @@ module Atlas::Parser::TextToHash; describe '(integration)' do
     it 'parses the query' do
       expect(hash).to include(queries: { update: 'SUM(1, 2)' })
     end
-  end # with a document containing a single-line query
+  end
 
   # --------------------------------------------------------------------------
 
@@ -160,7 +160,7 @@ module Atlas::Parser::TextToHash; describe '(integration)' do
       query = "SUM(\n  SUM(1, 2)\n  MAX(3, 4))"
       expect(hash).to include(queries: { update: query })
     end
-  end # with a document containing a single-line query
+  end
 
   # --------------------------------------------------------------------------
 
@@ -180,6 +180,6 @@ module Atlas::Parser::TextToHash; describe '(integration)' do
       query = "SUM(\n\n\n  SUM(1, 2)\n  MAX(3, 4))"
       expect(hash).to include(queries: { update: query })
     end
-  end # with a document containing a single-line, multi-spaced query
+  end
 
-end ; end # Atlas::Parser::TextToHash ; (integration)
+end ; end

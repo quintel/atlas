@@ -35,5 +35,5 @@ module Atlas
       path = Atlas::Dataset.find(region).dataset_dir.join("fce/#{ key }.yml")
       path.file? && YAML.load_file(path)
     end
-  end # Carrier
-end # Atlas
+  end
+end

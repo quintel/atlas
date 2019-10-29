@@ -74,5 +74,5 @@ module Atlas
         klass.topmost_document_class
     end
 
-  end # Collection
-end # Atlas
+  end
+end

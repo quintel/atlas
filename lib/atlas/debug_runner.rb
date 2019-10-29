@@ -205,5 +205,5 @@ module Atlas
       }).draw_to(@directory.join("#{ filter.downcase[0..50] }.#{ name }.png"))
     end
 
-  end # DebugRunner
-end # Atlas
+  end
+end

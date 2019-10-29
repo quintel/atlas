@@ -8,7 +8,7 @@ describe Node do
       let(:node) { Node.new(key: :a) }
 
       it 'has no output slots'
-    end # when the node has no output data
+    end
 
     context 'when the node has a single "output" pair' do
       let(:node) { Node.new(key: :a, output: { gas: 0.4 }) }
@@ -32,7 +32,7 @@ describe Node do
       it 'sets the slot carrier' do
         expect(node.out_slots.first.carrier).to eql(:gas)
       end
-    end # when the node has a single "output" pair
+    end
 
     context 'when creating an "elastic" slot' do
       it 'creates a Slot::Elastic when the share is :elastic' do
@@ -44,7 +44,7 @@ describe Node do
         node = Node.new(key: :a, output: { gas: 'elastic' })
         expect(node.out_slots.first).to be_a(Slot::Elastic)
       end
-    end # when creating an "elastic" slot
+    end
 
     context 'when the node has gas and oil "output" pairs' do
       let(:node) { Node.new(key: :a, output: { gas: 0.3, oil: 0.7 }) }
@@ -84,7 +84,7 @@ describe Node do
       it 'sets the oil slot carrier' do
         expect(node.out_slots.to_a.last.carrier).to eql(:oil)
       end
-    end # when the node has gas and oil "output" pairs
+    end
 
     context 'when updating the "output" data' do
       let(:node) { Node.new(key: :a, output: { gas: 0.9, elec: 0.1 }) }
@@ -113,15 +113,15 @@ describe Node do
         expect(new_slot.carrier).to eql(:oil)
         expect(new_slot.share).to eql(0.6)
       end
-    end # when updating the "output" data
-  end # out_slots
+    end
+  end
 
   describe '#in_slots' do
     context 'when the node has no "input" data' do
       let(:node) { Node.new(key: :a) }
 
       it 'has no input slots'
-    end # when the node has no input data
+    end
 
     context 'when the node has a single "input" pair' do
       let(:node) { Node.new(key: :a, input: { gas: 0.4 }) }
@@ -145,7 +145,7 @@ describe Node do
       it 'sets the slot carrier' do
         expect(node.in_slots.first.carrier).to eql(:gas)
       end
-    end # when the node has a single "input" pair
+    end
 
     context 'when creating an "elastic" slot' do
       let(:node) { Node.new(key: :a, input: { gas: :elastic }) }
@@ -153,7 +153,7 @@ describe Node do
       it 'sets no share on the slot' do
         expect(node.in_slots.first.share).to be_nil
       end
-    end # when creating an "elastic" slot
+    end
 
     context 'when the node has gas and oil "input" pairs' do
       let(:node) { Node.new(key: :a, input: { gas: 0.3, oil: 0.7 }) }
@@ -193,7 +193,7 @@ describe Node do
       it 'sets the oil slot carrier' do
         expect(node.in_slots.to_a.last.carrier).to eql(:oil)
       end
-    end # when the node has gas and oil "input" pairs
+    end
 
     context 'when updating the "input" data' do
       let(:node) { Node.new(key: :a, input: { gas: 0.9, elec: 0.1 }) }
@@ -222,8 +222,8 @@ describe Node do
         expect(new_slot.carrier).to eql(:oil)
         expect(new_slot.share).to eql(0.6)
       end
-    end # when updating the "input" data
-  end # in_slots
+    end
+  end
 
   describe '#all' do
     it 'returns all the subclasses that have been defined' do
@@ -281,7 +281,7 @@ describe Node do
       expect(node.max_demand).to eql(:recursive)
       expect(node.errors[:max_demand]).to be_empty
     end
-  end # max_demand=
+  end
 
   describe 'fever' do
     let(:fever) do
@@ -378,7 +378,7 @@ describe Node do
           expect(node.errors_on(:fever)).to be_empty
         end
       end
-    end # alias_of
+    end
 
     describe 'capacity' do
       context 'on a "hybrid" node' do
@@ -431,8 +431,8 @@ describe Node do
         end
       end
     end
-  end # fever
+  end
 
-end #describe Node
+end
 
-end #module
+end

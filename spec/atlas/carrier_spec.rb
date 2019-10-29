@@ -20,7 +20,7 @@ module Atlas
       it 'does not load FCE data for a carrier with no data' do
         expect(Carrier.find(:corn).fce(:nl)).to_not be
       end
-    end # fce
+    end
 
   end
 

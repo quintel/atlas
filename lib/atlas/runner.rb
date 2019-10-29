@@ -89,5 +89,5 @@ module Atlas
     def precomputed_graph?
       dataset.is_a?(Dataset::Derived)
     end
-  end # Runner
-end # Atlas
+  end
+end

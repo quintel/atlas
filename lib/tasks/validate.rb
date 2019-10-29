@@ -87,7 +87,7 @@ namespace :validate do
         puts Term::ANSIColor.red { errors.join("\n") }
       end
     end
-  end # ValidationRunner
+  end
 
   # --------------------------------------------------------------------------
 
@@ -110,7 +110,7 @@ namespace :validate do
       Atlas::Input,   Atlas::Node,    Atlas::Preset
     ).run
   end
-end # :validate
+end
 
 desc 'Runs the validations on all of the documents'
 task :validate, [:dir] => ['validate:all']

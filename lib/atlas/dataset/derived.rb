@@ -74,5 +74,5 @@ module Atlas
         end
       end
     end
-  end # Dataset::Derived
-end # Atlas
+  end
+end

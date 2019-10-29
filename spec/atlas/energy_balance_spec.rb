@@ -14,7 +14,7 @@ module Atlas
         expect(eb.key).to eql :nl
         expect(eb.unit).to eql :tj
       end
-    end # .new
+    end
 
     describe '.find' do
       it 'finds the dutch one' do
@@ -25,7 +25,7 @@ module Atlas
       it 'raises an error when key is invalid' do
         expect { EnergyBalance.find(nil) }.to raise_error InvalidKeyError
       end
-    end # .find
+    end
 
     describe '#get' do
       it 'returns correct value for NL when asked for a specific attribute' do
@@ -47,12 +47,12 @@ module Atlas
         expect(->{ eb.get('Residential','coal_and_peat') }).to \
           raise_error UnknownUnitError
       end
-    end # get
+    end
 
     describe '#query' do
       it 'returns a value when asked for a specific number' do
         expect(eb.query('residential,coal_and_peat')).to_not be_nil
       end
-    end # query
-  end # EnergyBalance
-end # Atlas
+    end
+  end
+end

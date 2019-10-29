@@ -72,6 +72,6 @@ module Atlas
       def to_hash
         attributes.merge(comments: comments).delete_if { |_, value| value.nil? }
       end
-    end # Last
-  end # ActiveDocument
-end # Atlas
+    end
+  end
+end

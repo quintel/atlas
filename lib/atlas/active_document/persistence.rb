@@ -180,8 +180,8 @@ module Atlas
         def create!(attributes)
           new(attributes).tap(&:save!)
         end
-      end # ClassMethods
+      end
 
-    end # Persistence
-  end # ActiveDocument
-end # Atlas
+    end
+  end
+end

@@ -20,5 +20,5 @@ module Atlas
         attrs
       end
     end
-  end # ValueObject
-end # Atlas
+  end
+end

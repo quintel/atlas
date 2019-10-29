@@ -15,5 +15,5 @@ module Atlas
     it 'retrieves edges' do
       expect(mode.edges.length).to eq(Atlas::Edge.all.length)
     end
-  end # ProductionMode
-end # Atlas
+  end
+end

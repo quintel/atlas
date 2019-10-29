@@ -49,7 +49,7 @@ module Atlas
           to include('electricity slot lacks efficiency ' \
                      'data for oil')
       end
-    end # when the slot lacks efficiencies
+    end
 
     context 'when the slot lacks input shares' do
       before do
@@ -68,6 +68,6 @@ module Atlas
           to include('electricity slot lacks input shares ' \
                      'for oil')
       end
-    end # when the slot lacks input shares
-  end # Slot::CarrierEfficient
-end # Atlas
+    end
+  end
+end

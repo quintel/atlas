@@ -34,13 +34,13 @@ module Atlas::ActiveDocument
             to raise_error(Atlas::NoSuchDocumentClassError)
         end
       end
-    end # get
+    end
 
     describe '#all' do
       it 'returns all the documents' do
         expect(manager.all.length).to eq(5)
       end
-    end # all
+    end
 
     describe '#key?' do
       it 'given a symbol, is true if a matching key exists' do
@@ -59,7 +59,7 @@ module Atlas::ActiveDocument
         SomeDocument.new(key: :hello)
         expect(manager.key?(:hello)).to be(false)
       end
-    end # key?
+    end
 
     describe '#clear!' do
       it 'removes the documents from the cache' do
@@ -73,7 +73,7 @@ module Atlas::ActiveDocument
         expect(manager.get('foo')).to be_nil
         expect(manager.get('new_key')).to be
       end
-    end # clear!
+    end
 
     describe 'when creating a new document' do
       let!(:document) { SomeDocument.new(key: 'something') }
@@ -103,7 +103,7 @@ module Atlas::ActiveDocument
 
         expect { result }.to raise_error(Atlas::DuplicateKeyError)
       end
-    end # when creating a new document
+    end
 
     describe 'when creating a subclassed document' do
       let!(:document) { FinalDocument.new(key: 'something') }
@@ -121,7 +121,7 @@ module Atlas::ActiveDocument
           to change { manager.all.include?(document) }.
           from(false).to(true)
       end
-    end # when creating a subclassed document
+    end
 
     describe 'when saving a document' do
       let!(:document) do
@@ -137,7 +137,7 @@ module Atlas::ActiveDocument
       it 'saves the changes' do
         expect { result }.to change { document.path.read }
       end
-    end # when saving a document
+    end
 
     describe 'when renaming a document' do
       let!(:document) do
@@ -189,7 +189,7 @@ module Atlas::ActiveDocument
           to_not change { manager.all.include?(document) }.
           from(true)
       end
-    end # when creating a new document
+    end
 
     describe 'when deleting a file' do
       let!(:document) { SomeDocument.new(key: :original).tap(&:save!) }
@@ -213,7 +213,7 @@ module Atlas::ActiveDocument
           to change { manager.all.include?(document) }.
           from(true).to(false)
       end
-    end # when deleting a file
+    end
 
     describe 'when deleting a file path' do
       let!(:document) { SomeDocument.new(key: :original).tap(&:save!) }
@@ -237,7 +237,7 @@ module Atlas::ActiveDocument
           to change { manager.all.include?(document) }.
           from(true).to(false)
       end
-    end # when deleting a file path
+    end
 
     describe 'with an unparseable document' do
       before do
@@ -258,7 +258,7 @@ module Atlas::ActiveDocument
       it 'includes the filename in the message' do
         expect { SomeDocument.find(:abc) }.to raise_error(/abc\.suffix/)
       end
-    end # with an unparseable document
+    end
 
     describe 'with a containing invalid content' do
       before do
@@ -278,8 +278,7 @@ module Atlas::ActiveDocument
       it 'includes the filename in the message' do
         expect { SomeDocument.find(:abc) }.to raise_error(/abc\.suffix/)
       end
-    end # with a containing invalid content
-
+    end
 
     context 'saving an document whose to_hash contains non-attribute keys' do
       let(:klass) do
@@ -328,6 +327,6 @@ module Atlas::ActiveDocument
           expect(document.path.read).to_not include('- nested.nope =')
         end
       end
-    end # saving an document whose to_hash contains non-attribute keys
-  end # Manager
-end # Atlas::ActiveDocument
+    end
+  end
+end

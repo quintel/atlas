@@ -160,6 +160,6 @@ module Atlas
         self.key = name
       end
 
-    end # Naming
-  end # ActiveDocument
-end # Atlas
+    end
+  end
+end

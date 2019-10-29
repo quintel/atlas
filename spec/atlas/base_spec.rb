@@ -44,7 +44,7 @@ module Atlas ; describe Atlas do
         to change { Atlas.data_dir }.
         to(Atlas.root.join('data'))
     end
-  end # data_dir=
+  end
 
   describe '#with_data_dir' do
     it 'temporarily changes the data directory' do
@@ -76,4 +76,4 @@ module Atlas ; describe Atlas do
     end
   end
 
-end ; end # describe Atlas, module Atlas
+end ; end

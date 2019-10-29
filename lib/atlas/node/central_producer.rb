@@ -10,5 +10,5 @@ module Atlas
         full_load_hours: "CENTRAL_PRODUCTION(#{ key }, full_load_hours)",
       }.merge(super)
     end
-  end # Node::CentralProducer
-end # Atlas
+  end
+end

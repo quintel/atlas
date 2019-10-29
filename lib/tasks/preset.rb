@@ -96,5 +96,5 @@ namespace :preset do
         preset.save!
       end
     end
-  end # :fix
-end # :preset
+  end
+end

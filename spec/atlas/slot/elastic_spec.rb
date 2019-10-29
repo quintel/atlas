@@ -20,6 +20,6 @@ module Atlas
         expect(slot.errors.full_messages).
           to include('cannot have more than one elastic slot')
       end
-    end # when the node has multiple elastic slots
-  end # Slot::Elastic
-end # Atlas
+    end
+  end
+end

@@ -177,5 +177,5 @@ module Atlas
           .to raise_error(Atlas::QueryError)
       end
     end
-  end # Runtime
-end # Atlas
+  end
+end

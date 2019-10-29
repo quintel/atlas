@@ -110,5 +110,5 @@ module Atlas
         direction: data[:direction] == '+' ? :in : :out,
         carrier:   data[:carrier].to_sym }
     end
-  end # Slot
-end # Atlas
+  end
+end

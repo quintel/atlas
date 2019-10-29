@@ -382,5 +382,5 @@ module Atlas
       super
       FileUtils.rm_rf(dataset_dir)
     end
-  end # Dataset
-end # Atlas
+  end
+end

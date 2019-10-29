@@ -68,6 +68,6 @@ module Atlas
       def error_msg(message, keys1, keys2)
         sprintf(ERRORS[message], carrier, (keys1 - keys2).to_a.join(', '))
       end
-    end # CarrierEfficient
-  end # Slot
-end # Atlas
+    end
+  end
+end

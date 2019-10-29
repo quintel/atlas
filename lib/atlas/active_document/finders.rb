@@ -40,8 +40,8 @@ module Atlas
 
           document
         end
-      end # ClassMethods
+      end
 
-    end # Finders
-  end # ActiveDocument
-end # Atlas
+    end
+  end
+end

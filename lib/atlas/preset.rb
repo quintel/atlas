@@ -57,5 +57,5 @@ module Atlas
         errors.add("scaling.#{ key }", messages)
       end
     end
-  end # Preset
-end # Atlas
+  end
+end

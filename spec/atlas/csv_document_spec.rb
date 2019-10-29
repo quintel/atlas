@@ -104,7 +104,7 @@ module Atlas
       it 'does not raise an error if the column is named by its index' do
         expect { doc.get('blank', 1) }.to_not raise_error
       end
-    end # get
+    end
 
     describe '#set' do
       it 'sets a given value for given row and column' do
@@ -120,7 +120,7 @@ module Atlas
       it 'raises an error when column header is not known' do
         expect { doc.set('yes', 'nope', 99) }.to raise_error(UnknownCSVCellError)
       end
-    end # set
+    end
 
     describe '#save!' do
       it 'saves the CSVDocument content to disk' do
@@ -151,7 +151,7 @@ module Atlas
         end
       end
     end
-  end # CSVDocument
+  end
 
   describe CSVDocument::OneDimensional do
     let(:doc) do
@@ -176,8 +176,8 @@ module Atlas
       it 'does not get the value of a header row' do
         expect { doc.get(:carrier) }.to raise_error(UnknownCSVRowError)
       end
-    end # get
-  end # CSVDocument::OneDimensional
+    end
+  end
 
   describe CSVDocument, '.curve' do
     context' with a simple list of values' do
@@ -202,7 +202,7 @@ module Atlas
       it 'contains all the values' do
         expect(doc.to_a).to eq([0.0, 0.2, 0.3])
       end
-    end # with a simple list of values
+    end
 
     context' with a lines ending in a comma' do
       let(:doc) do
@@ -222,7 +222,7 @@ module Atlas
       it 'contains all the values' do
         expect(doc.to_a).to eq([0.0, 0.2, 0.3])
       end
-    end # with a lines ending in a comma
+    end
 
     context' with an empty file' do
       let(:doc) do
@@ -235,6 +235,6 @@ module Atlas
       it 'has no values' do
         expect(doc.to_a).to eq([])#be_empty
       end
-    end # with a lines ending in a comma
-  end # CSVDocument.curve
-end # Atlas
+    end
+  end
+end

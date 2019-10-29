@@ -24,7 +24,7 @@ module Atlas
       end
 
       it 'raises an error when the collection is empty'
-    end # #find
+    end
 
     describe '#fetch' do
       it 'returns the first matching document' do
@@ -35,13 +35,13 @@ module Atlas
         expect { collection.fetch(:nope, :also_nope) }.
           to raise_error(DocumentNotFoundError)
       end
-    end # #fetch
+    end
 
     describe '#to_a' do
       it 'returns the documents as an array' do
         expect(collection.to_a).to eql(raw)
       end
-    end # #to_a
+    end
 
     describe '#each' do
       it 'delegates to the original collection' do
@@ -73,7 +73,7 @@ module Atlas
         it 'does returns the document when given the new key' do
           expect(refreshed.find(:new)).to eql(node_one)
         end
-      end # with a refreshed collection
-    end # when a document key changes
-  end # Collection
-end # Atlas
+      end
+    end
+  end
+end

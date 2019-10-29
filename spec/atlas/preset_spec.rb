@@ -82,7 +82,7 @@ module Atlas
                        "group, but the values sum to 100.011, not 100")
         end
       end
-    end # user values
+    end
 
     describe 'scaling' do
       it 'may be blank' do
@@ -107,5 +107,5 @@ module Atlas
         expect(error_keys).not_to be_empty
       end
     end
-  end # Preset
-end # Atlas
+  end
+end

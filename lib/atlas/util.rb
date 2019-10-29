@@ -95,5 +95,5 @@ module Atlas
       end
     end
 
-  end # Util
-end # Atlas
+  end
+end

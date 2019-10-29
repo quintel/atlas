@@ -9,5 +9,5 @@ module Atlas
     attribute :unit,           String
     attribute :deprecated_key, String
 
-  end # Guery
-end # Atlas
+  end
+end

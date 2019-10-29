@@ -48,5 +48,5 @@ module Atlas
     end
 
     private :validate_query_within_group
-  end # Input
-end # Atlas
+  end
+end

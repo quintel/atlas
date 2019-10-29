@@ -252,6 +252,6 @@ module Atlas
       def key_from_path(path)
         path.basename.to_s.split('.', 2).first.to_sym
       end
-    end # Manager
-  end # IO
-end # Atlas
+    end
+  end
+end

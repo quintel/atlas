@@ -72,7 +72,7 @@ module Atlas; describe Scaler do
           to raise_error(Atlas::InvalidDocumentError, /Scaling Value/)
       end
     end
-  end # create_scaled_dataset
+  end
 
   describe Scaler::TimeCurveScaler do
     let(:scaling) {
@@ -106,5 +106,5 @@ module Atlas; describe Scaler do
       expect(derived_dataset.time_curve(:woody_biomass).row_keys).
         to eql(base_dataset.time_curve(:woody_biomass).row_keys)
     end
-  end # TimeCurveScaler
-end; end # Atlas::Scaler
+  end
+end; end

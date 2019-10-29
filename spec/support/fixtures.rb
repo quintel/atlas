@@ -29,6 +29,6 @@ module Atlas
           FileUtils.cp_r(Atlas.root.join('spec/fixtures/.'), dir)
         end
       end
-    end # Fixtures
-  end # Spec
-end # Atlas
+    end
+  end
+end

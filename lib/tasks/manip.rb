@@ -34,14 +34,14 @@ namespace :manip do
         doc = klass.create!(attrs)
 
         puts "Saved to #{ doc.path.relative_path_from(Atlas.data_dir) }"
-      end # create
+      end
 
       task delete: :environment do
         klass(class_name).find(ENV['key']).destroy!
-      end # create
-    end # namespace class_name
-  end # Carrier, Edge, ...
-end # namespace :manip
+      end
+    end
+  end
+end
 
 # Top-level tasks for each class.
 MANIP_CLASS_NAMES.each do |class_name|
@@ -51,5 +51,5 @@ MANIP_CLASS_NAMES.each do |class_name|
 
     desc "Delete a #{ class_name.downcase }"
     task destroy: ["manip:#{ class_name.downcase }:destroy"]
-  end # namespace class_name
+  end
 end

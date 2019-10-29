@@ -57,5 +57,5 @@ module Atlas::ActiveDocument
     it 'disallows deleting the document' do
       expect { production_node.destroy! }.to raise_error(Atlas::ReadOnlyError)
     end
-  end # ProductionManager
-end # Atlas::ActiveDocument
+  end
+end

@@ -125,5 +125,5 @@ module Atlas
       end
     end
 
-  end # HashToTextParser
-end # Atlas
+  end
+end

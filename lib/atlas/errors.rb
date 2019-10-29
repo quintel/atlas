@@ -24,7 +24,7 @@ module Atlas
         super
       end
     end
-  end # ParserError
+  end
 
   # Raised when an error occurs executing a Rubel query.
   class QueryError < AtlasError
@@ -65,7 +65,7 @@ module Atlas
         @query
       end
     end
-  end # QueryError
+  end
 
   # --------------------------------------------------------------------------
 
@@ -232,4 +232,4 @@ module Atlas
     "#{ preamble }\n\n#{ block }"
   end
 
-end # Atlas
+end

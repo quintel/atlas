@@ -186,5 +186,5 @@ module Atlas
         } ]
       end ]
     end
-  end # ScenarioReconciler
-end # Atlas
+  end
+end

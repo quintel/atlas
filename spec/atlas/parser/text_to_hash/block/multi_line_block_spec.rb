@@ -26,7 +26,7 @@ module Atlas
               expect(block.value).to eql "SUM(\n  1,\n  2\n)"
             end
           end
-        end # with a correctly formatted block
+        end
 
         context 'when the value starts on the same line as the key' do
           let(:block) do
@@ -40,8 +40,8 @@ module Atlas
           it 'raises an error' do
             expect { block.key }.to raise_error(Atlas::ParserError)
           end
-        end # when the value starts on the same line as the key
-      end # MultilineBlock
+        end
+      end
     end
   end
 end

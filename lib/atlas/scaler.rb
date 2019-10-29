@@ -67,5 +67,5 @@ module Atlas
     def create_empty_graph_values_file
       GraphValues.new(@derived_dataset).create!
     end
-  end # Scaler
-end # Atlas
+  end
+end

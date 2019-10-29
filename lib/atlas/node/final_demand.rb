@@ -3,5 +3,5 @@ module Atlas
   # energy_balance_query.
   class Node::FinalDemand < Node::Demand
     validates_with QueryValidator, attributes: [:demand]
-  end # Node::FinalDemand
-end # Atlas
+  end
+end

@@ -45,4 +45,4 @@ module Atlas
   ensure
     self.data_dir = previous
   end
-end # Atlas
+end

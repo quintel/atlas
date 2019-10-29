@@ -27,5 +27,5 @@ module Atlas
     validates :subtype,
       inclusion: %i[generic pseudo],
       if: ->(mod) { mod.type == :consumer }
-  end # MeritOrderDetails
-end # Atlas
+  end
+end

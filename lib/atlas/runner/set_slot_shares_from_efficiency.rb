@@ -43,6 +43,6 @@ module Atlas
           refinery
         end
       end
-    end # SetSlotSharesFromEfficiency
-  end # Runner
-end # Atlas
+    end
+  end
+end

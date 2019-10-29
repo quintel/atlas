@@ -35,7 +35,7 @@ module Atlas
           # fd has a loss output, but no edge
           expect(graph.node(:fd).slots.out.map(&:carrier)).to eq([:loss])
         end
-      end # nodes
+      end
 
       context 'edges' do
         let(:foo_edges) { graph.node(:foo).out_edges.to_a }
@@ -56,8 +56,8 @@ module Atlas
           expect(bar_edges.last.get(:type)).to be_nil
           expect(baz_edges.first.get(:type)).to eql(:overflow)
         end
-      end # edges
-    end # .build
+      end
+    end
 
     describe '.establish_edge' do
       let(:node)   { Node.new(key: :key) }
@@ -105,7 +105,7 @@ module Atlas
           expect(edge.parent.key).to eq(model.supplier)
           expect(edge.child.key).to eq(model.consumer)
         end
-      end # with a single, share link
+      end
 
       context 'with a reversed link' do
         let(:link_data) { [ Edge.new(key: 'parent-key@coal', type: :share, reversed: true) ] }
@@ -126,7 +126,7 @@ module Atlas
         it 'adds an outgoing edge from the parent' do
           expect(t_parent.out_edges.to_a).to eql([edge])
         end
-      end # with a reversed link
+      end
 
       context 'with multiple links using different carriers' do
         let(:link_data) { [
@@ -140,7 +140,7 @@ module Atlas
           it 'sets the carrier (label) to coal' do
             expect(edge.label).to eql(:coal)
           end
-        end # the coal edge
+        end
 
         describe 'the corn edge' do
           let(:edge) { t_node.in_edges.to_a.last }
@@ -148,8 +148,8 @@ module Atlas
           it 'sets the carrier (label) to corn' do
             expect(edge.label).to eql(:corn)
           end
-        end # the corn edge
-      end # with multiple links using different carriers
+        end
+      end
 
       context 'with a non-existent node' do
         let(:link_data) { [] }
@@ -169,7 +169,7 @@ module Atlas
             GraphBuilder.establish_edge(link, graph, nodes)
           end.to raise_error(Atlas::DocumentNotFoundError)
         end
-      end # with a non-existent node
+      end
 
       context 'with a non-existent carrier' do
         let(:link_data) { [] }
@@ -182,7 +182,7 @@ module Atlas
             GraphBuilder.establish_edge(link, graph, nodes)
           end.to raise_error(Atlas::DocumentNotFoundError)
         end
-      end # with a non-existent carrier
-    end # .establish_edge
-  end # GraphBuilder
-end # Atlas
+      end
+    end
+  end
+end

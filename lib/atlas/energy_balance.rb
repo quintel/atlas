@@ -49,5 +49,5 @@ module Atlas
         0.0
       end
     end
-  end # EnergyBalance
-end # Atlas
+  end
+end

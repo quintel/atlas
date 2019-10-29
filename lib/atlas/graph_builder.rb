@@ -142,5 +142,5 @@ module Atlas
         ->(el) { true }
       end
     end
-  end # GraphBuilder
-end # Atlas
+  end
+end

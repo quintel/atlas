@@ -12,5 +12,5 @@ module Atlas
       # Cost per unit of volume installed.
       attribute :cost_per_mwh, Float, default: 0.0
     end
-  end # StorageDetails
-end # Atlas
+  end
+end

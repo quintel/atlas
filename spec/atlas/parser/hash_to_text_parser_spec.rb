@@ -123,8 +123,8 @@ module Atlas
         expect(p.to_text).to eql "# hi\n\n~ demand = SUM(1,2)"
       end
 
-    end # describe to_text
+    end
 
-  end # describe HashToTextParser
+  end
 
-end # module Atlas
+end

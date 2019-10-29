@@ -52,5 +52,5 @@ module Atlas
         end
       end
     end
-  end # Scaler::TimeCurveScaler
-end # Atlas
+  end
+end

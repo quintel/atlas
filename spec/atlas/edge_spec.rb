@@ -25,7 +25,7 @@ module Atlas
         edge = Edge.new(key: 'a-b@gas', type: :nope)
         expect(edge.errors_on(:type).length).to eq(1)
       end
-    end # type
+    end
 
     describe 'when creating a new Edge' do
       let(:edge) { Edge.new(path: 'left-right@gas.ad') }
@@ -49,7 +49,7 @@ module Atlas
       it 'sets the filename' do
         expect(edge.path.to_s).to match(%r{left-right@gas\.ad$})
       end
-    end # when creating a new Edge
+    end
 
     context 'creating an edge with supplier, consumer, and carrier' do
       let(:edge) do
@@ -76,7 +76,7 @@ module Atlas
       it 'sets the path' do
         expect(edge.path.to_s).to match(%r{/listen/here-there@talk\.ad$})
       end
-    end # creating an edge with supplier, consumer, and carrier
+    end
 
     context 'validation of associated documents' do
       it 'has an error when the carrier does not exist' do
@@ -93,7 +93,7 @@ module Atlas
         edge = Edge.new(key: 'a-b@nope').tap(&:valid?)
         expect(edge.errors[:consumer]).to include('does not exist')
       end
-    end # validation of associated documents
+    end
 
     describe 'creating an Edge with an invalid key' do
       it 'does not raise an error when the key is nil' do
@@ -119,7 +119,7 @@ module Atlas
       it 'raises an error when providing only the carrier' do
         expect { Edge.new(key: '@gas') }.to raise_error(InvalidKeyError)
       end
-    end # creating an Edge with an invalid key
+    end
 
     describe 'changing the key on an Edge' do
       let(:edge) { Edge.new(key: 'left-right@gas') }
@@ -211,7 +211,7 @@ module Atlas
       it 'raises an error if the key is nil' do
         expect { edge.key = nil }.to raise_error(InvalidKeyError)
       end
-    end # changing the key on an Edge
+    end
 
     describe 'changing the filename' do
       let(:edge) { Edge.new(key: 'left-right@gas') }
@@ -236,7 +236,7 @@ module Atlas
       it 'updates the key' do
         expect(edge.key).to eql(:'no-yes@electricity')
       end
-    end # changing the filename
+    end
 
     describe 'parsing an AD file' do
       let(:edge) { Edge.find('foo-bar@coal') }
@@ -269,6 +269,6 @@ module Atlas
         expect(Edge.find('bar-baz@corn').queries[:parent_share]).to eq \
           "SHARE(cars, gasoline)"
       end
-    end # parsing an AD file
-  end # Edge
-end # Atlas
+    end
+  end
+end

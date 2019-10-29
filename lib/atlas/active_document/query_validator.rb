@@ -29,6 +29,6 @@ module Atlas
           record.errors.add(:base, MISSING.gsub(':attrs', sentence))
         end
       end
-    end # QueryValidator
-  end # ActiveDocument
-end # Atlas
+    end
+  end
+end

@@ -43,5 +43,5 @@ module Atlas
       @edges ||= Collection.new(
         ActiveDocument::ProductionManager.new(Edge, @data[:edges]).all)
     end
-  end # ProductionMode
-end # Atlas
+  end
+end
