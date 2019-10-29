@@ -6,7 +6,7 @@ module Atlas
 
     describe 'new' do
       it "should create a new parser" do
-        expect(-> { HashToTextParser.new({}) }).to_not raise_error
+        expect(-> { HashToTextParser.new({}) }).not_to raise_error
       end
       it "should raise an ArgumentError when called with no Hash" do
         expect(-> { HashToTextParser.new() }).to raise_error ArgumentError

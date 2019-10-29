@@ -59,7 +59,7 @@ module Atlas ; describe Atlas do
       Atlas.with_data_dir('/tmp') {}
 
       expect(Atlas.data_dir).to eq(originally)
-      expect(Atlas.data_dir).to_not eq('/tmp')
+      expect(Atlas.data_dir).not_to eq('/tmp')
     end
 
     it 'restores the previous directory if an exception happens' do
@@ -72,7 +72,7 @@ module Atlas ; describe Atlas do
       end
 
       expect(Atlas.data_dir).to eq(originally)
-      expect(Atlas.data_dir).to_not eq('/tmp')
+      expect(Atlas.data_dir).not_to eq('/tmp')
     end
   end
 

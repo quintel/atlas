@@ -8,7 +8,7 @@ describe SomeDocument do
   describe 'new' do
     context 'given no key or path' do
       it 'does not raise an error' do
-        expect { SomeDocument.new({}) }.to_not raise_error
+        expect { SomeDocument.new({}) }.not_to raise_error
       end
     end
 
@@ -95,15 +95,15 @@ describe SomeDocument do
     it 'does not contain queries' do
       document = SomeDocument.new(key: 'a', queries: { foo: 'bar' })
 
-      expect(document.to_hash).to_not have_key(:queries)
+      expect(document.to_hash).not_to have_key(:queries)
     end
 
     it 'omits attributes which have no value' do
       document = SomeDocument.new(key: 'a', unit: '%')
       hash     = document.to_hash
 
-      expect(hash).to_not have_key(:query)
-      expect(hash).to_not have_key(:comments)
+      expect(hash).not_to have_key(:query)
+      expect(hash).not_to have_key(:comments)
     end
 
     it 'includes file comments' do
@@ -137,7 +137,7 @@ describe SomeDocument do
 
     it "loads a document from a subfolder" do
       another_document = Atlas::SomeDocument.find(:bar)
-      expect(another_document).to_not be_nil
+      expect(another_document).not_to be_nil
     end
 
     it 'loads subclassed documents' do
@@ -214,7 +214,7 @@ describe SomeDocument do
       end
 
       it 'has an error' do
-        expect(document.errors).to_not be_empty
+        expect(document.errors).not_to be_empty
       end
     end
   end
@@ -279,7 +279,7 @@ describe SomeDocument do
       let(:doc) { SomeDocument.create!(key: 'hello') }
 
       it 'remains persisted' do
-        expect { doc.key = 'new_name' }.to_not change { doc.persisted? }
+        expect { doc.key = 'new_name' }.not_to change { doc.persisted? }
       end
     end
 
@@ -390,7 +390,7 @@ describe SomeDocument do
         document.path = 'abc.other_document.suffix'
 
         expect(document.path.to_s).to     include('final_document')
-        expect(document.path.to_s).to_not include('other_document')
+        expect(document.path.to_s).not_to include('other_document')
       end
     end
   end
@@ -486,7 +486,7 @@ describe SomeDocument do
 
     it 'is false if validation fails' do
       document.query = nil
-      expect(document).to_not be_valid
+      expect(document).not_to be_valid
     end
 
     it 'is true if validation succeeds' do
@@ -555,7 +555,7 @@ describe SomeDocument do
       it "should create a new file" do
         some_document.key = "foo2"
         some_document.save!
-        expect { some_document.path.read }.to_not raise_error
+        expect { some_document.path.read }.not_to raise_error
       end
 
       it 'remains persisted' do
@@ -569,7 +569,7 @@ describe SomeDocument do
         document = SomeDocument.new(key: 'yes')
         document.key = 'no'
 
-        expect { document.save! }.to_not raise_error
+        expect { document.save! }.not_to raise_error
       end
 
       it 'no longer finds the old document' do
@@ -591,7 +591,7 @@ describe SomeDocument do
 
       it 'is not a new record' do
         some_document.update_attributes!(key: :foo2)
-        expect(some_document).to_not be_new_record
+        expect(some_document).not_to be_new_record
       end
 
       context 'when another object with that key already exists' do
@@ -630,7 +630,7 @@ describe SomeDocument do
       end
 
       it 'leaves omitted attributes alone' do
-        expect { result }.to_not change(document, :unit)
+        expect { result }.not_to change(document, :unit)
       end
     end
 
@@ -796,7 +796,7 @@ describe SomeDocument do
       end
 
       it 'does not save the document' do
-        expect { node.save }.to_not change { node.path.file? }.from(false)
+        expect { node.save }.not_to change { node.path.file? }.from(false)
       end
     end
 

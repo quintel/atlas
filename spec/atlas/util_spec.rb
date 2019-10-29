@@ -29,11 +29,11 @@ module Atlas
         end
 
         it 'does not have a key for the first-level hash' do
-          expect(dotted).to_not have_key(:b)
+          expect(dotted).not_to have_key(:b)
         end
 
         it 'does not have a key for the second-level value' do
-          expect(dotted).to_not have_key(:c)
+          expect(dotted).not_to have_key(:c)
         end
       end
 
@@ -49,19 +49,19 @@ module Atlas
         end
 
         it 'does not have a key for the first-level hash' do
-          expect(dotted).to_not have_key(:b)
+          expect(dotted).not_to have_key(:b)
         end
 
         it 'does not have a key for the second-level hash' do
-          expect(dotted).to_not have_key('b.c')
+          expect(dotted).not_to have_key('b.c')
         end
 
         it 'does not have a key for the second-level value' do
-          expect(dotted).to_not have_key(:c)
+          expect(dotted).not_to have_key(:c)
         end
 
         it 'does not have a key for the third-level value' do
-          expect(dotted).to_not have_key(:d)
+          expect(dotted).not_to have_key(:d)
         end
       end
 
@@ -119,7 +119,7 @@ module Atlas
         end
 
         it 'does not add the dotted key' do
-          expect(expanded).to_not have_key(:'b.c')
+          expect(expanded).not_to have_key(:'b.c')
         end
       end
 
@@ -143,8 +143,8 @@ module Atlas
         end
 
         it 'does not add the dotted key' do
-          expect(expanded).to_not have_key(:'b.c')
-          expect(expanded).to_not have_key(:'b.c.d')
+          expect(expanded).not_to have_key(:'b.c')
+          expect(expanded).not_to have_key(:'b.c.d')
         end
       end
     end
@@ -212,11 +212,11 @@ module Atlas
       end
 
       it 'omits nil' do
-        expect(serialized).to_not have_key(:nil_value)
+        expect(serialized).not_to have_key(:nil_value)
       end
 
       it 'omits blank strings' do
-        expect(serialized).to_not have_key(:blank_str)
+        expect(serialized).not_to have_key(:blank_str)
       end
 
       it 'includes non-blank strings' do
@@ -224,7 +224,7 @@ module Atlas
       end
 
       it 'omits empty arrays' do
-        expect(serialized).to_not have_key(:empty_arr)
+        expect(serialized).not_to have_key(:empty_arr)
       end
 
       it 'includes non-empty arrays' do
@@ -232,7 +232,7 @@ module Atlas
       end
 
       it 'omits empty hashes' do
-        expect(serialized).to_not have_key(:empty_hash)
+        expect(serialized).not_to have_key(:empty_hash)
       end
 
       it 'includes non-empty hashes' do

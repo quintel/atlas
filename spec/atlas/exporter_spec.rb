@@ -161,7 +161,7 @@ module Atlas
       it 'is not exported when not specified in the document' do
         mother.set(:max_demand, 50)
 
-        expect(nodes[:mother]).to_not have_key(:max_demand)
+        expect(nodes[:mother]).not_to have_key(:max_demand)
       end
 
       it 'is exported as :recursive when the original value is :recursive' do

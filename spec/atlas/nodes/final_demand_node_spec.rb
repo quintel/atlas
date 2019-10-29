@@ -18,7 +18,7 @@ describe Node::FinalDemand do
 
   describe '#find' do
     it "finds the fixture" do
-      expect(Node::FinalDemand.find('fd')).to_not be_nil
+      expect(Node::FinalDemand.find('fd')).not_to be_nil
     end
   end
 

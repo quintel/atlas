@@ -98,11 +98,11 @@ module Atlas
       end
 
       it 'does not raise an error if a cell is blank' do
-        expect { doc.get('blank', 'no') }.to_not raise_error
+        expect { doc.get('blank', 'no') }.not_to raise_error
       end
 
       it 'does not raise an error if the column is named by its index' do
-        expect { doc.get('blank', 1) }.to_not raise_error
+        expect { doc.get('blank', 1) }.not_to raise_error
       end
     end
 

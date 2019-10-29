@@ -97,7 +97,7 @@ module Atlas
 
     describe 'creating an Edge with an invalid key' do
       it 'does not raise an error when the key is nil' do
-        expect { Edge.new(key: nil) }.to_not raise_error
+        expect { Edge.new(key: nil) }.not_to raise_error
       end
 
       it 'raises an error when the key is blank' do

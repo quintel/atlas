@@ -102,7 +102,7 @@ describe Node do
       end
 
       it 'removes slots which were deleted' do
-        expect(node.out_slots.find { |slot| slot.carrier == :elec }).to_not be
+        expect(node.out_slots.find { |slot| slot.carrier == :elec }).not_to be
       end
 
       it 'adds slots which were added' do
@@ -211,7 +211,7 @@ describe Node do
       end
 
       it 'removes slots which were deleted' do
-        expect(node.in_slots.find { |slot| slot.carrier == :elec }).to_not be
+        expect(node.in_slots.find { |slot| slot.carrier == :elec }).not_to be
       end
 
       it 'adds slots which were added' do

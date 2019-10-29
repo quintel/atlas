@@ -39,7 +39,7 @@ module Atlas
       end
 
       it 'fails validation' do
-        expect(slot).to_not be_valid
+        expect(slot).not_to be_valid
       end
 
       it 'informs the user of the error' do
@@ -58,7 +58,7 @@ module Atlas
       end
 
       it 'fails validation' do
-        expect(slot).to_not be_valid
+        expect(slot).not_to be_valid
       end
 
       it 'informs the user of the error' do

@@ -6,7 +6,7 @@ module Atlas
 
     describe '.new' do
       it 'should be able to create a new one' do
-        expect(-> { EnergyBalance.new } ).to_not raise_error
+        expect(-> { EnergyBalance.new } ).not_to raise_error
       end
 
       it 'should be by default take the Netherlands and unit = TJ' do
@@ -51,7 +51,7 @@ module Atlas
 
     describe '#query' do
       it 'returns a value when asked for a specific number' do
-        expect(eb.query('residential,coal_and_peat')).to_not be_nil
+        expect(eb.query('residential,coal_and_peat')).not_to be_nil
       end
     end
   end

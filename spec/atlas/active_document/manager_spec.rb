@@ -17,11 +17,11 @@ module Atlas::ActiveDocument
       end
 
       it 'returns nil when no matching document exists' do
-        expect(manager.get(:no)).to_not be
+        expect(manager.get(:no)).not_to be
       end
 
       it 'returns nil when given nil' do
-        expect(manager.get(nil)).to_not be
+        expect(manager.get(nil)).not_to be
       end
 
       context 'when the document has an illegal subclass' do
@@ -300,7 +300,7 @@ module Atlas::ActiveDocument
         before { document.save! }
 
         it 'does not persist the non-attribute' do
-          expect(document.path.read).to_not include('- nope =')
+          expect(document.path.read).not_to include('- nope =')
         end
 
         it 'does persists attributes' do
@@ -316,7 +316,7 @@ module Atlas::ActiveDocument
         before { document.save! }
 
         it 'does not persist the non-attribute' do
-          expect(document.path.read).to_not include('- nope =')
+          expect(document.path.read).not_to include('- nope =')
         end
 
         it 'does not persist the nested attribute' do
@@ -324,7 +324,7 @@ module Atlas::ActiveDocument
         end
 
         it 'does not persist the nested non-attribute' do
-          expect(document.path.read).to_not include('- nested.nope =')
+          expect(document.path.read).not_to include('- nested.nope =')
         end
       end
     end
