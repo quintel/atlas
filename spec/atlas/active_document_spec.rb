@@ -3,7 +3,7 @@ require 'spec_helper'
 module Atlas
 
 describe SomeDocument do
-  let(:some_document) { some_document = SomeDocument.find('foo') }
+  let(:some_document) { SomeDocument.find('foo') }
 
   describe 'new' do
     context 'given no key or path' do
