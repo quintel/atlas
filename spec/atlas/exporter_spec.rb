@@ -128,7 +128,10 @@ module Atlas
 
       it 'exports merit order data as a hash' do
         mother.get(:model).merit_order =
-          Atlas::MeritOrderDetails.new(type: :rock, group: 'The Flower Kings')
+          Atlas::NodeAttributes::MeritOrder.new(
+            type: :rock,
+            group: 'The Flower Kings'
+          )
 
         expect(nodes[:mother][:merit_order]).to eq(
           type: :rock,
@@ -140,7 +143,7 @@ module Atlas
 
       it 'exports storage data as a hash' do
         mother.get(:model).storage =
-          Atlas::StorageDetails.new(volume: 1, decay: 0.5)
+          Atlas::NodeAttributes::Storage.new(volume: 1, decay: 0.5)
 
         expect(nodes[:mother][:storage]).to eq(
           volume: 1.0,

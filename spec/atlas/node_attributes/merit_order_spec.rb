@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Atlas::MeritOrderDetails do
+RSpec.describe Atlas::NodeAttributes::MeritOrder do
   let(:attrs) { {} }
 
   context 'when type=:flex' do

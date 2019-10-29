@@ -285,7 +285,7 @@ describe Node do
 
   describe 'fever' do
     let(:fever) do
-      FeverDetails.new(
+      NodeAttributes::Fever.new(
         efficiency_based_on: :electricity,
         efficiency_balanced_with: :ambient_heat
       )
@@ -330,7 +330,9 @@ describe Node do
     end
 
     context 'when the efficiency_balanced_with value is missing' do
-      let(:fever) { FeverDetails.new(efficiency_based_on: :electricity) }
+      let(:fever) do
+        NodeAttributes::Fever.new(efficiency_based_on: :electricity)
+      end
 
       it 'has an error' do
         expect(node.errors_on(:fever)).to include(
@@ -342,7 +344,7 @@ describe Node do
 
     describe 'alias_of' do
       context 'pointing at a non-existent node' do
-        let(:fever) { FeverDetails.new(alias_of: :no) }
+        let(:fever) { NodeAttributes::Fever.new(alias_of: :no) }
 
         it 'has an error' do
           expect(node.errors_on(:fever)).to include(
@@ -352,7 +354,7 @@ describe Node do
       end
 
       context 'pointing at a non-Fever node' do
-        let(:fever) { FeverDetails.new(alias_of: :my_residence) }
+        let(:fever) { NodeAttributes::Fever.new(alias_of: :my_residence) }
 
         it 'has an error' do
           expect(node.errors_on(:fever)).to include(
@@ -362,7 +364,9 @@ describe Node do
       end
 
       context 'pointing at a space heating node' do
-        let(:fever) { FeverDetails.new(alias_of: :fever_space_heat_producer) }
+        let(:fever) do
+          NodeAttributes::Fever.new(alias_of: :fever_space_heat_producer)
+        end
 
         it 'has an error' do
           expect(node.errors_on(:fever)).to include(
@@ -372,17 +376,22 @@ describe Node do
       end
 
       context 'pointing at a hot water node' do
-        let(:fever) { FeverDetails.new(alias_of: :fever_hot_water_producer) }
+        let(:fever) do
+          NodeAttributes::Fever.new(alias_of: :fever_hot_water_producer)
+        end
 
         it 'has no errors' do
           expect(node.errors_on(:fever)).to be_empty
         end
       end
-    end
+    end # alias_of
 
     describe 'capacity' do
       context 'on a "hybrid" node' do
-        let(:fever) { Atlas::FeverDetails.new(capacity: { electricity: 1.0 }) }
+        let(:fever) do
+          Atlas::NodeAttributes::Fever.new(capacity: { electricity: 1.0 })
+        end
+
         let(:node) { Atlas::Node.new(key: :abc_hybrid, fever: fever) }
 
         it 'permits the attribute having a value' do
@@ -397,7 +406,7 @@ describe Node do
         end
 
         it 'denies the attribute being nil' do
-          node.fever = FeverDetails.new
+          node.fever = NodeAttributes::Fever.new
 
           expect(node.errors_on(:fever))
             .to include('fever.capacity must be set on a hybrid node')
@@ -405,7 +414,10 @@ describe Node do
       end
 
       context 'on a non-variable-efficiency node' do
-        let(:fever) { Atlas::FeverDetails.new(capacity: { electricity: 1.0 }) }
+        let(:fever) do
+          Atlas::NodeAttributes::Fever.new(capacity: { electricity: 1.0 })
+        end
+
         let(:node) { Atlas::Node.new(key: :abc, fever: fever) }
 
         it 'denies the attribute having a value' do
@@ -417,7 +429,7 @@ describe Node do
 
       context 'when the variable-efficiency capacity is not specified' do
         let(:fever) do
-          Atlas::FeverDetails.new(
+          Atlas::NodeAttributes::Fever.new(
             capacity: { electricity: 1.0 },
             efficiency_based_on: :network_gas
           )
