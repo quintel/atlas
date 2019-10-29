@@ -38,7 +38,7 @@ module Atlas
         allow(eb).to receive(:cell).and_return(6)
 
         expect(eb.get('Residential','coal_and_peat')).
-          to eql(EnergyUnit.new(6, :tj).to_unit(:twh))
+          to eq(EnergyUnit.new(6, :tj).to_unit(:twh))
       end
 
       it 'raises an error when an unknown unit is requested' do

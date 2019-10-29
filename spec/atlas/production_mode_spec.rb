@@ -9,7 +9,7 @@ module Atlas
     end
 
     it 'uses static data' do
-      expect(mode.nodes.find(:foo).demand).to eql(50.0)
+      expect(mode.nodes.find(:foo).demand).to eq(50.0)
     end
 
     it 'retrieves edges' do

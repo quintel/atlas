@@ -10,12 +10,12 @@ module Atlas
 
     describe '#find' do
       it 'returns the document which matches the given key' do
-        expect(collection.find(:two)).to eql(node_two)
+        expect(collection.find(:two)).to eq(node_two)
       end
 
       it 'returns the document when there are similar entries' do
         collection.push(Node.new(key: :ona))
-        expect(collection.find(:one)).to eql(node_one)
+        expect(collection.find(:one)).to eq(node_one)
       end
 
       it 'raises an error when no document matches' do
@@ -28,7 +28,7 @@ module Atlas
 
     describe '#fetch' do
       it 'returns the first matching document' do
-        expect(collection.fetch(:nope, :two, :one)).to eql(node_two)
+        expect(collection.fetch(:nope, :two, :one)).to eq(node_two)
       end
 
       it 'raises an error when no document matches' do
@@ -39,7 +39,7 @@ module Atlas
 
     describe '#to_a' do
       it 'returns the documents as an array' do
-        expect(collection.to_a).to eql(raw)
+        expect(collection.to_a).to eq(raw)
       end
     end
 
@@ -48,7 +48,7 @@ module Atlas
         elements = []
         collection.each { |v| elements.push(v) }
 
-        expect(elements).to eql(raw)
+        expect(elements).to eq(raw)
       end
     end
 
@@ -56,7 +56,7 @@ module Atlas
       before { collection.find(:one) ; node_one.key = :new }
 
       it 'returns the document when given the old key' do
-        expect(collection.find(:one)).to eql(node_one)
+        expect(collection.find(:one)).to eq(node_one)
       end
 
       it 'does not return the document when given the new key' do
@@ -71,7 +71,7 @@ module Atlas
         end
 
         it 'does returns the document when given the new key' do
-          expect(refreshed.find(:new)).to eql(node_one)
+          expect(refreshed.find(:new)).to eq(node_one)
         end
       end
     end

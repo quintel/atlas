@@ -18,11 +18,11 @@ describe SomeDocument do
       end
 
       it 'sets the key (as a symbol)' do
-        expect(SomeDocument.new(key: 'key').key).to eql(:key)
+        expect(SomeDocument.new(key: 'key').key).to eq(:key)
       end
 
       it 'sets the key when the hash keys are strings' do
-        expect(SomeDocument.new('key' => 'key').key).to eql(:key)
+        expect(SomeDocument.new('key' => 'key').key).to eq(:key)
       end
 
       it 'sets no subdirectory' do
@@ -39,20 +39,20 @@ describe SomeDocument do
       it 'creates a new document' do
         some_document = SomeDocument.new(path: 'my_map1/new')
         expect(some_document.save!).to be(true)
-        expect(some_document.key).to eql(:new)
+        expect(some_document.key).to eq(:new)
       end
 
       it 'sets the key (as a symbol)' do
-        expect(SomeDocument.new(path: 'a/b/thing').key).to eql(:thing)
+        expect(SomeDocument.new(path: 'a/b/thing').key).to eq(:thing)
       end
 
       it 'sets the key when the hash keys are strings' do
-        expect(SomeDocument.new('path' => 'a/b/thing').key).to eql(:thing)
+        expect(SomeDocument.new('path' => 'a/b/thing').key).to eq(:thing)
       end
 
       it 'saves in that folder' do
         some_document = SomeDocument.new(path: 'my_map1/new')
-        expect(some_document.key).to eql(:new)
+        expect(some_document.key).to eq(:new)
         expect(some_document.path.to_s).to match /my_map1\/new/
       end
 
@@ -74,14 +74,14 @@ describe SomeDocument do
 
     it 'remembers them' do
       document = SomeDocument.new(key: 'a', queries: { foo: 'bar' })
-      expect(document.queries).to eql({ foo: 'bar' })
+      expect(document.queries).to eq({ foo: 'bar' })
     end
 
   end
 
   describe 'to_hash' do
     it 'is empty when no attributes have been set' do
-      expect(SomeDocument.new(key: 'a').to_hash).to eql({})
+      expect(SomeDocument.new(key: 'a').to_hash).to eq({})
     end
 
     it 'contains attributes set by the user' do
@@ -116,7 +116,7 @@ describe SomeDocument do
 
   describe "find" do
     it "should load a some_document from file" do
-      expect(some_document.key).to eql(:foo)
+      expect(some_document.key).to eq(:foo)
       expect(some_document.path.to_s).to include(some_document.key.to_s)
       expect(some_document.comments.size).to be > 0
       expect(some_document.comments).to include "MECE" #testing some words
@@ -127,12 +127,12 @@ describe SomeDocument do
 
     it "should find by Symbol" do
       some_document = Atlas::SomeDocument.find(:foo)
-      expect(some_document.key).to eql(:foo)
+      expect(some_document.key).to eq(:foo)
     end
 
     it "should find by String" do
       some_document = Atlas::SomeDocument.find('foo')
-      expect(some_document.key).to eql(:foo)
+      expect(some_document.key).to eq(:foo)
     end
 
     it "loads a document from a subfolder" do
@@ -254,7 +254,7 @@ describe SomeDocument do
 
   describe "key" do
     it "returns just the key part" do
-      expect(some_document.key).to eql(:foo)
+      expect(some_document.key).to eq(:foo)
     end
   end
 
@@ -288,12 +288,12 @@ describe SomeDocument do
       before    { doc.key = 'new' }
 
       it 'changes the document key' do
-        expect(doc.key).to eql(:new)
+        expect(doc.key).to eq(:new)
       end
 
       it 'puts the file at the DIRECTORY root' do
         expect(doc.path).
-          to eql(SomeDocument.directory.join('new.suffix'))
+          to eq(SomeDocument.directory.join('new.suffix'))
       end
     end
 
@@ -302,12 +302,12 @@ describe SomeDocument do
       before    { doc.key = 'new' }
 
       it 'changes the document key' do
-        expect(doc.key).to eql(:new)
+        expect(doc.key).to eq(:new)
       end
 
       it 'puts the file in the subdirectory' do
         expect(doc.path).
-          to eql(SomeDocument.directory.join('dir/new.suffix'))
+          to eq(SomeDocument.directory.join('dir/new.suffix'))
       end
     end
 
@@ -316,12 +316,12 @@ describe SomeDocument do
       before    { doc.key = 'new' }
 
       it 'changes the document key' do
-        expect(doc.key).to eql(:new)
+        expect(doc.key).to eq(:new)
       end
 
       it 'puts the file at the DIRECTORY root' do
         # Asserts that the suffix is not altered.
-        expect(doc.path).to eql(SomeDocument.directory.join('new.suffix'))
+        expect(doc.path).to eq(SomeDocument.directory.join('new.suffix'))
       end
     end
 
@@ -330,7 +330,7 @@ describe SomeDocument do
       before    { doc.key = 'new' }
 
       it 'changes the document key' do
-        expect(doc.key).to eql(:new)
+        expect(doc.key).to eq(:new)
       end
 
       it 'retains the subclass string in the filename' do
@@ -350,7 +350,7 @@ describe SomeDocument do
 
       it 'ignores new subclass prefixes' do
         document.path = 'def.final_document.ad'
-        expect(document.path).to eql(SomeDocument.directory.join('def.suffix'))
+        expect(document.path).to eq(SomeDocument.directory.join('def.suffix'))
       end
 
       it 'ignores new file extensions' do
@@ -472,7 +472,7 @@ describe SomeDocument do
   describe "path" do
     it "should change when the key has changed" do
       some_document.key = :total_co2_emitted
-      expect(some_document.key).to eql(:total_co2_emitted)
+      expect(some_document.key).to eq(:total_co2_emitted)
       expect(some_document.path.to_s).to include "total_co2_emitted"
     end
   end
@@ -679,12 +679,12 @@ describe SomeDocument do
     before { doc.key = 'pd' }
 
     it 'retains the extension and subclass' do
-      expect(doc.key).to eql(:pd)
+      expect(doc.key).to eq(:pd)
     end
 
     it 'retains the subclass suffix' do
       expect(doc.path.basename.to_s).
-        to eql([
+        to eq([
           doc.key,
           doc.class.subclass_suffix,
           doc.class::FILE_SUFFIX].join('.'))
@@ -727,15 +727,15 @@ describe SomeDocument do
     let(:node) { Node.new(key: 'f') }
 
     it 'is -1 when the node has an "earlier" key' do
-      expect(Node.new(key: 'a') <=> node).to eql(-1)
+      expect(Node.new(key: 'a') <=> node).to eq(-1)
     end
 
     it 'is 0 when the node has an equal key' do
-      expect(Node.new(key: 'f') <=> node).to eql(0)
+      expect(Node.new(key: 'f') <=> node).to eq(0)
     end
 
     it 'is 1 when the node has a "later" key' do
-      expect(Node.new(key: 'z') <=> node).to eql(1)
+      expect(Node.new(key: 'z') <=> node).to eq(1)
     end
   end
 

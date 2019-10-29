@@ -65,7 +65,7 @@ module Atlas
         query = "SUM(\n  1,\n  2\n)"
         p = HashToTextParser.new(message: "This\nis\nOK")
 
-        expect(p.to_text).to eql("- message =\n    This\n    is\n    OK")
+        expect(p.to_text).to eq("- message =\n    This\n    is\n    OK")
       end
 
       it 'parses attributes as a Set' do
@@ -96,7 +96,7 @@ module Atlas
         query = "SUM(\n  1,\n  2\n)"
         p = HashToTextParser.new({ queries: { demand: query } })
 
-        expect(p.to_text).to eql(<<-EOF.strip_heredoc.chomp("\n"))
+        expect(p.to_text).to eq(<<-EOF.strip_heredoc.chomp("\n"))
           ~ demand =
               SUM(
                 1,

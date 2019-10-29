@@ -5,7 +5,7 @@ module Atlas
     describe "#new" do
       it "sets key" do
         dataset = Dataset.new(key: :nl)
-        expect(dataset.key).to eql(:nl)
+        expect(dataset.key).to eq(:nl)
       end
     end
 
@@ -14,21 +14,21 @@ module Atlas
         dataset = Dataset.find(:nl)
         expect(dataset).to be_a(Dataset)
         expect(dataset).to be_a(Dataset::Full)
-        expect(dataset.key).to eql(:nl)
+        expect(dataset.key).to eq(:nl)
       end
 
       it "finds the UK dataset from file" do
         dataset = Dataset.find(:uk)
         expect(dataset).to be_a(Dataset)
         expect(dataset).to be_a(Dataset::Full)
-        expect(dataset.key).to eql(:uk)
+        expect(dataset.key).to eq(:uk)
       end
 
       it "finds the Groningen dataset from file" do
         dataset = Dataset.find(:groningen)
         expect(dataset).to be_a(Dataset)
         expect(dataset).to be_a(Dataset::Derived)
-        expect(dataset.key).to eql(:groningen)
+        expect(dataset.key).to eq(:groningen)
       end
     end
 

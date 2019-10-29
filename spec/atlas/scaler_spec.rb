@@ -99,12 +99,12 @@ module Atlas; describe Scaler do
 
     it 'has the same columns as original file' do
       expect(derived_dataset.time_curve(:woody_biomass).column_keys).
-        to eql(base_dataset.time_curve(:woody_biomass).column_keys)
+        to eq(base_dataset.time_curve(:woody_biomass).column_keys)
     end
 
     it 'has a row for each year in the original file' do
       expect(derived_dataset.time_curve(:woody_biomass).row_keys).
-        to eql(base_dataset.time_curve(:woody_biomass).row_keys)
+        to eq(base_dataset.time_curve(:woody_biomass).row_keys)
     end
   end
 end; end

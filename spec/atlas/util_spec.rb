@@ -9,11 +9,11 @@ module Atlas
         let(:hash) { { a: 1, b: 2 } }
 
         it 'adds the first value' do
-          expect(dotted[:a]).to eql(1)
+          expect(dotted[:a]).to eq(1)
         end
 
         it 'adds the second value' do
-          expect(dotted[:b]).to eql(2)
+          expect(dotted[:b]).to eq(2)
         end
       end
 
@@ -21,11 +21,11 @@ module Atlas
         let(:hash) { { a: 1, b: { c: 3 } } }
 
         it 'adds the first value' do
-          expect(dotted[:a]).to eql(1)
+          expect(dotted[:a]).to eq(1)
         end
 
         it 'adds the second value' do
-          expect(dotted['b.c']).to eql(3)
+          expect(dotted['b.c']).to eq(3)
         end
 
         it 'does not have a key for the first-level hash' do
@@ -41,11 +41,11 @@ module Atlas
         let(:hash) { { a: 1, b: { c: { d: 4 } } } }
 
         it 'adds the first value' do
-          expect(dotted[:a]).to eql(1)
+          expect(dotted[:a]).to eq(1)
         end
 
         it 'adds the second value' do
-          expect(dotted['b.c.d']).to eql(4)
+          expect(dotted['b.c.d']).to eq(4)
         end
 
         it 'does not have a key for the first-level hash' do
@@ -70,11 +70,11 @@ module Atlas
           let(:hash) { { a: 1, b: [2, 3] } }
 
           it 'adds the scalar value' do
-            expect(dotted[:a]).to eql(1)
+            expect(dotted[:a]).to eq(1)
           end
 
           it 'adds the array value' do
-            expect(dotted[:b]).to eql([2, 3])
+            expect(dotted[:b]).to eq([2, 3])
           end
         end
 

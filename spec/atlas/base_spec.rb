@@ -49,7 +49,7 @@ module Atlas ; describe Atlas do
   describe '#with_data_dir' do
     it 'temporarily changes the data directory' do
       Atlas.with_data_dir("#{ Atlas.root }/tmp") do
-        expect(Atlas.data_dir.to_s).to eql("#{ Atlas.root }/tmp")
+        expect(Atlas.data_dir.to_s).to eq("#{ Atlas.root }/tmp")
       end
     end
 
@@ -58,8 +58,8 @@ module Atlas ; describe Atlas do
 
       Atlas.with_data_dir('/tmp') {}
 
-      expect(Atlas.data_dir).to eql(originally)
-      expect(Atlas.data_dir).to_not eql('/tmp')
+      expect(Atlas.data_dir).to eq(originally)
+      expect(Atlas.data_dir).to_not eq('/tmp')
     end
 
     it 'restores the previous directory if an exception happens' do
@@ -71,8 +71,8 @@ module Atlas ; describe Atlas do
         raise exception unless exception.message == 'Nope'
       end
 
-      expect(Atlas.data_dir).to eql(originally)
-      expect(Atlas.data_dir).to_not eql('/tmp')
+      expect(Atlas.data_dir).to eq(originally)
+      expect(Atlas.data_dir).to_not eq('/tmp')
     end
   end
 

@@ -222,19 +222,19 @@ module Atlas
       end
 
       it 'updates the supplier node' do
-        expect(edge.supplier).to eql(:no)
+        expect(edge.supplier).to eq(:no)
       end
 
       it 'updates the consumer node' do
-        expect(edge.consumer).to eql(:yes)
+        expect(edge.consumer).to eq(:yes)
       end
 
       it 'updates the carrier' do
-        expect(edge.carrier).to eql(:electricity)
+        expect(edge.carrier).to eq(:electricity)
       end
 
       it 'updates the key' do
-        expect(edge.key).to eql(:'no-yes@electricity')
+        expect(edge.key).to eq(:'no-yes@electricity')
       end
     end
 
@@ -254,7 +254,7 @@ module Atlas
       end
 
       it 'sets the type' do
-        expect(edge.type).to eql(:share)
+        expect(edge.type).to eq(:share)
       end
 
       it 'sets the parent share' do

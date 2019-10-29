@@ -31,11 +31,11 @@ module Atlas
       before { slot.node = new_node }
 
       it 'sets the node' do
-        expect(slot.node).to eql(new_node)
+        expect(slot.node).to eq(new_node)
       end
 
       it 'changes the key' do
-        expect(slot.key).to eql(:'bar-@gas')
+        expect(slot.key).to eq(:'bar-@gas')
       end
     end
 
@@ -45,11 +45,11 @@ module Atlas
         before { slot.direction = :in }
 
         it 'sets the direction' do
-          expect(slot.direction).to eql(:in)
+          expect(slot.direction).to eq(:in)
         end
 
         it 'changes the key' do
-          expect(slot.key).to eql(:'foo+@gas')
+          expect(slot.key).to eq(:'foo+@gas')
         end
       end
 
@@ -58,11 +58,11 @@ module Atlas
         before { slot.direction = :out }
 
         it 'sets the direction' do
-          expect(slot.direction).to eql(:out)
+          expect(slot.direction).to eq(:out)
         end
 
         it 'changes the key' do
-          expect(slot.key).to eql(:'foo-@gas')
+          expect(slot.key).to eq(:'foo-@gas')
         end
       end
     end

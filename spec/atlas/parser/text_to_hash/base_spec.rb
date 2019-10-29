@@ -40,7 +40,7 @@ module Atlas::Parser::TextToHash
     describe '#comments' do
       it 'contains the comments' do
         base = Base.new(content)
-        expect(base.comments).to eql( "a\nb" )
+        expect(base.comments).to eq( "a\nb" )
       end
 
       it 'returns nil when there aint none' do
@@ -52,29 +52,29 @@ module Atlas::Parser::TextToHash
     describe '#properties' do
       it 'contains only fixed' do
         base = Base.new(content)
-        expect(base.properties).to eql({ unit: 'kg' })
+        expect(base.properties).to eq({ unit: 'kg' })
       end
 
       it 'supports numbers' do
         base = Base.new('- foo = 123.4')
-        expect(base.properties).to eql({ foo: 123.4 })
+        expect(base.properties).to eq({ foo: 123.4 })
       end
 
       it 'returns nil when there aint none' do
         base = Base.new("~ demand =\n  SUM(1,2)")
-        expect(base.properties).to eql({})
+        expect(base.properties).to eq({})
       end
     end
 
     describe '#dynamic_attributes' do
       it 'contains only dynamic ones' do
         base = Base.new(content)
-        expect(base.queries).to eql({ demand: 'SUM(1,2)' })
+        expect(base.queries).to eq({ demand: 'SUM(1,2)' })
       end
 
       it 'returns nil when there aint none' do
         base = Base.new("")
-        expect(base.queries).to eql({})
+        expect(base.queries).to eq({})
       end
     end
 

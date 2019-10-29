@@ -18,11 +18,11 @@ describe Node do
       end
 
       it 'sets the slot direction' do
-        expect(node.out_slots.first.direction).to eql(:out)
+        expect(node.out_slots.first.direction).to eq(:out)
       end
 
       it 'sets the slot node' do
-        expect(node.out_slots.first.node).to eql(node)
+        expect(node.out_slots.first.node).to eq(node)
       end
 
       it 'sets the slot share' do
@@ -30,7 +30,7 @@ describe Node do
       end
 
       it 'sets the slot carrier' do
-        expect(node.out_slots.first.carrier).to eql(:gas)
+        expect(node.out_slots.first.carrier).to eq(:gas)
       end
     end
 
@@ -54,11 +54,11 @@ describe Node do
       end
 
       it 'sets the gas slot direction' do
-        expect(node.out_slots.to_a.first.direction).to eql(:out)
+        expect(node.out_slots.to_a.first.direction).to eq(:out)
       end
 
       it 'sets the gas slot node' do
-        expect(node.out_slots.to_a.first.node).to eql(node)
+        expect(node.out_slots.to_a.first.node).to eq(node)
       end
 
       it 'sets the gas slot share' do
@@ -66,15 +66,15 @@ describe Node do
       end
 
       it 'sets the gas slot carrier' do
-        expect(node.out_slots.to_a.first.carrier).to eql(:gas)
+        expect(node.out_slots.to_a.first.carrier).to eq(:gas)
       end
 
       it 'sets the oil slot direction' do
-        expect(node.out_slots.to_a.last.direction).to eql(:out)
+        expect(node.out_slots.to_a.last.direction).to eq(:out)
       end
 
       it 'sets the oil slot node' do
-        expect(node.out_slots.to_a.last.node).to eql(node)
+        expect(node.out_slots.to_a.last.node).to eq(node)
       end
 
       it 'sets the oil slot share' do
@@ -82,7 +82,7 @@ describe Node do
       end
 
       it 'sets the oil slot carrier' do
-        expect(node.out_slots.to_a.last.carrier).to eql(:oil)
+        expect(node.out_slots.to_a.last.carrier).to eq(:oil)
       end
     end
 
@@ -110,8 +110,8 @@ describe Node do
 
         new_slot = node.out_slots.to_a.last
 
-        expect(new_slot.carrier).to eql(:oil)
-        expect(new_slot.share).to eql(0.6)
+        expect(new_slot.carrier).to eq(:oil)
+        expect(new_slot.share).to eq(0.6)
       end
     end
   end
@@ -131,11 +131,11 @@ describe Node do
       end
 
       it 'sets the slot direction' do
-        expect(node.in_slots.first.direction).to eql(:in)
+        expect(node.in_slots.first.direction).to eq(:in)
       end
 
       it 'sets the slot node' do
-        expect(node.in_slots.first.node).to eql(node)
+        expect(node.in_slots.first.node).to eq(node)
       end
 
       it 'sets the slot share' do
@@ -143,7 +143,7 @@ describe Node do
       end
 
       it 'sets the slot carrier' do
-        expect(node.in_slots.first.carrier).to eql(:gas)
+        expect(node.in_slots.first.carrier).to eq(:gas)
       end
     end
 
@@ -163,11 +163,11 @@ describe Node do
       end
 
       it 'sets the gas slot direction' do
-        expect(node.in_slots.to_a.first.direction).to eql(:in)
+        expect(node.in_slots.to_a.first.direction).to eq(:in)
       end
 
       it 'sets the gas slot node' do
-        expect(node.in_slots.to_a.first.node).to eql(node)
+        expect(node.in_slots.to_a.first.node).to eq(node)
       end
 
       it 'sets the gas slot share' do
@@ -175,15 +175,15 @@ describe Node do
       end
 
       it 'sets the gas slot carrier' do
-        expect(node.in_slots.to_a.first.carrier).to eql(:gas)
+        expect(node.in_slots.to_a.first.carrier).to eq(:gas)
       end
 
       it 'sets the oil slot direction' do
-        expect(node.in_slots.to_a.last.direction).to eql(:in)
+        expect(node.in_slots.to_a.last.direction).to eq(:in)
       end
 
       it 'sets the oil slot node' do
-        expect(node.in_slots.to_a.last.node).to eql(node)
+        expect(node.in_slots.to_a.last.node).to eq(node)
       end
 
       it 'sets the oil slot share' do
@@ -191,7 +191,7 @@ describe Node do
       end
 
       it 'sets the oil slot carrier' do
-        expect(node.in_slots.to_a.last.carrier).to eql(:oil)
+        expect(node.in_slots.to_a.last.carrier).to eq(:oil)
       end
     end
 
@@ -219,8 +219,8 @@ describe Node do
 
         new_slot = node.in_slots.to_a.last
 
-        expect(new_slot.carrier).to eql(:oil)
-        expect(new_slot.share).to eql(0.6)
+        expect(new_slot.carrier).to eq(:oil)
+        expect(new_slot.share).to eq(0.6)
       end
     end
   end
@@ -270,7 +270,7 @@ describe Node do
       node.max_demand = 'recursive'
       node.valid?
 
-      expect(node.max_demand).to eql('recursive')
+      expect(node.max_demand).to eq('recursive')
       expect(node.errors[:max_demand]).to be_empty
     end
 
@@ -278,7 +278,7 @@ describe Node do
       node.max_demand = :recursive
       node.valid?
 
-      expect(node.max_demand).to eql(:recursive)
+      expect(node.max_demand).to eq(:recursive)
       expect(node.errors[:max_demand]).to be_empty
     end
   end

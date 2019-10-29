@@ -16,7 +16,7 @@ module Atlas
 
         it 'sets the key on each node' do
           Node.all.each do |node|
-            expect(graph.node(node.key).key).to eql(node.key)
+            expect(graph.node(node.key).key).to eq(node.key)
           end
         end
 
@@ -54,7 +54,7 @@ module Atlas
           expect(foo_edges.first.get(:type)).to be_nil
           expect(bar_edges.first.get(:type)).to be_nil
           expect(bar_edges.last.get(:type)).to be_nil
-          expect(baz_edges.first.get(:type)).to eql(:overflow)
+          expect(baz_edges.first.get(:type)).to eq(:overflow)
         end
       end
     end
@@ -87,11 +87,11 @@ module Atlas
         end
 
         it 'sets the parent to Node(:parent)' do
-          expect(edge.from).to eql(t_parent)
+          expect(edge.from).to eq(t_parent)
         end
 
         it 'adds an outgoing edge from the parent' do
-          expect(t_parent.out_edges.to_a).to eql([edge])
+          expect(t_parent.out_edges.to_a).to eq([edge])
         end
 
         it 'sets the :reversed property to false' do
@@ -124,7 +124,7 @@ module Atlas
         end
 
         it 'adds an outgoing edge from the parent' do
-          expect(t_parent.out_edges.to_a).to eql([edge])
+          expect(t_parent.out_edges.to_a).to eq([edge])
         end
       end
 
@@ -138,7 +138,7 @@ module Atlas
           let(:edge) { t_node.in_edges.first }
 
           it 'sets the carrier (label) to coal' do
-            expect(edge.label).to eql(:coal)
+            expect(edge.label).to eq(:coal)
           end
         end
 
@@ -146,7 +146,7 @@ module Atlas
           let(:edge) { t_node.in_edges.to_a.last }
 
           it 'sets the carrier (label) to corn' do
-            expect(edge.label).to eql(:corn)
+            expect(edge.label).to eq(:corn)
           end
         end
       end

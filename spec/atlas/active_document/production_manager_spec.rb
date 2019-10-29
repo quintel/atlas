@@ -33,7 +33,7 @@ module Atlas::ActiveDocument
 
     it 'loads calculated slot data' do
       slot = production_node.out_slots.find { |n| n.carrier == :coal }
-      expect(slot.share).to eql(0.812)
+      expect(slot.share).to eq(0.812)
     end
 
     it 'loads edge data' do
@@ -43,8 +43,8 @@ module Atlas::ActiveDocument
       edge = ProductionManager.new(Atlas::Edge, data).get(:'foo-bar@coal')
 
       expect(edge.demand).to eq(20)
-      expect(edge.parent_share).to eql(0.385)
-      expect(edge.child_share).to eql(0.411)
+      expect(edge.parent_share).to eq(0.385)
+      expect(edge.child_share).to eq(0.411)
     end
 
     it 'disallows editing the document' do

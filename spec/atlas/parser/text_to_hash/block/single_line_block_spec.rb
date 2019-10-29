@@ -40,7 +40,7 @@ module Atlas
 
           it 'parses blanks' do
             block = SingleLineBlock.new([Line.new("- foo =")])
-            expect(block.value).to eql('')
+            expect(block.value).to eq('')
           end
 
         end

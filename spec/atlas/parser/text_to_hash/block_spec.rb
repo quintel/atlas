@@ -35,7 +35,7 @@ module Atlas
             allow(block).to receive(:key).and_return(:foo)
             allow(block).to receive(:value).and_return('bar!')
 
-            expect(block.to_hash).to eql({ foo: 'bar!' })
+            expect(block.to_hash).to eq({ foo: 'bar!' })
           end
         end
 
