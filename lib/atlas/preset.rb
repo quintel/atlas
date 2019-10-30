@@ -33,7 +33,8 @@ module Atlas
 
     validates_with FlexibilityOrderValidator,
       attribute: :flexibility_order,
-      if: -> { flexibility_order&.any? }
+      if: -> { flexibility_order&.any? },
+      in: -> { Array(Atlas::Config.read?('flexibility_order')) }
 
     private
 
