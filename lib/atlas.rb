@@ -70,6 +70,7 @@ require_relative 'atlas/runner/set_rubel_attributes'
 require_relative 'atlas/runner/set_slot_shares_from_efficiency'
 require_relative 'atlas/runner/zero_disabled_sectors'
 require_relative 'atlas/debug_runner'
+require_relative 'atlas/preset/flexibility_order_validator'
 require_relative 'atlas/preset/scaling'
 require_relative 'atlas/preset'
 

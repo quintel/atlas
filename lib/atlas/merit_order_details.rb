@@ -27,5 +27,10 @@ module Atlas
     validates :subtype,
       inclusion: %i[generic pseudo],
       if: ->(mod) { mod.type == :consumer }
+
+    validates_inclusion_of :group,
+      in: ->(_mod) { Array(Config.read?('flexibility_order')).map(&:to_sym) },
+      if: ->(mod) { mod.type == :flex },
+      message: 'is not a permitted flexibility order option'
   end
 end

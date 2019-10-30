@@ -17,7 +17,7 @@ module Atlas
     attribute :area_code,          String
     attribute :user_values,        Hash[Symbol => Float]
     attribute :scaling,            Scaling
-    attribute :flexibility_order,  Array[Symbol]
+    attribute :flexibility_order,  Array[String]
 
     validates :title,       presence: true
     validates :area_code,   presence: true
@@ -30,6 +30,10 @@ module Atlas
     validates_with PresetShareGroupTotalValidator,
       attribute: :user_values,
       if: -> { user_values && user_values.any? }
+
+    validates_with FlexibilityOrderValidator,
+      attribute: :flexibility_order,
+      if: -> { flexibility_order&.any? }
 
     private
 
