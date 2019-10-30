@@ -128,7 +128,7 @@ module Atlas
       end
 
       context 'when the order contains one of two valid values' do
-        let(:order) { Config.read('flexibility_order').first }
+        let(:order) { [Config.read('flexibility_order').first] }
 
         it 'has no errors' do
           expect(preset.errors_on(:flexibility_order)).to be_empty
