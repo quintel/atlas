@@ -8,9 +8,8 @@ module Atlas
       #
       # basename - The name of the config file, minus the ".yml" extension.
       def read(basename)
-        YAML.load_file(path_for_basename(basename))
-      rescue Errno::ENOENT
-        raise DocumentNotFoundError.new(clean_basename(basename), self)
+        read?(basename) ||
+          raise(ConfigNotFoundError, path_for_basename(basename))
       end
 
       # Internal: Reads a YAML config file from the ETSource config directory,

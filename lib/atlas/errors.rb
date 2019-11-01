@@ -97,6 +97,12 @@ module Atlas
     end
   end
 
+  ConfigNotFoundError =
+    error_class do |path|
+      "Could not find #{path.basename} in the ETSource config directory; " \
+      "expected file at: #{path}"
+    end
+
   ReadOnlyError = error_class do
     'Read-only documents may not be saved, updated, or deleted'
   end

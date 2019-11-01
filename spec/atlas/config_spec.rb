@@ -23,15 +23,15 @@ describe Atlas::Config do
     context 'when the file does not exist' do
       it 'throws an error' do
         expect { described_class.read('no') }.to raise_error(
-          Atlas::DocumentNotFoundError,
-          'Could not find a config with the key "no"'
+          Atlas::ConfigNotFoundError,
+          /Could not find no.yml in the ETSource config directory/
         )
       end
 
       it 'removes non-alphanumeric characters from the basename' do
         expect { described_class.read('no/file') }.to raise_error(
-          Atlas::DocumentNotFoundError,
-          'Could not find a config with the key "nofile"'
+          Atlas::ConfigNotFoundError,
+          /Could not find nofile.yml in the ETSource config directory/
         )
       end
     end
