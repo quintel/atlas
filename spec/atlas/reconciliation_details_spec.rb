@@ -31,6 +31,64 @@ RSpec.describe Atlas::ReconciliationDetails do
 
       expect(details.errors_on(:profile)).to include("can't be blank")
     end
+
+    it 'must not have an subordinate_to value' do
+      details.subordinate_to = :bar
+
+      expect(details.errors_on(:subordinate_to)).to include("must be blank")
+    end
+
+    it 'must not have an subordinate_input value' do
+      details.subordinate_input = 'electricity'
+
+      expect(details.errors_on(:subordinate_input))
+        .to include('must be blank')
+    end
+
+    it 'must not have an subordinate_output value' do
+      details.subordinate_output = :ueable_heat
+
+      expect(details.errors_on(:subordinate_output))
+        .to include('must be blank')
+    end
+  end
+
+  context 'with a consumer and subordinate attributes' do
+    let(:attrs) do
+      {
+        type: :consumer,
+        behavior: :subordinate,
+        subordinate_to: :bar,
+        subordinate_input: :electricity,
+        subordinate_output: :useable_heat,
+        profile: :abc
+      }
+    end
+
+    it 'is valid' do
+      expect(details).to be_valid
+    end
+
+    it 'must reference a valid node' do
+      details.subordinate_to = :invalid
+
+      expect(details.errors_on(:subordinate_to))
+        .to include('references a node which does not exist')
+    end
+
+    it 'must have an subordinate_input value' do
+      details.subordinate_input = nil
+
+      expect(details.errors_on(:subordinate_input))
+        .to include("can't be blank")
+    end
+
+    it 'must have an subordinate_output value' do
+      details.subordinate_output = nil
+
+      expect(details.errors_on(:subordinate_output))
+        .to include("can't be blank")
+    end
   end
 
   context 'with a type of :producer' do
@@ -43,6 +101,14 @@ RSpec.describe Atlas::ReconciliationDetails do
     it 'must have a profile' do
       details.profile = nil
       expect(details.errors_on(:profile)).to include("can't be blank")
+    end
+
+    context 'with a behavior of :subordinate' do
+      let(:attrs) { { type: :producer, behavior: :subordinate } }
+
+      it 'is not valid' do
+        expect(details).not_to be_valid
+      end
     end
   end
 
