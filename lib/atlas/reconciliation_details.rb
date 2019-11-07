@@ -14,6 +14,9 @@ module Atlas
       attribute :profile,  Symbol, writer: :public
       attribute :behavior, Symbol, writer: :public
 
+      # Set a custom carrier to be used for the calculation of demand.
+      attribute :demand_carrier, Symbol, writer: :public
+
       # Sets that the reconciliation of this node is affected by an input curve
       # on another "leader" node. The leader node key should be specified as the
       # value for "subordinate_to".
