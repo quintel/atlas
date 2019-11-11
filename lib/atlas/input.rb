@@ -35,6 +35,10 @@ module Atlas
     validates_presence_of :share_group, allow_nil: true,
       message: 'must be blank, or have a value of non-zero length'
 
+    validate :validate_enum_input
+
+    private
+
     # Internal: Asserts that a query is defined on the Input.
     #
     # A query may be omitted only if the input belongs to a share group and all
@@ -47,6 +51,12 @@ module Atlas
       end
     end
 
-    private :validate_query_within_group
-  end
-end
+    # Asserts that an input with permitted_values or type=enum has the necessary
+    # data.
+    def validate_enum_input
+      return if unit != 'enum' || !min_value_gql.blank?
+
+      errors.add(:min_value_gql, 'must not be blank when the unit is "enum"')
+    end
+  end # Input
+end # Atlas

@@ -95,5 +95,16 @@ module Atlas
       end
     end
 
-  end
-end
+    # Public: Loads the curve at the given `path` using Merit.
+    #
+    # Raises a Merit::MissingLoadProfileError if the file does not exist, or
+    # Atlas::MeritRequired if the Merit library has not been loaded.
+    #
+    # Returns a Merit::Curve.
+    def load_curve(path)
+      Merit::LoadProfile.load(path)
+    rescue NameError => e
+      raise(e.message.match(/Merit$/) ? MeritRequired : ex)
+    end
+  end # Util
+end # Atlas
