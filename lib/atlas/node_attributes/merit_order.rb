@@ -2,6 +2,8 @@
 
 module Atlas
   module NodeAttributes
+    # Contains attributes allowing the node to participate in a merit order
+    # calculation in ETEngine.
     class MeritOrder
       include ValueObject
       include ActiveModel::Validations
