@@ -22,15 +22,10 @@ module Atlas
       # value for "subordinate_to".
       attribute :subordinate_to, Symbol, writer: :public
 
-      # The input carrier on the leader node. This will be used to fetch the
-      # input curve and conversion.
-      attribute :subordinate_input, Symbol, writer: :public
-
       # The output carrier on both this node and the leader. This will be used
-      # to convert the leader input curve to something which may be subtracted
-      # from the reconciliation demand curve. This attribute is optional, and if
-      # omitted, ETEngine will try to determine the carrier itself.
-      attribute :subordinate_output, Symbol, writer: :public
+      # to fetch the output curve from the leader and to fetch the output
+      # conversion on the subordinate.
+      attribute :subordinate_to_output, Symbol, writer: :public
     end
 
     validates :type, inclusion: %i[consumer producer storage]
@@ -46,15 +41,13 @@ module Atlas
 
     validate :validate_subordinate_behavior
 
-    validates :subordinate_input, presence: true, if: -> { subordinate_to }
-    validates :subordinate_output, presence: true, if: -> { subordinate_to }
+    validates :subordinate_to_output, presence: true, if: :subordinate_to
 
     # When the node is not a subordinate...
     validates :subordinate_to,
       absence: true, if: -> { behavior != :subordinate }
 
-    validates :subordinate_input, absence: true, unless: :subordinate_to
-    validates :subordinate_output, absence: true, unless: :subordinate_to
+    validates :subordinate_to_output, absence: true, unless: :subordinate_to
 
     def validate_subordinate_behavior
       if type != :consumer && behavior == :subordinate

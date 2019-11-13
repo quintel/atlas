@@ -38,17 +38,10 @@ RSpec.describe Atlas::ReconciliationDetails do
       expect(details.errors_on(:subordinate_to)).to include("must be blank")
     end
 
-    it 'must not have an subordinate_input value' do
-      details.subordinate_input = 'electricity'
+    it 'must not have an subordinate_to_output value' do
+      details.subordinate_to_output = :ueable_heat
 
-      expect(details.errors_on(:subordinate_input))
-        .to include('must be blank')
-    end
-
-    it 'must not have an subordinate_output value' do
-      details.subordinate_output = :ueable_heat
-
-      expect(details.errors_on(:subordinate_output))
+      expect(details.errors_on(:subordinate_to_output))
         .to include('must be blank')
     end
   end
@@ -59,8 +52,7 @@ RSpec.describe Atlas::ReconciliationDetails do
         type: :consumer,
         behavior: :subordinate,
         subordinate_to: :bar,
-        subordinate_input: :electricity,
-        subordinate_output: :useable_heat,
+        subordinate_to_output: :useable_heat,
         profile: :abc
       }
     end
@@ -76,17 +68,10 @@ RSpec.describe Atlas::ReconciliationDetails do
         .to include('references a node which does not exist')
     end
 
-    it 'must have an subordinate_input value' do
-      details.subordinate_input = nil
+    it 'must have an subordinate_to_output value' do
+      details.subordinate_to_output = nil
 
-      expect(details.errors_on(:subordinate_input))
-        .to include("can't be blank")
-    end
-
-    it 'must have an subordinate_output value' do
-      details.subordinate_output = nil
-
-      expect(details.errors_on(:subordinate_output))
+      expect(details.errors_on(:subordinate_to_output))
         .to include("can't be blank")
     end
   end
