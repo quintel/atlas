@@ -3,7 +3,7 @@
 module Atlas
   # Asserts that the named attribute contains only values named in the
   # flexibility order configuration file.
-  class FlexibilityOrderValidator < ActiveModel::Validator
+  class UserSortableValidator < ActiveModel::Validator
     def validate(record)
       validate_unique(record)
       validate_allowed(record)
@@ -18,7 +18,7 @@ module Atlas
 
       record.errors.add(
         options[:attribute],
-        'contains a flexibility option more than once'
+        'contains an option more than once'
       )
     end
 
@@ -31,7 +31,7 @@ module Atlas
 
       record.errors.add(
         options[:attribute],
-        "contains unknown flexibility options: #{unknown.join(', ')}"
+        "contains unknown options: #{unknown.join(', ')}"
       )
     end
 

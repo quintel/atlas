@@ -18,6 +18,7 @@ module Atlas
     attribute :user_values,        Hash[Symbol => Float]
     attribute :scaling,            Scaling
     attribute :flexibility_order,  Array[String]
+    attribute :heat_network_order, Array[String]
 
     validates :title,       presence: true
     validates :area_code,   presence: true
@@ -31,10 +32,15 @@ module Atlas
       attribute: :user_values,
       if: -> { user_values && user_values.any? }
 
-    validates_with FlexibilityOrderValidator,
+    validates_with UserSortableValidator,
       attribute: :flexibility_order,
       if: -> { flexibility_order&.any? },
       in: -> { Array(Atlas::Config.read?('flexibility_order')) }
+
+    validates_with UserSortableValidator,
+      attribute: :heat_network_order,
+      if: -> { heat_network_order&.any? },
+      in: -> { Array(Atlas::Config.read?('heat_network_order')) }
 
     private
 

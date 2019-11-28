@@ -161,7 +161,7 @@ module Atlas
 
         it 'has an error' do
           expect(preset.errors_on(:flexibility_order)).to include(
-            'contains a flexibility option more than once'
+            'contains an option more than once'
           )
         end
       end
@@ -171,7 +171,7 @@ module Atlas
 
         it 'has an error' do
           expect(preset.errors_on(:flexibility_order)).to include(
-            'contains unknown flexibility options: invalid'
+            'contains unknown options: invalid'
           )
         end
       end
