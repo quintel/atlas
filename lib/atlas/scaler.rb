@@ -9,11 +9,12 @@ module Atlas
       real_estate
     ].freeze
 
-    def initialize(base_dataset_key, derived_dataset_name, number_of_residences, base_value = nil)
+    def initialize(base_dataset_key, derived_dataset_name, number_of_residences, base_value = nil, time_curves_to_zero: false)
       @base_dataset         = Dataset::Full.find(base_dataset_key)
       @derived_dataset_name = derived_dataset_name
       @number_of_residences = number_of_residences
       @base_value           = base_value || @base_dataset.number_of_residences
+      @time_curves_to_zero  = time_curves_to_zero
     end
 
     def create_scaled_dataset
@@ -22,7 +23,7 @@ module Atlas
         AreaAttributesScaler.call(@base_dataset, @derived_dataset.scaling.factor)
       @derived_dataset.save!
 
-      TimeCurveScaler.call(@base_dataset, @derived_dataset)
+      TimeCurveScaler.call(@base_dataset, @derived_dataset, @time_curves_to_zero)
 
       create_empty_graph_values_file
       symlink_etengine_data_files
