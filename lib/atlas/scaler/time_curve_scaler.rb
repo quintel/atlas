@@ -14,10 +14,10 @@ module Atlas
 
     private_class_method :new
 
-    def initialize(base_dataset, derived_dataset)
+    def initialize(base_dataset, derived_dataset, set_to_zero = false)
       @base_dataset    = base_dataset
       @derived_dataset = derived_dataset
-      @scaling_factor  = derived_dataset.scaling.factor
+      @scaling_factor  = set_to_zero ? 0 : derived_dataset.scaling.factor
     end
 
     # Public: Scales the curves and saves them to new csv files
