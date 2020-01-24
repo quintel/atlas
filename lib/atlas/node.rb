@@ -22,6 +22,7 @@ module Atlas
     attribute :network_gas,          NodeAttributes::Reconciliation
     attribute :heat_network,         NodeAttributes::MeritOrder
     attribute :graph_methods,        Array[String]
+    attribute :waste_outputs,        Array[Symbol]
 
     alias_method :sector,  :ns
     alias_method :sector=, :ns=
@@ -97,6 +98,7 @@ module Atlas
     validates_with Atlas::Node::FeverValidator
 
     validate :validate_slots
+    validate :validate_waste_outputs
 
     # ------------------------------------------------------------------------
 
@@ -178,6 +180,27 @@ module Atlas
 
       out_slots.reject(&:valid?).each do |slot|
         slot.errors.full_messages.each { |msg| errors.add(:output, msg) }
+      end
+    end
+
+    # Internal: Asserts that the output carriers named in `waste_outputs` exist
+    # as an output.
+    #
+    # Returns nothing.
+    def validate_waste_outputs
+      return if waste_outputs.empty?
+
+      valid_carriers = out_slots.map(&:carrier)
+
+      waste_outputs.each do |carrier_key|
+        if carrier_key == :loss
+          errors.add(:waste_outputs, 'must not include loss')
+        elsif !valid_carriers.include?(carrier_key)
+          errors.add(
+            :waste_outputs,
+            "includes a non-existent output carrier: #{carrier_key}"
+          )
+        end
       end
     end
 

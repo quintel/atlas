@@ -445,6 +445,63 @@ describe Node do
     end
   end
 
-end
+  describe 'waste_outputs' do
+    context 'when the node has an output slot of the correct type' do
+      let(:node) do
+        Atlas::Node.new(
+          output: { electricity: 1.0 },
+          waste_outputs: [:electricity]
+        )
+      end
 
+      it 'has no error on waste_outputs' do
+        expect(node.errors_on(:waste_outputs)).to be_blank
+      end
+    end
+
+    context 'when the node has no output slot of the correct type' do
+      let(:node) do
+        Atlas::Node.new(
+          output: { gas: 1.0 },
+          waste_outputs: [:electricity]
+        )
+      end
+
+      it 'has an error on waste_outputs' do
+        expect(node.errors_on(:waste_outputs))
+          .to include('includes a non-existent output carrier: electricity')
+      end
+    end
+
+    context 'when loss is used as a waste_output' do
+      let(:node) do
+        Atlas::Node.new(
+          output: { electricity: 0.9, loss: 0.1 },
+          waste_outputs: [:loss]
+        )
+      end
+
+      it 'has an error on waste_outputs' do
+        expect(node.errors_on(:waste_outputs))
+          .to include('must not include loss')
+      end
+    end
+
+    context 'when the value is empty' do
+      let(:node) { Atlas::Node.new(waste_outputs: []) }
+
+      it 'has no error on waste_outputs' do
+        expect(node.errors_on(:waste_outputs)).to be_blank
+      end
+    end
+
+    context 'when the value is nil' do
+      let(:node) { Atlas::Node.new(waste_outputs: nil) }
+
+      it 'has no error on waste_outputs' do
+        expect(node.errors_on(:waste_outputs)).to be_blank
+      end
+    end
+  end
+end
 end
