@@ -8,7 +8,7 @@ end
 gemspec
 
 gem 'rubel',    ref: 'ad3d44e', github: 'quintel/rubel'
-gem 'refinery', ref: '316c8b1', github: 'quintel/refinery'
+gem 'refinery', ref: 'e3e3ba8', github: 'quintel/refinery'
 
 group :development do
   gem 'httparty'
