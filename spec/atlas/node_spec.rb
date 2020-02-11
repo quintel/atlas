@@ -46,6 +46,18 @@ describe Node do
       end
     end
 
+    context 'when creating an "etengine_dynamic" slot' do
+      it 'creates a Slot::Elastic when the share is :etengine_dynamic' do
+        node = Node.new(key: :a, output: { gas: :etengine_dynamic })
+        expect(node.out_slots.first).to be_a(Slot::Dynamic)
+      end
+
+      it 'creates a Slot::Elastic when the share is "elastic"' do
+        node = Node.new(key: :a, output: { gas: 'etengine_dynamic' })
+        expect(node.out_slots.first).to be_a(Slot::Dynamic)
+      end
+    end
+
     context 'when the node has gas and oil "output" pairs' do
       let(:node) { Node.new(key: :a, output: { gas: 0.3, oil: 0.7 }) }
 

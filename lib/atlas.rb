@@ -101,6 +101,7 @@ require_relative 'atlas/node/final_demand'
 require_relative 'atlas/node/stat'
 
 require_relative 'atlas/slot'
+require_relative 'atlas/slot/dynamic'
 require_relative 'atlas/slot/elastic'
 require_relative 'atlas/slot/carrier_efficient'
 

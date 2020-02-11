@@ -46,15 +46,16 @@ module Atlas
 
       attributes = { node: node, direction: direction, carrier: carrier }
 
-      if direction == :in
-        # No special behaviour for input slots.
-        Slot.new(attributes)
-      elsif Slot::Elastic.elastic?(node.output[carrier])
-        # Elastic slots automatically fill whatever share isn't filled by the
-        # other output slots. Commonly used for loss.
+      # No special behaviour for input slots.
+      return Slot.new(attributes) if direction == :in
+
+      share = node.output[carrier]
+
+      if Slot::Elastic.elastic?(share)
         Slot::Elastic.new(attributes)
-      elsif node.output[carrier].is_a?(Hash)
-        # Carrier efficient slot; share depends on the proportion of inputs.
+      elsif Slot::Dynamic.dynamic?(share)
+        Slot::Dynamic.new(attributes)
+      elsif share.is_a?(Hash)
         Slot::CarrierEfficient.new(attributes)
       else
         Slot.new(attributes)
