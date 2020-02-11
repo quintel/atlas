@@ -4,6 +4,44 @@ module Atlas
   describe Slot do
     let(:node) { Node.new(key: :foo) }
 
+    describe '#share' do
+      context 'when the slot is an output' do
+        let(:node) do
+          Node.new(
+            key: :foo,
+            input: { electricity: 0.25 },
+            output: { electricity: 0.5 }
+          )
+        end
+
+        let(:slot) do
+          node.out_slots.detect { |slot| slot.carrier == :electricity }
+        end
+
+        it 'is determined by the Node output attribute' do
+          expect(slot.share).to eq(0.5)
+        end
+      end
+
+      context 'when the slot is an input' do
+        let(:node) do
+          Node.new(
+            key: :foo,
+            input: { electricity: 0.25 },
+            output: { electricity: 0.5 }
+          )
+        end
+
+        let(:slot) do
+          node.in_slots.detect { |slot| slot.carrier == :electricity }
+        end
+
+        it 'is determined by the Node input attribute' do
+          expect(slot.share).to eq(0.25)
+        end
+      end
+    end
+
     describe 'Creating a input slot' do
       let(:slot) { Slot.new(node: node, direction: :in, carrier: :gas) }
 
