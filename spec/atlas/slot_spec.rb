@@ -39,6 +39,20 @@ module Atlas
         it 'is determined by the Node input attribute' do
           expect(slot.share).to eq(0.25)
         end
+
+        it 'must have a numeric share' do
+          node.input[:electricity] = :elastic
+          slot.valid?
+
+          expect(slot.errors_on(:share)).to include('is not a number')
+        end
+
+        it 'may have a nil share' do
+          node.input[:electricity] = nil
+          slot.valid?
+
+          expect(slot.errors_on(:share)).not_to include('is not a number')
+        end
       end
     end
 

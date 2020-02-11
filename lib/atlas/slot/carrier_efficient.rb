@@ -35,7 +35,7 @@ module Atlas
       # Returns a numeric.
       def share
         node.in_slots.map do |slot|
-          slot.share * node.output[carrier][slot.carrier]
+          slot.share * node.output[carrier].fetch(slot.carrier, 0.0)
         end.sum
       end
 

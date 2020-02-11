@@ -10,6 +10,11 @@ describe Atlas::Slot::Elastic do
     expect(slot.share).to be_nil
   end
 
+  it 'has no errors on share' do
+    slot.valid?
+    expect(slot.errors_on(:share)).not_to include('is not a number')
+  end
+
   it 'is a Slot::Dynamic' do
     expect(slot).to be_a(described_class)
   end

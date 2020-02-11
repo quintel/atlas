@@ -12,6 +12,8 @@ module Atlas
     attribute :direction, Symbol
     attribute :carrier,   Symbol
 
+    validates :share, numericality: true, allow_nil: true
+
     # Public: A human-readable version of the Slot for debugging.
     #
     # Returns a string.
