@@ -147,14 +147,6 @@ describe Node do
       end
     end
 
-    context 'when creating an "elastic" slot' do
-      let(:node) { Node.new(key: :a, input: { gas: :elastic }) }
-
-      it 'sets no share on the slot' do
-        expect(node.in_slots.first.share).to be_nil
-      end
-    end
-
     context 'when the node has gas and oil "input" pairs' do
       let(:node) { Node.new(key: :a, input: { gas: 0.3, oil: 0.7 }) }
 

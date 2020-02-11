@@ -85,8 +85,7 @@ module Atlas
     #
     # Returns a numeric.
     def share
-      share = (in? ? node.input[carrier] : node.output[carrier])
-      share == :elastic ? nil : share
+      in? ? node.input[carrier] : node.output[carrier]
     end
 
     # Public: The Rubel query which will calculate the share of the slot, if
