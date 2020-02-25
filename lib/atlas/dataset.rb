@@ -21,7 +21,6 @@ module Atlas
 
     attribute :has_agriculture,          Boolean, default: true
     attribute :has_buildings,            Boolean, default: true
-    attribute :has_climate,              Boolean, default: false
     attribute :has_coastline,            Boolean, default: true
     attribute :has_cold_network,         Boolean, default: false
     attribute :has_electricity_storage,  Boolean, default: true
@@ -132,7 +131,29 @@ module Atlas
       :heat_demand_reduction_high_insulation_semi_detached_house,
       :heat_demand_reduction_high_insulation_terraced_house,
       :heat_demand_reduction_high_insulation_apartments,
-      :heat_demand_reduction_high_insulation_buildings
+      :heat_demand_reduction_high_insulation_buildings,
+      :heat_share_of_apartments_with_block_heating,
+      :heat_households_indoor_pipelines_investment_costs_with_block_heating_eur,
+      :heat_households_indoor_pipelines_investment_costs_without_block_heating_eur,
+      :heat_buildings_indoor_investment_costs_eur_per_kw,
+      :heat_buildings_heat_meter_investment_costs_eur_per_kw,
+      :heat_buildings_heat_meter_investment_costs_eur_per_connection,
+      :heat_exchanger_station_investment_costs_eur_per_kw,
+      :heat_sub_station_investment_costs_eur_per_kw,
+      :heat_distribution_pipelines_investment_costs_eur_per_meter,
+      :heat_length_of_distribution_pipelines_in_meter_per_residence_object_first_bracket,
+      :heat_length_of_distribution_pipelines_in_meter_per_residence_object_second_bracket,
+      :heat_length_of_distribution_pipelines_in_meter_per_residence_object_third_bracket,
+      :heat_length_of_distribution_pipelines_in_meter_per_residence_object_fourth_bracket,
+      :heat_length_of_distribution_pipelines_in_meter_per_residence_object_fifth_bracket,
+      :heat_length_of_connection_pipelines_in_meter_per_residence_first_bracket,
+      :heat_length_of_connection_pipelines_in_meter_per_residence_second_bracket,
+      :heat_length_of_connection_pipelines_in_meter_per_residence_third_bracket,
+      :heat_length_of_connection_pipelines_in_meter_per_residence_fourth_bracket,
+      :heat_length_of_connection_pipelines_in_meter_per_residence_fifth_bracket,
+      :heat_primary_pipelines_investment_costs_per_kw,
+      :heat_yearly_indoor_infrastructure_maintenance_costs_factor,
+      :heat_yearly_outdoor_infrastructure_maintenance_costs_factor
     ].each do |name|
       attribute name, Float
     end
