@@ -34,6 +34,9 @@ module Atlas
       def delegate
         super if self.class.attribute_set[:delegate]
       end
+
+      # Electricity merit order attribute: unused in other Merit calculations.
+      def production_curtailment; end
     end
   end
 end

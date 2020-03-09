@@ -22,9 +22,17 @@ module Atlas
         # (such as capacity) will be taken from the named delegate instead of
         # this node.
         attribute :delegate, Symbol
+
+        # Sets a percentage of production load to be curtailed. For example, if
+        # this is set to 0.2, the top 20% of the profile will be removed.
+        attribute :production_curtailment, Float
       end
 
       validates :level, inclusion: %i[lv mv hv omit]
+
+      validates :production_curtailment, absence: true, if: (lambda do |mo|
+        mo.type != :producer || !%i[must_run volatile].include?(mo.subtype)
+      end)
     end
   end
 end

@@ -57,4 +57,10 @@ RSpec.describe Atlas::NodeAttributes::MeritOrder do
       expect(described_class.new(delegate: :hi).delegate).to be_nil
     end
   end
+
+  describe '#production_curtailment' do
+    it 'returns nil' do
+      expect(described_class.new.production_curtailment).to be_nil
+    end
+  end
 end
