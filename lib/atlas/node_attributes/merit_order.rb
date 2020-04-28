@@ -12,6 +12,9 @@ module Atlas
         attribute :type,    Symbol
         attribute :subtype, Symbol, default: :generic
         attribute :group,   Symbol
+
+        attribute :output_capacity_from_demand_of, Symbol
+        attribute :output_capacity_from_demand_share, Float
       end
 
       validates :type, inclusion: %i[consumer flex producer]
@@ -30,6 +33,14 @@ module Atlas
         in: ->(_mod) { Array(Config.read?('flexibility_order')).map(&:to_sym) },
         if: ->(mod) { mod.type == :flex },
         message: 'is not a permitted flexibility order option'
+
+      validates_absence_of :output_capacity_from_demand_of,
+        unless: ->(mod) { mod.subtype == :storage },
+        message: 'must be blank when subtype is not storage'
+
+      validates_absence_of :output_capacity_from_demand_share,
+        unless: ->(mod) { mod.subtype == :storage },
+        message: 'must be blank when subtype is not storage'
 
       def delegate
         super if self.class.attribute_set[:delegate]

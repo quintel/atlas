@@ -63,4 +63,48 @@ RSpec.describe Atlas::NodeAttributes::MeritOrder do
       expect(described_class.new.production_curtailment).to be_nil
     end
   end
+
+  describe '#output_capacity_from_demand_of' do
+    it 'is permitted when the subtype is :storage' do
+      mod = described_class.new(
+        output_capacity_from_demand_of: :hi,
+        subtype: :storage
+      )
+
+      expect(mod.errors_on(:output_capacity_from_demand_of))
+        .not_to include('must be blank when subtype is not storage')
+    end
+
+    it 'is not permitted when the subtype is not :storage' do
+      mod = described_class.new(
+        output_capacity_from_demand_of: :hi,
+        subtype: :generic
+      )
+
+      expect(mod.errors_on(:output_capacity_from_demand_of))
+        .to include('must be blank when subtype is not storage')
+    end
+  end
+
+  describe '#output_capacity_from_demand_share' do
+    it 'is permitted when the subtype is :storage' do
+      mod = described_class.new(
+        output_capacity_from_demand_share: :hi,
+        subtype: :storage
+      )
+
+      expect(mod.errors_on(:output_capacity_from_demand_share))
+        .not_to include('must be blank when subtype is not storage')
+    end
+
+    it 'is not permitted when the subtype is not :storage' do
+      mod = described_class.new(
+        output_capacity_from_demand_share: :hi,
+        subtype: :generic
+      )
+
+      expect(mod.errors_on(:output_capacity_from_demand_share))
+        .to include('must be blank when subtype is not storage')
+    end
+  end
 end
