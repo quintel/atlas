@@ -82,13 +82,6 @@ module Atlas
     attribute :electrical_efficiency_when_using_coal, Float
     attribute :electrical_efficiency_when_using_wood_pellets, Float
 
-    # The amount of the storage volume which may not be used for load
-    # balancing (such as the amount of energy which must be present in an
-    # electric vehicle battery so that the owner may go driving)
-    #
-    # TODO Move to StorageDetails as soon as ETE has better support for nested
-    #      attributes.
-    attribute :reserved_fraction, Float
     attribute :input_efficiency,  Float
     attribute :output_efficiency, Float
 
