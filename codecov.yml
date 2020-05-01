@@ -1,0 +1,6 @@
+coverage:
+  status:
+    project:
+      default:
+        # Default is 0% which wrongly fails some commits.
+        threshold: 0.1%
