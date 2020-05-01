@@ -44,6 +44,10 @@ module Atlas
         key:            @derived_dataset_name,
         area:           @derived_dataset_name,
         base_dataset:   @base_dataset.area,
+        enabled: {
+          etmodel:      true,
+          etengine:     true
+        },
         scaling: {
           value:          @number_of_residences,
           base_value:     @base_value,
