@@ -12,6 +12,7 @@ module Atlas
       number_of_units
       input
       output
+      full_load_hours
     ).freeze
 
     attr_accessor :values
