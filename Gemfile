@@ -13,6 +13,10 @@ gem 'refinery', ref: '72eacf8', github: 'quintel/refinery'
 group :development do
   gem 'httparty'
   gem 'osmosis', github: 'quintel/osmosis', require: false
+
+  gem 'rubocop', '~> 0.85.0', require: false
+  gem 'rubocop-performance',  require: false
+  gem 'rubocop-rspec',        require: false
 end
 
 group :test do
