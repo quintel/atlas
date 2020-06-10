@@ -26,6 +26,10 @@ module Atlas
         # Sets a percentage of production load to be curtailed. For example, if
         # this is set to 0.2, the top 20% of the profile will be removed.
         attribute :production_curtailment, Float
+
+        # Used only on price-sensitive demands; controls whether to use
+        # dispatchables when meeting the demand of the participant.
+        attribute :satisfy_with_dispatchables, Boolean, writer: :public
       end
 
       validates :level, inclusion: %i[lv mv hv omit]
@@ -33,6 +37,13 @@ module Atlas
       validates :production_curtailment, absence: true, if: (lambda do |mo|
         mo.type != :producer || !%i[must_run volatile].include?(mo.subtype)
       end)
+
+      validates :satisfy_with_dispatchables,
+        exclusion: {
+          in: [true, false],
+          message: 'is only allowed when type=:flex and subtype=:export'
+        },
+        unless: ->(mo) { mo.type == :flex && mo.subtype == :export }
     end
   end
 end

@@ -95,4 +95,60 @@ describe Atlas::NodeAttributes::ElectricityMeritOrder do
       end
     end
   end
+
+  describe '#satisfy_with_dispatchables' do
+    context 'when type=:consumer' do
+      let(:mo) do
+        described_class.new(type: :consumer)
+      end
+
+      it 'may be blank' do
+        expect(mo.errors_on(:satisfy_with_dispatchables)).to be_blank
+      end
+
+      it 'must not have a value' do
+        mo.satisfy_with_dispatchables = false
+
+        expect(mo.errors_on(:satisfy_with_dispatchables))
+          .to include('is only allowed when type=:flex and subtype=:export')
+      end
+    end
+
+    context 'when type=:flex and subtype=:storage' do
+      let(:mo) do
+        described_class.new(type: :flex, subtype: :storage)
+      end
+
+      it 'may be blank' do
+        expect(mo.errors_on(:satisfy_with_dispatchables)).to be_blank
+      end
+
+      it 'must not have a value' do
+        mo.satisfy_with_dispatchables = true
+
+        expect(mo.errors_on(:satisfy_with_dispatchables))
+          .to include('is only allowed when type=:flex and subtype=:export')
+      end
+    end
+
+    context 'when type=:flex and subtype=:export' do
+      let(:mo) do
+        described_class.new(type: :flex, subtype: :export)
+      end
+
+      it 'may be blank' do
+        expect(mo.errors_on(:satisfy_with_dispatchables)).to be_blank
+      end
+
+      it 'may be true' do
+        mo.satisfy_with_dispatchables = true
+        expect(mo.errors_on(:satisfy_with_dispatchables)).to be_blank
+      end
+
+      it 'may be false' do
+        mo.satisfy_with_dispatchables = false
+        expect(mo.errors_on(:satisfy_with_dispatchables)).to be_blank
+      end
+    end
+  end
 end
