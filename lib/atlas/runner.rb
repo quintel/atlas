@@ -47,7 +47,7 @@ module Atlas
     #
     # Returns an Atlas::Runtime.
     def runtime
-      @runtime ||= Runtime.new(precomputed_graph? ? dataset.parent : dataset, graph)
+      @runtime ||= Runtime.new(dataset, graph)
     end
 
     def graph

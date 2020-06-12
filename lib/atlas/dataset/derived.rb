@@ -6,6 +6,17 @@ module Atlas
     attribute :geo_id,       String
     attribute :uses_deprecated_initializer_inputs, Boolean, default: false
 
+    # Delegate any method which might be called in `Runner` to the parent dataset.
+    delegate :central_producers, to: :parent
+    delegate :demands, to: :parent
+    delegate :efficiencies, to: :parent
+    delegate :energy_balance, to: :parent
+    delegate :fce, to: :parent
+    delegate :insulation_costs, to: :parent
+    delegate :parent_values, to: :parent
+    delegate :primary_production, to: :parent
+    delegate :shares, to: :parent
+
     validates :scaling, presence: true
 
     validate :validate_presence_of_base_dataset
