@@ -40,7 +40,7 @@ module Atlas
     #
     # Returns an object.
     def AREA(property)
-      dataset.send(property)
+      dataset.public_send(property)
     end
 
     # Public: Retrieves a share value identified by the given key.
