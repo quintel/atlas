@@ -2,6 +2,8 @@ module Atlas
   class SomeDocument
     include ActiveDocument
 
+    directory_name 'active_document'
+
     attribute :comments, String
     attribute :unit,     String
     attribute :query,    String
@@ -11,7 +13,6 @@ module Atlas
     attr_accessor :do_validation
 
     FILE_SUFFIX = 'suffix'
-    DIRECTORY   = 'active_document'
   end
 
   class SomeDocument::OtherDocument < SomeDocument

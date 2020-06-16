@@ -3,7 +3,6 @@ module Atlas
     include ActiveDocument
 
     FILE_SUFFIX = 'gql'
-    DIRECTORY   = 'gqueries'
 
     attribute :query,          String
     attribute :unit,           String

@@ -711,6 +711,48 @@ describe SomeDocument do
     end
   end
 
+  describe 'setting the directory_name on the class' do
+    let!(:original_name) { SomeDocument.directory_name }
+
+    after { SomeDocument.directory_name(original_name) }
+
+    context 'when setting a string path' do
+      it 'sets changes the directory' do
+        expect { SomeDocument.directory_name('hi') }
+          .to change(SomeDocument, :directory)
+          .from(Atlas.data_dir.join(original_name))
+          .to(Atlas.data_dir.join('hi'))
+      end
+
+      it 'sets the directory name' do
+        expect { SomeDocument.directory_name('hi') }
+          .to change(SomeDocument, :directory_name)
+          .from(original_name)
+          .to('hi')
+      end
+    end
+
+    context 'when getting the directory_name of a class' do
+      it 'returns the name' do
+        SomeDocument.directory_name('hi')
+        expect(SomeDocument.directory_name).to eq('hi')
+      end
+    end
+
+    context 'when setting a string path on a subclass' do
+      it 'raises an error' do
+        expect { SomeDocument::OtherDocument.directory_name('hi') }
+          .to raise_error(Atlas::NotTopmostClassError)
+      end
+    end
+
+    context 'when getting the directory_name of a subclass' do
+      it 'returns the top-most class directory name' do
+        expect(SomeDocument::OtherDocument.directory_name).to eq(SomeDocument.directory_name)
+      end
+    end
+  end
+
   describe 'inspect' do
 
     it 'should contain the key' do

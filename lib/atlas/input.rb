@@ -3,8 +3,6 @@ module Atlas
     include ActiveDocument
     include InputHelper
 
-    DIRECTORY = 'inputs'
-
     attribute :query,           String
     attribute :share_group,     Symbol
     attribute :label,           String

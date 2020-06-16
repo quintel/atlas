@@ -14,8 +14,6 @@ module Atlas
   class Edge
     include ActiveDocument
 
-    DIRECTORY = 'edges'
-
     attribute :type,          Symbol
     attribute :demand,        Float
     attribute :parent_share,  Float

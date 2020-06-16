@@ -2,8 +2,6 @@ module Atlas
   class Dataset
     include ActiveDocument
 
-    DIRECTORY = 'datasets'
-
     # General Attributes
     attribute :area,      String
     attribute :id,        Integer
