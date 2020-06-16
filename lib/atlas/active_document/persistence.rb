@@ -139,7 +139,7 @@ module Atlas
         @manager || self.class.manager
       end
 
-      # ----------------------------------------------------------------------
+      # --------------------------------------------------------------------------------------------
 
       module ClassMethods
         # Public: The absolute path to the directory in which the documents
@@ -148,6 +148,22 @@ module Atlas
         # Returns a Pathname.
         def directory
           manager.directory
+        end
+
+        # Public: Sets the name of the directory (relative to the data_dir) in which the .ad files
+        # for this class are stored. If no name is provided, the current name is returned.
+        #
+        # Directory names may only be set on top-most document classes; attempts to set the
+        # name on a subclass will raise NotTopmostClassError.
+        #
+        # name - The directory name as a string. May include "/" to specify subdirectories.
+        #
+        # Returns the name.
+        def directory_name(name = nil)
+          raise(NotTopmostClassError, :directory_name) if name && subclassed_document?
+
+          manager.directory_name = name if name
+          manager.directory_name
         end
 
         # Internal: The Manager used to fetch the documents from disk.

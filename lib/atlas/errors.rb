@@ -120,6 +120,14 @@ module Atlas
     "Duplicate key found: #{ key }"
   end
 
+  NoDirectorySetError = error_class do |model_name|
+    "No directory has been set for #{model_name}"
+  end
+
+  NotTopmostClassError = error_class do |method_name|
+    "Cannot call #{method_name} on a subclassed document"
+  end
+
   MissingAttributeError = error_class do |attribute, object|
     "Missing attribute #{ attribute } for #{ object }"
   end
