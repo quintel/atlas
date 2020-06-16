@@ -2,8 +2,6 @@ module Atlas
   class Node
     include ActiveDocument
 
-    DIRECTORY = 'nodes'
-
     attribute :use,                  String
     attribute :has_loss,             Boolean
     attribute :scaling_exempt,       Boolean

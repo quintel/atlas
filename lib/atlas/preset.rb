@@ -4,8 +4,6 @@ module Atlas
   class Preset
     include ActiveDocument
 
-    DIRECTORY = 'presets'
-
     attribute :id,                 Integer
     attribute :description,        String
     attribute :ordering,           Integer

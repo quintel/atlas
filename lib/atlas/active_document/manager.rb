@@ -13,8 +13,6 @@ module Atlas
     #
     # Wow! I'm Mr. Manager!
     class Manager
-      attr_reader :directory
-
       # Public: Creates a new manager for the given document +klass+.
       #
       # klass    - The ActiveDocument class whose files are read by the
@@ -81,8 +79,34 @@ module Atlas
       #
       # Returns a string.
       def inspect
-        relative = @directory.relative_path_from(Atlas.data_dir)
+        relative = directory.relative_path_from(Atlas.data_dir)
         "#<#{ self.class.name } (#{ @klass.name } at ./#{ relative })>"
+      end
+
+      # Public: Returns the path to the documents for this manager.
+      #
+      # Returns a Pathname.
+      # Raises a NoDirectorySetError if no path has been set.
+      def directory
+        Atlas.data_dir.join(directory_name) || raise(NoDirectorySetError, @klass.name)
+      end
+
+      # Public: Returns the name of the directory in which the files are stored. Attempts to infer
+      # a name from the class if none is set.
+      #
+      # Returns a String.
+      def directory_name
+        @directory_name ||= @klass.name.gsub(/^Atlas::/, '').tableize
+      end
+
+      # Internal: Sets the path where the documents for this manger are stored.
+      #
+      # This should be a relative path from the data directory root.
+      #
+      # Returns the given name.
+      def directory_name=(name)
+        clear!
+        @directory_name = name
       end
 
       # Internal: Writes a given document to disk.
@@ -139,7 +163,6 @@ module Atlas
       def clear!
         @documents  = {}
         @attributes = {}
-        @directory  = Atlas.data_dir.join(@klass::DIRECTORY)
         @lookup_map = nil
         @all_loaded = false
         @all        = []
@@ -174,7 +197,7 @@ module Atlas
       # Returns an array of Symbol keys and Pathname values.
       def lookup_map
         @lookup_map ||= begin
-          gpath = @directory.join("**/*.#{ @klass::FILE_SUFFIX }")
+          gpath = directory.join("**/*.#{ @klass::FILE_SUFFIX }")
 
           Pathname.glob(gpath).each_with_object({}) do |path, map|
             map[ key_from_path(path) ] = path
@@ -199,7 +222,7 @@ module Atlas
 
         # This is ugly, but significantly faster than relative_path_from and we
         # know that the path is prefixed exactly with the directory path.
-        relative_path = path.to_s.delete_prefix("#{@directory}/")
+        relative_path = path.to_s.delete_prefix("#{directory}/")
 
         basename =
           if (dir_index = relative_path.rindex('/'))
