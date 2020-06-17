@@ -13,6 +13,17 @@ module Atlas
     #
     # Wow! I'm Mr. Manager!
     class Manager
+      # Public: Returns the name of the directory in which the files are stored. Manager infers the
+      # name from the class when none is explicitly set.
+      #
+      # Returns a String.
+      attr_reader :directory_name
+
+      # Public: Returns the file extension used by files in this manager.
+      #
+      # Returns a String.
+      attr_reader :extension_name
+
       # Public: Creates a new manager for the given document +klass+.
       #
       # klass    - The ActiveDocument class whose files are read by the
@@ -25,6 +36,8 @@ module Atlas
       # Returns a Manager.
       def initialize(klass, register = true)
         @klass = klass
+        @directory_name = klass.name.gsub(/^Atlas::/, '').tableize
+        @extension_name = 'ad'
 
         clear!
         self.class.register(self) if register
@@ -91,14 +104,6 @@ module Atlas
         Atlas.data_dir.join(directory_name) || raise(NoDirectorySetError, @klass.name)
       end
 
-      # Public: Returns the name of the directory in which the files are stored. Attempts to infer
-      # a name from the class if none is set.
-      #
-      # Returns a String.
-      def directory_name
-        @directory_name ||= @klass.name.gsub(/^Atlas::/, '').tableize
-      end
-
       # Internal: Sets the path where the documents for this manger are stored.
       #
       # This should be a relative path from the data directory root.
@@ -107,6 +112,14 @@ module Atlas
       def directory_name=(name)
         clear!
         @directory_name = name
+      end
+
+      # Internal: Sets the file extension used by the documents.
+      #
+      # Returns the given name.
+      def extension_name=(name)
+        clear!
+        @extension_name = name
       end
 
       # Internal: Writes a given document to disk.
@@ -197,7 +210,7 @@ module Atlas
       # Returns an array of Symbol keys and Pathname values.
       def lookup_map
         @lookup_map ||= begin
-          gpath = directory.join("**/*.#{ @klass::FILE_SUFFIX }")
+          gpath = directory.join("**/*.#{extension_name}")
 
           Pathname.glob(gpath).each_with_object({}) do |path, map|
             map[ key_from_path(path) ] = path
@@ -231,7 +244,7 @@ module Atlas
             relative_path
           end
 
-        without_ext = basename.delete_suffix(".#{@klass::FILE_SUFFIX}")
+        without_ext = basename.delete_suffix(".#{extension_name}")
 
         if without_ext.include?('.')
           subclass = without_ext.split('.').last

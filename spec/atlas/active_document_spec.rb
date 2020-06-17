@@ -687,7 +687,7 @@ describe SomeDocument do
         to eq([
           doc.key,
           doc.class.subclass_suffix,
-          doc.class::FILE_SUFFIX].join('.'))
+          doc.class.extension_name].join('.'))
     end
   end
 
@@ -749,6 +749,35 @@ describe SomeDocument do
     context 'when getting the directory_name of a subclass' do
       it 'returns the top-most class directory name' do
         expect(SomeDocument::OtherDocument.directory_name).to eq(SomeDocument.directory_name)
+      end
+    end
+  end
+
+  describe 'setting the extension on the class' do
+    let!(:original_name) { SomeDocument.extension_name }
+
+    after { SomeDocument.extension_name(original_name) }
+
+    context 'when setting a string extension' do
+      it 'sets the extension name' do
+        expect { SomeDocument.extension_name('hi') }
+          .to change(SomeDocument, :extension_name)
+          .from(original_name)
+          .to('hi')
+      end
+    end
+
+    context 'when setting a string path on a subclass' do
+      it 'raises an error' do
+        expect { SomeDocument::OtherDocument.extension_name('hi') }
+          .to raise_error(Atlas::NotTopmostClassError)
+      end
+    end
+
+    context 'when getting the directory_name of a subclass' do
+      it 'returns the top-most class directory name' do
+        SomeDocument.extension_name('hi')
+        expect(SomeDocument::OtherDocument.extension_name).to eq(SomeDocument.extension_name)
       end
     end
   end
