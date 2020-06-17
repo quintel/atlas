@@ -2,6 +2,8 @@ module Atlas
   class Node
     include ActiveDocument
 
+    directory_name 'graphs/energy/nodes'
+
     attribute :use,                  String
     attribute :has_loss,             Boolean
     attribute :scaling_exempt,       Boolean

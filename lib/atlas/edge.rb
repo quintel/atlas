@@ -14,6 +14,8 @@ module Atlas
   class Edge
     include ActiveDocument
 
+    directory_name 'graphs/energy/edges'
+
     attribute :type,          Symbol
     attribute :demand,        Float
     attribute :parent_share,  Float
