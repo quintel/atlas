@@ -17,7 +17,7 @@ module Atlas
       #
       # Returns a Pathname.
       def path
-        filename = [key, self.class.subclass_suffix, self.class::FILE_SUFFIX]
+        filename = [key, self.class.subclass_suffix, self.class.extension_name]
         filename = filename.compact.join('.')
 
         if subdirectory
@@ -153,8 +153,8 @@ module Atlas
         # Public: Sets the name of the directory (relative to the data_dir) in which the .ad files
         # for this class are stored. If no name is provided, the current name is returned.
         #
-        # Directory names may only be set on top-most document classes; attempts to set the
-        # name on a subclass will raise NotTopmostClassError.
+        # Directory names may only be set on top-most document classes; attempts to set the name on
+        # a subclass will raise NotTopmostClassError.
         #
         # name - The directory name as a string. May include "/" to specify subdirectories.
         #
@@ -164,6 +164,22 @@ module Atlas
 
           manager.directory_name = name if name
           manager.directory_name
+        end
+
+        # Public: Sets the extension name of files loaded by the ActiveDocumetn class. If no name is
+        # provided, the current name is returned.
+        #
+        # Extension names may only be set on top-most document classes; attempts to set the name on
+        # a subclass will raise NotTopmostClassError.
+        #
+        # name - The extension name as a string, without a leading ".".
+        #
+        # Returns the name.
+        def extension_name(name = nil)
+          raise(NotTopmostClassError, :extension_name) if name && subclassed_document?
+
+          manager.extension_name = name if name
+          manager.extension_name
         end
 
         # Internal: The Manager used to fetch the documents from disk.

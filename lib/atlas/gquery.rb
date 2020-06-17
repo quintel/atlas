@@ -2,7 +2,7 @@ module Atlas
   class Gquery
     include ActiveDocument
 
-    FILE_SUFFIX = 'gql'
+    extension_name 'gql'
 
     attribute :query,          String
     attribute :unit,           String
