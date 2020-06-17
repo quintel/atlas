@@ -14,11 +14,6 @@ module Atlas
       end
     end
 
-    # Public: The file extension. You can customise this in subclasses.
-    #
-    # Returns a String.
-    FILE_SUFFIX = 'ad'
-
     # Public: Optional comments available on all documents and the queries
     # that are used to store the query-dependant properties.
     #
