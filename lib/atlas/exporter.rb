@@ -93,7 +93,7 @@ module Atlas
       end
 
       # Yay coupling carrier special cases!
-      Edge.all.each do |edge|
+      EnergyEdge.all.each do |edge|
         if edge.carrier == :coupling_carrier
           data[edge.key] = edge.to_hash
           data[edge.key][:share] = edge.child_share

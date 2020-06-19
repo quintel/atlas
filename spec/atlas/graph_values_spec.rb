@@ -24,7 +24,7 @@ module Atlas; describe GraphValues do
 
     context "of a node" do
       let(:values) { { 'bar' => { 'demand' => 20.0 } } }
-      let(:node)   { Atlas::Node.find(:bar) }
+      let(:node)   { Atlas::EnergyNode.find(:bar) }
 
       it "all" do
         expect(graph_values.for(node)).to eq('demand' => 20.0)
@@ -46,7 +46,7 @@ module Atlas; describe GraphValues do
       let(:values) { {} }
 
       it "(demand)" do
-        node = Atlas::Node.find(:bar)
+        node = Atlas::EnergyNode.find(:bar)
 
         graph_values.set(node.key.to_s, :demand, 50.0)
         graph_values.save
@@ -61,7 +61,7 @@ module Atlas; describe GraphValues do
       }
 
       it "(demand)" do
-        node = Atlas::Node.find(:bar)
+        node = Atlas::EnergyNode.find(:bar)
 
         graph_values.set(node.key.to_s, :demand, 50.0)
         graph_values.save
@@ -76,7 +76,7 @@ module Atlas; describe GraphValues do
       }
 
       it "(electricity)" do
-        node = Atlas::Node.find(:bar)
+        node = Atlas::EnergyNode.find(:bar)
 
         graph_values.set(node.key.to_s, 'input', { 'electricity' => 0.5 })
         graph_values.save

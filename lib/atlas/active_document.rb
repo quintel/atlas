@@ -2,16 +2,16 @@ require 'fileutils'
 
 module Atlas
   module ActiveDocument
-    def self.included(base)
-      base.class_eval do
-        include Virtus.model
-        include ActiveModel::Validations
-        include ActiveDocument::Persistence
-        include ActiveDocument::Finders
-        include ActiveDocument::Naming
-        include ActiveDocument::Subclassing
-        include ActiveDocument::Last
-      end
+    extend ActiveSupport::Concern
+
+    included do
+      include Virtus.model
+      include ActiveModel::Validations
+      include ActiveDocument::Persistence
+      include ActiveDocument::Finders
+      include ActiveDocument::Naming
+      include ActiveDocument::Subclassing
+      include ActiveDocument::Last
     end
 
     # Public: Optional comments available on all documents and the queries

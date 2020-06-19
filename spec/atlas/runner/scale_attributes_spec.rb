@@ -12,14 +12,14 @@ module Atlas
         a = graph.add(
           Refinery::Node.new(:a,
             demand: 1000,
-            model: Atlas::Node.find(:bar)
+            model: Atlas::EnergyNode.find(:bar)
           )
         )
 
         b = graph.add(
           Refinery::Node.new(:b,
             demand: 2000,
-            model: Atlas::Node.find(:baz)
+            model: Atlas::EnergyNode.find(:baz)
           )
         )
 

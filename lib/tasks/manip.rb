@@ -1,4 +1,4 @@
-MANIP_CLASS_NAMES = %w( Carrier Edge Gquery Input Node )
+MANIP_CLASS_NAMES = %w[Carrier EnergyEdge EnergyNode Input Gquery]
 
 namespace :manip do
   # Given an Atlas document class, returns the properties which a user may set
@@ -11,7 +11,7 @@ namespace :manip do
     props.map { |name| name.to_s[0..-2] }
   end
 
-  # Given a short class name ("Edge", "Node", etc), returns the corresponding
+  # Given a short class name ("EnergyEdge", "EnergyNode", etc), returns the corresponding
   # class.
   def klass(class_name)
     Atlas.const_get(class_name)
@@ -27,8 +27,8 @@ namespace :manip do
         attrs = ENV.to_h.slice(*keys)
 
         # Temporary workaround for the custom edge key format.
-        if klass == Atlas::Edge && ! attrs.key?('key')
-          attrs[:key] = Atlas::Edge.key(ENV['from'], ENV['to'], ENV['carrier'])
+        if klass == Atlas::EnergyEdge && ! attrs.key?('key')
+          attrs[:key] = Atlas::EnergyEdge.key(ENV['from'], ENV['to'], ENV['carrier'])
         end
 
         doc = klass.create!(attrs)

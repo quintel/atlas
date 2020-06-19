@@ -1,7 +1,7 @@
 # frozen_string_literal: false
 
 module Atlas
-  class Node
+  module Node
     # Asserts that a nodes Fever configuration is valid.
     class FeverValidator < ActiveModel::Validator
       MESSAGES = {
@@ -55,9 +55,11 @@ module Atlas
       end
 
       def validate_alias_of(record, fever)
-        if !Node.exists?(fever.alias_of) || !Node.find(fever.alias_of).fever
+        klass = record.class
+
+        if !klass.exists?(fever.alias_of) || !klass.find(fever.alias_of).fever
           record.errors.add(:fever, MESSAGES[:alias_missing])
-        elsif !Node.find(fever.alias_of).fever.group.to_s.match?(/hot_water/)
+        elsif !klass.find(fever.alias_of).fever.group.to_s.match?(/hot_water/)
           record.errors.add(:fever, MESSAGES[:alias_invalid])
         end
       end
@@ -67,7 +69,7 @@ module Atlas
           if !fever.capacity || fever.capacity.values.none?
             record.errors.add(:fever, MESSAGES[:missing_capacity])
           end
-        elsif fever.capacity && fever.capacity.values.any?
+        elsif fever.capacity&.values&.any?
           if !fever.efficiency_based_on
             record.errors.add(:fever, MESSAGES[:illegal_capacity])
           elsif !fever.capacity.key?(fever.efficiency_based_on)

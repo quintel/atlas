@@ -7,11 +7,13 @@ module Atlas
       # nil instead.
       NO_DIR = '.'.freeze
 
-      included do
-        # Public: The unique key used to identify the document.
-        #
-        # Returns a Symbol.
-        attr_reader :key
+      # Public: The unique key used to identify the document.
+      #
+      # Defining an attr_reader in an `included` block causes inheritance issues in Node and Edge.
+      #
+      # Returns a Symbol.
+      def key
+        @key
       end
 
       # Public: Change the key of the document.

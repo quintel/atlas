@@ -14,7 +14,7 @@ RSpec.describe Atlas::ActiveDocument::DocumentReferenceValidator do
       attribute :ref, String
 
       validates_with Atlas::ActiveDocument::DocumentReferenceValidator,
-        class_name: 'Atlas::Node', attribute: :ref
+        class_name: 'Atlas::EnergyNode', attribute: :ref
     end
   end
 
@@ -25,18 +25,18 @@ RSpec.describe Atlas::ActiveDocument::DocumentReferenceValidator do
 
   it 'has an error when the attribute is nil' do
     doc = klass.new(ref: nil)
-    expect(doc.errors_on(:ref)).to include('must contain a reference to a node')
+    expect(doc.errors_on(:ref)).to include('must contain a reference to a energy node')
   end
 
   it 'has an error when the attribute is an empty string' do
     doc = klass.new(ref: '')
-    expect(doc.errors_on(:ref)).to include('must contain a reference to a node')
+    expect(doc.errors_on(:ref)).to include('must contain a reference to a energy node')
   end
 
   it 'has an error when a non-existent document is referenced' do
     doc = klass.new(ref: :no_such_document)
 
     expect(doc.errors_on(:ref))
-      .to include('references a node which does not exist')
+      .to include('references a energy node which does not exist')
   end
 end

@@ -3,7 +3,7 @@ require 'spec_helper'
 module Atlas::ActiveDocument
   describe ProductionManager do
     let(:manager) do
-      ProductionManager.new(Atlas::Node, { foo: {
+      ProductionManager.new(Atlas::EnergyNode, { foo: {
         demand: 50,
         output: { coal: 0.812 }
       }})
@@ -23,7 +23,7 @@ module Atlas::ActiveDocument
       # Load the production node.
       production_node.demand
 
-      non_prod = Atlas::Node.find(:foo)
+      non_prod = Atlas::EnergyNode.find(:foo)
       expect(non_prod.demand).to be_nil
 
       # Fetching the non-production node should not change the production
@@ -40,7 +40,7 @@ module Atlas::ActiveDocument
       data = { :'foo-bar@coal' => {
         demand: 20, parent_share: 0.385, child_share: 0.411 } }
 
-      edge = ProductionManager.new(Atlas::Edge, data).get(:'foo-bar@coal')
+      edge = ProductionManager.new(Atlas::EnergyEdge, data).get(:'foo-bar@coal')
 
       expect(edge.demand).to eq(20)
       expect(edge.parent_share).to eq(0.385)

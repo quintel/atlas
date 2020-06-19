@@ -1,3 +1,8 @@
+# frozen_string_literal: true
+
+require_relative 'graph_values/share_group_inclusion_validator'
+require_relative 'graph_values/whitelisting_initializer_methods'
+
 module Atlas
   class GraphValues
     include ActiveModel::Validations
@@ -20,8 +25,7 @@ module Atlas
     validate :validate_presence_of_init_values
     validate :validate_presence_of_init_keys
 
-    validates_with Atlas::ActiveDocument::WhitelistingInitializerMethods,
-      attribute: :values
+    validates_with WhitelistingInitializerMethods, attribute: :values
 
     # validates_with Atlas::ActiveDocument::ShareGroupTotalValidator,
     #   attribute: :values, share_attribute: :parent_share, sum: 1.0
@@ -29,10 +33,10 @@ module Atlas
     # validates_with Atlas::ActiveDocument::ShareGroupTotalValidator,
     #   attribute: :values, share_attribute: :child_share, sum: 1.0
 
-    # validates_with Atlas::ActiveDocument::ShareGroupInclusionValidator,
+    # validates_with ShareGroupInclusionValidator,
     #   attribute: :values, share_attribute: :parent_share
 
-    # validates_with Atlas::ActiveDocument::ShareGroupInclusionValidator,
+    # validates_with ShareGroupInclusionValidator,
     #   attribute: :values, share_attribute: :child_share
 
     def initialize(derived_dataset)

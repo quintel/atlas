@@ -1,6 +1,10 @@
+# frozen_string_literal: true
+
+require_relative '../active_document/share_group_validator'
+
 module Atlas
-  module ActiveDocument
-    class ShareGroupInclusionValidator < ShareGroupValidator
+  class GraphValues
+    class ShareGroupInclusionValidator < Atlas::ActiveDocument::ShareGroupValidator
       def validate(record)
         return if record.errors.messages[options[:attribute]]&.any?
 
@@ -20,7 +24,7 @@ module Atlas
       private
 
       def share_inputs
-        @share_inputs ||= Edge.all.each_with_object({}) do |edge, hash|
+        @share_inputs ||= EnergyEdge.all.each_with_object({}) do |edge, hash|
           hash[edge.supplier] ||= []
           hash[edge.supplier] << edge.key
           hash

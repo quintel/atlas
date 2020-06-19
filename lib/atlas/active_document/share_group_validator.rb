@@ -15,9 +15,8 @@ module Atlas
         record
           .public_send(options[:attribute])
           .each_with_object({}) do |(graph_key, methods), result|
-            if graph_key =~ /-.+@/ && methods[values_attribute]
-              edge = Edge.find(graph_key)
-              group = group_key(edge)
+            if graph_key.match?(/-.+@/) && methods[values_attribute]
+              edge = EnergyEdge.find(graph_key)
 
               result[group] ||= {}
               result[group][graph_key] = methods[values_attribute]

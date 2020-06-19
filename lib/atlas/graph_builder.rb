@@ -28,11 +28,11 @@ module Atlas
     #
     # Returns a GraphBuilder.
     def initialize(sector = nil)
-      @nodes = Collection.new(Node.all.select(&filter(sector)))
+      @nodes = Collection.new(EnergyNode.all.select(&filter(sector)))
       @graph = Turbine::Graph.new
 
       @edges = if sector
-        Collection.new(Edge.all.select do |edge|
+        Collection.new(EnergyEdge.all.select do |edge|
           # For the moment, we test the sector of the node on each end of the
           # edge, rather than the namespace of the edge; edges currently use
           # the same namespace as the parent node. Because of this, testing
@@ -41,7 +41,7 @@ module Atlas
           @nodes.key?(edge.supplier) || @nodes.key?(edge.consumer)
         end)
       else
-        Edge.all
+        EnergyEdge.all
       end
     end
 
@@ -122,8 +122,8 @@ module Atlas
         props[:type] = :flexible
       end
 
-      fail DocumentNotFoundError.new(edge.supplier, Node) if parent.nil?
-      fail DocumentNotFoundError.new(edge.consumer, Node) if child.nil?
+      fail DocumentNotFoundError.new(edge.supplier, EnergyNode) if parent.nil?
+      fail DocumentNotFoundError.new(edge.consumer, EnergyNode) if child.nil?
 
       parent.connect_to(child, carrier.key, props)
     end

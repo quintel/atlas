@@ -21,7 +21,7 @@ module Atlas
 
       if with_calculate
         describe '#calculate' do
-          let(:edge)  { Edge.find('bar-baz@corn') }
+          let(:edge)  { EnergyEdge.find('bar-baz@corn') }
           let(:graph) { runner.refinery_graph }
 
           # The Turbine edge.
@@ -60,7 +60,7 @@ module Atlas
       let(:graph) { runner.refinery_graph }
 
       describe '#calculate' do
-        let(:edge)  { Edge.find('bar-baz@corn') }
+        let(:edge)  { EnergyEdge.find('bar-baz@corn') }
         let(:graph) { runner.refinery_graph }
 
         let(:t_edge) do
@@ -71,8 +71,11 @@ module Atlas
 
         context 'when a node has an output attribute' do
           it 'sets the share of slots with an efficiency' do
-            Node.new(path: 'simple_graph/abc', queries: { demand: '5.0' },
-                     output: { gas: 0.65 }).save!
+            EnergyNode.new(
+              path: 'simple_graph/abc',
+              queries: { demand: '5.0' },
+              output: { gas: 0.65 }
+            ).save!
 
             expect(graph.node(:abc).slots.out(:gas).get(:share)).to eq(0.65)
           end
@@ -88,14 +91,14 @@ module Atlas
           ratio   = Rational('500/746')
           i_ratio = Rational('1') - ratio
 
-          bar = Node.find(:bar)
+          bar = EnergyNode.find(:bar)
 
           bar.update_attributes!(queries: bar.queries.merge({
             :'output.corn' => ratio.to_f.to_s,
             :'output.coal' => i_ratio.to_f.to_s
           }))
 
-          Node.find(:fd).update_attributes!(
+          EnergyNode.find(:fd).update_attributes!(
             input: { corn: ratio, coal: i_ratio })
 
           expect(t_edge.get(:demand)).to eq(5.0)
@@ -110,7 +113,7 @@ module Atlas
       end
 
       context 'max_demand' do
-        let(:node) { Node.find(:bar) }
+        let(:node) { EnergyNode.find(:bar) }
 
         it 'is set when :recursive' do
           node.queries[:max_demand] = 'recursive'
