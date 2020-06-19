@@ -1,254 +1,189 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
-module Atlas
+shared_examples_for 'a slot collection' do
+  def collection
+    node.public_send(collection_name)
+  end
 
-describe Node do
-  describe '#out_slots' do
-    context 'when the node has no "output" data' do
-      let(:node) { Node.new(key: :a) }
+  context 'when the node has no data' do
+    let(:node) { klass.new(key: :a) }
 
-      it 'has no output slots'
+    it 'has no output slots' do
+      expect(collection.length).to eq(0)
+    end
+  end
+
+  context 'when the node has a single slot' do
+    let(:node) { klass.new(key: :a, direction => { gas: 0.4 }) }
+
+    it 'contains a single slot' do
+      expect(collection.length).to eq(1)
     end
 
-    context 'when the node has a single "output" pair' do
-      let(:node) { Node.new(key: :a, output: { gas: 0.4 }) }
+    it 'sets the slot direction' do
+      expect(collection.first.direction).to eq(:out)
+    end
 
-      it 'contains a single slot' do
-        expect(node.out_slots.length).to eq(1)
+    it 'sets the slot node' do
+      expect(collection.first.node).to eq(node)
+    end
+
+    it 'sets the slot share' do
+      expect(collection.first.share).to eq(0.4)
+    end
+
+    it 'sets the slot carrier' do
+      expect(collection.first.carrier).to eq(:gas)
+    end
+  end
+
+  context 'when the node has gas and oil slots' do
+    let(:node) { klass.new(key: :a, direction => { gas: 0.3, oil: 0.7 }) }
+
+    it 'contains two slots' do
+      expect(collection.length).to eq(2)
+    end
+
+    it 'sets the gas slot direction' do
+      expect(collection.to_a.first.direction).to eq(:out)
+    end
+
+    it 'sets the gas slot node' do
+      expect(collection.to_a.first.node).to eq(node)
+    end
+
+    it 'sets the gas slot share' do
+      expect(collection.to_a.first.share).to eq(0.3)
+    end
+
+    it 'sets the gas slot carrier' do
+      expect(collection.to_a.first.carrier).to eq(:gas)
+    end
+
+    it 'sets the oil slot direction' do
+      expect(collection.to_a.last.direction).to eq(:out)
+    end
+
+    it 'sets the oil slot node' do
+      expect(collection.to_a.last.node).to eq(node)
+    end
+
+    it 'sets the oil slot share' do
+      expect(collection.to_a.last.share).to eq(0.7)
+    end
+
+    it 'sets the oil slot carrier' do
+      expect(collection.to_a.last.carrier).to eq(:oil)
+    end
+  end
+
+  context 'when updating the "output" data' do
+    let(:node) { klass.new(key: :a, direction => { gas: 0.9, elec: 0.1 }) }
+
+    before do
+      collection
+      node.public_send(:"#{direction}=", gas: 0.4, oil: 0.6)
+    end
+
+    context 'when a slot is still present' do
+      let(:slot) { collection.find { |slot| slot.carrier == :gas } }
+
+      it 'retains the old slot objects' do
+        expect(slot).not_to be_nil
       end
 
-      it 'sets the slot direction' do
-        expect(node.out_slots.first.direction).to eq(:out)
+      it 'sets the new slot share' do
+        expect(slot.share).to eq(0.4)
       end
+    end
 
-      it 'sets the slot node' do
-        expect(node.out_slots.first.node).to eq(node)
+    context 'when a slot has been removed' do
+      let(:slot) { collection.find { |slot| slot.carrier == :elec } }
+
+      it 'removes the slot' do
+        expect(slot).to be_nil
+      end
+    end
+
+    context 'when a slot has been added' do
+      let(:slot) { collection.find { |slot| slot.carrier == :oil } }
+
+      it 'adds the slot' do
+        expect(slot.carrier).to eq(:oil)
       end
 
       it 'sets the slot share' do
-        expect(node.out_slots.first.share).to eq(0.4)
+        expect(slot.share).to eq(0.6)
+      end
+    end
+  end
+end
+
+# --------------------------------------------------------------------------------------------------
+
+describe Atlas::Node do
+  let(:klass) do
+    Class.new do
+      include Atlas::Node
+
+      def self.name
+        'TestNode'
       end
 
-      it 'sets the slot carrier' do
-        expect(node.out_slots.first.carrier).to eq(:gas)
+      def inspect
+        "#<TestNode #{key.inspect}>"
       end
+    end
+  end
+
+  describe '#out_slots' do
+    it_behaves_like 'a slot collection' do
+      let(:collection_name) { :out_slots }
+      let(:direction) { :output }
     end
 
     context 'when creating an "elastic" slot' do
       it 'creates a Slot::Elastic when the share is :elastic' do
-        node = Node.new(key: :a, output: { gas: :elastic })
-        expect(node.out_slots.first).to be_a(Slot::Elastic)
+        node = klass.new(key: :a, output: { gas: :elastic })
+        expect(node.out_slots.first).to be_a(Atlas::Slot::Elastic)
       end
 
       it 'creates a Slot::Elastic when the share is "elastic"' do
-        node = Node.new(key: :a, output: { gas: 'elastic' })
-        expect(node.out_slots.first).to be_a(Slot::Elastic)
+        node = klass.new(key: :a, output: { gas: 'elastic' })
+        expect(node.out_slots.first).to be_a(Atlas::Slot::Elastic)
       end
     end
 
     context 'when creating an "etengine_dynamic" slot' do
       it 'creates a Slot::Elastic when the share is :etengine_dynamic' do
-        node = Node.new(key: :a, output: { gas: :etengine_dynamic })
-        expect(node.out_slots.first).to be_a(Slot::Dynamic)
+        node = klass.new(key: :a, output: { gas: :etengine_dynamic })
+        expect(node.out_slots.first).to be_a(Atlas::Slot::Dynamic)
       end
 
       it 'creates a Slot::Elastic when the share is "elastic"' do
-        node = Node.new(key: :a, output: { gas: 'etengine_dynamic' })
-        expect(node.out_slots.first).to be_a(Slot::Dynamic)
-      end
-    end
-
-    context 'when the node has gas and oil "output" pairs' do
-      let(:node) { Node.new(key: :a, output: { gas: 0.3, oil: 0.7 }) }
-
-      it 'contains two slots' do
-        expect(node.out_slots.length).to eq(2)
-      end
-
-      it 'sets the gas slot direction' do
-        expect(node.out_slots.to_a.first.direction).to eq(:out)
-      end
-
-      it 'sets the gas slot node' do
-        expect(node.out_slots.to_a.first.node).to eq(node)
-      end
-
-      it 'sets the gas slot share' do
-        expect(node.out_slots.to_a.first.share).to eq(0.3)
-      end
-
-      it 'sets the gas slot carrier' do
-        expect(node.out_slots.to_a.first.carrier).to eq(:gas)
-      end
-
-      it 'sets the oil slot direction' do
-        expect(node.out_slots.to_a.last.direction).to eq(:out)
-      end
-
-      it 'sets the oil slot node' do
-        expect(node.out_slots.to_a.last.node).to eq(node)
-      end
-
-      it 'sets the oil slot share' do
-        expect(node.out_slots.to_a.last.share).to eq(0.7)
-      end
-
-      it 'sets the oil slot carrier' do
-        expect(node.out_slots.to_a.last.carrier).to eq(:oil)
-      end
-    end
-
-    context 'when updating the "output" data' do
-      let(:node) { Node.new(key: :a, output: { gas: 0.9, elec: 0.1 }) }
-
-      before do
-        node.out_slots # Load the old slots.
-        node.output = { gas: 0.4, oil: 0.6 }
-      end
-
-      it 'retains the old slot objects which are still present' do
-        gas = node.out_slots.find { |slot| slot.carrier == :gas }
-
-        expect(gas).to be
-        expect(gas.share).to eq(0.4)
-      end
-
-      it 'removes slots which were deleted' do
-        expect(node.out_slots.find { |slot| slot.carrier == :elec }).not_to be
-      end
-
-      it 'adds slots which were added' do
-        expect(node.out_slots.length).to eq(2)
-
-        new_slot = node.out_slots.to_a.last
-
-        expect(new_slot.carrier).to eq(:oil)
-        expect(new_slot.share).to eq(0.6)
+        node = klass.new(key: :a, output: { gas: 'etengine_dynamic' })
+        expect(node.out_slots.first).to be_a(Atlas::Slot::Dynamic)
       end
     end
   end
 
   describe '#in_slots' do
-    context 'when the node has no "input" data' do
-      let(:node) { Node.new(key: :a) }
-
-      it 'has no input slots'
-    end
-
-    context 'when the node has a single "input" pair' do
-      let(:node) { Node.new(key: :a, input: { gas: 0.4 }) }
-
-      it 'contains a single slot' do
-        expect(node.in_slots.length).to eq(1)
-      end
-
-      it 'sets the slot direction' do
-        expect(node.in_slots.first.direction).to eq(:in)
-      end
-
-      it 'sets the slot node' do
-        expect(node.in_slots.first.node).to eq(node)
-      end
-
-      it 'sets the slot share' do
-        expect(node.in_slots.first.share).to eq(0.4)
-      end
-
-      it 'sets the slot carrier' do
-        expect(node.in_slots.first.carrier).to eq(:gas)
-      end
-    end
-
-    context 'when the node has gas and oil "input" pairs' do
-      let(:node) { Node.new(key: :a, input: { gas: 0.3, oil: 0.7 }) }
-
-      it 'contains two slots' do
-        expect(node.in_slots.length).to eq(2)
-      end
-
-      it 'sets the gas slot direction' do
-        expect(node.in_slots.to_a.first.direction).to eq(:in)
-      end
-
-      it 'sets the gas slot node' do
-        expect(node.in_slots.to_a.first.node).to eq(node)
-      end
-
-      it 'sets the gas slot share' do
-        expect(node.in_slots.to_a.first.share).to eq(0.3)
-      end
-
-      it 'sets the gas slot carrier' do
-        expect(node.in_slots.to_a.first.carrier).to eq(:gas)
-      end
-
-      it 'sets the oil slot direction' do
-        expect(node.in_slots.to_a.last.direction).to eq(:in)
-      end
-
-      it 'sets the oil slot node' do
-        expect(node.in_slots.to_a.last.node).to eq(node)
-      end
-
-      it 'sets the oil slot share' do
-        expect(node.in_slots.to_a.last.share).to eq(0.7)
-      end
-
-      it 'sets the oil slot carrier' do
-        expect(node.in_slots.to_a.last.carrier).to eq(:oil)
-      end
-    end
-
-    context 'when updating the "input" data' do
-      let(:node) { Node.new(key: :a, input: { gas: 0.9, elec: 0.1 }) }
-
-      before do
-        node.in_slots # Load the old slots.
-        node.input = { gas: 0.4, oil: 0.6 }
-      end
-
-      it 'retains the old slot objects which are still present' do
-        gas = node.in_slots.find { |slot| slot.carrier == :gas }
-
-        expect(gas).to be
-        expect(gas.share).to eq(0.4)
-      end
-
-      it 'removes slots which were deleted' do
-        expect(node.in_slots.find { |slot| slot.carrier == :elec }).not_to be
-      end
-
-      it 'adds slots which were added' do
-        expect(node.in_slots.length).to eq(2)
-
-        new_slot = node.in_slots.to_a.last
-
-        expect(new_slot.carrier).to eq(:oil)
-        expect(new_slot.share).to eq(0.6)
-      end
-    end
-  end
-
-  describe '#all' do
-    it 'returns all the subclasses that have been defined' do
-      expect(Node.all.length).to eq(7)
-    end
-  end
-
-  describe '#find' do
-    it 'returns a node in its right class' do
-      expect(Node.find('foo')).to be_a(Node::Converter)
+    it_behaves_like 'a slot collection' do
+      let(:collection_name) { :out_slots }
+      let(:direction) { :output }
     end
   end
 
   describe '#sector' do
     it 'is an alias of #ns' do
-      expect(Node.new(path: 'energy/a').sector).to eq('energy')
+      expect(klass.new(path: 'energy/a').sector).to eq('energy')
     end
   end
 
   describe '#sector=' do
-    let(:node) { Node.new(key: 'a', sector: 'energy') }
+    let(:node) { klass.new(key: 'a', sector: 'energy') }
 
     it 'sets the sector' do
       expect(node.sector).to eq('energy')
@@ -260,252 +195,33 @@ describe Node do
   end
 
   describe 'max_demand=' do
-    let(:node) { Node.new }
+    let(:node) { klass.new }
 
-    it 'permits a numeric value' do
-      node.max_demand = 50
-      node.valid?
+    context 'when given a numeric value' do
+      before { node.max_demand = 50 }
 
-      expect(node.max_demand).to eq(50)
-      expect(node.errors[:max_demand]).to be_empty
+      it 'sets the value' do
+        expect(node.max_demand).to eq(50)
+      end
+
+      it 'is valid' do
+        node.valid?
+        expect(node.errors[:max_demand]).to be_empty
+      end
     end
 
     it 'permits "recursive"' do
       node.max_demand = 'recursive'
-      node.valid?
 
-      expect(node.max_demand).to eq('recursive')
+      node.valid?
       expect(node.errors[:max_demand]).to be_empty
     end
 
     it 'permits :recursive' do
       node.max_demand = :recursive
-      node.valid?
 
-      expect(node.max_demand).to eq(:recursive)
+      node.valid?
       expect(node.errors[:max_demand]).to be_empty
     end
   end
-
-  describe 'fever' do
-    let(:fever) do
-      NodeAttributes::Fever.new(
-        efficiency_based_on: :electricity,
-        efficiency_balanced_with: :ambient_heat
-      )
-    end
-
-    let(:attrs) do
-      { fever: fever, input: input }
-    end
-
-    let(:input) do
-      { electricity: 0.5, ambient_heat: 0.5 }
-    end
-
-    let(:node) { Node.new(fever: fever, input: input) }
-
-    context 'with an efficiency_based_on and efficiency_balanced_with' do
-      it 'has no errors' do
-        expect(node.errors_on(:fever)).to be_empty
-      end
-    end
-
-    context 'when the efficiency_based_on slot is missing' do
-      let(:input) { { ambient_heat: 0.5 } }
-
-      it 'has an error' do
-        expect(node.errors_on(:fever)).to include(
-          'fever.efficiency_based_on expects a electricity slot, but none ' \
-          'was present'
-        )
-      end
-    end
-
-    context 'when the efficiency_balanced_with slot is missing' do
-      let(:input) { { electricity: 0.5 } }
-
-      it 'has an error' do
-        expect(node.errors_on(:fever)).to include(
-          'fever.efficiency_balanced_with expects a ambient_heat slot, but ' \
-          'none was present'
-        )
-      end
-    end
-
-    context 'when the efficiency_balanced_with value is missing' do
-      let(:fever) do
-        NodeAttributes::Fever.new(efficiency_based_on: :electricity)
-      end
-
-      it 'has an error' do
-        expect(node.errors_on(:fever)).to include(
-          'fever.efficiency_balanced_with must not be blank when ' \
-          'fever.efficiency_based_on is set'
-        )
-      end
-    end
-
-    describe 'alias_of' do
-      context 'pointing at a non-existent node' do
-        let(:fever) { NodeAttributes::Fever.new(alias_of: :no) }
-
-        it 'has an error' do
-          expect(node.errors_on(:fever)).to include(
-            'fever.alias_of must be the name of a Fever node'
-          )
-        end
-      end
-
-      context 'pointing at a non-Fever node' do
-        let(:fever) { NodeAttributes::Fever.new(alias_of: :my_residence) }
-
-        it 'has an error' do
-          expect(node.errors_on(:fever)).to include(
-            'fever.alias_of must be the name of a Fever node'
-          )
-        end
-      end
-
-      context 'pointing at a space heating node' do
-        let(:fever) do
-          NodeAttributes::Fever.new(alias_of: :fever_space_heat_producer)
-        end
-
-        it 'has an error' do
-          expect(node.errors_on(:fever)).to include(
-            'fever.alias_of must be the name of a hot water node'
-          )
-        end
-      end
-
-      context 'pointing at a hot water node' do
-        let(:fever) do
-          NodeAttributes::Fever.new(alias_of: :fever_hot_water_producer)
-        end
-
-        it 'has no errors' do
-          expect(node.errors_on(:fever)).to be_empty
-        end
-      end
-    end # alias_of
-
-    describe 'capacity' do
-      context 'on a "hybrid" node' do
-        let(:fever) do
-          Atlas::NodeAttributes::Fever.new(capacity: { electricity: 1.0 })
-        end
-
-        let(:node) { Atlas::Node.new(key: :abc_hybrid, fever: fever) }
-
-        it 'permits the attribute having a value' do
-          expect(node.errors_on(:fever)).to be_empty
-        end
-
-        it 'denies the attribute being empty' do
-          fever.capacity.delete(:electricity)
-
-          expect(node.errors_on(:fever))
-            .to include('fever.capacity must be set on a hybrid node')
-        end
-
-        it 'denies the attribute being nil' do
-          node.fever = NodeAttributes::Fever.new
-
-          expect(node.errors_on(:fever))
-            .to include('fever.capacity must be set on a hybrid node')
-        end
-      end
-
-      context 'on a non-variable-efficiency node' do
-        let(:fever) do
-          Atlas::NodeAttributes::Fever.new(capacity: { electricity: 1.0 })
-        end
-
-        let(:node) { Atlas::Node.new(key: :abc, fever: fever) }
-
-        it 'denies the attribute having a value' do
-          expect(node.errors_on(:fever)).to include(
-            'fever.capacity requires fever.efficiency_based_on to be present'
-          )
-        end
-      end
-
-      context 'when the variable-efficiency capacity is not specified' do
-        let(:fever) do
-          Atlas::NodeAttributes::Fever.new(
-            capacity: { electricity: 1.0 },
-            efficiency_based_on: :network_gas
-          )
-        end
-
-        let(:node) { Atlas::Node.new(key: :abc, fever: fever) }
-
-        it 'denies the attribute having a value' do
-          expect(node.errors_on(:fever))
-            .to include('fever.capacity.network_gas must not be blank')
-        end
-      end
-    end
-  end
-
-  describe 'waste_outputs' do
-    context 'when the node has an output slot of the correct type' do
-      let(:node) do
-        Atlas::Node.new(
-          output: { electricity: 1.0 },
-          waste_outputs: [:electricity]
-        )
-      end
-
-      it 'has no error on waste_outputs' do
-        expect(node.errors_on(:waste_outputs)).to be_blank
-      end
-    end
-
-    context 'when the node has no output slot of the correct type' do
-      let(:node) do
-        Atlas::Node.new(
-          output: { gas: 1.0 },
-          waste_outputs: [:electricity]
-        )
-      end
-
-      it 'has an error on waste_outputs' do
-        expect(node.errors_on(:waste_outputs))
-          .to include('includes a non-existent output carrier: electricity')
-      end
-    end
-
-    context 'when loss is used as a waste_output' do
-      let(:node) do
-        Atlas::Node.new(
-          output: { electricity: 0.9, loss: 0.1 },
-          waste_outputs: [:loss]
-        )
-      end
-
-      it 'has an error on waste_outputs' do
-        expect(node.errors_on(:waste_outputs))
-          .to include('must not include loss')
-      end
-    end
-
-    context 'when the value is empty' do
-      let(:node) { Atlas::Node.new(waste_outputs: []) }
-
-      it 'has no error on waste_outputs' do
-        expect(node.errors_on(:waste_outputs)).to be_blank
-      end
-    end
-
-    context 'when the value is nil' do
-      let(:node) { Atlas::Node.new(waste_outputs: nil) }
-
-      it 'has no error on waste_outputs' do
-        expect(node.errors_on(:waste_outputs)).to be_blank
-      end
-    end
-  end
-end
 end

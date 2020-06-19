@@ -2,12 +2,12 @@ require 'spec_helper'
 
 module Atlas
   describe Slot do
-    let(:node) { Node.new(key: :foo) }
+    let(:node) { EnergyNode.new(key: :foo) }
 
     describe '#share' do
       context 'when the slot is an output' do
         let(:node) do
-          Node.new(
+          EnergyNode.new(
             key: :foo,
             input: { electricity: 0.25 },
             output: { electricity: 0.5 }
@@ -18,14 +18,14 @@ module Atlas
           node.out_slots.detect { |slot| slot.carrier == :electricity }
         end
 
-        it 'is determined by the Node output attribute' do
+        it 'is determined by the EnergyNode output attribute' do
           expect(slot.share).to eq(0.5)
         end
       end
 
       context 'when the slot is an input' do
         let(:node) do
-          Node.new(
+          EnergyNode.new(
             key: :foo,
             input: { electricity: 0.25 },
             output: { electricity: 0.5 }
@@ -36,7 +36,7 @@ module Atlas
           node.in_slots.detect { |slot| slot.carrier == :electricity }
         end
 
-        it 'is determined by the Node input attribute' do
+        it 'is determined by the EnergyNode input attribute' do
           expect(slot.share).to eq(0.25)
         end
 
@@ -78,7 +78,7 @@ module Atlas
 
     describe 'setting the node' do
       let(:slot)     { Slot.new(node: node, direction: :out, carrier: :gas) }
-      let(:new_node) { Node.new(key: :bar) }
+      let(:new_node) { EnergyNode.new(key: :bar) }
 
       before { slot.node = new_node }
 

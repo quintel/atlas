@@ -3,7 +3,7 @@ require 'spec_helper'
 module Atlas
   describe Slot::CarrierEfficient do
     let(:node) do
-      Node.new(
+      EnergyNode.new(
         key:    :a,
         input:  { gas: 0.4, oil: 0.6 },
         output: { electricity: { gas: 0.5, oil: 0.4 }, loss: :elastic }

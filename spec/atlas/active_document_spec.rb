@@ -795,18 +795,18 @@ describe SomeDocument do
   end
 
   describe '#<=>' do
-    let(:node) { Node.new(key: 'f') }
+    let(:node) { EnergyNode.new(key: 'f') }
 
     it 'is -1 when the node has an "earlier" key' do
-      expect(Node.new(key: 'a') <=> node).to eq(-1)
+      expect(EnergyNode.new(key: 'a') <=> node).to eq(-1)
     end
 
     it 'is 0 when the node has an equal key' do
-      expect(Node.new(key: 'f') <=> node).to eq(0)
+      expect(EnergyNode.new(key: 'f') <=> node).to eq(0)
     end
 
     it 'is 1 when the node has a "later" key' do
-      expect(Node.new(key: 'z') <=> node).to eq(1)
+      expect(EnergyNode.new(key: 'z') <=> node).to eq(1)
     end
   end
 

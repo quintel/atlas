@@ -11,17 +11,17 @@ module Atlas
 
       context 'nodes' do
         it 'are all added to the graph' do
-          expect(graph.nodes.length).to eq(Node.all.length)
+          expect(graph.nodes.length).to eq(EnergyNode.all.length)
         end
 
         it 'sets the key on each node' do
-          Node.all.each do |node|
+          EnergyNode.all.each do |node|
             expect(graph.node(node.key).key).to eq(node.key)
           end
         end
 
         it 'each have a "model" property containing the AD instance' do
-          Node.all.each do |node|
+          EnergyNode.all.each do |node|
             expect(graph.node(node.key).get(:model)).to be
           end
         end
@@ -60,8 +60,8 @@ module Atlas
     end
 
     describe '.establish_edge' do
-      let(:node)   { Node.new(key: :key) }
-      let(:parent) { Node.new(key: :parent) }
+      let(:node)   { EnergyNode.new(key: :key) }
+      let(:parent) { EnergyNode.new(key: :parent) }
       let(:nodes)  { Collection.new([node, parent]) }
 
       let!(:graph)    { Turbine::Graph.new }
@@ -75,7 +75,7 @@ module Atlas
       end
 
       context 'with a single, share link' do
-        let(:link_data) { [ Edge.new(key: 'parent-key@coal', type: :share) ] }
+        let(:link_data) { [ EnergyEdge.new(key: 'parent-key@coal', type: :share) ] }
         let(:edge)      { t_node.in_edges.first }
 
         it 'adds a single incoming edge' do
@@ -86,7 +86,7 @@ module Atlas
           expect(edge.get(:type)).to be_nil
         end
 
-        it 'sets the parent to Node(:parent)' do
+        it 'sets the parent to EnergyNode(:parent)' do
           expect(edge.from).to eq(t_parent)
         end
 
@@ -108,7 +108,7 @@ module Atlas
       end
 
       context 'with a reversed link' do
-        let(:link_data) { [ Edge.new(key: 'parent-key@coal', type: :share, reversed: true) ] }
+        let(:link_data) { [ EnergyEdge.new(key: 'parent-key@coal', type: :share, reversed: true) ] }
         let(:edge)      { t_node.in_edges.first }
 
         it 'adds a single incoming edge' do
@@ -130,8 +130,8 @@ module Atlas
 
       context 'with multiple links using different carriers' do
         let(:link_data) { [
-          Edge.new(key: 'parent-key@coal', type: :share),
-          Edge.new(key: 'parent-key@corn', type: :share)
+          EnergyEdge.new(key: 'parent-key@coal', type: :share),
+          EnergyEdge.new(key: 'parent-key@corn', type: :share)
         ] }
 
         describe 'the coal edge' do
@@ -155,7 +155,7 @@ module Atlas
         let(:link_data) { [] }
 
         it 'raises an InvalidLinkError with the parent does not exist' do
-          link = Edge.new(key: 'nope-key@coal', type: :share)
+          link = EnergyEdge.new(key: 'nope-key@coal', type: :share)
 
           expect do
             GraphBuilder.establish_edge(link, graph, nodes)
@@ -163,7 +163,7 @@ module Atlas
         end
 
         it 'raises an InvalidLinkError with the child does not exist' do
-          link = Edge.new(key: 'key-nope@coal', type: :share)
+          link = EnergyEdge.new(key: 'key-nope@coal', type: :share)
 
           expect do
             GraphBuilder.establish_edge(link, graph, nodes)
@@ -176,7 +176,7 @@ module Atlas
 
         it 'raises an InvalidLinkCarrierError' do
           # Where iid=infinite improbability drive. Obviously. :)
-          link = Edge.new(key: 'key-parent@iid', type: :share)
+          link = EnergyEdge.new(key: 'key-parent@iid', type: :share)
 
           expect do
             GraphBuilder.establish_edge(link, graph, nodes)

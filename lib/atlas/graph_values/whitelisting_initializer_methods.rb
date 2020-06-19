@@ -1,5 +1,5 @@
 module Atlas
-  module ActiveDocument
+  class GraphValues
     class WhitelistingInitializerMethods < ActiveModel::Validator
 
       def validate(record)
@@ -26,9 +26,9 @@ module Atlas
       #
       def find_element_and_type(graph_key)
         if graph_key =~ /-.+@/
-          [:edge, Edge.find(graph_key)]
+          [:edge, EnergyEdge.find(graph_key)]
         else
-          [:node, Node.find(graph_key)]
+          [:node, EnergyNode.find(graph_key)]
         end
       end
     end

@@ -2,9 +2,9 @@ require 'spec_helper'
 
 module Atlas
   describe Collection do
-    let(:node_one)   { Node.new(key: :one) }
-    let(:node_two)   { Node.new(key: :two) }
-    let(:node_three) { Node.new(key: :three) }
+    let(:node_one)   { EnergyNode.new(key: :one) }
+    let(:node_two)   { EnergyNode.new(key: :two) }
+    let(:node_three) { EnergyNode.new(key: :three) }
     let(:raw)        { [node_one, node_two, node_three] }
     let(:collection) { Collection.new([node_one, node_two, node_three]) }
 
@@ -14,7 +14,7 @@ module Atlas
       end
 
       it 'returns the document when there are similar entries' do
-        collection.push(Node.new(key: :ona))
+        collection.push(EnergyNode.new(key: :ona))
         expect(collection.find(:one)).to eq(node_one)
       end
 

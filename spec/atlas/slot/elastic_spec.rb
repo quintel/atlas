@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe Atlas::Slot::Elastic do
-  let(:node) { Atlas::Node.new(key: :a, output: { loss: :elastic }) }
+  let(:node) { Atlas::EnergyNode.new(key: :a, output: { loss: :elastic }) }
   let(:slot) { node.out_slots.detect { |slot| slot.carrier == :loss } }
 
   it 'has nil share' do
@@ -19,7 +19,7 @@ describe Atlas::Slot::Elastic do
     expect(slot).to be_a(described_class)
   end
 
-  it 'belongs to a Node' do
+  it 'belongs to an EnergyNode' do
     expect(slot.node).to eq(node)
   end
 

@@ -96,18 +96,23 @@ namespace :validate do
     Atlas.data_dir = args.dir || '../etsource'
   end
 
-  task(carriers: :setup) { ValidationRunner.new(Atlas::Carrier).run }
-  task(datasets: :setup) { ValidationRunner.new(Atlas::Dataset).run }
-  task(edges: :setup)    { ValidationRunner.new(Atlas::Edge).run }
-  task(gqueries: :setup) { ValidationRunner.new(Atlas::Gquery).run }
-  task(inputs: :setup)   { ValidationRunner.new(Atlas::Input).run }
-  task(nodes: :setup)    { ValidationRunner.new(Atlas::Node).run }
-  task(presets: :setup)  { ValidationRunner.new(Atlas::Preset).run }
+  task(carriers: :setup)     { ValidationRunner.new(Atlas::Carrier).run }
+  task(datasets: :setup)     { ValidationRunner.new(Atlas::Dataset).run }
+  task(energy_edges: :setup) { ValidationRunner.new(Atlas::EnergyEdge).run }
+  task(energy_nodes: :setup) { ValidationRunner.new(Atlas::EnergyNode).run }
+  task(gqueries: :setup)     { ValidationRunner.new(Atlas::Gquery).run }
+  task(inputs: :setup)       { ValidationRunner.new(Atlas::Input).run }
+  task(presets: :setup)      { ValidationRunner.new(Atlas::Preset).run }
 
   task all: :setup do
     ValidationRunner.new(
-      Atlas::Carrier, Atlas::Dataset, Atlas::Edge,   Atlas::Gquery,
-      Atlas::Input,   Atlas::Node,    Atlas::Preset
+      Atlas::Carrier,
+      Atlas::Dataset,
+      Atlas::EnergyEdge,
+      Atlas::EnergyNode,
+      Atlas::Gquery,
+      Atlas::Input,
+      Atlas::Preset
     ).run
   end
 end

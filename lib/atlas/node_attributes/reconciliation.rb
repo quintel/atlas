@@ -37,7 +37,7 @@ module Atlas
       # When the node is a subordinate...
       validates_with ActiveDocument::DocumentReferenceValidator,
         attribute: :subordinate_to,
-        class_name: 'Atlas::Node',
+        class_name: 'Atlas::EnergyNode',
         if: -> { behavior == :subordinate }
 
       validate :validate_subordinate_behavior

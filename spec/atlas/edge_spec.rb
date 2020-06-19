@@ -2,12 +2,38 @@ require 'spec_helper'
 
 module Atlas
   describe Edge do
+    let(:node_class) do
+      Class.new do
+        include Atlas::Node
+
+        def self.name
+          'TestNode'
+        end
+      end
+    end
+
+    let(:klass) do
+      Class.new do
+        include Atlas::Edge
+
+        def self.node_class
+          TestNode
+        end
+
+        def self.name
+          'TestEdge'
+        end
+      end
+    end
+
+    before { stub_const('TestNode', node_class) }
+
     it 'must have a consumer' do
-      expect(described_class.new(key: 'a-b@gas').errors_on(:consumer)).to include('does not exist')
+      expect(klass.new(key: 'a-b@gas').errors_on(:consumer)).to include('does not exist')
     end
 
     it 'must have a supplier' do
-      expect(described_class.new(key: 'a-b@gas').errors_on(:supplier)).to include('does not exist')
+      expect(klass.new(key: 'a-b@gas').errors_on(:supplier)).to include('does not exist')
     end
 
     describe 'type' do
@@ -16,24 +42,24 @@ module Atlas
 
       valid_types.each do |type|
         it "is permitted to be #{ type.inspect }" do
-          edge = Edge.new(key: 'a-b@gas', type: type)
+          edge = klass.new(key: 'a-b@gas', type: type)
           expect(edge.errors_on(:type).length).to eq(0)
         end
       end
 
       it 'may not be blank' do
-        edge = Edge.new(key: 'a-b@gas', type: nil)
+        edge = klass.new(key: 'a-b@gas', type: nil)
         expect(edge.errors_on(:type).length).to eq(1)
       end
 
       it 'may not be any other value' do
-        edge = Edge.new(key: 'a-b@gas', type: :nope)
+        edge = klass.new(key: 'a-b@gas', type: :nope)
         expect(edge.errors_on(:type).length).to eq(1)
       end
     end
 
     describe 'when creating a new Edge' do
-      let(:edge) { Edge.new(path: 'left-right@gas.ad') }
+      let(:edge) { klass.new(path: 'left-right@gas.ad') }
 
       it 'sets the consumer from the filename' do
         expect(edge.consumer).to eq(:right)
@@ -58,8 +84,8 @@ module Atlas
 
     context 'creating an edge with supplier, consumer, and carrier' do
       let(:edge) do
-        Edge.new(supplier: 'here', consumer: 'there',
-                 carrier: 'talk', ns: 'listen')
+        klass.new(supplier: 'here', consumer: 'there',
+                  carrier: 'talk', ns: 'listen')
       end
 
       it 'sets the supplier' do
@@ -85,49 +111,49 @@ module Atlas
 
     context 'validation of associated documents' do
       it 'has an error when the carrier does not exist' do
-        edge = Edge.new(key: 'a-b@nope').tap(&:valid?)
+        edge = klass.new(key: 'a-b@nope').tap(&:valid?)
         expect(edge.errors[:carrier]).to include('does not exist')
       end
 
       it 'has an error when the supplier does not exist' do
-        edge = Edge.new(key: 'a-b@nope').tap(&:valid?)
+        edge = klass.new(key: 'a-b@nope').tap(&:valid?)
         expect(edge.errors[:supplier]).to include('does not exist')
       end
 
       it 'has an error when the consumer does not exist' do
-        edge = Edge.new(key: 'a-b@nope').tap(&:valid?)
+        edge = klass.new(key: 'a-b@nope').tap(&:valid?)
         expect(edge.errors[:consumer]).to include('does not exist')
       end
     end
 
     describe 'creating an Edge with an invalid key' do
       it 'does not raise an error when the key is nil' do
-        expect { Edge.new(key: nil) }.not_to raise_error
+        expect { klass.new(key: nil) }.not_to raise_error
       end
 
       it 'raises an error when the key is blank' do
-        expect { Edge.new(key: '') }.to raise_error(InvalidKeyError)
+        expect { klass.new(key: '') }.to raise_error(InvalidKeyError)
       end
 
       it 'raises an error when the key has only one edge' do
-        expect { Edge.new(key: 'left@gas') }.to raise_error(InvalidKeyError)
+        expect { klass.new(key: 'left@gas') }.to raise_error(InvalidKeyError)
       end
 
       it 'raises an error when one edge key is blank' do
-        expect { Edge.new(key: 'left-@gas') }.to raise_error(InvalidKeyError)
+        expect { klass.new(key: 'left-@gas') }.to raise_error(InvalidKeyError)
       end
 
       it 'raises an error when omitting the carrier' do
-        expect { Edge.new(key: 'one-two') }.to raise_error(InvalidKeyError)
+        expect { klass.new(key: 'one-two') }.to raise_error(InvalidKeyError)
       end
 
       it 'raises an error when providing only the carrier' do
-        expect { Edge.new(key: '@gas') }.to raise_error(InvalidKeyError)
+        expect { klass.new(key: '@gas') }.to raise_error(InvalidKeyError)
       end
     end
 
     describe 'changing the key on an Edge' do
-      let(:edge) { Edge.new(key: 'left-right@gas') }
+      let(:edge) { klass.new(key: 'left-right@gas') }
 
       context 'changing the supplier node only' do
         before { edge.key = 'left-other@gas' }
@@ -219,7 +245,8 @@ module Atlas
     end
 
     describe 'changing the filename' do
-      let(:edge) { Edge.new(key: 'left-right@gas') }
+      let(:edge) { klass.new(key: 'left-right@gas') }
+
       before { edge.path = 'no-yes@electricity.ad' }
 
       it 'updates the file path' do
@@ -244,35 +271,51 @@ module Atlas
     end
 
     describe 'parsing an AD file' do
-      let(:edge) { Edge.find('foo-bar@coal') }
+      before do
+        FileUtils.mkdir_p(klass.directory)
+        File.write(klass.directory.join('a-b@c.ad'), content)
+      end
+
+      let(:content) do
+        <<~DOC
+          - type = share
+          - parent_share = 0.5
+        DOC
+      end
+
+      let(:edge) { klass.find('a-b@c') }
 
       it 'sets the supplier' do
-        expect(edge.supplier).to eq(:foo)
+        expect(edge.supplier).to eq(:a)
       end
 
       it 'sets the consumer' do
-        expect(edge.consumer).to eq(:bar)
+        expect(edge.consumer).to eq(:b)
       end
 
       it 'sets the carrier' do
-        expect(edge.carrier).to eq(:coal)
+        expect(edge.carrier).to eq(:c)
       end
 
       it 'sets the type' do
         expect(edge.type).to eq(:share)
       end
 
-      it 'sets the parent share' do
+      it 'sets attributes' do
         expect(edge.parent_share).to eq(0.5)
       end
 
-      it 'sets the child share' do
-        expect(edge.child_share).to eq(1)
-      end
+      context 'when a query is present' do
+        let(:content) do
+          <<~DOC
+            - type = share
+            ~ parent_share = SHARE(cars, gasoline)
+          DOC
+        end
 
-      it 'sets the query when one is present' do
-        expect(Edge.find('bar-baz@corn').queries[:parent_share]).to eq \
-          "SHARE(cars, gasoline)"
+        it 'sets the query when one is present' do
+          expect(klass.find('a-b@c').queries[:parent_share]).to eq('SHARE(cars, gasoline)')
+        end
       end
     end
   end

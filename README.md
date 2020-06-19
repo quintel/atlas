@@ -53,10 +53,10 @@ to use:
 * **Atlas::Carrier**
 * **Atlas::Dataset** – Also provides access to data such as energy balances,
   edge shares, and CHP data.
-* **Atlas::Edge** – In the past known as "links".
+* **Atlas::EnergyEdge** – In the past known as "links".
 * **Atlas::Gquery**
 * **Atlas::Input**
-* **Atlas::Node** – ... and the subclasses Converter, DemandNode, StatNode,
+* **Atlas::EnergyNode** – ... and the subclasses Converter, DemandNode, StatNode,
   and FinalDemandNode.
 * **Atlas::Preset**
 * **Atlas::Slot**

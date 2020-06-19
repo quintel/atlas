@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe Atlas::Slot::Dynamic do
   let(:node) do
-    Atlas::Node.new(output: { electricity: :etengine_dynamic })
+    Atlas::EnergyNode.new(output: { electricity: :etengine_dynamic })
   end
 
   let(:slot) do
@@ -19,7 +19,7 @@ describe Atlas::Slot::Dynamic do
     expect(slot).to be_a(described_class)
   end
 
-  it 'belongs to a Node' do
+  it 'belongs to an EnergyNode' do
     expect(slot.node).to eq(node)
   end
 
