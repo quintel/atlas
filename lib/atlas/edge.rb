@@ -131,5 +131,11 @@ module Atlas
         end
       end
     end
+
+    # ----------------------------------------------------------------------------------------------
+
+    def self.all
+      EnergyEdge.all + MoleculeEdge.all
+    end
   end
 end

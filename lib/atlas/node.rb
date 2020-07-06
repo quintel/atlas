@@ -157,5 +157,11 @@ module Atlas
           .map { |key, _| [key.to_s.split('.', 2).last.to_sym, nil] } ]
       end
     end
+
+    # ----------------------------------------------------------------------------------------------
+
+    def self.all
+      EnergyNode.all + MoleculeNode.all
+    end
   end
 end

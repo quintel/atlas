@@ -21,6 +21,37 @@ module Atlas
       @graph
     end
 
+    # Internal: Given a single +edge+, sets up the edge between the two
+    # nodes specified.
+    #
+    # edge - An Edge (ActiveDocument) instance.
+    #
+    # Returns the Turbine::Edge which was created.
+    def self.establish_edge(edge, graph)
+      parent  = graph.node(edge.supplier)
+      child   = graph.node(edge.consumer)
+      carrier = Carrier.find(edge.carrier)
+
+      props = edge.attributes.slice(
+        :parent_share, :child_share, :demand, :reversed, :priority
+      ).merge(model: edge)
+
+      if edge.type == :inversed_flexible
+        # Send energy to the sink only once all the other edges have had their
+        # demands set.
+        props[:type] = :overflow
+      elsif edge.type == :flexible
+        # Receive energy from the source once all the other input edges have
+        # had their demand set.
+        props[:type] = :flexible
+      end
+
+      raise DocumentNotFoundError.new(edge.supplier, edge.class.node_class) if parent.nil?
+      raise DocumentNotFoundError.new(edge.consumer, edge.class.node_class) if child.nil?
+
+      parent.connect_to(child, carrier.key, props)
+    end
+
     private
 
     # Internal: Creates a new GraphBuilder. Use GraphBuilder.build rather than
@@ -28,11 +59,11 @@ module Atlas
     #
     # Returns a GraphBuilder.
     def initialize(sector = nil)
-      @nodes = Collection.new(EnergyNode.all.select(&filter(sector)))
+      @nodes = Collection.new(Node.all.select(&filter(sector)))
       @graph = Turbine::Graph.new
 
       @edges = if sector
-        Collection.new(EnergyEdge.all.select do |edge|
+        Collection.new(Edge.all.select do |edge|
           # For the moment, we test the sector of the node on each end of the
           # edge, rather than the namespace of the edge; edges currently use
           # the same namespace as the parent node. Because of this, testing
@@ -41,7 +72,7 @@ module Atlas
           @nodes.key?(edge.supplier) || @nodes.key?(edge.consumer)
         end)
       else
-        EnergyEdge.all
+        Edge.all
       end
     end
 
@@ -59,7 +90,7 @@ module Atlas
       @edges.sort_by(&:key).each do |edge|
         next if edge.carrier == :coupling_carrier
 
-        self.class.establish_edge(edge, @graph, @nodes)
+        self.class.establish_edge(edge, @graph)
       end
     end
 
@@ -95,37 +126,6 @@ module Atlas
         ref_slot.set(:model, slot)
         ref_slot.set(:type, :elastic) if slot.is_a?(Slot::Elastic)
       end
-    end
-
-    # Internal: Given a single +edge+, sets up the edge between the two
-    # nodes specified.
-    #
-    # edge - An Edge (ActiveDocument) instance.
-    #
-    # Returns the Turbine::Edge which was created.
-    def self.establish_edge(edge, graph, nodes)
-      parent  = graph.node(edge.supplier)
-      child   = graph.node(edge.consumer)
-      carrier = Carrier.find(edge.carrier)
-
-      props = edge.attributes.slice(
-        :parent_share, :child_share, :demand, :reversed, :priority
-      ).merge(model: edge)
-
-      if edge.type == :inversed_flexible
-        # Send energy to the sink only once all the other edges have had their
-        # demands set.
-        props[:type] = :overflow
-      elsif edge.type == :flexible
-        # Receive energy from the source once all the other input edges have
-        # had their demand set.
-        props[:type] = :flexible
-      end
-
-      fail DocumentNotFoundError.new(edge.supplier, EnergyNode) if parent.nil?
-      fail DocumentNotFoundError.new(edge.consumer, EnergyNode) if child.nil?
-
-      parent.connect_to(child, carrier.key, props)
     end
 
     # Internal: Given a sector, returns a lambda which can be used to filter
