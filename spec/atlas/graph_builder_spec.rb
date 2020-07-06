@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Atlas
   describe GraphBuilder do
     describe '.build' do
-      let(:graph) { GraphBuilder.build }
+      let(:graph) { described_class.build }
 
       it 'returns a Turbine::Graph' do
         expect(graph).to be_a(Turbine::Graph)
@@ -70,7 +72,7 @@ module Atlas
 
       before do
         link_data.each do |link|
-          GraphBuilder.establish_edge(link, graph, nodes)
+          described_class.establish_edge(link, graph)
         end
       end
 
@@ -158,7 +160,7 @@ module Atlas
           link = EnergyEdge.new(key: 'nope-key@coal', type: :share)
 
           expect do
-            GraphBuilder.establish_edge(link, graph, nodes)
+            described_class.establish_edge(link, graph)
           end.to raise_error(Atlas::DocumentNotFoundError)
         end
 
@@ -166,7 +168,7 @@ module Atlas
           link = EnergyEdge.new(key: 'key-nope@coal', type: :share)
 
           expect do
-            GraphBuilder.establish_edge(link, graph, nodes)
+            described_class.establish_edge(link, graph)
           end.to raise_error(Atlas::DocumentNotFoundError)
         end
       end
@@ -179,7 +181,7 @@ module Atlas
           link = EnergyEdge.new(key: 'key-parent@iid', type: :share)
 
           expect do
-            GraphBuilder.establish_edge(link, graph, nodes)
+            described_class.establish_edge(link, graph)
           end.to raise_error(Atlas::DocumentNotFoundError)
         end
       end
