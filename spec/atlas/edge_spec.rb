@@ -16,8 +16,8 @@ module Atlas
       Class.new do
         include Atlas::Edge
 
-        def self.node_class
-          TestNode
+        def self.graph_config
+          GraphConfig::Config.new(:test, self, TestNode)
         end
 
         def self.name

@@ -9,6 +9,10 @@ module Atlas
 
     directory_name 'graphs/energy/nodes'
 
+    def self.graph_config
+      GraphConfig.energy
+    end
+
     attribute :use,                  String
     attribute :has_loss,             Boolean
     attribute :energy_balance_group, String
