@@ -87,7 +87,7 @@ module Atlas
   end
 
   DocumentNotFoundError = error_class do |key, klass = nil|
-    name = klass && klass.name.demodulize.humanize.downcase || 'document'
+    name = klass && klass.name.demodulize.underscore.humanize.downcase || 'document'
 
     if key.is_a?(Array)
       "Could not find a #{ name } with one of these keys: " +
