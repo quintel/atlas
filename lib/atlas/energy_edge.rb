@@ -9,8 +9,8 @@ module Atlas
 
     directory_name 'graphs/energy/edges'
 
-    def self.node_class
-      EnergyNode
+    def self.graph_config
+      GraphConfig.energy
     end
   end
 end

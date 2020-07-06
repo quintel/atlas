@@ -46,8 +46,8 @@ module Atlas
         props[:type] = :flexible
       end
 
-      raise DocumentNotFoundError.new(edge.supplier, edge.class.node_class) if parent.nil?
-      raise DocumentNotFoundError.new(edge.consumer, edge.class.node_class) if child.nil?
+      raise DocumentNotFoundError.new(edge.supplier, edge.graph_config.node_class) if parent.nil?
+      raise DocumentNotFoundError.new(edge.consumer, edge.graph_config.node_class) if child.nil?
 
       parent.connect_to(child, carrier.key, props)
     end

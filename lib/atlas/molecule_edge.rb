@@ -9,8 +9,8 @@ module Atlas
 
     directory_name 'graphs/molecules/edges'
 
-    def self.node_class
-      MoleculeNode
+    def self.graph_config
+      GraphConfig.molecules
     end
   end
 end

@@ -49,8 +49,9 @@ module Atlas
 
     # Class methods used on classes which include Edge.
     module ClassMethods
-      # Returns the class used to represent nodes associated with the Edge.
-      def node_class
+      # Public: Returns the GraphConfig::Config object which has information about the graph to
+      # which the edge belongs.
+      def graph_config
         raise NotImplementedError
       end
 
@@ -107,6 +108,11 @@ module Atlas
         @carrier = carrier&.to_sym
       end
 
+      # See Edge.graph_config
+      def graph_config
+        self.class.graph_config
+      end
+
       private
 
       # Internal: Given the name of the ActiveDocument file, without a subclass suffix or file
@@ -122,11 +128,11 @@ module Atlas
       def validate_associated_documents
         errors.add(:carrier, 'does not exist') if carrier && !Carrier.manager.key?(carrier)
 
-        if supplier && !self.class.node_class.manager.key?(supplier)
+        if supplier && !graph_config.node_class.manager.key?(supplier)
           errors.add(:supplier, 'does not exist')
         end
 
-        if consumer && !self.class.node_class.manager.key?(consumer)
+        if consumer && !graph_config.node_class.manager.key?(consumer)
           errors.add(:consumer, 'does not exist')
         end
       end

@@ -43,6 +43,17 @@ module Atlas
 
     # ----------------------------------------------------------------------------------------------
 
+    # Contains methods defined on the class which includes Node.
+    module ClassMethods
+      # Public: Returns the GraphConfig::Config object which has information about the graph to
+      # which the node belongs.
+      def graph_config
+        raise NotImplementedError
+      end
+    end
+
+    # ----------------------------------------------------------------------------------------------
+
     # InstanceMethods have to be defined in a separate module, and included at the end of the
     # above `included` block, otherwise the Virtus attributes will override any custom
     # implementation (such as `input=`).
@@ -109,6 +120,11 @@ module Atlas
       def output=(outputs)
         super
         @out_slots = nil
+      end
+
+      # See Edge.graph_config
+      def graph_config
+        self.class.graph_config
       end
 
       private
