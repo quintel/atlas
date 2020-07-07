@@ -13,7 +13,6 @@ module Atlas
       GraphConfig.energy
     end
 
-    attribute :use,                  String
     attribute :has_loss,             Boolean
     attribute :energy_balance_group, String
 

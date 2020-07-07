@@ -13,17 +13,17 @@ module Atlas
 
       context 'nodes' do
         it 'are all added to the graph' do
-          expect(graph.nodes.length).to eq(EnergyNode.all.length)
+          expect(graph.nodes.length).to eq(Node.all.length)
         end
 
         it 'sets the key on each node' do
-          EnergyNode.all.each do |node|
+          Node.all.each do |node|
             expect(graph.node(node.key).key).to eq(node.key)
           end
         end
 
         it 'each have a "model" property containing the AD instance' do
-          EnergyNode.all.each do |node|
+          Node.all.each do |node|
             expect(graph.node(node.key).get(:model)).to be
           end
         end
