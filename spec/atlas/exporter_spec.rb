@@ -20,28 +20,35 @@ module Atlas
     let!(:child)   { graph.add(make_node(:child,  demand: 25)) }
 
     # Edges
-    let!(:mf_edge) { make_edge(mother, father, :spouse, child_share: 1.0) }
     let!(:mc_edge) { make_edge(mother, child,  :child,  child_share: (15.0 / 25.0)) }
-    let!(:fc_edge) { make_edge(father, child,  :child,  child_share: (10.0 / 25.0)) }
-
-    # Slots
-    let!(:mf_slot) { mother.slots.out(:spouse).set(:share, 10.0 / 25.0) }
-    let!(:mc_slot) { mother.slots.out(:child).set(:share, 15.0 / 25.0) }
 
     # Result and Output
-    let(:result) { Exporter.dump(graph) }
-    let(:edges)  { result[:edges] }
-    let(:nodes)  { result[:nodes] }
+    let(:result) { described_class.dump(graph) }
+    let(:edges)  { result[GraphConfig.energy.edge_class.name] }
+    let(:nodes)  { result[GraphConfig.energy.node_class.name] }
+
+    # Slots and edges which aren't explicitly tested.
+    before do
+      make_edge(mother, father, :spouse, child_share: 1.0)
+      make_edge(father, child,  :child,  child_share: (10.0 / 25.0))
+
+      mother.slots.out(:spouse).set(:share, 10.0 / 25.0)
+      mother.slots.out(:child).set(:share, 15.0 / 25.0)
+    end
 
     # ------------------------------------------------------------------------
 
-    it 'writes static data from the document' do
+    it 'writes static scalar data from the document' do
       model = mother.get(:model)
-
       model.has_loss = false
-      model.groups   = %w( bomber life drg innovation jaedong )
 
       expect(nodes[:mother][:has_loss]).to be(false)
+    end
+
+    it 'writes static complex data from the document' do
+      model = mother.get(:model)
+      model.groups = %w[group_one group_two]
+
       expect(nodes[:mother][:groups]).to eq(model.groups)
     end
 
@@ -95,6 +102,38 @@ module Atlas
 
       it 'writes [C]+@child share' do
         expect(nodes[:child][:input][:child]).to eq(1)
+      end
+    end
+
+    describe 'saving when there are molecule nodes and edges' do
+      let!(:molecule_from) { graph.add(make_node(:m_from, class: Atlas::MoleculeNode, demand: 25)) }
+      let!(:molecule_to) { graph.add(make_node(:m_to, class: Atlas::MoleculeNode, demand: 25)) }
+
+      let!(:molecule_edge) do
+        make_edge(molecule_from, molecule_to, :co2, class: Atlas::MoleculeEdge, child_share: 1.0)
+      end
+
+      let(:molecule_nodes)  { result[GraphConfig.molecules.node_class.name] }
+      let(:molecule_edges)  { result[GraphConfig.molecules.edge_class.name] }
+
+      it 'writes [M_FROM] demand' do
+        expect(molecule_nodes[:m_from][:demand]).to eq(molecule_from.demand)
+      end
+
+      it 'writes [M_TO] demand' do
+        expect(molecule_nodes[:m_to][:demand]).to eq(molecule_to.demand)
+      end
+
+      it 'writes [M_FROM]->[M_TO] child share' do
+        expect(molecule_edges[:'m_from-m_to@co2'][:child_share]).to eq(molecule_edge.child_share)
+      end
+
+      it 'does not save molecule data with energy data' do
+        expect(nodes[:m_from]).to be_nil
+      end
+
+      it 'does not save energy data with molecule data' do
+        expect(molecule_nodes[:mother]).to be_nil
       end
     end
 
@@ -194,7 +233,7 @@ module Atlas
       end
 
       it 'is exported as an edge share' do
-        key  = Atlas::EnergyEdge.key(:fd, :bar, :coupling_carrier)
+        key  = Atlas::Edge.key(:fd, :bar, :coupling_carrier)
         edge = Atlas::EnergyEdge.new(key: key, child_share: 1.0, type: :share)
 
         edge.save!

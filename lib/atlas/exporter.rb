@@ -30,10 +30,16 @@ module Atlas
     #
     # Returns a Hash.
     def to_h
-      nodes = @graph.nodes
-      edges = nodes.map { |node| node.out_edges.to_a }.flatten
+      nodes = @graph.nodes.group_by { |node| node.get(:model).graph_config }
 
-      { nodes: nodes_hash(nodes), edges: edges_hash(edges) }
+      edges = @graph.nodes
+        .flat_map { |node| node.out_edges.to_a }
+        .group_by { |edge| edge.get(:model).graph_config }
+
+      GraphConfig.configs.each_with_object({}) do |graph_config, data|
+        data[graph_config.node_class.name] = nodes_hash(nodes[graph_config] || {})
+        data[graph_config.edge_class.name] = edges_hash(edges[graph_config] || {})
+      end
     end
 
     private
@@ -55,7 +61,7 @@ module Atlas
 
         if model.max_demand
           attributes[:max_demand] = model.max_demand
-        elsif ! model.queries.key?(:max_demand)
+        elsif !model.queries.key?(:max_demand)
           # Keep the Refinery value if it was set by a query.
           attributes.delete(:max_demand)
         end
@@ -76,7 +82,7 @@ module Atlas
     # Returns a Hash.
     def edges_hash(edges)
       data = edges.each_with_object({}) do |edge, hash|
-        model      = edge.get(:model)
+        model = edge.get(:model)
 
         attributes = model.to_hash
         attributes[:child_share] = edge.child_share.to_f

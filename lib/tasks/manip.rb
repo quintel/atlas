@@ -28,7 +28,7 @@ namespace :manip do
 
         # Temporary workaround for the custom edge key format.
         if klass == Atlas::EnergyEdge && ! attrs.key?('key')
-          attrs[:key] = Atlas::EnergyEdge.key(ENV['from'], ENV['to'], ENV['carrier'])
+          attrs[:key] = Atlas::Edge.key(ENV['from'], ENV['to'], ENV['carrier'])
         end
 
         doc = klass.create!(attrs)

@@ -14,5 +14,9 @@ module Atlas
     def molecules
       @molecules ||= Config.new(:molecules, MoleculeEdge, MoleculeNode)
     end
+
+    def configs
+      [energy, molecules]
+    end
   end
 end

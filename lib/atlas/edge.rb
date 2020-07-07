@@ -54,18 +54,6 @@ module Atlas
       def graph_config
         raise NotImplementedError
       end
-
-      # Public: Given +consumer+ and +supplier+ keys, and a +carrier+, returns
-      # the key which would be assigned to an edge with those attributes.
-      #
-      # supplier - The key of the supplier node.
-      # consumer - The key of the consumer node.
-      # carrier  - The carrier key.
-      #
-      # Returns a Symbol.
-      def key(supplier, consumer, carrier)
-        :"#{supplier}-#{consumer}@#{carrier}"
-      end
     end
 
     # InstanceMethods have to be defined in a separate module, and included at the end of the
@@ -78,7 +66,7 @@ module Atlas
       #
       # Returns a Symbol.
       def key
-        self.class.key(supplier, consumer, carrier)
+        Edge.key(supplier, consumer, carrier)
       end
 
       # Public: Sets the key of the consumer ("child" or "left") node.
@@ -142,6 +130,18 @@ module Atlas
 
     def self.all
       EnergyEdge.all + MoleculeEdge.all
+    end
+
+    # Public: Given +consumer+ and +supplier+ keys, and a +carrier+, returns the key which would be
+    # assigned to an edge with those attributes.
+    #
+    # supplier - The key of the supplier node.
+    # consumer - The key of the consumer node.
+    # carrier  - The carrier key.
+    #
+    # Returns a Symbol.
+    def self.key(supplier, consumer, carrier)
+      :"#{supplier}-#{consumer}@#{carrier}"
     end
   end
 end

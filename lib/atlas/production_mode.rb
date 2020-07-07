@@ -23,25 +23,45 @@ module Atlas
     #
     # Returns a ProductionMode
     def initialize(data)
-      @data = { nodes: {}, edges: {} }.merge(data)
+      @data = data
     end
 
-    # Public: An array containing all of the nodes with the pre-calculated
-    # demands.
+    # Public: An array containing all of the nodes with the pre-calculated demands for nodes
+    # belonging to the energy graph.
     #
-    # Returns an array of nodes.
-    def nodes
-      @nodes ||= Collection.new(
-        ActiveDocument::ProductionManager.new(EnergyNode, @data[:nodes]).all)
+    # Returns a ActiveDocument::Collection of nodes.
+    def energy_nodes
+      @energy_nodes ||= collection(GraphConfig.energy.node_class)
     end
 
-    # Public: An array containing all of the edges with the pre-calculated
-    # demands.
+    # Public: An array containing all of the nodes with the pre-calculated demands for nodes
+    # belonging to the molecule graph.
     #
-    # Returns an array of edges.
-    def edges
-      @edges ||= Collection.new(
-        ActiveDocument::ProductionManager.new(EnergyEdge, @data[:edges]).all)
+    # Returns a ActiveDocument::Collection of nodes.
+    def molecule_nodes
+      @molecule_nodes ||= collection(GraphConfig.molecules.node_class)
+    end
+
+    # Public: An array containing all of the edges with the pre-calculated demands for edges
+    # belonging to the energy graph.
+    #
+    # Returns ActiveDocument::Collection of edges.
+    def energy_edges
+      @energy_edges ||= collection(GraphConfig.energy.edge_class)
+    end
+
+    # Public: An array containing all of the edges with the pre-calculated demands for edges
+    # belonging to the molecule graph.
+    #
+    # Returns ActiveDocument::Collection of edges.
+    def molecule_edges
+      @molecule_edges ||= collection(GraphConfig.molecules.edge_class)
+    end
+
+    private
+
+    def collection(klass)
+      Collection.new(ActiveDocument::ProductionManager.new(klass, @data[klass.name] || {}).all)
     end
   end
 end
