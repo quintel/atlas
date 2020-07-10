@@ -12,5 +12,14 @@ module Atlas
     def self.graph_config
       GraphConfig.molecules
     end
+
+    # Public: The queries to be executed and saved on the Refinery graph.
+    #
+    # Defaults demand to zero, as the molecule graph should have no flows.
+    #
+    # Returns a Hash.
+    def queries
+      { demand: '0.0' }.merge(super)
+    end
   end
 end
