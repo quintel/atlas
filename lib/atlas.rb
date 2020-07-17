@@ -13,9 +13,9 @@ require 'rubel'
 require 'turbine'
 require 'virtus'
 
-require 'active_support/core_ext/string/strip'
 require 'active_support/core_ext/hash/deep_merge'
 require 'active_support/core_ext/hash/except'
+require 'active_support/core_ext/string/strip'
 
 require_relative 'atlas/base'
 require_relative 'atlas/parser/hash_to_text_parser'
@@ -88,6 +88,7 @@ require_relative 'atlas/scaler/area_attributes_scaler'
 require_relative 'atlas/scaler/time_curve_scaler'
 
 require_relative 'atlas/node_attributes/electricity_merit_order'
+require_relative 'atlas/node_attributes/energy_to_molecules'
 require_relative 'atlas/node_attributes/fever'
 require_relative 'atlas/node_attributes/merit_order'
 require_relative 'atlas/node_attributes/reconciliation'

@@ -170,6 +170,11 @@ module Atlas
     "use an #{ klass.name }"
   end
 
+  MoleculeCarrierRequired = error_class do
+    'Cannot call MoleculeConversion#conversion_of without a carrier name when ' \
+    'the conversion attribute is a hash'
+  end
+
   # Graph Structure / Topology Errors ----------------------------------------
 
   InvalidLinkError = error_class do |link|
