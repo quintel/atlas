@@ -2,7 +2,7 @@ module Atlas
   module ActiveDocument
     class ShareGroupInclusionValidator < ShareGroupValidator
       def validate(record)
-        return if record.errors.messages[options[:attribute]]
+        return if record.errors.messages[options[:attribute]]&.any?
 
         share_groups_for(record).each_pair do |share_group, inputs|
           missing = share_inputs[share_group] - inputs.keys

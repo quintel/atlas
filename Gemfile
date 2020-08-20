@@ -1,4 +1,4 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
@@ -7,8 +7,8 @@ end
 
 gemspec
 
-gem 'rubel',    ref: 'ad3d44e', github: 'quintel/rubel'
 gem 'refinery', ref: '72eacf8', github: 'quintel/refinery'
+gem 'rubel',    ref: 'ad3d44e', github: 'quintel/rubel'
 
 group :development do
   gem 'httparty'
@@ -20,16 +20,8 @@ group :development do
 end
 
 group :test do
-  gem 'rspec'
-  gem 'guard'
-  gem 'guard-rspec'
-  gem 'rb-fsevent', '~> 0.9.1'
-  gem 'simplecov'
   gem 'codecov', require: false
-
-  # Switch back to mainline once 2.6.1 is released.
-  gem 'shoulda-matchers', '>= 2.6.1.rc1'
-
-  # Growl notifications in Guard.
-  gem 'ruby_gntp', require: false
+  gem 'rspec'
+  gem 'shoulda-matchers'
+  gem 'simplecov'
 end

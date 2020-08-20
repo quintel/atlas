@@ -2,6 +2,9 @@ require 'fileutils'
 require 'yaml'
 require 'tmpdir'
 
+# Required by shoulda-matchers.
+require 'active_support/core_ext/object/try'
+
 require 'support/coverage'
 
 ENV['ATLAS_ENV'] = 'test'

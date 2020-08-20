@@ -2,10 +2,21 @@ require 'spec_helper'
 
 module Atlas
   describe Preset do
-    it { expect(Preset.new(key: 'o')).to validate_presence_of(:title) }
-    it { expect(Preset.new(key: 'o')).to validate_presence_of(:area_code) }
-    it { expect(Preset.new(key: 'o')).to validate_presence_of(:end_year) }
-    it { expect(Preset.new(key: 'o')).to validate_presence_of(:user_values) }
+    it 'must have a title' do
+      expect(described_class.new.errors_on(:title)).to include("can't be blank")
+    end
+
+    it 'must have an area_code' do
+      expect(described_class.new.errors_on(:area_code)).to include("can't be blank")
+    end
+
+    it 'must have an end_year' do
+      expect(described_class.new.errors_on(:end_year)).to include("can't be blank")
+    end
+
+    it 'must have user_values' do
+      expect(described_class.new.errors_on(:user_values)).to include("can't be blank")
+    end
 
     describe 'user values' do
       it 'permits inputs which exist' do

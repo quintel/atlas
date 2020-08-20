@@ -2,8 +2,13 @@ require 'spec_helper'
 
 module Atlas
   describe Edge do
-    it { expect(Edge.new(key: 'a-b@gas')).to validate_presence_of(:consumer) }
-    it { expect(Edge.new(key: 'a-b@gas')).to validate_presence_of(:supplier) }
+    it 'must have a consumer' do
+      expect(described_class.new(key: 'a-b@gas').errors_on(:consumer)).to include('does not exist')
+    end
+
+    it 'must have a supplier' do
+      expect(described_class.new(key: 'a-b@gas').errors_on(:supplier)).to include('does not exist')
+    end
 
     describe 'type' do
       valid_types = [ :share, :flexible, :constant,

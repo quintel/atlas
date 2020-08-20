@@ -2,7 +2,7 @@ module Atlas
   module ActiveDocument
     class ShareGroupTotalValidator < ShareGroupValidator
       def validate(record)
-        return if record.errors.messages[options[:attribute]]
+        return if record.errors.messages[options[:attribute]]&.any?
 
         share_groups_for(record).each do |share_group, inputs|
           sum = inputs.values.sum
