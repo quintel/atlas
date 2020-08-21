@@ -22,6 +22,7 @@ module Atlas
     attribute :merit_order,          NodeAttributes::ElectricityMeritOrder
     attribute :network_gas,          NodeAttributes::Reconciliation
     attribute :storage,              NodeAttributes::Storage
+    attribute :from_molecules,       NodeAttributes::EnergyToMolecules
 
     # Numeric attributes.
     %i[
