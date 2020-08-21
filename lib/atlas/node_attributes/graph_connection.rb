@@ -3,7 +3,7 @@
 module Atlas
   module NodeAttributes
     # Configures conversion from energy flows in ETEngine to equivalent flows in the molecule graph.
-    class EnergyToMolecules
+    class GraphConnection
       include ValueObject
       include ActiveModel::Validations
 
@@ -53,7 +53,7 @@ module Atlas
 
       validates_with ActiveDocument::DocumentReferenceValidator,
         attribute: :source,
-        class_name: 'Atlas::EnergyNode'
+        class_name: ->(conn) { conn.source_class_name }
 
       validates_inclusion_of :direction, in: DIRECTIONS, allow_nil: true
 
@@ -73,6 +73,10 @@ module Atlas
         conversion[carrier.to_sym] || 0.0
       end
 
+      def source_class_name
+        raise NotImplementedError
+      end
+
       private
 
       def validate_type_of_conversion
@@ -81,6 +85,18 @@ module Atlas
         elsif direction.nil? && conversion.is_a?(Hash)
           errors.add(:conversion, 'must be numeric when direction has no value')
         end
+      end
+    end
+
+    class EnergyToMolecules < GraphConnection
+      def source_class_name
+        'Atlas::EnergyNode'
+      end
+    end
+
+    class MoleculesToEnergy < GraphConnection
+      def source_class_name
+        'Atlas::MoleculeNode'
       end
     end
   end
