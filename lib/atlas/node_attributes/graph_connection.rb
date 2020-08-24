@@ -51,10 +51,6 @@ module Atlas
         attribute :conversion, Hash[Symbol => Float], default: nil
       end
 
-      validates_with ActiveDocument::DocumentReferenceValidator,
-        attribute: :source,
-        class_name: ->(conn) { conn.source_class_name }
-
       validates_inclusion_of :direction, in: DIRECTIONS, allow_nil: true
 
       validates_presence_of :conversion,
@@ -89,15 +85,15 @@ module Atlas
     end
 
     class EnergyToMolecules < GraphConnection
-      def source_class_name
-        'Atlas::EnergyNode'
-      end
+      validates_with ActiveDocument::DocumentReferenceValidator,
+        attribute: :source,
+        class_name: 'Atlas::EnergyNode'
     end
 
     class MoleculesToEnergy < GraphConnection
-      def source_class_name
-        'Atlas::MoleculeNode'
-      end
+      validates_with ActiveDocument::DocumentReferenceValidator,
+        attribute: :source,
+        class_name: 'Atlas::MoleculeNode'
     end
   end
 end
