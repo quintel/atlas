@@ -2,7 +2,10 @@
 
 module Atlas
   module NodeAttributes
-    # Configures conversion from energy flows in ETEngine to equivalent flows in the molecule graph.
+    # Configures conversion from flows in one ETEngine graph to another.
+    #
+    # Used to allow a demand in the energy graph to be used to set a demand in the molecule graph,
+    # and vice-versa.
     class GraphConnection
       include ValueObject
       include ActiveModel::Validations
@@ -84,12 +87,14 @@ module Atlas
       end
     end
 
+    # Represents connections from the energy graph to the molecule graph.
     class EnergyToMolecules < GraphConnection
       validates_with ActiveDocument::DocumentReferenceValidator,
         attribute: :source,
         class_name: 'Atlas::EnergyNode'
     end
 
+    # Represents connections from the molecule graph to the energy graph.
     class MoleculesToEnergy < GraphConnection
       validates_with ActiveDocument::DocumentReferenceValidator,
         attribute: :source,
