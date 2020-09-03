@@ -90,6 +90,44 @@ RSpec.shared_examples_for 'a GraphConnection subclass' do
     end
   end
 
+  describe '#attribute' do
+    context 'when attribute is not specified' do
+      let(:conv) { connection_class.new }
+
+      it 'defaults to :demand' do
+        expect(conv.attribute).to eq(:demand)
+      end
+
+      it 'is valid' do
+        expect(conv.errors_on(:attribute)).to be_empty
+      end
+    end
+
+    context 'when attribute is nil' do
+      let(:conv) { connection_class.new(attribute: nil) }
+
+      it 'is not valid' do
+        expect(conv.errors_on(:attribute)).to include("can't be blank")
+      end
+    end
+
+    context 'when attribute is ""' do
+      let(:conv) { connection_class.new(attribute: '') }
+
+      it 'is not valid' do
+        expect(conv.errors_on(:attribute)).to include("can't be blank")
+      end
+    end
+
+    context 'when attribute is :primary_co2_emission' do
+      let(:conv) { connection_class.new(attribute: :primary_co2_emission) }
+
+      it 'is valid' do
+        expect(conv.errors_on(:attribute)).to be_empty
+      end
+    end
+  end
+
   describe '#conversion_of' do
     context 'when conversion is nil' do
       let(:conv) { connection_class.new(conversion: nil) }
