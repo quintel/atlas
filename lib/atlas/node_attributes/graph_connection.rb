@@ -18,6 +18,11 @@ module Atlas
         # molecules.
         attribute :source, Symbol
 
+        # The name of the node attribute to be called to fetch the base quantity to be used for the
+        # connection. This defaults to "demand", but may be set to any other node attribute or
+        # computed value.
+        attribute :attribute, Symbol, default: :demand
+
         # Indicates whether to convert the inputs or outputs of the source node when determining the
         # molecule demand. Optional.
         #
@@ -55,6 +60,8 @@ module Atlas
       end
 
       validates_inclusion_of :direction, in: DIRECTIONS, allow_nil: true
+
+      validates_presence_of :attribute
 
       validates_presence_of :conversion,
         if: -> { DIRECTIONS.include?(direction) },
