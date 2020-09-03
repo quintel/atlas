@@ -107,7 +107,7 @@ RSpec.shared_examples_for 'a GraphConnection subclass' do
       let(:conv) { connection_class.new(attribute: nil) }
 
       it 'is not valid' do
-        expect(conv.errors_on(:attribute)).to include("can't be blank")
+        expect(conv.errors_on(:attribute)).to include('is not included in the list')
       end
     end
 
@@ -115,7 +115,7 @@ RSpec.shared_examples_for 'a GraphConnection subclass' do
       let(:conv) { connection_class.new(attribute: '') }
 
       it 'is not valid' do
-        expect(conv.errors_on(:attribute)).to include("can't be blank")
+        expect(conv.errors_on(:attribute)).to include('is not included in the list')
       end
     end
 
