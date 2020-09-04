@@ -15,6 +15,9 @@ module Atlas
 
     attribute :from_energy, NodeAttributes::EnergyToMolecules
 
+    # Molecule nodes define output capacity; the capacity of all non-loss output carriers.
+    attribute :output_capacity, Float
+
     # Public: The queries to be executed and saved on the Refinery graph.
     #
     # Defaults demand to zero, as the molecule graph should have no flows.
