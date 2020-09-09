@@ -30,6 +30,22 @@ module Atlas
       attribute :preset_demand,          Float
       attribute :typical_input_capacity, Float
 
+      # (Numeric) attributes for costs
+      %i[
+        ccs_investment
+        construction_time
+        cost_of_installing
+        decommissioning_costs
+        fixed_operation_and_maintenance_costs_per_year
+        initial_investment
+        technical_lifetime
+        variable_operation_and_maintenance_costs_for_ccs_per_full_load_hour
+        variable_operation_and_maintenance_costs_per_full_load_hour
+        wacc
+      ].each do |name|
+        attribute name, Float
+      end
+
       validates_with ActiveDocument::QueryValidator,
         attributes: [:max_demand], allow_no_query: true
 
