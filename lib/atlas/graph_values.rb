@@ -23,11 +23,17 @@ module Atlas
     validates_with Atlas::ActiveDocument::WhitelistingInitializerMethods,
       attribute: :values
 
-    validates_with Atlas::ActiveDocument::ShareGroupTotalValidator,
-      attribute: :values
+    # validates_with Atlas::ActiveDocument::ShareGroupTotalValidator,
+    #   attribute: :values, share_attribute: :parent_share, sum: 1.0
 
-    validates_with Atlas::ActiveDocument::ShareGroupInclusionValidator,
-      attribute: :values
+    # validates_with Atlas::ActiveDocument::ShareGroupTotalValidator,
+    #   attribute: :values, share_attribute: :child_share, sum: 1.0
+
+    # validates_with Atlas::ActiveDocument::ShareGroupInclusionValidator,
+    #   attribute: :values, share_attribute: :parent_share
+
+    # validates_with Atlas::ActiveDocument::ShareGroupInclusionValidator,
+    #   attribute: :values, share_attribute: :child_share
 
     def initialize(derived_dataset)
       @derived_dataset = derived_dataset

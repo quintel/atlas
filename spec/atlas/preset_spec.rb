@@ -80,7 +80,7 @@ module Atlas
 
           expect(preset.errors_on(:user_values)).
             to include("contains inputs belonging to the my_group share " \
-                       "group, but the values sum to 99.989, not 100")
+                       "group, but the values sum to 99.989, not 100.0")
         end
 
         it 'does not permit sums of more than 100.01' do
@@ -90,7 +90,7 @@ module Atlas
 
           expect(preset.errors_on(:user_values)).
             to include("contains inputs belonging to the my_group share " \
-                       "group, but the values sum to 100.011, not 100")
+                       "group, but the values sum to 100.011, not 100.0")
         end
       end
     end

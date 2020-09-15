@@ -1,4 +1,4 @@
 - type = share
-- graph_methods = [share]
+- graph_methods = [parent_share]
 
 ~ parent_share = SHARE(cars, gasoline)
