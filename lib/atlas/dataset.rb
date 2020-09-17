@@ -54,7 +54,7 @@ module Atlas
       :co2_emissions_of_imported_electricity_g_per_kwh,
       :co2_percentage_free,
       :co2_price,
-      :ccs_cost_in_industry,
+      :offshore_ccs_potential_mt_per_year,
       :economic_multiplier,
       :employment_fraction_production,
       :employment_local_fraction,
