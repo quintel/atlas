@@ -29,6 +29,7 @@ module Atlas
       electricity_output_capacity
       forecasting_error
       free_co2_factor
+      ccs_capture_rate
       heat_output_capacity
       households_supplied_per_unit
       land_use_per_unit
