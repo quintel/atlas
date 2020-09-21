@@ -67,7 +67,8 @@ module Atlas
         SetRubelAttributes.with_queryable(method(:query)),
         SetSlotSharesFromEfficiency.with_queryable(method(:query)),
         ScaleAttributes.with_dataset(dataset),
-        ZeroDisabledSectors.with_dataset(dataset)
+        ZeroDisabledSectors.with_dataset(dataset),
+        ZeroMoleculeLeaves
       ]
     end
 
