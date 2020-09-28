@@ -24,7 +24,7 @@ module Atlas
     #
     # Returns the calculated Graph.
     def calculate(with = Refinery::Catalyst::Calculators)
-      refinery_catalysts = [precursor, with, Refinery::Catalyst::Validation]
+      refinery_catalysts = [*precursors, with, Refinery::Catalyst::Validation]
 
       refinery_catalysts.compact.reduce(refinery_graph) do |result, catalyst|
         catalyst.call(result)
@@ -56,10 +56,10 @@ module Atlas
 
     private
 
-    def precursor
-      if precomputed_graph? && !@dataset.uses_deprecated_initializer_inputs
-        SetAttributesFromGraphValues.with_dataset(@dataset)
-      end
+    def precursors
+      return unless precomputed_graph? && !@dataset.uses_deprecated_initializer_inputs
+
+      [SetAttributesFromGraphValues.with_dataset(@dataset), ZeroMoleculeNodes]
     end
 
     def catalysts
