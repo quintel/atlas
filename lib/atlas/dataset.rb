@@ -17,28 +17,29 @@ module Atlas
     # Flags
     # -----
 
-    attribute :has_agriculture,          Boolean, default: true
-    attribute :has_buildings,            Boolean, default: true
-    attribute :has_coastline,            Boolean, default: true
-    attribute :has_cold_network,         Boolean, default: false
-    attribute :has_electricity_storage,  Boolean, default: true
-    attribute :has_employment,           Boolean, default: true
-    attribute :has_fce,                  Boolean, default: true
-    attribute :has_industry,             Boolean, default: true
-    attribute :has_lignite,              Boolean, default: false
-    attribute :has_merit_order,          Boolean, default: false
-    attribute :has_metal,                Boolean, default: true
-    attribute :has_mountains,            Boolean, default: true
-    attribute :has_old_technologies,     Boolean, default: false
-    attribute :has_other,                Boolean, default: true
-    attribute :has_solar_csp,            Boolean, default: false
-    attribute :has_import_export,        Boolean, default: true
-    attribute :use_network_calculations, Boolean, default: true
-    attribute :use_merit_order_demands,  Boolean, default: true
-    attribute :has_weather_curves,       Boolean, default: false
-    attribute :has_aggregated_chemical_industry,  Boolean, default:true
-    attribute :has_detailed_chemical_industry,    Boolean, default:false
-    attribute :has_coal_oil_for_heating_built_environment, Boolean, default:false
+    attribute :has_agriculture,                             Boolean, default: true
+    attribute :has_buildings,                               Boolean, default: true
+    attribute :has_coastline,                               Boolean, default: true
+    attribute :has_cold_network,                            Boolean, default: false
+    attribute :has_electricity_storage,                     Boolean, default: true
+    attribute :has_employment,                              Boolean, default: true
+    attribute :has_fce,                                     Boolean, default: true
+    attribute :has_industry,                                Boolean, default: true
+    attribute :has_lignite,                                 Boolean, default: false
+    attribute :has_merit_order,                             Boolean, default: false
+    attribute :has_metal,                                   Boolean, default: true
+    attribute :has_mountains,                               Boolean, default: true
+    attribute :has_old_technologies,                        Boolean, default: false
+    attribute :has_other,                                   Boolean, default: true
+    attribute :has_solar_csp,                               Boolean, default: false
+    attribute :has_other_emissions_section,                 Boolean, default: true
+    attribute :has_import_export,                           Boolean, default: true
+    attribute :use_network_calculations,                    Boolean, default: true
+    attribute :use_merit_order_demands,                     Boolean, default: true
+    attribute :has_weather_curves,                          Boolean, default: false
+    attribute :has_aggregated_chemical_industry,            Boolean, default:true
+    attribute :has_detailed_chemical_industry,              Boolean, default:false
+    attribute :has_coal_oil_for_heating_built_environment,  Boolean, default:false
 
     # Numeric Data
     # ------------
