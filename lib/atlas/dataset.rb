@@ -344,6 +344,13 @@ module Atlas
       @curve_sets ||= CurveSetCollection.at_path(dataset_dir.join('curves'))
     end
 
+    # Public: Retrieves and caches data about carriers from the carriers.csv file.
+    #
+    # Returns a CSVDocument.
+    def carrier_data
+      @carrier_data ||= CSVDocument.new(dataset_dir.join('carriers.csv'))
+    end
+
     # Public: Retrieves demand and full load hours data for the region.
     # Expects to load a file at datasets/AREA/central_producers.csv.
     #

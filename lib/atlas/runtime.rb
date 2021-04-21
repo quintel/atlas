@@ -69,6 +69,19 @@ module Atlas
       dataset.public_send(property)
     end
 
+    # Public: Fetches a value from the carriers.csv file.
+    #
+    # carrier_key - The name of the carrier.
+    # attr_key    - The name of the attribute to be fetched.
+    #
+    # For example:
+    #   CARRIER(:coal, :co2_conversion_per_mj)
+    #
+    # Returns a float.
+    def CARRIER(carrier_key, attr_key)
+      dataset.carrier_data.get(carrier_key, attr_key)
+    end
+
     # Public: Given the key of a node, retrieves the production (energy
     # supplied) of the node from the central_producers.csv file.
     #
