@@ -7,9 +7,6 @@ module Atlas
   class Runner
     attr_reader :dataset
 
-    # Queries must return a numeric value, or one of these.
-    PERMITTED_NON_NUMERICS = [nil, :infinity, :recursive].freeze
-
     # Public: Creates a new Runner.
     #
     # Returns a Runner.
@@ -64,27 +61,12 @@ module Atlas
 
     def catalysts
       [
-        SetRubelAttributes.with_queryable(method(:query)),
-        SetSlotSharesFromEfficiency.with_queryable(method(:query)),
+        SetRubelAttributes.with_queryable(->(q) { runtime.execute_checked(q) }),
+        SetSlotSharesFromEfficiency.with_queryable(->(q) { runtime.execute_checked(q) }),
         ScaleAttributes.with_dataset(dataset),
         ZeroDisabledSectors.with_dataset(dataset),
         ZeroMoleculeLeaves
       ]
-    end
-
-    # Internal: Executes the given Rubel query +string+, returning the
-    # result.
-    def query(string)
-      result = runtime.execute(string)
-
-      unless result.is_a?(Numeric) || PERMITTED_NON_NUMERICS.include?(result)
-        fail NonNumericQueryError.new(result)
-      end
-
-      result == :infinity ? Float::INFINITY : result
-    rescue RuntimeError => ex
-      ex.message.gsub!(/$/, " (executing: #{ string.inspect })")
-      raise ex
     end
 
     def precomputed_graph?

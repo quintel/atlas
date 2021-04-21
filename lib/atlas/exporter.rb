@@ -1,138 +1,16 @@
+# frozen_string_literal: true
+
 module Atlas
-  # Given a graph, exports its data as a Hash for serialization.
-  #
-  # This is an abstract base class. An implementation must provide
-  # the following methods:
-  #  - nodes_hash(nodes)
-  #  - edges_hash(edges)
-  class Exporter
-    # Public: Given a graph, returns the Hash with all the exported values.
-    #
-    # graph - A Turbine::Graph containing the nodes and edges.
-    #
-    # Returns a Hash for you to save as you see fit.
-    def self.dump(graph)
-      new(graph).to_h
-    end
-
-    # Public: Creates a new exporter. Does not care if the graph has been
-    # calculated; it is expected you'll run the graph through Runner first
-    # if needed, which will raise errors if the graph is not fully calculated.
-    #
-    # graph - The graph which will be exported.
-    #
-    # Returns an Exporter.
-    def initialize(graph)
-      @graph = graph
-    end
-
-    # Public: Creates the hash of attributes for nodes and edges.
+  # Exports graph-based data for a region.
+  module Exporter
+    # Public: Given a Runner, returns the Hash with all the exported values for nodes, edges, and
+    # carriers.
     #
     # Returns a Hash.
-    def to_h
-      nodes = @graph.nodes.group_by { |node| node.get(:model).graph_config }
-
-      edges = @graph.nodes
-        .flat_map { |node| node.out_edges.to_a }
-        .group_by { |edge| edge.get(:model).graph_config }
-
-      GraphConfig.configs.each_with_object({}) do |graph_config, data|
-        data[graph_config.node_class.name] = nodes_hash(nodes[graph_config] || {})
-        data[graph_config.edge_class.name] = edges_hash(edges[graph_config] || {})
-      end
-    end
-
-    private
-
-    # Internal: Given an array of +nodes+, creates a hash containing all
-    # of the node demands and attributes.
-    #
-    # Returns a Hash.
-    def nodes_hash(nodes)
-      nodes.each_with_object({}) do |node, hash|
-        model      = node.get(:model)
-        attributes = model.to_hash
-
-        attributes.merge!(node.properties.except(:model, :cc_in, :cc_out))
-
-        attributes.each do |key, value|
-          attributes[key] = value.to_hash if value.is_a?(ValueObject)
-        end
-
-        if model.max_demand
-          attributes[:max_demand] = model.max_demand
-        elsif !model.queries.key?(:max_demand)
-          # Keep the Refinery value if it was set by a query.
-          attributes.delete(:max_demand)
-        end
-
-        attributes[:demand] = node.demand.to_f
-        attributes[:input]  = slots_hash(node.slots.in)
-        attributes[:output] = slots_hash(node.slots.out)
-
-        attributes.delete(:queries)
-
-        hash[node.key] = attributes
-      end
-    end
-
-    # Internal: Given an array of +edges+, creates a hash containing all
-    # of the edge shares.
-    #
-    # Returns a Hash.
-    def edges_hash(edges)
-      data = edges.each_with_object({}) do |edge, hash|
-        model = edge.get(:model)
-
-        attributes = model.to_hash
-        attributes[:child_share] = edge.child_share.to_f
-
-        if model.type == :constant
-          attributes[:demand] = edge.demand.to_f
-        elsif model.type == :share && model.reversed?
-          attributes[:parent_share] = edge.parent_share.to_f
-        end
-
-        attributes.delete(:queries)
-
-        hash[model.key] = attributes
-      end
-
-      # Yay coupling carrier special cases!
-      EnergyEdge.all.each do |edge|
-        if edge.carrier == :coupling_carrier
-          data[edge.key] = edge.to_hash
-          data[edge.key][:share] = edge.child_share
-        end
-      end
-
+    def self.dump(runner)
+      data = GraphExporter.dump(runner.refinery_graph)
+      data[Carrier.name] = CarrierExporter.dump_collection(Carrier.all, runner.runtime)
       data
-    end
-
-    # Internal: Given a collection of slots, creates a hash with the shares of
-    # each slot.
-    #
-    # Returns a Hash.
-    def slots_hash(slots)
-      node      = slots.node
-      direction = slots.direction
-
-      from_slots = slots.each_with_object({}) do |slot, hash|
-        if slot.get(:model).is_a?(Atlas::Slot::Elastic)
-          hash[slot.carrier] = :elastic
-        else
-          hash[slot.carrier] = slot.share.to_f
-        end
-      end
-
-      if slots.any?
-        # Find any temporarily stored coupling carrier conversion.
-        if cc_share = node.get(:"cc_#{ direction }")
-          from_slots[:coupling_carrier] = cc_share
-        end
-      end
-
-      from_slots
     end
   end
 end

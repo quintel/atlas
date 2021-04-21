@@ -1,5 +1,16 @@
+# frozen_string_literal: true
+
 module Atlas
-  class Runtime < ::Rubel::Base
+  # Runtime in which we execute queries for dynamic attributes.
+  #
+  # Rubel::Runtime::Sandbox inherits from BasicObject, so many normally-global
+  # methods need to reference `::Kernel` explicitly.
+  class Runtime < ::Rubel::Runtime::Sandbox
+    include ::Rubel::Functions::Defaults
+
+    # Queries must return a numeric value, or one of these.
+    PERMITTED_NON_NUMERICS = [nil, :infinity, :recursive].freeze
+
     attr_reader :dataset
 
     # Creates a new runtime in the +context+ of a dataset.
@@ -25,7 +36,22 @@ module Atlas
       ::Kernel.raise(QueryError.new(ex, string))
     end
 
-    alias_method :query, :execute
+    # Public: Much like `execute`, but raises a useful error if the query
+    # returns a non-numeric, or unexpected, value.
+    #
+    # Returns the result of the query.
+    def execute_checked(string)
+      result = execute(string)
+
+      unless result.is_a?(::Numeric) || PERMITTED_NON_NUMERICS.include?(result)
+        ::Kernel.raise(NonNumericQueryError.new(result))
+      end
+
+      result == :infinity ? ::Float::INFINITY : result
+    rescue ::RuntimeError => e
+      e.message.gsub!(/$/, " (executing: #{string.inspect})")
+      ::Kernel.raise(e)
+    end
 
     # Query Functions --------------------------------------------------------
 
