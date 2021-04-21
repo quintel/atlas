@@ -58,6 +58,14 @@ module Atlas
       @molecule_edges ||= collection(GraphConfig.molecules.edge_class)
     end
 
+    # Public: An array containing all of the carriers with pre-calculated dataset-specific query
+    # attributes.
+    #
+    # Returns ActiveDocument::Collection of carriers.
+    def carriers
+      @carriers ||= collection(Atlas::Carrier)
+    end
+
     private
 
     def collection(klass)
