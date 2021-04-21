@@ -5,3 +5,5 @@
 - mj_per_kg = 29.5
 - co2_conversion_per_mj = 0.0926835
 - infinite = 0.0
+
+~ co2_conversion_per_mj = CARRIER(coal, co2_conversion_per_mj)

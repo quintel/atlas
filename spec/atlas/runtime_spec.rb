@@ -40,6 +40,22 @@ module Atlas
       end
     end
 
+    describe 'CARRIER' do
+      it 'fetches a carrier value' do
+        expect(runtime.execute('CARRIER(coal, co2_conversion_per_mj)')).to eq(12.0)
+      end
+
+      it 'raises an error if the carrier is missing' do
+        expect { runtime.execute('CARRIER(nope, co2_conversion_per_mj)') }
+          .to(raise_error { |e| expect(e.original).to be_a(Atlas::UnknownCSVRowError) })
+      end
+
+      it 'raises an error if the attribute is missing' do
+        expect { runtime.execute('CARRIER(coal, nope)') }
+          .to(raise_error { |e| expect(e.original).to be_a(Atlas::UnknownCSVCellError) })
+      end
+    end
+
     context 'SHARE' do
       it 'executes SHARE functions' do
         expect(runtime.execute("SHARE(cars, gasoline)")).to eq(0.1)
