@@ -57,6 +57,25 @@ module Atlas
       end
     end
 
+    context 'with data for carriers' do
+      let(:mode) do
+        described_class.new(
+          Atlas::Carrier.name => {
+            'coal': { co2_conversion_per_mj: 10.0 },
+            'corn': { co2_conversion_per_mj: 50.0 }
+          }
+        )
+      end
+
+      it 'retrieves carriers' do
+        expect(mode.carriers.length).to eq(2)
+      end
+
+      it 'uses static data for carriers' do
+        expect(mode.carriers.find('coal').co2_conversion_per_mj).to eq(10.0)
+      end
+    end
+
     context 'with only energy graph data' do
       let(:mode) do
         described_class.new(
