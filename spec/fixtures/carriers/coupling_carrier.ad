@@ -1,2 +1,6 @@
 - infinite = false
 - graphviz_color = pink
+- co2_conversion_per_mj = 0
+- cost_per_mj = 0
+- potential_co2_conversion_per_mj = 0
+

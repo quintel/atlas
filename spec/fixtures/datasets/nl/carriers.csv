@@ -1,2 +1,6 @@
-key,co2_conversion_per_mj
-coal,12.0
+key,co2_conversion_per_mj,cost_per_mj,potential_co2_conversion_per_mj
+coal,12.0,10.0,8.0
+corn,1.2,1.0,0.8
+fictional_carrier,0.12,0.1,0.08
+fictional_carrier_one,0.12,0.1,0.08
+fictional_carrier_two,0.12,0.1,0.08
