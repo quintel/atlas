@@ -55,9 +55,12 @@ module Atlas
     def queries_block
       return unless @queries
 
-      @queries.map do |key, value|
-        "~ #{ format_attribute(key, value) }"
-      end
+      formatted_queries = @queries.map { |key, value| "~ #{format_attribute(key, value)}" }
+
+      formatted_queries.map.with_index do |str, index|
+        next_query = formatted_queries[index + 1]
+        str.include?("\n") || next_query&.include?("\n") ? "#{str}\n" : str
+      end.join("\n")
     end
 
     # Internal: Lines containing the attributes for the document, whichi will

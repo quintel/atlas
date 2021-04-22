@@ -123,8 +123,65 @@ module Atlas
         expect(p.to_text).to eql "# hi\n\n~ demand = SUM(1,2)"
       end
 
+      it 'puts no extra newlines between multiple queries' do
+        hash = { thing: 'hi', queries: { a: '1', b: '2', c: '3' } }
+
+        expect(described_class.new(hash).to_text).to eq(<<-TEXT.strip_heredoc.chomp("\n"))
+          - thing = hi
+
+          ~ a = 1
+          ~ b = 2
+          ~ c = 3
+        TEXT
+      end
+
+      it 'puts a newline after a multi-line query' do
+        hash = { thing: 'hi', queries: { demand: "SUM(\n  1,\n  2\n)", other: "1" } }
+
+        expect(described_class.new(hash).to_text).to eq(<<-TEXT.strip_heredoc.chomp("\n"))
+          - thing = hi
+
+          ~ demand =
+              SUM(
+                1,
+                2
+              )
+
+          ~ other = 1
+        TEXT
+      end
+
+      it 'puts a newline between multiple multi-line queries' do
+        hash = { thing: 'hi', queries: { demand: "SUM(\n  1,\n  2\n)", other: "1\n2" } }
+
+        expect(described_class.new(hash).to_text).to eq(<<-TEXT.strip_heredoc.chomp("\n"))
+          - thing = hi
+
+          ~ demand =
+              SUM(
+                1,
+                2
+              )
+
+          ~ other =
+              1
+              2
+        TEXT
+      end
+
+      it 'has no extra newline after the last multi-line query' do
+        hash = { thing: 'hi', queries: { demand: "SUM(\n  1,\n  2\n)" } }
+
+        expect(described_class.new(hash).to_text).to eq(<<-TEXT.strip_heredoc.chomp("\n"))
+          - thing = hi
+
+          ~ demand =
+              SUM(
+                1,
+                2
+              )
+        TEXT
+      end
     end
-
   end
-
 end
