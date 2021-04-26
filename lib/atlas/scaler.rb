@@ -1,6 +1,7 @@
 module Atlas
   class Scaler
-    UNSCALED_ETENGINE_DATA_FOLDERS = %w[
+    LINKED_FILES = %w[
+      carriers.csv
       curves
       demands
       fce
@@ -57,15 +58,15 @@ module Atlas
     end
 
     def symlink_etengine_data_files
-      UNSCALED_ETENGINE_DATA_FOLDERS.each do |folder|
+      LINKED_FILES.each do |folder|
         base = @base_dataset.dataset_dir.join(folder)
 
-        if File.directory?(base)
-          FileUtils.ln_s(
-            base.relative_path_from(@derived_dataset.dataset_dir),
-            @derived_dataset.dataset_dir
-          )
-        end
+        next unless base.exist?
+
+        FileUtils.ln_s(
+          base.relative_path_from(@derived_dataset.dataset_dir),
+          @derived_dataset.dataset_dir
+        )
       end
     end
 
