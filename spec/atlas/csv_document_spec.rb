@@ -150,6 +150,77 @@ module Atlas
           expect(File.readlines(doc.path).first.strip).to eq('yes,no,maybe_baby')
         end
       end
+
+      context 'when the CSV document is a symlink' do
+        let(:link_path) { Atlas.data_dir.join('symlink.csv') }
+        let(:source_path) { Atlas.data_dir.join('source.csv') }
+
+        let(:doc) do
+          source_path.open('w') { |f| f.puts(original_content) }
+          described_class.new(link_path)
+        end
+
+        let(:original_content) do
+          <<-CSV.lines.map(&:strip).join("\n")
+            key,attribute
+            one,1
+
+          CSV
+        end
+
+        let(:new_content) do
+          <<-CSV.lines.map(&:strip).join("\n")
+            key,attribute
+            one,2
+
+          CSV
+        end
+
+        before do
+          FileUtils.ln_s(source_path, link_path)
+          doc.set('one', 'attribute', 2)
+        end
+
+        describe 'with no follow_link value' do
+          before { doc.save! }
+
+          it 'saves the file at the symlink location' do
+            expect(source_path.read).to eq(new_content)
+          end
+
+          it 'retains the symlink' do
+            expect(link_path).to be_symlink
+          end
+        end
+
+        describe 'with follow_link: true' do
+          before { doc.save!(follow_link: true) }
+
+          it 'saves the file at the symlink location' do
+            expect(source_path.read).to eq(new_content)
+          end
+
+          it 'retains the symlink' do
+            expect(link_path).to be_symlink
+          end
+        end
+
+        describe 'with follow_link: false' do
+          before { doc.save!(follow_link: false) }
+
+          it 'saves the file at the initialzied path' do
+            expect(link_path.read).to eq(new_content)
+          end
+
+          it 'removes the symlink' do
+            expect(link_path).not_to be_symlink
+          end
+
+          it 'does not change the original file' do
+            expect(source_path.read).to eq(original_content)
+          end
+        end
+      end
     end
   end
 
