@@ -54,7 +54,17 @@ module Atlas
     end
 
     # Public: Saves the CSV document to disk
-    def save!
+    #
+    # follow_link - If the path is a symlink, the file will be saved at the
+    #               symlink target location. Setting `follow_link` to false
+    #               will remove the symlink and replace it with a file
+    #               containing the CSV contents; the original linked file will
+    #               be unchanged.
+    #
+    # Returns self.
+    def save!(follow_link: true)
+      path.unlink if !follow_link && path.symlink?
+
       FileUtils.mkdir_p(path.dirname)
       File.write(path, table.to_csv)
       self
