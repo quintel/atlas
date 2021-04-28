@@ -347,7 +347,7 @@ module Atlas
     # Public: Retrieves and caches data about carriers from the carriers.csv file.
     #
     # Returns a CSVDocument.
-    def carrier_data
+    def carriers
       @carrier_data ||= CSVDocument.new(dataset_dir.join('carriers.csv'))
     end
 
