@@ -69,7 +69,8 @@ module Atlas
       dataset.public_send(property)
     end
 
-    # Public: Fetches a value from the carriers.csv file.
+    # Public: Fetches a value from the carriers.csv file. If the file defines no such value, or the
+    # value is nil, the value is looked up from the ActiveDocument instead.
     #
     # carrier_key - The name of the carrier.
     # attr_key    - The name of the attribute to be fetched.
@@ -79,7 +80,8 @@ module Atlas
     #
     # Returns a float.
     def CARRIER(carrier_key, attr_key)
-      dataset.carrier_data.get(carrier_key, attr_key)
+      dataset.carriers.get(carrier_key, attr_key) ||
+        Atlas::Carrier.find(carrier_key).public_send(attr_key)
     end
 
     # Public: Given the key of a node, retrieves the production (energy
