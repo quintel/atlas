@@ -45,6 +45,35 @@ describe Atlas::Carrier do
       end
     end
 
+    context 'with a persisted carrier and no queries' do
+      let(:carrier) do
+        doc = described_class.new(key: 'my_carrier', queries: {})
+        doc.save!
+
+        Atlas::ActiveDocument::Manager.clear_all!
+        described_class.find('my_carrier')
+      end
+
+      it 'has a no query for co2_conversion_per_mj' do
+        expect(carrier.queries).to eq({})
+      end
+
+      it 'allows setting a query for co2_conversion_per_mj' do
+        carrier.queries[:co2_conversion_per_mj] = 'hello'
+        expect(carrier.queries).to eq(co2_conversion_per_mj: 'hello')
+      end
+
+      it 'persists a changed query' do
+        carrier.queries[:co2_conversion_per_mj] = 'hello'
+        carrier.save!
+        Atlas::ActiveDocument::Manager.clear_all!
+
+        expect(described_class.find('my_carrier').queries).to eq(
+          co2_conversion_per_mj: 'hello'
+        )
+      end
+    end
+
     context 'with a custom query for co2_conversion_per_mj' do
       it 'keeps the custom query' do
         carrier = described_class.new(key: 'my_carrier', queries: { co2_conversion_per_mj: '10' })
