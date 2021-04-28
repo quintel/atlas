@@ -31,18 +31,19 @@ module Atlas
     attribute :co2_transportation_per_mj,       Float
     attribute :co2_waste_treatment_per_mj,      Float
 
+    def initialize(attributes = {})
+      if new_record? && attributes[:key]
+        super(attributes.merge(queries: default_queries(attributes)))
+      else
+        super
+      end
+    end
+
     def fce(region)
       region = region.to_sym
 
       @fce ||= {}
       @fce.key?(region) ? @fce[region] : @fce[region] = load_fce_values(region)
-    end
-
-    # Public: The queries for dynamic attributes.
-    #
-    # Returns a string.
-    def queries
-      default_queries.merge(super)
     end
 
     private
@@ -52,11 +53,11 @@ module Atlas
       path.file? && YAML.load_file(path)
     end
 
-    def default_queries
-      return {} if key.nil?
+    def default_queries(attrs)
+      return attrs[:queries] if attrs.key?(:queries)
 
       DEFAULT_QUERY_ATTRIBUTES.each_with_object({}) do |attr_key, data|
-        data[attr_key] = "CARRIER(#{key}, #{attr_key})" if public_send(attr_key).nil?
+        data[attr_key] = "CARRIER(#{attrs[:key]}, #{attr_key})" if attrs[attr_key].nil?
       end
     end
   end
