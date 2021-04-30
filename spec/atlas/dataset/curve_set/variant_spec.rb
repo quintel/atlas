@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe Atlas::Dataset::CurveSet::Variant do
   let(:parent_path) { Pathname.new(Dir.mktmpdir) }
   let(:path) { parent_path.join('variant').tap(&:mkdir) }
-  let(:variant) { described_class.new(path) }
+  let(:variant) { described_class.new(Atlas::PathResolver.create(path)) }
 
   after { path.rmtree if path.exist? }
 
@@ -60,7 +60,7 @@ RSpec.describe Atlas::Dataset::CurveSet::Variant do
       end
 
       it 'removes directory traversals' do
-        expect(variant.curve_path('../hi')).to eq(variant.path.join('hi.csv'))
+        expect(variant.curve_path('../hi')).to eq(path.join('hi.csv'))
       end
     end
   end

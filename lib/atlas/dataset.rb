@@ -226,7 +226,7 @@ module Atlas
         :electric_vehicle_profile_2_share,
         :electric_vehicle_profile_3_share,
         :electric_vehicle_profile_4_share,
-        :electric_vehicle_profile_5_share,
+        :electric_vehicle_profile_5_share
       ]
 
     # Returns the Energy Balance for this area/dataset.
@@ -246,8 +246,7 @@ module Atlas
       key = key.to_sym
 
       (@shares ||= {})[key] ||=
-        CSVDocument::OneDimensional.new(
-          dataset_dir.join("shares/#{ key }.csv"))
+        CSVDocument::OneDimensional.new(path_resolver.resolve("shares/#{key}.csv"))
     end
 
     # Public: Retrieves the efficiency data from the named file.
@@ -261,7 +260,8 @@ module Atlas
     def efficiencies(key)
       (@efficiencies ||= {})[key.to_sym] ||=
         CSVDocument::OneDimensional.new(
-          dataset_dir.join("efficiencies/#{ key }_efficiency.csv"))
+          path_resolver.resolve("efficiencies/#{key}_efficiency.csv")
+        )
     end
 
     def time_curves_dir
@@ -304,7 +304,7 @@ module Atlas
     # Returns a Dataset::InsulationCostCSV.
     def insulation_costs(type)
       (@insulation_costs ||= {})[type.to_sym] ||= InsulationCostCSV.new(
-        dataset_dir.join("real_estate/insulation_costs_#{type}.csv")
+        path_resolver.resolve("real_estate/insulation_costs_#{type}.csv")
       )
     end
 
@@ -323,7 +323,7 @@ module Atlas
     #
     # Returns a Pathname.
     def load_profile_path(key)
-      dataset_dir.join("curves/#{ key }.csv")
+      path_resolver.resolve("curves/#{key}.csv")
     end
 
     # Public: If the Merit library has been loaded, returns the
@@ -341,14 +341,14 @@ module Atlas
     #
     # Returns a CurveSetCollection.
     def curve_sets
-      @curve_sets ||= CurveSetCollection.at_path(dataset_dir.join('curves'))
+      @curve_sets ||= CurveSetCollection.at_path(path_resolver.join('curves'))
     end
 
     # Public: Retrieves and caches data about carriers from the carriers.csv file.
     #
     # Returns a CSVDocument.
     def carriers
-      @carrier_data ||= CSVDocument.new(dataset_dir.join('carriers.csv'))
+      @carrier_data ||= CSVDocument.new(path_resolver.resolve('carriers.csv'))
     end
 
     # Public: Retrieves demand and full load hours data for the region.
@@ -361,16 +361,14 @@ module Atlas
     #
     # Returns a CSVDocument.
     def central_producers
-      @cental_prod ||= CSVDocument.new(
-        dataset_dir.join('central_producers.csv'))
+      @cental_producers ||= CSVDocument.new(path_resolver.resolve('central_producers.csv'))
     end
 
     # Public: A set of demands required for use inside ETlocal
     #
     # Returns a CSVDocument
     def parent_values
-      @parent_values ||= CSVDocument.new(
-        dataset_dir.join('demands').join('parent_values.csv'))
+      @parent_values ||= CSVDocument.new(path_resolver.resolve('demands/parent_values.csv'))
     end
 
     # Public: Retrieves demand and max demand data for the region. Expects to
@@ -383,8 +381,7 @@ module Atlas
     #
     # Returns a CSVDocument.
     def primary_production
-      @primary_prod ||= CSVDocument.new(
-        dataset_dir.join('primary_production.csv'))
+      @primary_production ||= CSVDocument.new(path_resolver.resolve('primary_production.csv'))
     end
 
     # Public: Retrieves the demand data for the file whose name matches +key+.
@@ -399,8 +396,7 @@ module Atlas
       key = key.to_sym
 
       (@demands ||= {})[key] ||=
-        CSVDocument::OneDimensional.new(
-          dataset_dir.join("demands/#{ key }.csv"))
+        CSVDocument::OneDimensional.new(path_resolver.resolve("demands/#{key}.csv"))
     end
 
     # Public: Retrieves the FCE data for the file matching +key+.
@@ -412,7 +408,7 @@ module Atlas
       key = key.to_sym
 
       (@fce ||= {})[key] ||=
-        YAML.load_file(dataset_dir.join("fce/#{key}.yml"))
+        YAML.load_file(path_resolver.resolve("fce/#{key}.yml"))
           .symbolize_keys.transform_values(&:symbolize_keys)
     end
 
@@ -430,6 +426,20 @@ module Atlas
     def destroy!
       super
       FileUtils.rm_rf(dataset_dir)
+    end
+
+    private
+
+    # Internal: Returns an object which can resolve paths to files within the dataset. This serves
+    # little purpose in Dataset itself, but is useful for Dataset::Derived where the lack of a file
+    # means the file from the parent should be used instead.
+    def path_resolver
+      @path_resolver ||= PathResolver.create(*resolve_paths)
+    end
+
+    # Internal: Paths used to look for CSV and other dataset-related files.
+    def resolve_paths
+      [dataset_dir]
     end
   end
 end

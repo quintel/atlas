@@ -25,7 +25,7 @@ describe Atlas::Dataset::Derived do
     let(:dataset) { described_class.find(:groningen) }
 
     it 'loads the parent dataset primary production CSV' do
-      expect(dataset.primary_production).to eq(dataset.parent.primary_production)
+      expect(dataset.primary_production.path).to eq(dataset.parent.primary_production.path)
     end
   end
 end
