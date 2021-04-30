@@ -4,7 +4,7 @@ require 'spec_helper'
 
 describe Atlas::Dataset::CurveSet do
   let(:path) { Pathname.new(Dir.mktmpdir(%w[curve set])) }
-  let(:set) { described_class.new(path) }
+  let(:set) { described_class.new(Atlas::PathResolver.create(path)) }
 
   after { path.rmtree if path.exist? }
 
@@ -137,6 +137,68 @@ describe Atlas::Dataset::CurveSet do
     it 'enumerates with "default" first' do
       names = set.map.with_index { |v, index| [index, v.name] }
       expect(names).to eq([[0, 'default'], [1, 'a'], [2, 'b']])
+    end
+  end
+
+  context 'when initialized with a Atlas::PathResolver::WithFallback' do
+    let(:fallback) { path.join('fallback/curve-set') }
+    let(:preferred) { path.join('preferred/curve-set') }
+
+    let(:set) { described_class.new(Atlas::PathResolver.create(preferred, fallback)) }
+
+    before do
+      fallback.mkpath
+      preferred.mkpath
+    end
+
+    it 'sets the curve set path' do
+      expect(set.path).to eq(Atlas::PathResolver.create(preferred, fallback))
+    end
+
+    it 'infers the name from the directory' do
+      expect(set.name).to eq('curve-set')
+    end
+
+    context 'with a "variant_one" subdirectory in both paths, each with a CSV' do
+      before do
+        fallback.join('variant_one').mkdir
+        fallback.join('variant_one/both.csv').write('1.0')
+        fallback.join('variant_one/fallback.csv').write('1.0')
+
+        preferred.join('variant_one').mkdir
+        preferred.join('variant_one/both.csv').write('1.0')
+        preferred.join('variant_one/preferred.csv').write('1.0')
+      end
+
+      it 'has one variant' do
+        expect(set.to_a.length).to eq(1)
+      end
+
+      it 'has a variant called "variant_one"' do
+        expect(set.variant?('variant_one')).to be(true)
+      end
+
+      it 'has three curves in the variant' do
+        expect(set.variant('variant_one').length).to eq(3)
+      end
+
+      it 'reads curves preferentially from the preferred path' do
+        expect(set.variant('variant_one').curve_path('both')).to eq(
+          preferred.join('variant_one/both.csv')
+        )
+      end
+
+      it 'reads curves from the fallback path' do
+        expect(set.variant('variant_one').curve_path('fallback')).to eq(
+          fallback.join('variant_one/fallback.csv')
+        )
+      end
+
+      it 'reads curves from the preferred path' do
+        expect(set.variant('variant_one').curve_path('preferred')).to eq(
+          preferred.join('variant_one/preferred.csv')
+        )
+      end
     end
   end
 end

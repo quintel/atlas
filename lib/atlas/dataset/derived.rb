@@ -10,16 +10,9 @@ module Atlas
       attribute :geo_id,       String
       attribute :uses_deprecated_initializer_inputs, Boolean, default: false
 
-      # Delegate any method which might be called in `Runner` to the parent dataset.
-      delegate :central_producers, to: :parent
-      delegate :demands, to: :parent
-      delegate :efficiencies, to: :parent
+      # Delegate some methods which might be called in `Runner` to the parent dataset.
       delegate :energy_balance, to: :parent
       delegate :fce, to: :parent
-      delegate :insulation_costs, to: :parent
-      delegate :parent_values, to: :parent
-      delegate :primary_production, to: :parent
-      delegate :shares, to: :parent
 
       validates :scaling, presence: true
 
@@ -39,6 +32,14 @@ module Atlas
         all.detect { |item| item.geo_id == geo_id }
       end
 
+      def initialize(*args)
+        super
+
+        # A map of load profile keys to booleans. A truthy value means the derived dataset has a
+        # custom curve matching the key, false that the parent curve should be used.
+        @load_profile_map = {}
+      end
+
       def graph_values
         @graph_values ||= GraphValues.new(self)
       end
@@ -48,6 +49,11 @@ module Atlas
       end
 
       private
+
+      # Internal: Paths used to look for CSV and other dataset-related files.
+      def resolve_paths
+        [dataset_dir, parent.dataset_dir]
+      end
 
       def validate_presence_of_base_dataset
         return if Dataset::Full.exists?(base_dataset)

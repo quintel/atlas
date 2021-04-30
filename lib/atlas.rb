@@ -75,6 +75,7 @@ require_relative 'atlas/runner/zero_molecule_leaves'
 require_relative 'atlas/runner/zero_molecule_nodes'
 require_relative 'atlas/debug_runner'
 require_relative 'atlas/user_sortable_validator'
+require_relative 'atlas/path_resolver'
 require_relative 'atlas/preset/scaling'
 require_relative 'atlas/preset'
 
