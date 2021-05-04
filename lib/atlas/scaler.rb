@@ -1,15 +1,5 @@
 module Atlas
   class Scaler
-    LINKED_FILES = %w[
-      carriers.csv
-      curves
-      demands
-      fce
-      load_profiles
-      network
-      real_estate
-    ].freeze
-
     def initialize(base_dataset_key, derived_dataset_name, number_of_residences, base_value = nil, time_curves_to_zero: false)
       @base_dataset         = Dataset::Full.find(base_dataset_key)
       @derived_dataset_name = derived_dataset_name
@@ -27,7 +17,6 @@ module Atlas
       TimeCurveScaler.call(@base_dataset, @derived_dataset, @time_curves_to_zero)
 
       create_empty_graph_values_file
-      symlink_etengine_data_files
     end
 
     private
@@ -55,19 +44,6 @@ module Atlas
           area_attribute: 'number_of_residences'
         }
       }
-    end
-
-    def symlink_etengine_data_files
-      LINKED_FILES.each do |folder|
-        base = @base_dataset.dataset_dir.join(folder)
-
-        next unless base.exist?
-
-        FileUtils.ln_s(
-          base.relative_path_from(@derived_dataset.dataset_dir),
-          @derived_dataset.dataset_dir
-        )
-      end
     end
 
     def create_empty_graph_values_file
