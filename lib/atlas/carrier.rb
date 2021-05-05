@@ -39,19 +39,7 @@ module Atlas
       end
     end
 
-    def fce(region)
-      region = region.to_sym
-
-      @fce ||= {}
-      @fce.key?(region) ? @fce[region] : @fce[region] = load_fce_values(region)
-    end
-
     private
-
-    def load_fce_values(region)
-      path = Atlas::Dataset.find(region).dataset_dir.join("fce/#{ key }.yml")
-      path.file? && YAML.load_file(path)
-    end
 
     def default_queries(attrs)
       return attrs[:queries] if attrs.key?(:queries)

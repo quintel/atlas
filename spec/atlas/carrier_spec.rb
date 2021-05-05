@@ -7,20 +7,6 @@ describe Atlas::Carrier do
     expect(described_class.all.length).not_to eq(0)
   end
 
-  describe '#fce' do
-    it 'loads FCE data when present' do
-      expect(described_class.find(:coal).fce(:nl)).not_to be_empty
-    end
-
-    it 'does not load FCE data for a region with no data' do
-      expect(described_class.find(:coal).fce(:uk)).not_to be
-    end
-
-    it 'does not load FCE data for a carrier with no data' do
-      expect(described_class.find(:corn).fce(:nl)).not_to be
-    end
-  end
-
   describe '#queries' do
     context 'with no carrier key' do
       it 'has no default queries'

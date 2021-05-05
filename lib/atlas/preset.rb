@@ -11,7 +11,6 @@ module Atlas
     attribute :display_group,      String
     attribute :end_year,           Integer
     attribute :in_start_menu,      Boolean
-    attribute :use_fce,            Boolean
     attribute :area_code,          String
     attribute :user_values,        Hash[Symbol => Float]
     attribute :scaling,            Scaling

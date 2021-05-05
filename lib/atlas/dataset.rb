@@ -23,7 +23,6 @@ module Atlas
     attribute :has_cold_network,                            Boolean, default: false
     attribute :has_electricity_storage,                     Boolean, default: true
     attribute :has_employment,                              Boolean, default: true
-    attribute :has_fce,                                     Boolean, default: true
     attribute :has_industry,                                Boolean, default: true
     attribute :has_lignite,                                 Boolean, default: false
     attribute :has_merit_order,                             Boolean, default: false
@@ -397,19 +396,6 @@ module Atlas
 
       (@demands ||= {})[key] ||=
         CSVDocument::OneDimensional.new(path_resolver.resolve("demands/#{key}.csv"))
-    end
-
-    # Public: Retrieves the FCE data for the file matching +key+.
-    #
-    # key - The name of the FCE file to load.
-    #
-    # Returns a hash.
-    def fce(key)
-      key = key.to_sym
-
-      (@fce ||= {})[key] ||=
-        YAML.load_file(path_resolver.resolve("fce/#{key}.yml"))
-          .symbolize_keys.transform_values(&:symbolize_keys)
     end
 
     # Public: Path to the directory in which the dataset specific data is
