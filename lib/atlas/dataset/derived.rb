@@ -12,7 +12,6 @@ module Atlas
 
       # Delegate some methods which might be called in `Runner` to the parent dataset.
       delegate :energy_balance, to: :parent
-      delegate :fce, to: :parent
 
       validates :scaling, presence: true
 

@@ -170,28 +170,5 @@ module Atlas
         )
       end
     end
-
-    context 'FCE' do
-      it 'executes FCE functions' do
-        expect(
-          runtime.execute('FCE(coal, north_america, start_value)')
-        ).to eq(16.9)
-      end
-
-      it 'raises an error if the FCE file does not exist' do
-        expect { runtime.execute('FCE(nope, north_america, start_value') }
-          .to raise_error(Atlas::QueryError)
-      end
-
-      it 'raises an error if the carrier key does not exist' do
-        expect { runtime.execute('FCE(coal, nope, start_value') }
-          .to raise_error(Atlas::QueryError)
-      end
-
-      it 'raises an error if the carrier attribute does not exist' do
-        expect { runtime.execute('FCE(coal, north_america, nope') }
-          .to raise_error(Atlas::QueryError)
-      end
-    end
   end
 end
