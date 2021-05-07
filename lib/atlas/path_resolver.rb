@@ -56,7 +56,7 @@ module Atlas
     end
 
     def glob(*args)
-      @path.glob(*args).map { |child| self.class.new(child) }
+      @path.glob(*args)
     end
 
     def join(basename)
