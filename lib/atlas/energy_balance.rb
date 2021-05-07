@@ -15,7 +15,18 @@ module Atlas
       @key  = key
       @unit = unit
 
-      super(Dataset.find(key).dataset_dir.join('energy_balance.csv'))
+      dataset = Dataset.find(key)
+
+      # Always prefer a file from the dataset itself before falling back to the parent.
+      if (option = dataset.dataset_dir.join('energy_balance.open_access.csv')).exist?
+        super(option)
+      elsif (option = dataset.dataset_dir.join('energy_balance.csv')).exist?
+        super(option)
+      elsif (option = dataset.path_resolver.join('energy_balance.open_access.csv')).exist?
+        super(option)
+      else
+        super(dataset.path_resolver.join('energy_balance.csv'))
+      end
     end
 
     # Loads a stored energy balance
