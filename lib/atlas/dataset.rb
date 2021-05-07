@@ -428,14 +428,14 @@ module Atlas
       FileUtils.rm_rf(dataset_dir)
     end
 
-    private
-
-    # Internal: Returns an object which can resolve paths to files within the dataset. This serves
+    # Public: Returns an object which can resolve paths to files within the dataset. This serves
     # little purpose in Dataset itself, but is useful for Dataset::Derived where the lack of a file
     # means the file from the parent should be used instead.
     def path_resolver
       @path_resolver ||= PathResolver.create(*resolve_paths)
     end
+
+    private
 
     # Internal: Paths used to look for CSV and other dataset-related files.
     def resolve_paths
