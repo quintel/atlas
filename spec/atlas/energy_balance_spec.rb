@@ -17,13 +17,105 @@ module Atlas
     end
 
     describe '.find' do
-      it 'finds the dutch one' do
-        eb = EnergyBalance.find(:nl)
-        expect(eb.key).to eql :nl
+      it 'raises an error when key is invalid' do
+        expect { described_class.find(nil) }.to raise_error(InvalidKeyError)
       end
 
-      it 'raises an error when key is invalid' do
-        expect { EnergyBalance.find(nil) }.to raise_error InvalidKeyError
+      context 'when a dataset has an energy_balance.csv file' do
+        it 'finds the correct energy balance' do
+          eb = EnergyBalance.find(:nl)
+          expect(eb.key).to eql :nl
+        end
+      end
+
+      context 'when a dataset has an energy_balance.open_access.csv file' do
+        it 'finds the open access CSV' do
+          ds = Atlas::Dataset.find(:nl)
+
+          FileUtils.mv(
+            ds.dataset_dir.join('energy_balance.csv'),
+            ds.dataset_dir.join('energy_balance.open_access.csv')
+          )
+
+          expect(described_class.find(:nl).key).to eq(:nl)
+        end
+      end
+
+      context 'when a dataset has both enegy balance files' do
+        it 'opens the open access CSV' do
+          ds = Atlas::Dataset.find(:nl)
+
+          ds.dataset_dir.join('energy_balance.csv').write(
+            "o,a,b,c\n" \
+            'x,1,2,3'
+          )
+
+          ds.dataset_dir.join('energy_balance.open_access.csv').write(
+            "o,a,b,c\n" \
+            'x,10,20,30'
+          )
+
+          balance = described_class.find(:nl)
+          expect(balance.get('x', 'a')).to eq(10)
+        end
+      end
+
+      context 'when using a derived dataset without a custom energy balance' do
+        let(:dataset) { Atlas::Dataset.find(:groningen) }
+
+        it 'retrieves the parent balance' do
+          expect(described_class.find(dataset.key).path)
+            .to eq(dataset.parent.dataset_dir.join('energy_balance.csv'))
+        end
+      end
+
+      context 'when using a derived dataset without a custom energy balance and parent has an ' \
+              'open-access file' do
+        let(:dataset) { Atlas::Dataset.find(:groningen) }
+
+        before do
+          FileUtils.mv(
+            dataset.parent.dataset_dir.join('energy_balance.csv'),
+            dataset.parent.dataset_dir.join('energy_balance.open_access.csv')
+          )
+        end
+
+        it 'retrieves the parent balance' do
+          expect(described_class.find(dataset.key).path)
+            .to eq(dataset.parent.dataset_dir.join('energy_balance.open_access.csv'))
+        end
+      end
+
+      context 'when using a derived dataset with a custom energy_balance.csv' do
+        let(:dataset) { Atlas::Dataset.find(:groningen) }
+
+        before do
+          dataset.dataset_dir.join('energy_balance.csv').write(
+            "o,a,b,c\n" \
+            'x,1,2,3'
+          )
+        end
+
+        it 'retrieves the parent balance' do
+          expect(described_class.find(dataset.key).path)
+            .to eq(dataset.dataset_dir.join('energy_balance.csv'))
+        end
+      end
+
+      context 'when using a derived dataset with a custom energy_balance.open_access.csv' do
+        let(:dataset) { Atlas::Dataset.find(:groningen) }
+
+        before do
+          dataset.dataset_dir.join('energy_balance.open_access.csv').write(
+            "o,a,b,c\n" \
+            'x,1,2,3'
+          )
+        end
+
+        it 'retrieves the parent balance' do
+          expect(described_class.find(dataset.key).path)
+            .to eq(dataset.dataset_dir.join('energy_balance.open_access.csv'))
+        end
       end
     end
 
