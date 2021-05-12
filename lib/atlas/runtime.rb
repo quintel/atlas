@@ -160,19 +160,6 @@ module Atlas
       dataset.shares(file_key).get(attribute)
     end
 
-    # Public: Given a key from the time curves file, retrieves the associated
-    # value.
-    #
-    # Presently just a stub so that queries using it don't break. This will
-    # be implemented soon.
-    #
-    # key - The key identifying the row to be read.
-    #
-    # Returns a Float.
-    def TIME_CURVE(curve_key, attribute)
-      dataset.time_curve(curve_key).get(@dataset.analysis_year, attribute)
-    end
-
     private
 
     # Helpers ----------------------------------------------------------------
@@ -183,6 +170,5 @@ module Atlas
     def energy_balance
       dataset.energy_balance
     end
-
   end
 end

@@ -101,54 +101,6 @@ module Atlas
       end
     end
 
-    describe '#time_curve' do
-      let(:dataset) { Dataset.find(:nl) }
-      let(:curves)  { dataset.time_curve(:woody_biomass) }
-
-      it 'returns a CSV document' do
-        expect(curves).to be_a(CSVDocument)
-      end
-
-      it 'sets the file path' do
-        expect(curves.path.to_s).
-          to end_with('nl/time_curves/woody_biomass_time_curve.csv')
-      end
-
-      it 'raises an error when no time curve data exists' do
-        expect { Dataset.find(:nl).time_curve(:nope) }.to raise_error(Errno::ENOENT)
-      end
-    end
-
-    describe '#time_curves' do
-      let(:dataset) { Dataset.find(:nl) }
-
-      describe 'when no curves have been loaded' do
-        it 'loads all the time curves' do
-          expect(dataset.time_curves.length).to eq(2)
-        end
-
-        it "doesn't include the 'time_curve' suffix in each key" do
-          keys = dataset.time_curves.keys
-
-          expect(keys.length).to eq(2)
-          expect(keys).to include(:woody_biomass)
-          expect(keys).to include(:coal)
-        end
-      end
-
-      describe 'when a curve has already been loaded' do
-        let!(:loaded) { dataset.time_curve(:woody_biomass) }
-
-        it 'loads all the time curves' do
-          expect(dataset.time_curves.length).to eq(2)
-        end
-
-        it "reuses the already-loaded curve" do
-          expect(dataset.time_curves.values).to include(loaded)
-        end
-      end
-    end
-
     describe '#load_profile_path' do
       let(:dataset) { Dataset.find(:nl) }
       let(:profile) { dataset.load_profile_path(:total_demand) }

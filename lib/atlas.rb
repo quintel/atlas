@@ -88,7 +88,6 @@ require_relative 'atlas/dataset/insulation_cost_csv'
 
 require_relative 'atlas/scaler'
 require_relative 'atlas/scaler/area_attributes_scaler'
-require_relative 'atlas/scaler/time_curve_scaler'
 
 require_relative 'atlas/node_attributes/electricity_merit_order'
 require_relative 'atlas/node_attributes/graph_connection'

@@ -73,38 +73,4 @@ module Atlas; describe Scaler do
       end
     end
   end
-
-  describe Scaler::TimeCurveScaler do
-    let(:scaling) {
-      Preset::Scaling.new(
-        base_value: 7_349_500,
-        value: 1000,
-        area: 'number_of_residences'
-      )
-    }
-
-    let(:derived_dataset) do
-      Atlas::Dataset::Derived.new(
-        key: 'rotterdam', area: 'rotterdam', scaling: scaling)
-    end
-
-    before do
-      Scaler::TimeCurveScaler.call(base_dataset, derived_dataset)
-    end
-
-    it 'scales the time curves' do
-      expect(derived_dataset.time_curve(:woody_biomass).get(2030, :max_demand)).
-        to be_within(0.001).of(9.73488372100000E+04 * scaling_factor)
-    end
-
-    it 'has the same columns as original file' do
-      expect(derived_dataset.time_curve(:woody_biomass).column_keys).
-        to eq(base_dataset.time_curve(:woody_biomass).column_keys)
-    end
-
-    it 'has a row for each year in the original file' do
-      expect(derived_dataset.time_curve(:woody_biomass).row_keys).
-        to eq(base_dataset.time_curve(:woody_biomass).row_keys)
-    end
-  end
 end; end
