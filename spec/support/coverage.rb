@@ -9,4 +9,5 @@ end
 if ENV['CI']
   require 'codecov'
   SimpleCov.formatter = SimpleCov::Formatter::Codecov
+  Codecov.pass_ci_if_error = true
 end
