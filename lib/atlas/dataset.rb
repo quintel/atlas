@@ -327,7 +327,7 @@ module Atlas
     #
     # Returns a CSVDocument.
     def central_producers
-      @cental_producers ||= CSVDocument.new(path_resolver.resolve('central_producers.csv'))
+      @central_producers ||= CSVDocument.new(path_resolver.resolve('central_producers.csv'))
     end
 
     # Public: A set of demands required for use inside ETlocal
