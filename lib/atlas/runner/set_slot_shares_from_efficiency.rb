@@ -32,16 +32,29 @@ module Atlas
               ref_slot.set(:model, slot)
               ref_slot.set(:type, :elastic) if slot.is_a?(Slot::Elastic)
 
+
               if slot.query
                 ref_slot.set(:share, query.call(slot.query))
               elsif slot.share
                 ref_slot.set(:share, slot.share)
+              elsif slot.is_a?(Slot::CarrierEfficient)
+                ref_slot.set(:share, carrier_efficient_share(query, slot, model))
               end
             end
           end
 
           refinery
         end
+      end
+
+      def self.carrier_efficient_share(query, slot, node)
+        input_queries = Hash[
+          slot.dependencies.map do |carrier|
+            [carrier, node.queries["input.#{carrier}".to_sym]]
+          end.compact
+        ]
+
+        slot.calculate_share(input_queries.transform_values { |value| query.call(value) })
       end
     end
   end

@@ -22,6 +22,11 @@ module Atlas
     # comes from 0.4 coal input at 0.5 efficiency, and 0.6 biomass input at
     # 0.4 efficiency).
     class CarrierEfficient < Slot
+      MissingDependency = Atlas.error_class do |input, slot|
+        "Input #{input} share needed to calculate \"#{slot.node.key}\" #{slot.carrier} output " \
+        'was missing'
+      end
+
       validate :validate_data
 
       ERRORS = {
@@ -34,12 +39,37 @@ module Atlas
       #
       # Returns a numeric.
       def share
-        node.in_slots.map do |slot|
-          slot.share * node.output[carrier].fetch(slot.carrier, 0.0)
-        end.sum
+        calculate_share if static_shares?
+      end
+
+      # Public: Calculates the eneryg which leaves the node through this slot.
+      #
+      # When the input shares are dynamic (calculated using a query), the share of this slot can
+      # only be calculated by `Runner`.
+      def calculate_share(dynamic_inputs = {})
+        dependencies.sum do |input|
+          share = dynamic_inputs[input] || node.input[input]
+
+          raise MissingDependency.new(input, self) if share.nil?
+
+          share * node.output[carrier].fetch(input, 0.0)
+        end
+      end
+
+      # Public: Returns the input carriers on which the slot share depends.
+      #
+      # Returns an array of symbols.
+      def dependencies
+        node.output[carrier].keys
       end
 
       private
+
+      # Internal: Returns if the input shares required by this slot are all
+      # specified in the node document.
+      def static_shares?
+        dependencies.all? { |dep| node.input.key?(dep) }
+      end
 
       # Internal: Asserts that the data required to perform carrier-efficiency
       # calculations is preset.
@@ -48,7 +78,7 @@ module Atlas
       # carrier for each efficiency.
       def validate_data
         inputs = Set.new(node.in_slots.map(&:carrier))
-        effs   = Set.new(node.output[carrier].keys)
+        effs   = Set.new(dependencies)
 
         unless inputs.subset?(effs)
           # One or more efficiencies are missing.

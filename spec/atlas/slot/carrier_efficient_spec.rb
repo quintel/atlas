@@ -69,5 +69,26 @@ module Atlas
                      'for oil')
       end
     end
+
+    context 'when the slot has some dynamic input shares' do
+      before do
+        node.input  = { gas: 0.4 }
+        node.output = { electricity: { gas: 0.5, oil: 0.5 } }
+        node.queries[:"input.oil"] = '1.0'
+      end
+
+      it 'passes validation' do
+        expect(slot).to be_valid
+      end
+
+      it 'raises an error when calculating the share with incomplete data' do
+        expect { slot.calculate_share }
+          .to raise_error(Atlas::Slot::CarrierEfficient::MissingDependency)
+      end
+
+      it 'calculates the share given data for dynamic slots' do
+        expect(slot.calculate_share(oil: 1.0)).to eq(0.7)
+      end
+    end
   end
 end
