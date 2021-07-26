@@ -29,11 +29,6 @@ module Atlas
         inclusion: %i[generic pseudo],
         if: ->(mod) { mod.type == :consumer }
 
-      validates_inclusion_of :group,
-        in: ->(_mod) { Array(Config.read?('flexibility_order')).map(&:to_sym) },
-        if: ->(mod) { mod.type == :flex },
-        message: 'is not a permitted flexibility order option'
-
       validates_absence_of :output_capacity_from_demand_of,
         unless: ->(mod) { mod.subtype == :storage },
         message: 'must be blank when subtype is not storage'
