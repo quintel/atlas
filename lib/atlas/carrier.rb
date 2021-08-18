@@ -16,6 +16,7 @@ module Atlas
     attribute :sustainable,                     Float
     attribute :infinite,                        Boolean
     attribute :cost_per_mj,                     Float
+    attribute :fallback_price,                  Float
     attribute :mj_per_kg,                       Float
     attribute :co2_conversion_per_mj,           Float
     attribute :potential_co2_conversion_per_mj, Float
@@ -38,6 +39,10 @@ module Atlas
         super
       end
     end
+
+    validates :fallback_price,
+      absence: { message: 'can only be set on the "electricity" carrier' },
+      if: -> { key != :electricity }
 
     private
 
