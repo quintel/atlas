@@ -74,4 +74,24 @@ describe Atlas::Carrier do
       end
     end
   end
+
+  describe '#fallback_price' do
+    it 'must be blank when the carrier key is not electricity' do
+      expect(
+        described_class.new(key: :gas, fallback_price: 10.0).errors_on(:fallback_price)
+      ).to include('can only be set on the "electricity" carrier')
+    end
+
+    it 'must be blank when the carrier key is blank' do
+      expect(
+        described_class.new(fallback_price: 10.0).errors_on(:fallback_price)
+      ).to include('can only be set on the "electricity" carrier')
+    end
+
+    it 'may be present when the carrier key is electricity' do
+      expect(
+        described_class.new(key: :electricity, fallback_price: 10.0).errors_on(:fallback_price)
+      ).to be_empty
+    end
+  end
 end
