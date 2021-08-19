@@ -59,5 +59,32 @@ module Atlas
     attribute :electrical_efficiency_when_using_wood_pellets, Float
 
     validates_with Atlas::Node::FeverValidator
+    validate :validate_primary_demand_sustainable
+
+    private
+
+    # Internal: Asserts that primary_energy_demand nodes have enough information - either on the
+    # output carriers or the node itself - to calculate sustainability_share in ETEngine.
+    def validate_primary_demand_sustainable
+      return unless groups.include?(:primary_energy_demand)
+      return unless sustainability_share.nil?
+
+      out_edges = Atlas::EnergyEdge.all.select { |edge| edge.supplier == key }
+      carriers = out_edges.map(&:carrier).uniq - [:loss]
+
+      blank_slots = carriers.any? { |carrier| Atlas::Carrier.find(carrier).sustainable.nil? }
+
+      # blank_slots = out_slots.any? do |slot|
+      #   slot.carrier != loss && Atlas::Carrier.find(slot.carrier).sustainable.nil?
+      # end
+
+      return unless blank_slots
+
+      errors.add(
+        :sustainability_share,
+        'must not be blank on a primary_energy_demand node when one or more output carriers do ' \
+        'not define a `sustainable` value'
+      )
+    end
   end
 end

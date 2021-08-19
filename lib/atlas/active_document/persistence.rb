@@ -89,7 +89,7 @@ module Atlas
       def save(validate = true)
         return false if validate && ! valid?
 
-        if @last_saved_file_path != path && @last_saved_file_path.file?
+        if @last_saved_file_path != path && @last_saved_file_path&.file?
           manager.delete_path(@last_saved_file_path)
         end
 

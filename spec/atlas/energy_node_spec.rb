@@ -229,4 +229,69 @@ describe Atlas::EnergyNode do
       end
     end
   end
+
+  describe '#sustainability_share' do
+    let(:node) { described_class.new(key: :test_node).tap(&:save!) }
+
+    before do
+      Atlas::Carrier.new(key: :electricity).save(false)
+
+      Atlas::EnergyEdge.new(
+        supplier: node.key,
+        consumer: :__unused__,
+        carrier: :electricity,
+        ns: ''
+      ).save(false)
+
+      Atlas::EnergyEdge.new(
+        supplier: node.key,
+        consumer: :__unused__,
+        carrier: :loss,
+        ns: ''
+      ).save(false)
+    end
+
+    context 'when the node does not belong to the primary_energy_demand group' do
+      it 'may be blank' do
+        expect(node.errors_on(:sustainability_share)).to be_empty
+      end
+    end
+
+    context 'when the node belongs to the primary_energy_demand group and a share is set' do
+      before do
+        node.groups = [:primary_energy_demand]
+        node.sustainability_share = 1.0
+      end
+
+      it 'is valid' do
+        expect(node.errors_on(:sustainability_share)).to be_empty
+      end
+    end
+
+    context 'when the node belongs to the primary_energy_demand group and carriers have a ' \
+            'sustainable value' do
+      before do
+        node.groups = [:primary_energy_demand]
+        Atlas::Carrier.find(:electricity).sustainable = 1.0
+      end
+
+      it 'is valid' do
+        expect(node.errors_on(:sustainability_share)).to be_empty
+      end
+    end
+
+    context 'when the node belongs to the primary_energy_demand group and carriers have no ' \
+            'sustainable value' do
+      before do
+        node.groups = [:primary_energy_demand]
+      end
+
+      it 'is valid' do
+        expect(node.errors_on(:sustainability_share)).to include(
+          'must not be blank on a primary_energy_demand node when one or more output carriers do ' \
+          'not define a `sustainable` value'
+        )
+      end
+    end
+  end
 end
