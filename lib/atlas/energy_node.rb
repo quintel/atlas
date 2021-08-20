@@ -37,6 +37,7 @@ module Atlas
       part_load_operating_point
       sustainability_share
       takes_part_in_ets
+      max_consumption_price
     ].each do |name|
       attribute name, Float
     end
