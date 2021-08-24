@@ -13,7 +13,11 @@ module Atlas
       # Valid directions. Direction may be left blank.
       DIRECTIONS = %i[input output].freeze
 
-      ALLOWED_ATTRIBUTES = %i[demand primary_co2_emission].freeze
+      ALLOWED_ATTRIBUTES = %i[
+        demand
+        primary_co2_emission
+        primary_co2_emission_of_bio_and_fossil
+      ].freeze
 
       values do
         # The key of the energy node which will be used to determine the conversion of energy to
