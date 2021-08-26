@@ -16,7 +16,7 @@ module Atlas
       ALLOWED_ATTRIBUTES = %i[
         demand
         primary_co2_emission
-        primary_co2_emission_of_bio_and_fossil
+        primary_co2_emission_of_bio_and_fossil_without_capture
       ].freeze
 
       values do
