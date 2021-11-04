@@ -30,12 +30,19 @@ module Atlas
         # Used only on price-sensitive demands; controls whether to use
         # dispatchables when meeting the demand of the participant.
         attribute :satisfy_with_dispatchables, Boolean, writer: :public
+
+        # Used by always-on battery parks to name related nodes in the technology.
+        attribute :relations, Hash[Symbol => Symbol], default: nil
       end
 
       validates :level, inclusion: %i[lv mv hv omit]
 
       validates :production_curtailment, absence: true, if: (lambda do |mo|
         mo.type != :producer || !%i[must_run volatile].include?(mo.subtype)
+      end)
+
+      validates :relations, presence: true, if: (lambda do |mo|
+        mo.type == :producer && mo.subtype == :always_on_battery_park
       end)
 
       validates :satisfy_with_dispatchables,
