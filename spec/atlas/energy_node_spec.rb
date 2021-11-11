@@ -2,6 +2,86 @@
 
 require 'spec_helper'
 
+RSpec.shared_examples 'a storage price attribute' do |attribute|
+  def build_mo(type = nil, subtype = nil)
+    Atlas::NodeAttributes::ElectricityMeritOrder.new(type: type, subtype: subtype)
+  end
+
+  context 'when the node does not belong to the merit order' do
+    it "has an error on #{attribute}" do
+      node = described_class.new(attribute => 10.0)
+
+      expect(node.errors_on(attribute)).to include(
+        'is only allowed when the merit_order type is "flex" and subtype is "storage"'
+      )
+    end
+  end
+
+  context 'when the node is a non-flex merit order participant' do
+    it "has an error on #{attribute}" do
+      node = described_class.new(
+        attribute => 10.0,
+        merit_order: build_mo(:producer)
+      )
+
+      expect(node.errors_on(attribute)).to include(
+        'is only allowed when the merit_order type is "flex" and subtype is "storage"'
+      )
+    end
+  end
+
+  context 'when the node is a flex non-storage merit order participant' do
+    it "has an error on #{attribute}" do
+      node = described_class.new(
+        attribute => 10.0,
+        merit_order: build_mo(:flex, :something)
+      )
+
+      expect(node.errors_on(attribute)).to include(
+        'is only allowed when the merit_order type is "flex" and subtype is "storage"'
+      )
+    end
+  end
+
+  context 'when the node is a storage merit order participant' do
+    it 'has an error when the value is -10' do
+      node = described_class.new(
+        attribute => -10.0,
+        merit_order: build_mo(:flex, :storage)
+      )
+
+      expect(node.errors_on(attribute)).to include('must not be less than zero')
+    end
+
+    it 'has no error when the value is 0' do
+      node = described_class.new(
+        attribute => 0.0,
+        merit_order: build_mo(:flex, :storage)
+      )
+
+      expect(node.errors_on(attribute)).to be_empty
+    end
+
+    it 'has no error when the value is 10' do
+      node = described_class.new(
+        attribute => 10.0,
+        merit_order: build_mo(:flex, :storage)
+      )
+
+      expect(node.errors_on(attribute)).to be_empty
+    end
+
+    it 'has no error when the value is nil' do
+      node = described_class.new(
+        attribute => nil,
+        merit_order: build_mo(:flex, :storage)
+      )
+
+      expect(node.errors_on(attribute)).to be_empty
+    end
+  end
+end
+
 describe Atlas::EnergyNode do
   describe '#all' do
     it 'returns all the subclasses that have been defined' do
@@ -293,5 +373,13 @@ describe Atlas::EnergyNode do
         )
       end
     end
+  end
+
+  describe '#marginal_costs' do
+    include_examples 'a storage price attribute', 'marginal_costs'
+  end
+
+  describe '#max_consumption_price' do
+    include_examples 'a storage price attribute', 'max_consumption_price'
   end
 end
