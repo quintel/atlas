@@ -94,12 +94,8 @@ module Atlas
 
         next if value.nil?
 
-        if merit_order&.type != :flex || merit_order&.subtype != :storage
-          errors.add(
-            price_attribute,
-            'is only allowed when the merit_order type is "flex" and subtype is "storage"'
-          )
-
+        if merit_order&.type != :flex
+          errors.add(price_attribute, 'is only allowed when the merit_order type is "flex"')
           next
         end
 
