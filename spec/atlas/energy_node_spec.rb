@@ -3,8 +3,8 @@
 require 'spec_helper'
 
 RSpec.shared_examples 'a storage price attribute' do |attribute|
-  def build_mo(type = nil, subtype = nil)
-    Atlas::NodeAttributes::ElectricityMeritOrder.new(type: type, subtype: subtype)
+  def build_mo(type = nil)
+    Atlas::NodeAttributes::ElectricityMeritOrder.new(type: type)
   end
 
   context 'when the node does not belong to the merit order' do
@@ -12,42 +12,16 @@ RSpec.shared_examples 'a storage price attribute' do |attribute|
       node = described_class.new(attribute => 10.0)
 
       expect(node.errors_on(attribute)).to include(
-        'is only allowed when the merit_order type is "flex" and subtype is "storage"'
+        'is only allowed when the merit_order type is "flex"'
       )
     end
   end
 
-  context 'when the node is a non-flex merit order participant' do
-    it "has an error on #{attribute}" do
-      node = described_class.new(
-        attribute => 10.0,
-        merit_order: build_mo(:producer)
-      )
-
-      expect(node.errors_on(attribute)).to include(
-        'is only allowed when the merit_order type is "flex" and subtype is "storage"'
-      )
-    end
-  end
-
-  context 'when the node is a flex non-storage merit order participant' do
-    it "has an error on #{attribute}" do
-      node = described_class.new(
-        attribute => 10.0,
-        merit_order: build_mo(:flex, :something)
-      )
-
-      expect(node.errors_on(attribute)).to include(
-        'is only allowed when the merit_order type is "flex" and subtype is "storage"'
-      )
-    end
-  end
-
-  context 'when the node is a storage merit order participant' do
+  context 'when the node is a flex merit order participant' do
     it 'has an error when the value is -10' do
       node = described_class.new(
         attribute => -10.0,
-        merit_order: build_mo(:flex, :storage)
+        merit_order: build_mo(:flex)
       )
 
       expect(node.errors_on(attribute)).to include('must not be less than zero')
@@ -56,7 +30,7 @@ RSpec.shared_examples 'a storage price attribute' do |attribute|
     it 'has no error when the value is 0' do
       node = described_class.new(
         attribute => 0.0,
-        merit_order: build_mo(:flex, :storage)
+        merit_order: build_mo(:flex)
       )
 
       expect(node.errors_on(attribute)).to be_empty
@@ -65,7 +39,7 @@ RSpec.shared_examples 'a storage price attribute' do |attribute|
     it 'has no error when the value is 10' do
       node = described_class.new(
         attribute => 10.0,
-        merit_order: build_mo(:flex, :storage)
+        merit_order: build_mo(:flex)
       )
 
       expect(node.errors_on(attribute)).to be_empty
@@ -74,7 +48,7 @@ RSpec.shared_examples 'a storage price attribute' do |attribute|
     it 'has no error when the value is nil' do
       node = described_class.new(
         attribute => nil,
-        merit_order: build_mo(:flex, :storage)
+        merit_order: build_mo(:flex)
       )
 
       expect(node.errors_on(attribute)).to be_empty
