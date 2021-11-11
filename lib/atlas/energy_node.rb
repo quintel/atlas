@@ -38,6 +38,7 @@ module Atlas
       sustainability_share
       takes_part_in_ets
       max_consumption_price
+      marginal_costs
     ].each do |name|
       attribute name, Float
     end
@@ -61,6 +62,7 @@ module Atlas
 
     validates_with Atlas::Node::FeverValidator
     validate :validate_primary_demand_sustainable
+    validate :validate_consumption_and_production_prices
 
     private
 
@@ -75,10 +77,6 @@ module Atlas
 
       blank_slots = carriers.any? { |carrier| Atlas::Carrier.find(carrier).sustainable.nil? }
 
-      # blank_slots = out_slots.any? do |slot|
-      #   slot.carrier != loss && Atlas::Carrier.find(slot.carrier).sustainable.nil?
-      # end
-
       return unless blank_slots
 
       errors.add(
@@ -86,6 +84,27 @@ module Atlas
         'must not be blank on a primary_energy_demand node when one or more output carriers do ' \
         'not define a `sustainable` value'
       )
+    end
+
+    # Internal: Verifies that the consumption and production prices require a merit order flex node
+    # and a non-negative value.
+    def validate_consumption_and_production_prices
+      %i[marginal_costs max_consumption_price].each do |price_attribute|
+        value = public_send(price_attribute)
+
+        next if value.nil?
+
+        if merit_order&.type != :flex || merit_order&.subtype != :storage
+          errors.add(
+            price_attribute,
+            'is only allowed when the merit_order type is "flex" and subtype is "storage"'
+          )
+
+          next
+        end
+
+        errors.add(price_attribute, 'must not be less than zero') if value.negative?
+      end
     end
   end
 end
