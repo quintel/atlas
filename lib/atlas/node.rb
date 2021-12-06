@@ -41,6 +41,7 @@ module Atlas
         technical_lifetime
         variable_operation_and_maintenance_costs_for_ccs_per_full_load_hour
         variable_operation_and_maintenance_costs_per_full_load_hour
+        fixed_costs_per_mw_input_capacity
         wacc
       ].each do |name|
         attribute name, Float
