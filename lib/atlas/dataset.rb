@@ -31,6 +31,7 @@ module Atlas
     attribute :has_old_technologies,                        Boolean, default: false
     attribute :has_other,                                   Boolean, default: true
     attribute :has_solar_csp,                               Boolean, default: false
+    attribute :has_offshore_solar,                          Boolean, default: false
     attribute :has_other_emissions_section,                 Boolean, default: true
     attribute :has_import_export,                           Boolean, default: true
     attribute :use_network_calculations,                    Boolean, default: true
