@@ -10,17 +10,6 @@ module Atlas
         validate_reference(record, key, options)
       end
 
-      private
-
-      def validate_presence(record, key, options)
-        return if key.to_s.length.positive?
-
-        record.errors.add(
-          options[:attribute],
-          "must contain a reference to a #{ref_name(options[:class_name])}"
-        )
-      end
-
       def validate_reference(record, key, options)
         return unless key # Already caught by presence validator.
 
@@ -30,7 +19,18 @@ module Atlas
 
         record.errors.add(
           options[:attribute],
-          "references a #{ref_name(options[:class_name])} which does not exist"
+          "references a #{ref_name(options[:class_name])} which does not exist: #{key.to_s.inspect}"
+        )
+      end
+
+      private
+
+      def validate_presence(record, key, options)
+        return if key.to_s.length.positive?
+
+        record.errors.add(
+          options[:attribute],
+          "must contain a reference to a #{ref_name(options[:class_name])}"
         )
       end
 

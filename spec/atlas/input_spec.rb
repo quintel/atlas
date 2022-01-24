@@ -4,7 +4,121 @@ module Atlas
   describe Input do
     describe 'priority' do
       it 'defaults to zero' do
-        expect(Input.new(key: 'ohnoes').priority).to eq(0)
+        expect(described_class.new(key: 'ohnoes').priority).to eq(0)
+      end
+    end
+
+    describe 'disabled_by' do
+      context 'when empty' do
+        it 'has no errors' do
+          expect(described_class.new.errors_on(:disabled_by)).to be_empty
+        end
+      end
+
+      context 'when specifying two valid inputs' do
+        it 'has no errors' do
+          input = described_class.new(disabled_by: %i[grouped_one grouped_two])
+          expect(input.errors_on(:disabled_by)).to be_empty
+        end
+      end
+
+      context 'when specifying two inputs, one of which does not exist' do
+        let(:input) do
+          described_class.new(disabled_by: %i[grouped_one nope])
+        end
+
+        it 'has no error for the valid input' do
+          expect(input.errors_on(:disabled_by))
+            .not_to include('references a input which does not exist: "grouped_one"')
+        end
+
+        it 'has an error for the missing input' do
+          expect(input.errors_on(:disabled_by))
+            .to include('references a input which does not exist: "nope"')
+        end
+      end
+
+      context 'when specifying two inputs which do not exist' do
+        let(:input) do
+          described_class.new(disabled_by: %i[nope also_nope])
+        end
+
+        it 'has an error for the first missing input' do
+          expect(input.errors_on(:disabled_by))
+            .to include('references a input which does not exist: "nope"')
+        end
+
+        it 'has an error for the second missing input' do
+          expect(input.errors_on(:disabled_by))
+            .to include('references a input which does not exist: "also_nope"')
+        end
+      end
+
+      # Update period validation
+
+      context 'when the input period is "both" and the other is "before"' do
+        before do
+          described_class.new(key: 'other', update_period: 'before', query: 'NOOP()').save!
+        end
+
+        it 'has an error' do
+          input = described_class.new(disabled_by: %i[other], update_period: 'both')
+
+          expect(input.errors_on(:disabled_by)).to include(
+            'cannot include "other" because it does not update present or future or ' \
+            'both period'
+          )
+        end
+      end
+
+      context 'when the input period is "both" and the other is "future"' do
+        before do
+          described_class.new(key: 'other', update_period: 'future', query: 'NOOP()').save!
+        end
+
+        it 'has no errors' do
+          input = described_class.new(disabled_by: %i[other], update_period: 'both')
+          expect(input.errors_on(:disabled_by)).to be_empty
+        end
+      end
+
+      context 'when the input period is "future" and the other is "future"' do
+        before do
+          described_class.new(key: 'other', update_period: 'future', query: 'NOOP()').save!
+        end
+
+        it 'has no errors' do
+          input = described_class.new(disabled_by: %i[other], update_period: 'future')
+          expect(input.errors_on(:disabled_by)).to be_empty
+        end
+      end
+
+      context 'when the input period is "future" and the other is "present"' do
+        before do
+          described_class.new(key: 'other', update_period: 'present', query: 'NOOP()').save!
+        end
+
+        it 'has no errors' do
+          input = described_class.new(disabled_by: %i[other], update_period: 'future')
+
+          expect(input.errors_on(:disabled_by)).to include(
+            'cannot include "other" because it does not update future period'
+          )
+        end
+      end
+
+      context 'when the input period is "future" and the other is "both"' do
+        before do
+          described_class.new(key: 'other', update_period: 'both', query: 'NOOP()').save!
+        end
+
+        it 'has no errors' do
+          input = described_class.new(disabled_by: %i[other], update_period: 'future')
+
+          expect(input.errors_on(:disabled_by)).to include(
+            'cannot include "other" because it does not update future period'
+          )
+        end
       end
     end
 

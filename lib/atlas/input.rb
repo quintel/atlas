@@ -23,7 +23,9 @@ module Atlas
     attribute :update_period,   String
     attribute :update_type,     String
     attribute :default_unit,    String
-    attribute :dependent_on,    String
+    attribute :dependent_on,    Array[String]
+
+    attribute :disabled_by,     Array[Symbol]
 
     validates_presence_of :query, if: ->{ share_group.blank? }
 
@@ -33,9 +35,42 @@ module Atlas
     validates_presence_of :share_group, allow_nil: true,
       message: 'must be blank, or have a value of non-zero length'
 
+    validates_presence_of :update_period
+
     validate :validate_enum_input
+    validate :validate_disabled_inputs
 
     private
+
+    # Internal: Asserts that the inputs named in `disabled_by` all exist and update a compatible
+    # period.
+    #
+    # Returns nothing.
+    def validate_disabled_inputs
+      validator = DocumentReferenceValidator.new
+      disabled_periods = update_period == 'both' ? %w[present future both] : [update_period]
+
+      Array(disabled_by).each do |other_key|
+        validator.validate_reference(
+          self,
+          other_key,
+          attribute: 'disabled_by',
+          class_name: 'Atlas::Input'
+        )
+
+        next unless Atlas::Input.exists?(other_key)
+
+        other = Atlas::Input.find(other_key)
+
+        next if disabled_periods.include?(other.update_period)
+
+        errors.add(
+          :disabled_by,
+          "cannot include #{other.key.to_s.inspect} because it does not update " \
+          "#{disabled_periods.join(' or ')} period"
+        )
+      end
+    end
 
     # Internal: Asserts that a query is defined on the Input.
     #

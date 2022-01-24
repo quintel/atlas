@@ -37,6 +37,6 @@ RSpec.describe Atlas::ActiveDocument::DocumentReferenceValidator do
     doc = klass.new(ref: :no_such_document)
 
     expect(doc.errors_on(:ref))
-      .to include('references a energy node which does not exist')
+      .to include('references a energy node which does not exist: "no_such_document"')
   end
 end

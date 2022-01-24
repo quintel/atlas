@@ -65,7 +65,7 @@ RSpec.describe Atlas::NodeAttributes::Reconciliation do
       details.subordinate_to = :invalid
 
       expect(details.errors_on(:subordinate_to))
-        .to include('references a energy node which does not exist')
+        .to include('references a energy node which does not exist: "invalid"')
     end
 
     it 'must have an subordinate_to_output value' do

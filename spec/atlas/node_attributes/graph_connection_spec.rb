@@ -16,8 +16,9 @@ RSpec.shared_examples_for 'a GraphConnection subclass' do
     let(:conv) { connection_class.new(source: :invalid) }
 
     it 'has an error on "source"' do
-      expect(conv.errors_on(:source))
-        .to include("references a #{source_class_description} node which does not exist")
+      expect(conv.errors_on(:source)).to include(
+        "references a #{source_class_description} node which does not exist: \"invalid\""
+      )
     end
   end
 
