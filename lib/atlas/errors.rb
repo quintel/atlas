@@ -175,6 +175,11 @@ module Atlas
     'the conversion attribute is a hash'
   end
 
+  MissingPasswordError = error_class do |path|
+    'Cannot decrypt file without an ETSource password. Is the .password file missing from ' \
+    "ETSource? Expected the file at: #{path}"
+  end
+
   # Graph Structure / Topology Errors ----------------------------------------
 
   InvalidLinkError = error_class do |link|
@@ -225,6 +230,10 @@ module Atlas
   BlankCSVHeaderError = error_class(InvalidKeyError) do |path|
     "#{ path } contains a cell in the header row which has no value. All " \
     "of the cells in the first row must contain a non-blank value."
+  end
+
+  ReadOnlyCSVError = error_class do
+    'Cannot change a value in a read-only (temporary) CSV document'
   end
 
   ExistingCSVHeaderError = error_class do |path|

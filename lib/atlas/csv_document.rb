@@ -8,49 +8,98 @@ module Atlas
       info.header == :year ? value.to_f.to_i : value
     end
 
-    # Public: Reads a CSV file whose contents is a simple list of values with
-    # no headers.
-    #
-    # Returns an Array.
-    def self.curve(path)
-      CSV.read(
-        path.to_s, converters: [YEAR_NORMALIZER, :float]
-      ).map(&:first).compact
+    class << self
+      # Public: Reads a CSV file whose contents is a simple list of values with
+      # no headers.
+      #
+      # Returns an Array.
+      def curve(path)
+        CSV.read(path.to_s, converters: [YEAR_NORMALIZER, :float]).map(&:first).compact
+      end
+
+      # Public: Reads a CSV at the given path.
+      def read(path)
+        new(CSV.read(path, table_opts), path)
+      end
+
+      # Public: Reads a CSV from a string.
+      def from_string(str, path = nil)
+        new(CSV.parse(str, table_opts), path)
+      end
+
+      # Public: Creates a new CSVDocument with the given headers.
+      def empty(headers, path)
+        path = Pathname(path) unless path.nil?
+
+        raise(ExistingCSVHeaderError, path) if path&.file?
+
+        headers = headers.map { |header| normalize_key(header) }
+        new(CSV::Table.new([CSV::Row.new(headers, headers, true)]), path)
+      end
+
+      # Internal: Converts the given key to a format which removes all special
+      # characters.
+      #
+      # Returns a Symbol.
+      def normalize_key(key)
+        case key
+        when Numeric, nil
+          # nils never happen here in Ruby >= 2.3 since nils
+          # skip the normalizer.
+          key
+        else
+          key.to_s.downcase.strip
+            .gsub(/(?:\s+|-)/, '_')
+            .gsub(/[^a-zA-Z0-9_]+/, '')
+            .squeeze('_')
+            .gsub(/_$/, '')
+            .to_sym
+        end
+      end
+
+      private
+
+      # Internal: Default options when parsing to a CSV::Table.
+      def table_opts
+        {
+          converters: [YEAR_NORMALIZER, :float],
+          headers: true,
+          header_converters: [->(header) { normalize_key(header) }],
+          # Needed to retrieve the headers in case of an otherwise empty csv file
+          return_headers: true
+        }
+      end
+
+      # Internal: Procs passed to the CSV::Table describing how to convert values
+      # from the CSV to Ruby types.
+      #
+      # Returns an Array of Procs or Symbols.
+      def value_converters
+        [YEAR_NORMALIZER, :float]
+      end
     end
 
-    # A lambda which converts strings to a consistent format for keys in
-    # CSV files.
-    # Public: Creates a new CSV document instance which will read data from a
-    # CSV file on disk. Documents are read-write.
+    # Use `read`, `from_string`, or `empty`.
+    private_class_method :new
+
+    # Internal: Creates a new CSV document instance which will read data from a CSV file on disk.
+    # Documents are read-write.
     #
-    # path - Path to the CSV file.
+    # `new` is not available; use `read`, `from_string`, or `empty`.
+    #
+    # table - A CSV::Table with the data.
+    # path  - An optional path to the CSV file.
     #
     # Returns a CSVDocument.
-    def initialize(path, headers = nil)
-      @path = Pathname.new(path)
+    def initialize(table, path = nil)
+      @headers = table.headers
+      @path = Pathname(path) if path
+      @table = table
 
-      if headers
-        raise(ExistingCSVHeaderError, path) if @path.file?
-        @headers = headers.map { |header| normalize_key(header) }
-        @table = CSV::Table.new([CSV::Row.new(@headers, @headers, true)])
-      else
-        @table = CSV.table(
-          @path.to_s,
-          converters: value_converters,
-          header_converters: [->(header) { normalize_key(header) }],
-          # Needed to retrieve the headers in case
-          # of an otherwise empty csv file
-          return_headers: true
-        )
+      # Delete the header row for the internal representation. This will be (re-)created when saved.
+      @table.delete(0)
 
-        @headers = table.headers
-
-        # Delete the header row for the internal representation -
-        # will be dynamically (re-)created when outputting
-        table.delete(0)
-
-        raise(BlankCSVHeaderError, path) if @headers.any?(&:nil?)
-      end
+      raise(BlankCSVHeaderError, path || '<no path>') if @headers.any?(&:nil?)
     end
 
     # Public: Saves the CSV document to disk
@@ -63,6 +112,8 @@ module Atlas
     #
     # Returns self.
     def save!(follow_link: true)
+      raise(ReadOnlyCSVError) if @path.nil? || !@path.to_s.end_with?('.csv')
+
       path.unlink if !follow_link && path.symlink?
 
       FileUtils.mkdir_p(path.dirname)
@@ -165,27 +216,7 @@ module Atlas
     #
     # Returns a Symbol.
     def normalize_key(key)
-      case key
-      when Numeric, nil
-        # nils never happen here in Ruby >= 2.3 since nils
-        # skip the normalizer.
-        key
-      else
-        key.to_s.downcase.strip
-          .gsub(/(?:\s+|-)/, '_')
-          .gsub(/[^a-zA-Z0-9_]+/, '')
-          .gsub(/_+/, '_')
-          .gsub(/_$/, '')
-          .to_sym
-      end
-    end
-
-    # Internal: Procs passed to the CSV::Table describing how to convert values
-    # from the CSV to Ruby types.
-    #
-    # Returns an Array of Procs or Symbols.
-    def value_converters
-      [YEAR_NORMALIZER, :float]
+      self.class.normalize_key(key)
     end
 
     # Internal: Raises unless the named column exists in the file.

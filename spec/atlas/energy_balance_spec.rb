@@ -1,30 +1,47 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Atlas
   describe EnergyBalance do
-    let(:eb) { EnergyBalance.new(:nl) }
-
-    describe '.new' do
-      it 'should be able to create a new one' do
-        expect(-> { EnergyBalance.new } ).not_to raise_error
-      end
-
-      it 'should be by default take the Netherlands and unit = TJ' do
-        eb = EnergyBalance.new
-        expect(eb.key).to eql :nl
-        expect(eb.unit).to eql :tj
-      end
-    end
+    let(:eb) { described_class.find(:nl) }
 
     describe '.find' do
       it 'raises an error when key is invalid' do
-        expect { described_class.find(nil) }.to raise_error(InvalidKeyError)
+        expect { described_class.find(nil) }.to raise_error(DocumentNotFoundError)
       end
 
       context 'when a dataset has an energy_balance.csv file' do
         it 'finds the correct energy balance' do
-          eb = EnergyBalance.find(:nl)
-          expect(eb.key).to eql :nl
+          eb = described_class.find(:nl)
+          expect(eb.path).to eq(Dataset.find(:nl).dataset_dir.join('energy_balance.csv'))
+        end
+      end
+
+      context 'when a dataset has an energy_balance.gpg file' do
+        let(:dataset) { Atlas::Dataset.find(:nl) }
+
+        before do
+          content = dataset.dataset_dir.join('energy_balance.csv').read
+
+          crypto = GPGME::Crypto.new(password: Atlas.password)
+          encrypted = crypto.encrypt(
+            content,
+            pinentry_mode: GPGME::PINENTRY_MODE_LOOPBACK,
+            symmetric: true
+          ).to_s
+
+          File.open(dataset.dataset_dir.join('energy_balance.gpg'), 'wb') { |f| f.write(encrypted) }
+          dataset.dataset_dir.join('energy_balance.csv').unlink
+        end
+
+        it 'can read values from the decrypted CSV' do
+          expect(described_class.find(:nl).get(:production, :coal_and_peat)).to eq(115)
+        end
+
+        it 'sets the path on the CSV' do
+          expect(described_class.find(:nl).path)
+            .to eq(dataset.dataset_dir.join('energy_balance.gpg'))
         end
       end
 
@@ -37,7 +54,8 @@ module Atlas
             ds.dataset_dir.join('energy_balance.open_access.csv')
           )
 
-          expect(described_class.find(:nl).key).to eq(:nl)
+          expect(described_class.find(:nl).path)
+            .to eq(ds.dataset_dir.join('energy_balance.open_access.csv'))
         end
       end
 
@@ -125,19 +143,9 @@ module Atlas
         expect(eb.get('Residential','coal_and_peat')).to eql 6.0
       end
 
-      it 'works with other units' do
-        eb.unit = :twh
-        allow(eb).to receive(:cell).and_return(6)
-
-        expect(eb.get('Residential','coal_and_peat')).
-          to eq(EnergyUnit.new(6, :tj).to_unit(:twh))
-      end
-
-      it 'raises an error when an unknown unit is requested' do
-        eb.unit = :i_do_not_exist
-        allow(eb).to receive(:cell).and_return(6)
-        expect(->{ eb.get('Residential','coal_and_peat') }).to \
-          raise_error UnknownUnitError
+      it 'raises an error if the value is non-numeric' do
+        allow(eb).to receive(:cell).and_return('x')
+        expect { eb.get('Residential', 'coal_and_peat') }.to raise_error(/non-numeric/i)
       end
     end
 

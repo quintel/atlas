@@ -31,6 +31,22 @@ module Atlas
     end
   end
 
+  # Public: The password for decrypting energy balances.
+  #
+  # Looks first for an `ETSOURCE_PASSWORD` environment variable, falling back to a .password file
+  # in the data directory.
+  #
+  # Returns a String, or raises an error if no password is available.
+  def self.password
+    return ENV['ETSOURCE_PASSWORD'] if ENV.key?('ETSOURCE_PASSWORD')
+
+    if File.exist?(Atlas.data_dir.join('.password'))
+      return File.read(Atlas.data_dir.join('.password')).strip
+    end
+
+    raise MissingPasswordError, Atlas.data_dir.join('.password')
+  end
+
   # Public: Wrap around a block of code to work with a temporarily altered
   # +data_dir+ setting.
   #

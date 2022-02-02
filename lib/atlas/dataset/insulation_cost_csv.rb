@@ -39,11 +39,11 @@ module Atlas
         info.header == :present ? Integer(value).to_s.to_sym : value
       end
 
-      private
-
-      def value_converters
+      def self.value_converters
         [LEVEL_VALUE_NORMALIZER, :float]
       end
+
+      private
 
       # Internal: Converts a CSV header key to a standard format.
       def normalize_key(key)

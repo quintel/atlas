@@ -18,6 +18,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'activemodel',   '>= 4.1.14.1'
   gem.add_dependency 'activesupport', '>= 4.1.14.1'
+  gem.add_dependency 'gpgme',         '~> 2.0'
   gem.add_dependency 'turbine-graph', '>= 0.1'
   gem.add_dependency 'virtus',        '~> 1.0'
 

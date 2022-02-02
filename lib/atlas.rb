@@ -9,6 +9,7 @@ Bundler.setup(:default)
 require 'refinery'
 
 require 'active_model'
+require 'gpgme'
 require 'rubel'
 require 'turbine'
 require 'virtus'

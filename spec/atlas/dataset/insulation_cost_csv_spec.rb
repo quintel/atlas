@@ -17,7 +17,7 @@ RSpec.describe Atlas::Dataset::InsulationCostCSV do
         CSV
       end
 
-      described_class.new(path.to_s)
+      described_class.read(path.to_s)
     end
 
     context 'when querying the first row' do
@@ -73,7 +73,7 @@ RSpec.describe Atlas::Dataset::InsulationCostCSV do
         CSV
       end
 
-      described_class.new(path.to_s)
+      described_class.read(path.to_s)
     end
 
     describe 'when querying the "apartment" row' do

@@ -246,7 +246,7 @@ module Atlas
       key = key.to_sym
 
       (@shares ||= {})[key] ||=
-        CSVDocument::OneDimensional.new(path_resolver.resolve("shares/#{key}.csv"))
+        CSVDocument::OneDimensional.read(path_resolver.resolve("shares/#{key}.csv"))
     end
 
     # Public: Retrieves the efficiency data from the named file.
@@ -259,7 +259,7 @@ module Atlas
     # Returns a CSVDocument::OneDimensional.
     def efficiencies(key)
       (@efficiencies ||= {})[key.to_sym] ||=
-        CSVDocument::OneDimensional.new(
+        CSVDocument::OneDimensional.read(
           path_resolver.resolve("efficiencies/#{key}_efficiency.csv")
         )
     end
@@ -270,7 +270,7 @@ module Atlas
     #
     # Returns a Dataset::InsulationCostCSV.
     def insulation_costs(type)
-      (@insulation_costs ||= {})[type.to_sym] ||= InsulationCostCSV.new(
+      (@insulation_costs ||= {})[type.to_sym] ||= InsulationCostCSV.read(
         path_resolver.resolve("real_estate/insulation_costs_#{type}.csv")
       )
     end
@@ -315,7 +315,7 @@ module Atlas
     #
     # Returns a CSVDocument.
     def carriers
-      @carrier_data ||= CSVDocument.new(path_resolver.resolve('carriers.csv'))
+      @carrier_data ||= CSVDocument.read(path_resolver.resolve('carriers.csv'))
     end
 
     # Public: Retrieves demand and full load hours data for the region.
@@ -328,14 +328,14 @@ module Atlas
     #
     # Returns a CSVDocument.
     def central_producers
-      @central_producers ||= CSVDocument.new(path_resolver.resolve('central_producers.csv'))
+      @central_producers ||= CSVDocument.read(path_resolver.resolve('central_producers.csv'))
     end
 
     # Public: A set of demands required for use inside ETlocal
     #
     # Returns a CSVDocument
     def parent_values
-      @parent_values ||= CSVDocument.new(path_resolver.resolve('demands/parent_values.csv'))
+      @parent_values ||= CSVDocument.read(path_resolver.resolve('demands/parent_values.csv'))
     end
 
     # Public: Retrieves demand and max demand data for the region. Expects to
@@ -348,7 +348,7 @@ module Atlas
     #
     # Returns a CSVDocument.
     def primary_production
-      @primary_production ||= CSVDocument.new(path_resolver.resolve('primary_production.csv'))
+      @primary_production ||= CSVDocument.read(path_resolver.resolve('primary_production.csv'))
     end
 
     # Public: Retrieves the demand data for the file whose name matches +key+.
@@ -363,7 +363,7 @@ module Atlas
       key = key.to_sym
 
       (@demands ||= {})[key] ||=
-        CSVDocument::OneDimensional.new(path_resolver.resolve("demands/#{key}.csv"))
+        CSVDocument::OneDimensional.read(path_resolver.resolve("demands/#{key}.csv"))
     end
 
     # Public: Path to the directory in which the dataset specific data is

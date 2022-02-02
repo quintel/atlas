@@ -7,36 +7,47 @@ module Atlas
   # Currently, it is presumed that the EnergyBalance values are provided
   # in ktoe, the standard of the IEA.
   class EnergyBalance < CSVDocument
-    ORIGINAL_UNIT = :tj
-
-    attr_accessor :key, :unit
-
-    def initialize(key = :nl, unit = :tj)
-      @key  = key
-      @unit = unit
-
+    # Public: Loads a stored energy balance
+    def self.find(key)
       dataset = Dataset.find(key)
 
       # Always prefer a file from the dataset itself before falling back to the parent.
       if (option = dataset.dataset_dir.join('energy_balance.open_access.csv')).exist?
-        super(option)
+        read(option)
       elsif (option = dataset.dataset_dir.join('energy_balance.csv')).exist?
-        super(option)
+        read(option)
       elsif (option = dataset.path_resolver.join('energy_balance.open_access.csv')).exist?
-        super(option)
+        read(option)
+      elsif (option = dataset.path_resolver.join('energy_balance.gpg')).exist?
+        from_string(decrypt(option), option)
       else
-        super(dataset.path_resolver.join('energy_balance.csv'))
+        read(dataset.path_resolver.join('energy_balance.csv'))
       end
     end
 
-    # Loads a stored energy balance
-    def self.find(key, year = nil)
-      key ? new(key) : fail(InvalidKeyError.new(key))
+    # Don't use `new` directly, use `find` instead.
+    private_class_method :new
+
+    # Internal: Decrypts an energy balance at the given path, returning the CSV contents as string.
+    #
+    # Returns a string.
+    def self.decrypt(path)
+      GPGME::Crypto.new(password: Atlas.password).decrypt(
+        File.read(path),
+        pinentry_mode: GPGME::PINENTRY_MODE_LOOPBACK
+      ).to_s
     end
 
-    # Returns the energy balance item in the correct unit
+    private_class_method :decrypt
+
+    # Returns the energy balance item as a numeric, or logs a message and returns zero.
     def get(use, carrier)
-      convert_to_unit(super(use, carrier))
+      if (value = super).is_a?(Numeric)
+        value.to_f
+      else
+        raise AtlasError,
+          "Non-numeric energy balance value #{use.inspect} #{carrier.inspect} in #{@path}.inspect"
+      end
     end
 
     # basicly the same as get, but then in one big string, separates by comma
@@ -44,21 +55,6 @@ module Atlas
     def query(string)
       params = string.split(',')
       get(params.first, params.last)
-    end
-
-    private
-
-    # Internal: Given a value extracted from the CSV file, converts it to the
-    # unit used by the EnergyBalance instance.
-    #
-    # Returns a numeric, warning if the given value was not also numeric.
-    def convert_to_unit(value)
-      if value.is_a?(Numeric)
-        EnergyUnit.new(value, ORIGINAL_UNIT).to_unit(unit)
-      else
-        puts "WARNING: Discarding non-numeric #{ value.inspect }"
-        0.0
-      end
     end
   end
 end
