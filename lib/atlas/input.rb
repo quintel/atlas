@@ -23,7 +23,7 @@ module Atlas
     attribute :update_period,   String
     attribute :update_type,     String
     attribute :default_unit,    String
-    attribute :dependent_on,    Array[String]
+    attribute :dependent_on,    String
 
     attribute :disabled_by,     Array[Symbol]
 
