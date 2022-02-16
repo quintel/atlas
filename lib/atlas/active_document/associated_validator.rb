@@ -9,8 +9,15 @@ module Atlas
 
         return true if associated.nil? || associated.valid?
 
-        associated.errors.each do |error|
-          record.errors.add(options[:attribute], error.full_message)
+        associated.errors.each do |error, msg|
+          message = if error.respond_to?(:full_message)
+            # ActiveModel::Error
+            error.full_message
+          else
+            "#{error} #{msg}"
+          end
+
+          record.errors.add(options[:attribute], message)
         end
       end
     end

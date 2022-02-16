@@ -13,6 +13,77 @@ describe Atlas::NodeAttributes::ElectricityMeritOrder do
     end
   end
 
+  describe '#demand_source for load shifting nodes' do
+    context 'when the demand source is empty' do
+      it 'has an error' do
+        mo = described_class.new(type: :flex, subtype: :load_shifting)
+        expect(mo.errors_on(:demand_source)).to include('must be set and contain at least one node')
+      end
+    end
+
+    context 'when the demand source names a node that does not exist' do
+      it 'has an error' do
+        mo = described_class.new(type: :flex, subtype: :load_shifting, demand_source: [:nope])
+        expect(mo.errors_on(:demand_source)).to include('contains node nope which does not exist')
+      end
+    end
+
+    context 'when the demand source names a node that does not participate in Merit' do
+      before do
+        Atlas::EnergyNode.new(key: :source).save!
+      end
+
+      it 'has an error' do
+        mo = described_class.new(type: :flex, subtype: :load_shifting, demand_source: [:source])
+
+        expect(mo.errors_on(:demand_source))
+          .to include('contains node source which is not a consumer node')
+      end
+    end
+
+    context 'when the demand source names a node that is not a Merit consumer' do
+      before do
+        Atlas::EnergyNode.new(
+          key: :source,
+          merit_order: { type: :producer, subtype: :volatile }
+        ).save!
+      end
+
+      it 'has an error' do
+        mo = described_class.new(type: :flex, subtype: :load_shifting, demand_source: [:source])
+
+        expect(mo.errors_on(:demand_source))
+          .to include('contains node source which is not a consumer node')
+      end
+    end
+
+    context 'when the demand source names a valid demand source' do
+      before do
+        Atlas::EnergyNode.new(key: :source, merit_order: { type: :consumer }).save!
+      end
+
+      it 'has no error' do
+        mo = described_class.new(type: :flex, subtype: :load_shifting, demand_source: [:source])
+        expect(mo.errors_on(:demand_source)).to be_empty
+      end
+    end
+
+    context 'when the demand source names multiple valid demand sources' do
+      before do
+        Atlas::EnergyNode.new(key: :source_one, merit_order: { type: :consumer }).save!
+        Atlas::EnergyNode.new(key: :source_two, merit_order: { type: :consumer }).save!
+      end
+
+      it 'has no errors' do
+        mo = described_class.new(
+          type: :flex, subtype: :load_shifting, demand_source: [:source_one, :source_two]
+        )
+
+        expect(mo.errors_on(:demand_source)).to be_empty
+      end
+    end
+  end
+
   describe '#production_curtailment' do
     context 'when type=:consumer' do
       let(:mo) do

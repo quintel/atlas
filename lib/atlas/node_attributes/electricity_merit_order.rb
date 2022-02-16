@@ -12,8 +12,9 @@ module Atlas
         attribute :level, Symbol, default: :hv
 
         # Used with power-to-heat to define a node which should be used as the
-        # source of demand.
-        attribute :demand_source, Symbol
+        # source of demand. Also used with load shifting demand reduction,
+        # where the demand source may be an array containing multiple nodes.
+        attribute :demand_source, Array[Symbol]
 
         # Used with power-to-heat to defines the profile used to shape demand.
         attribute :demand_profile, Symbol
@@ -58,6 +59,36 @@ module Atlas
 
       def self.consumer_subtypes
         @consumer_subtypes = (super + %i[electricity_loss]).freeze
+      end
+
+      validate :validate_load_shifting_config
+
+      def attributes
+        attrs = super
+        attrs.delete(:demand_source) if attrs[:demand_source].empty?
+        attrs
+      end
+
+      private
+
+      # Validates that demand sources named in a load shifting node are valid for use as a demand
+      # source.
+      def validate_load_shifting_config
+        return unless type == :flex && subtype == :load_shifting
+
+        source_nodes = Array(demand_source)
+
+        if source_nodes.empty?
+          errors.add(:demand_source, 'must be set and contain at least one node')
+        end
+
+        source_nodes.each do |node|
+          if !Atlas::EnergyNode.exists?(node)
+            errors.add(:demand_source, "contains node #{node} which does not exist")
+          elsif Atlas::EnergyNode.find(node).merit_order&.type != :consumer
+            errors.add(:demand_source, "contains node #{node} which is not a consumer node")
+          end
+        end
       end
     end
   end
