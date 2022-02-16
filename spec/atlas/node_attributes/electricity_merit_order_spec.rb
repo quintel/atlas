@@ -84,6 +84,49 @@ describe Atlas::NodeAttributes::ElectricityMeritOrder do
     end
   end
 
+  describe '#load_shifting_hours' do
+    context 'when a load_shifting component' do
+      it 'may be nil' do
+        mo = described_class.new(type: :flex, subtype: :load_shifting, load_shifting_hours: nil)
+        expect(mo.errors_on(:load_shifting_hours)).to be_blank
+      end
+
+      it 'may be 0' do
+        mo = described_class.new(type: :flex, subtype: :load_shifting, load_shifting_hours: 0)
+        expect(mo.errors_on(:load_shifting_hours)).to be_blank
+      end
+
+      it 'may be 8760' do
+        mo = described_class.new(type: :flex, subtype: :load_shifting, load_shifting_hours: 8760)
+        expect(mo.errors_on(:load_shifting_hours)).to be_blank
+      end
+
+      it 'may not be negative' do
+        mo = described_class.new(type: :flex, subtype: :load_shifting, load_shifting_hours: -1)
+        expect(mo.errors_on(:load_shifting_hours)).to include('must be greater than or equal to 0')
+      end
+
+      it 'may not be greater than 8760' do
+        mo = described_class.new(type: :flex, subtype: :load_shifting, load_shifting_hours: 8761)
+        expect(mo.errors_on(:load_shifting_hours)).to include('must be less than or equal to 8760')
+      end
+    end
+
+    context 'when not a load shifting component' do
+      it 'has no errors when nil' do
+        mo = described_class.new(type: :flex, subtype: :generic, load_shifting_hours: nil)
+        expect(mo.errors_on(:load_shifting_hours)).to be_blank
+      end
+
+      it 'has an error when non-nil' do
+        mo = described_class.new(type: :flex, subtype: :generic, load_shifting_hours: 10)
+
+        expect(mo.errors_on(:load_shifting_hours))
+          .to include('is only allowed when type=flex and subtype=export')
+      end
+    end
+  end
+
   describe '#production_curtailment' do
     context 'when type=:consumer' do
       let(:mo) do
@@ -181,7 +224,7 @@ describe Atlas::NodeAttributes::ElectricityMeritOrder do
         mo.satisfy_with_dispatchables = false
 
         expect(mo.errors_on(:satisfy_with_dispatchables))
-          .to include('is only allowed when type=:flex and subtype=:export')
+          .to include('is only allowed when type=flex and subtype=export')
       end
     end
 
@@ -198,7 +241,7 @@ describe Atlas::NodeAttributes::ElectricityMeritOrder do
         mo.satisfy_with_dispatchables = true
 
         expect(mo.errors_on(:satisfy_with_dispatchables))
-          .to include('is only allowed when type=:flex and subtype=:export')
+          .to include('is only allowed when type=flex and subtype=export')
       end
     end
 
