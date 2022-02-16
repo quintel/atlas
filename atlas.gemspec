@@ -21,6 +21,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'gpgme',         '~> 2.0'
   gem.add_dependency 'turbine-graph', '>= 0.1'
   gem.add_dependency 'virtus',        '~> 1.0'
+  gem.add_dependency 'csv',           '>= 3'
 
   gem.add_development_dependency 'rake', '>= 10.0.3'
   gem.add_development_dependency 'pry',  '>= 0.9.12'

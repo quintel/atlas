@@ -1,5 +1,4 @@
 require 'yaml'
-require 'csv'
 require 'pathname'
 require 'delegate'
 
@@ -9,6 +8,7 @@ Bundler.setup(:default)
 require 'refinery'
 
 require 'active_model'
+require 'csv'
 require 'gpgme'
 require 'rubel'
 require 'turbine'
