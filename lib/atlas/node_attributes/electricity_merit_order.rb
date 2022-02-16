@@ -34,6 +34,13 @@ module Atlas
 
         # Used by always-on battery parks to name related nodes in the technology.
         attribute :relations, Hash[Symbol => Symbol], default: nil
+
+        # Use with load shifting to specify an upper-capacity limit on how much
+        # load can be shifted. Since the capacity is calculated dynamically
+        # based on the demand sources, this is expressed as multiple of output
+        # capacity. i.e. if the output capacity is 10 MW and the limit is set
+        # to 50, then the load shifting limit will be 500 MWh.
+        attribute :load_shifting_hours, Float
       end
 
       validates :level, inclusion: %i[lv mv hv omit]
@@ -49,7 +56,7 @@ module Atlas
       validates :satisfy_with_dispatchables,
         exclusion: {
           in: [true, false],
-          message: 'is only allowed when type=:flex and subtype=:export'
+          message: 'is only allowed when type=flex and subtype=export'
         },
         unless: ->(mo) { mo.type == :flex && mo.subtype == :export }
 
@@ -60,6 +67,18 @@ module Atlas
       def self.consumer_subtypes
         @consumer_subtypes = (super + %i[electricity_loss]).freeze
       end
+
+      validates :load_shifting_hours,
+        absence: { message: 'is only allowed when type=flex and subtype=export' },
+        unless: ->(mo) { mo.type == :flex && mo.subtype == :load_shifting }
+
+      validates :load_shifting_hours,
+        numericality: {
+          greater_than_or_equal_to: 0,
+          less_than_or_equal_to: 8760
+        },
+        allow_nil: true,
+        if: ->(mo) { mo.type == :flex && mo.subtype == :load_shifting }
 
       validate :validate_load_shifting_config
 
