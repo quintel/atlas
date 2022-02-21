@@ -51,6 +51,14 @@ module Atlas
           message: 'is only allowed when type=:flex and subtype=:export'
         },
         unless: ->(mo) { mo.type == :flex && mo.subtype == :export }
+
+      def self.producer_subtypes
+        @producer_subtypes = (super + %i[import always_on_battery_park]).freeze
+      end
+
+      def self.consumer_subtypes
+        @consumer_subtypes = (super + %i[electricity_loss]).freeze
+      end
     end
   end
 end

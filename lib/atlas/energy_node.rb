@@ -64,6 +64,12 @@ module Atlas
     validate :validate_primary_demand_sustainable
     validate :validate_consumption_and_production_prices
 
+    validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :from_molecules
+    validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :heat_network
+    validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :hydrogen
+    validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :merit_order
+    validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :network_gas
+
     private
 
     # Internal: Asserts that primary_energy_demand nodes have enough information - either on the

@@ -21,20 +21,20 @@ module Atlas
 
       # Producer subtypes.
       validates :subtype,
-        inclusion: %i[dispatchable must_run volatile],
+        inclusion: { in: ->(mod) { mod.class.producer_subtypes } },
         if: ->(mod) { mod.type == :producer }
 
       # Consumer subtypes.
       validates :subtype,
-        inclusion: %i[generic pseudo],
+        inclusion: { in: ->(mod) { mod.class.consumer_subtypes } },
         if: ->(mod) { mod.type == :consumer }
 
       validates_absence_of :output_capacity_from_demand_of,
-        unless: ->(mod) { mod.subtype == :storage },
+        unless: ->(mod) { mod.subtype == :storage || mod.subtype == :heat_storage },
         message: 'must be blank when subtype is not storage'
 
       validates_absence_of :output_capacity_from_demand_share,
-        unless: ->(mod) { mod.subtype == :storage },
+        unless: ->(mod) { mod.subtype == :storage || mod.subtype == :heat_storage },
         message: 'must be blank when subtype is not storage'
 
       def delegate
@@ -43,6 +43,14 @@ module Atlas
 
       # Electricity merit order attribute: unused in other Merit calculations.
       def production_curtailment; end
+
+      def self.producer_subtypes
+        @producer_subtypes = %i[dispatchable must_run volatile backup].freeze
+      end
+
+      def self.consumer_subtypes
+        @consumer_subtypes ||= %i[generic pseudo consumption_loss backup]
+      end
     end
   end
 end

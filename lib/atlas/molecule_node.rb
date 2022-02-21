@@ -17,5 +17,7 @@ module Atlas
 
     # Molecule nodes define output capacity; the capacity of all non-loss output carriers.
     attribute :output_capacity, Float
+
+    validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :from_energy
   end
 end
