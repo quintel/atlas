@@ -22,6 +22,7 @@ blocks:
             - env_var: RUBY_VERSION
               values:
                 - 2.7.5
+                - 3.1.1
       epilogue:
         always:
           commands:

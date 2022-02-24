@@ -19,12 +19,12 @@ module Atlas
 
       # Public: Reads a CSV at the given path.
       def read(path)
-        new(CSV.read(path, table_opts), path)
+        new(CSV.read(path, **table_opts), path)
       end
 
       # Public: Reads a CSV from a string.
       def from_string(str, path = nil)
-        new(CSV.parse(str, table_opts), path)
+        new(CSV.parse(str, **table_opts), path)
       end
 
       # Public: Creates a new CSVDocument with the given headers.
