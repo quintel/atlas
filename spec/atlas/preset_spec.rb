@@ -100,7 +100,7 @@ module Atlas
         preset = Preset.new(scaling: nil)
         preset.valid?
 
-        error_keys = preset.errors.keys.select do |key|
+        error_keys = preset.errors.map(&:attribute).select do |key|
           key.to_s.start_with?('scaling.')
         end
 
@@ -111,7 +111,7 @@ module Atlas
         preset = Preset.new(scaling: {})
         preset.valid?
 
-        error_keys = preset.errors.keys.select do |key|
+        error_keys = preset.errors.map(&:attribute).select do |key|
           key.to_s.start_with?('scaling.')
         end
 
