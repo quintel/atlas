@@ -22,6 +22,7 @@ end
 group :test do
   gem 'codecov', require: false
   gem 'rspec'
+  gem 'rspec_junit_formatter'
   gem 'shoulda-matchers'
   gem 'simplecov'
 end
