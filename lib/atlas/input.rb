@@ -39,8 +39,20 @@ module Atlas
 
     validate :validate_enum_input
     validate :validate_disabled_inputs
+    validate :validate_disallowed_gql
 
     private
+
+    # Internal: Validates that INPUT_VALUE is not used in any GQL used to initialize inputs.
+    #
+    # Returns nothing.
+    def validate_disallowed_gql
+      %i[start_value_gql min_value_gql max_value_gql].each do |attribute|
+        if public_send(attribute).to_s.include?('INPUT_VALUE')
+          errors.add(attribute, 'cannot contain INPUT_VALUE')
+        end
+      end
+    end
 
     # Internal: Asserts that the inputs named in `disabled_by` all exist and update a compatible
     # period.

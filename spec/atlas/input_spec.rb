@@ -166,6 +166,32 @@ module Atlas
 
           expect(input.errors[:query]).to eq(["can't be blank"])
         end
+
+        it 'may contain INPUT_VALUE' do
+          input = Input.new(query: 'INPUT_VALUE(thing)')
+          expect(input.errors_on(:query)).to be_empty
+        end
+      end
+    end
+
+    describe '.start_value_gql' do
+      it 'may not contain INPUT_VALUE' do
+        input = Input.new(start_value_gql: 'INPUT_VALUE(thing)')
+        expect(input.errors_on(:start_value_gql)).to include('cannot contain INPUT_VALUE')
+      end
+    end
+
+    describe '.min_value_gql' do
+      it 'may not contain INPUT_VALUE' do
+        input = Input.new(min_value_gql: 'INPUT_VALUE(thing)')
+        expect(input.errors_on(:min_value_gql)).to include('cannot contain INPUT_VALUE')
+      end
+    end
+
+    describe '.max_value_gql' do
+      it 'may not contain INPUT_VALUE' do
+        input = Input.new(max_value_gql: 'INPUT_VALUE(thing)')
+        expect(input.errors_on(:max_value_gql)).to include('cannot contain INPUT_VALUE')
       end
     end
 
