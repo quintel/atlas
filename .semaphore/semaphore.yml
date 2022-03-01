@@ -7,9 +7,6 @@ agent:
 blocks:
   - name: RSpec
     task:
-      env_vars:
-        - name: DATABASE_HOST
-          value: localhost
       jobs:
         - name: Test
           commands:
@@ -23,6 +20,8 @@ blocks:
               values:
                 - 2.7.5
                 - 3.1.1
+      secrets:
+        - name: Atlas
       epilogue:
         always:
           commands:
