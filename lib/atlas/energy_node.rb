@@ -18,6 +18,7 @@ module Atlas
 
     attribute :fever,                NodeAttributes::Fever
     attribute :heat_network,         NodeAttributes::MeritOrder
+    attribute :agriculture_heat,     NodeAttributes::MeritOrder
     attribute :hydrogen,             NodeAttributes::Reconciliation
     attribute :merit_order,          NodeAttributes::ElectricityMeritOrder
     attribute :network_gas,          NodeAttributes::Reconciliation
@@ -66,6 +67,7 @@ module Atlas
 
     validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :from_molecules
     validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :heat_network
+    validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :agriculture_heat
     validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :hydrogen
     validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :merit_order
     validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :network_gas
