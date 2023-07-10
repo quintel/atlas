@@ -17,7 +17,7 @@ module Atlas
     attribute :energy_balance_group, String
 
     attribute :fever,                NodeAttributes::Fever
-    attribute :heat_network,         NodeAttributes::MeritOrder
+    attribute :heat_network,         NodeAttributes::HeatMeritOrder
     attribute :agriculture_heat,     NodeAttributes::MeritOrder
     attribute :hydrogen,             NodeAttributes::Reconciliation
     attribute :merit_order,          NodeAttributes::ElectricityMeritOrder
