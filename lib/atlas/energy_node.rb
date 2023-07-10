@@ -17,7 +17,9 @@ module Atlas
     attribute :energy_balance_group, String
 
     attribute :fever,                NodeAttributes::Fever
-    attribute :heat_network,         NodeAttributes::HeatMeritOrder
+    attribute :heat_network_lt,      NodeAttributes::MeritOrder
+    attribute :heat_network_mt,      NodeAttributes::MeritOrder
+    attribute :heat_network_ht,      NodeAttributes::MeritOrder
     attribute :agriculture_heat,     NodeAttributes::MeritOrder
     attribute :hydrogen,             NodeAttributes::Reconciliation
     attribute :merit_order,          NodeAttributes::ElectricityMeritOrder
@@ -66,7 +68,9 @@ module Atlas
     validate :validate_consumption_and_production_prices
 
     validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :from_molecules
-    validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :heat_network
+    validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :heat_network_lt
+    validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :heat_network_mt
+    validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :heat_network_ht
     validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :agriculture_heat
     validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :hydrogen
     validates_with Atlas::ActiveDocument::AssociatedValidator, attribute: :merit_order

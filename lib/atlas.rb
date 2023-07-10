@@ -93,7 +93,6 @@ require_relative 'atlas/scaler/area_attributes_scaler'
 
 require_relative 'atlas/node_attributes/electricity_merit_order'
 require_relative 'atlas/node_attributes/graph_connection'
-require_relative 'atlas/node_attributes/heat_merit_order'
 require_relative 'atlas/node_attributes/fever'
 require_relative 'atlas/node_attributes/merit_order'
 require_relative 'atlas/node_attributes/reconciliation'
