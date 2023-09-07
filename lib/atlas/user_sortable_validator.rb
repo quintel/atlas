@@ -45,8 +45,13 @@ module Atlas
     end
 
     def call_with_options(allowed_order, record)
+      allowed_order.call(options_for_allowed(record))
+    end
+
+    def options_for_allowed(record)
       param = options[:with]
-      param ? allowed_order.call(record.public_send(param)) : allowed_order.call(nil)
+      param = param.respond_to?(:call) ? param.call : param
+      param ? record.public_send(param) : nil
     end
   end
 end
