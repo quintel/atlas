@@ -166,7 +166,9 @@ module Atlas
       :heat_buildings_indoor_investment_costs_eur_per_kw,
       :heat_buildings_indoor_investment_costs_eur_per_connection,
       :heat_yearly_indoor_infrastructure_maintenance_costs_factor,
-      :heat_yearly_outdoor_infrastructure_maintenance_costs_factor
+      :heat_yearly_outdoor_infrastructure_maintenance_costs_factor,
+      :households_ht_heat_delivery_system_costs_ground_level_houses_eur_per_connection,
+      :households_ht_heat_delivery_system_costs_apartments_eur_per_connection
     ].each do |name|
       attribute name, Float
     end
