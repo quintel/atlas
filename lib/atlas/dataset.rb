@@ -142,14 +142,12 @@ module Atlas
       :heat_infrastructure_households_mt_indoor_investment_costs_apartments_with_block_heating_eur,
       :heat_infrastructure_households_mt_indoor_investment_costs_apartments_without_block_heating_eur,
       :heat_infrastructure_households_mt_indoor_investment_costs_ground_level_houses_eur,
-      :heat_exchanger_station_investment_costs_eur_per_kw,
       :heat_mt_sub_station_investment_costs_eur_per_kw,
       :heat_mt_distribution_pipelines_investment_costs_eur_per_meter,
       :heat_mt_primary_pipelines_investment_costs_per_kw,
       :heat_infrastructure_households_lt_indoor_investment_costs_apartments_with_block_heating_eur,
       :heat_infrastructure_households_lt_indoor_investment_costs_apartments_without_block_heating_eur,
       :heat_infrastructure_households_lt_indoor_investment_costs_ground_level_houses_eur,
-      :heat_exchanger_station_investment_costs_eur_per_kw,
       :heat_lt_sub_station_investment_costs_eur_per_kw,
       :heat_lt_distribution_pipelines_investment_costs_eur_per_meter,
       :heat_lt_primary_pipelines_investment_costs_per_kw,
@@ -169,6 +167,10 @@ module Atlas
       :heat_yearly_outdoor_infrastructure_maintenance_costs_factor,
       :households_ht_heat_delivery_system_costs_ground_level_houses_eur_per_connection,
       :households_ht_heat_delivery_system_costs_apartments_eur_per_connection
+      :households_mt_heat_delivery_system_costs_ground_level_houses_eur_per_connection,
+      :households_mt_heat_delivery_system_costs_apartments_eur_per_connection
+      :households_lt_heat_delivery_system_costs_ground_level_houses_eur_per_connection,
+      :households_lt_heat_delivery_system_costs_apartments_eur_per_connection
     ].each do |name|
       attribute name, Float
     end
