@@ -166,9 +166,9 @@ module Atlas
       :heat_yearly_indoor_infrastructure_maintenance_costs_factor,
       :heat_yearly_outdoor_infrastructure_maintenance_costs_factor,
       :households_ht_heat_delivery_system_costs_ground_level_houses_eur_per_connection,
-      :households_ht_heat_delivery_system_costs_apartments_eur_per_connection
+      :households_ht_heat_delivery_system_costs_apartments_eur_per_connection,
       :households_mt_heat_delivery_system_costs_ground_level_houses_eur_per_connection,
-      :households_mt_heat_delivery_system_costs_apartments_eur_per_connection
+      :households_mt_heat_delivery_system_costs_apartments_eur_per_connection,
       :households_lt_heat_delivery_system_costs_ground_level_houses_eur_per_connection,
       :households_lt_heat_delivery_system_costs_apartments_eur_per_connection
     ].each do |name|
