@@ -170,7 +170,10 @@ module Atlas
       :households_mt_heat_delivery_system_costs_ground_level_houses_eur_per_connection,
       :households_mt_heat_delivery_system_costs_apartments_eur_per_connection,
       :households_lt_heat_delivery_system_costs_ground_level_houses_eur_per_connection,
-      :households_lt_heat_delivery_system_costs_apartments_eur_per_connection
+      :households_lt_heat_delivery_system_costs_apartments_eur_per_connection,
+      :buildings_lt_heat_delivery_system_costs_eur_per_connection,
+      :buildings_mt_heat_delivery_system_costs_eur_per_connection,
+      :buildings_ht_heat_delivery_system_costs_eur_per_connection
     ].each do |name|
       attribute name, Float
     end
