@@ -40,6 +40,9 @@ module Atlas
     attribute :has_aggregated_chemical_industry,            Boolean, default:true
     attribute :has_detailed_chemical_industry,              Boolean, default:false
     attribute :has_coal_oil_for_heating_built_environment,  Boolean, default:false
+    attribute :has_aquathermal_potential_for_surface_water, Boolean, default:false
+    attribute :has_aquathermal_potential_for_waste_water,   Boolean, default:false
+    attribute :has_aquathermal_potential_for_drink_water,   Boolean, default:false
 
     # Numeric Data
     # ------------
@@ -173,7 +176,10 @@ module Atlas
       :households_lt_heat_delivery_system_costs_apartments_eur_per_connection,
       :buildings_lt_heat_delivery_system_costs_eur_per_connection,
       :buildings_mt_heat_delivery_system_costs_eur_per_connection,
-      :buildings_ht_heat_delivery_system_costs_eur_per_connection
+      :buildings_ht_heat_delivery_system_costs_eur_per_connection,
+      :aquathermal_potential_for_surface_water,
+      :aquathermal_potential_for_waste_water,
+      :aquathermal_potential_for_drink_water
     ].each do |name|
       attribute name, Float
     end
