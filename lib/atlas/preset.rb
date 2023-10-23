@@ -14,7 +14,9 @@ module Atlas
     attribute :area_code,          String
     attribute :user_values,        Hash[Symbol => Float]
     attribute :scaling,            Scaling
-    attribute :heat_network_order, Array[String]
+    attribute :heat_network_lt_order, Array[String]
+    attribute :heat_network_mt_order, Array[String]
+    attribute :heat_network_ht_order, Array[String]
 
     validates :title,       presence: true
     validates :area_code,   presence: true
@@ -29,9 +31,19 @@ module Atlas
       if: -> { user_values && user_values.any? }
 
     validates_with UserSortableValidator,
-      attribute: :heat_network_order,
-      if: -> { heat_network_order&.any? },
-      in: -> { Array(Atlas::Config.read?('heat_network_order')) }
+      attribute: :heat_network_lt_order,
+      if: -> { heat_network_lt_order&.any? },
+      in: -> { Array(Atlas::Config.read?('heat_network_lt_order')) }
+
+    validates_with UserSortableValidator,
+      attribute: :heat_network_mt_order,
+      if: -> { heat_network_mt_order&.any? },
+      in: -> { Array(Atlas::Config.read?('heat_network_mt_order')) }
+
+    validates_with UserSortableValidator,
+      attribute: :heat_network_ht_order,
+      if: -> { heat_network_ht_order&.any? },
+      in: -> { Array(Atlas::Config.read?('heat_network_ht_order')) }
 
     private
 

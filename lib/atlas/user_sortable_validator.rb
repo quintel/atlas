@@ -25,7 +25,7 @@ module Atlas
     # Internal: Asserts that all of the flexibility options are named in the
     # config file.
     def validate_allowed(record)
-      unknown = provided(record) - allowed
+      unknown = provided(record) - allowed(record)
 
       return if unknown.empty?
 
@@ -39,9 +39,19 @@ module Atlas
       Array(record.public_send(options[:attribute]))
     end
 
-    def allowed
+    def allowed(record)
       allowed = options[:in]
-      allowed.respond_to?(:call) ? allowed.call : allowed
+      allowed.respond_to?(:call) ? call_with_options(allowed, record) : allowed
+    end
+
+    def call_with_options(allowed_order, record)
+      allowed_order.call(options_for_allowed(record))
+    end
+
+    def options_for_allowed(record)
+      param = options[:with]
+      param = param.respond_to?(:call) ? param.call : param
+      param ? record.public_send(param) : nil
     end
   end
 end
