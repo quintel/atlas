@@ -11,6 +11,7 @@ module Atlas
         attribute :type,      Symbol
         attribute :group,     Symbol
         attribute :curve,     String
+        attribute :share_in_group, Float
 
         # Deferrable demands.
         attribute :defer_for, Integer

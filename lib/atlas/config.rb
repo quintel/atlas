@@ -25,11 +25,22 @@ module Atlas
       private
 
       def path_for_basename(basename)
-        Atlas.data_dir.join('config').join("#{clean_basename(basename)}.yml")
+        path_with_subfolder(Atlas.data_dir.join('config'), basename)
       end
 
       def clean_basename(basename)
         basename.to_s.downcase.gsub(/[^a-z0-9_]/, '')
+      end
+
+      def path_with_subfolder(path, basename)
+        with_subfolder = basename.to_s.split('.')
+
+        if with_subfolder.length == 2
+          basename = with_subfolder[1]
+          path = path.join(with_subfolder[0])
+        end
+
+        path.join("#{clean_basename(basename)}.yml")
       end
     end
   end

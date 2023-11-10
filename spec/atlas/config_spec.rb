@@ -12,6 +12,10 @@ describe Atlas::Config do
       it 'removes non-alphanumeric characters from the basename' do
         expect(described_class.public_send(method_name, '../un/sc^aleable_units')).to eq(%w[a b])
       end
+
+      it 'finds it in the subfolder' do
+        expect(described_class.public_send(method_name, 'fever.groups')).to eq(%w[group_1 group_2])
+      end
     end
   end
 
