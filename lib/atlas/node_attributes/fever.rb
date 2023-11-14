@@ -13,6 +13,9 @@ module Atlas
         attribute :curve,     String
         attribute :share_in_group, Float
 
+        # Which of the dynamic curves to use for producers
+        attribute :tech_curve, Symbol
+
         # Deferrable demands.
         attribute :defer_for, Integer
 
