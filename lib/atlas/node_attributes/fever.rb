@@ -10,11 +10,11 @@ module Atlas
       values do
         attribute :type,      Symbol
         attribute :group,     Symbol
-        attribute :curve,     String
+        attribute :curve,     Hash[Symbol => Float]
         attribute :share_in_group, Float
 
-        # Which of the dynamic curves to use for producers
-        attribute :tech_curve, Symbol
+        # Which of the technology curves to use for producers
+        attribute :technology_curve_type, Symbol
 
         # Deferrable demands.
         attribute :defer_for, Integer
