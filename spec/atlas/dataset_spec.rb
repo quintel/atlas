@@ -273,7 +273,7 @@ module Atlas
       it 'is invalid when the number of residence types does not sum to number of residences' do
         dataset = Dataset::Full.new(
           present_number_of_residences: 100,
-          present_number_of_apartments_before_1945: 5,
+          present_number_of_apartments_before_1945: 1,
           present_number_of_apartments_1945_1964: 5,
           present_number_of_apartments_1965_1984: 5,
           present_number_of_apartments_1985_2004: 5,
