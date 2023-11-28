@@ -46,7 +46,7 @@ module Atlas
 
         unless record.present_number_of_residences.round == sum_of_residences.round
           record.errors.add(:present_number_of_residences,
-            "Number of residences per type and construction year"\
+            "Number of residences per type and construction year "\
             "don't add up to the total number of residences "\
             "(#{ record.present_number_of_residences })."
           )
