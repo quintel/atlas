@@ -1,10 +1,10 @@
 module Atlas
   class Scaler
-    def initialize(base_dataset_key, derived_dataset_name, number_of_residences, base_value = nil)
+    def initialize(base_dataset_key, derived_dataset_name, present_number_of_residences, base_value = nil)
       @base_dataset         = Dataset::Full.find(base_dataset_key)
       @derived_dataset_name = derived_dataset_name
-      @number_of_residences = number_of_residences
-      @base_value           = base_value || @base_dataset.number_of_residences
+      @present_number_of_residences = present_number_of_residences
+      @base_value           = base_value || @base_dataset.present_number_of_residences
     end
 
     def create_scaled_dataset
@@ -36,9 +36,9 @@ module Atlas
           etengine:     true
         },
         scaling: {
-          value:          @number_of_residences,
+          value:          @present_number_of_residences,
           base_value:     @base_value,
-          area_attribute: 'number_of_residences'
+          area_attribute: 'present_number_of_residences'
         }
       }
     end

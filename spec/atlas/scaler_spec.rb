@@ -50,13 +50,13 @@ module Atlas; describe Scaler do
         expect(derived_dataset.scaling[:value]).to eq(scaling_value)
       end
 
-      it 'sets the scaling base_value of the Derived to the number_of_residences in nl' do
+      it 'sets the scaling base_value of the Derived to the present_number_of_residences in nl' do
         expect(derived_dataset.scaling[:base_value]).
-          to eq(base_dataset.number_of_residences)
+          to eq(base_dataset.present_number_of_residences)
       end
 
       it 'assigns the correctly scaled number of residences' do
-        expect(derived_dataset.number_of_residences).to eq(scaling_value)
+        expect(derived_dataset.present_number_of_residences).to eq(scaling_value)
       end
 
       it 'assigns the correctly scaled number of inhabitants' do

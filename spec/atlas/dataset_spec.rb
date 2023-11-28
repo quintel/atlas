@@ -243,34 +243,62 @@ module Atlas
     describe 'validate number of residences' do
       it 'is valid when the number of residence types is set correctly' do
         dataset = Dataset::Full.new(
-          number_of_residences: 100,
-          number_of_detached_houses: 20,
-          number_of_apartments: 20,
-          number_of_semi_detached_houses: 20,
-          number_of_corner_houses: 20,
-          number_of_terraced_houses: 20
+          present_number_of_residences: 100,
+          present_number_of_apartments_before_1945: 5,
+          present_number_of_apartments_1945_1964: 5,
+          present_number_of_apartments_1965_1984: 5,
+          present_number_of_apartments_1985_2004: 5,
+          present_number_of_apartments_2005_present: 5,
+          present_number_of_detached_houses_before_1945: 5,
+          present_number_of_detached_houses_1945_1964: 5,
+          present_number_of_detached_houses_1965_1984: 5,
+          present_number_of_detached_houses_1985_2004: 5,
+          present_number_of_detached_houses_2005_present: 5,
+          present_number_of_semi_detached_houses_before_1945: 5,
+          present_number_of_semi_detached_houses_1945_1964: 5,
+          present_number_of_semi_detached_houses_1965_1984: 5,
+          present_number_of_semi_detached_houses_1985_2004: 5,
+          present_number_of_semi_detached_houses_2005_present: 5,
+          present_number_of_terraced_houses_before_1945: 5,
+          present_number_of_terraced_houses_1945_1964: 5,
+          present_number_of_terraced_houses_1965_1984: 5,
+          present_number_of_terraced_houses_1985_2004: 5,
+          present_number_of_terraced_houses_2005_present: 5
         )
 
         dataset.valid?
-        expect(dataset.errors[:number_of_residences]).to be_empty
+        expect(dataset.errors[:present_number_of_residences]).to be_empty
       end
 
       it 'is invalid when the number of residence types does not sum to number of residences' do
         dataset = Dataset::Full.new(
-          number_of_residences: 100,
-          number_of_detached_houses: 19,
-          number_of_apartments: 20,
-          number_of_semi_detached_houses: 20,
-          number_of_corner_houses: 20,
-          number_of_terraced_houses: 20
+          present_number_of_residences: 100,
+          present_number_of_apartments_before_1945: 5,
+          present_number_of_apartments_1945_1964: 5,
+          present_number_of_apartments_1965_1984: 5,
+          present_number_of_apartments_1985_2004: 5,
+          present_number_of_apartments_2005_present: 5,
+          present_number_of_detached_houses_before_1945: 5,
+          present_number_of_detached_houses_1945_1964: 5,
+          present_number_of_detached_houses_1965_1984: 5,
+          present_number_of_detached_houses_1985_2004: 5,
+          present_number_of_detached_houses_2005_present: 5,
+          present_number_of_semi_detached_houses_before_1945: 5,
+          present_number_of_semi_detached_houses_1945_1964: 5,
+          present_number_of_semi_detached_houses_1965_1984: 5,
+          present_number_of_semi_detached_houses_1985_2004: 5,
+          present_number_of_semi_detached_houses_2005_present: 5,
+          present_number_of_terraced_houses_before_1945: 5,
+          present_number_of_terraced_houses_1945_1964: 5,
+          present_number_of_terraced_houses_1965_1984: 5,
+          present_number_of_terraced_houses_1985_2004: 5,
+          present_number_of_terraced_houses_2005_present: 5
         )
 
         dataset.valid?
-        expect(dataset.errors[:number_of_residences]).to include(
+        expect(dataset.errors[:present_number_of_residences]).to include(
           <<~ERROR.gsub(/\s+/, ' ').strip
-            Number of apartments (20.0) Number of terraced houses (20.0) Number
-            of corner houses (20.0) Number of detached houses (19.0) Number of
-            semi detached houses (20.0) don't add up to the total number of
+            Number of residences per type and construction year don't add up to the total number of
             residences (100.0).
           ERROR
         )
