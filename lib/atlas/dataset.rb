@@ -212,7 +212,7 @@ module Atlas
       :number_of_trucks,
       :number_of_vans,
       :present_number_of_residences,
-      :present_number_of_buildings_present,
+      :present_number_of_buildings,
       :present_number_of_apartments_before_1945,
       :present_number_of_apartments_1945_1964,
       :present_number_of_apartments_1965_1984,
