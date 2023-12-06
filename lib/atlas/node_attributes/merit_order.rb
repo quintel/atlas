@@ -15,6 +15,8 @@ module Atlas
 
         attribute :output_capacity_from_demand_of, Symbol
         attribute :output_capacity_from_demand_share, Float
+
+        attribute :input_capacity_from_share, Float
       end
 
       validates :type, inclusion: %i[consumer flex producer]
