@@ -100,7 +100,8 @@ module Atlas
     # Asserts that an input with permitted_values or type=enum has the necessary
     # data.
     def validate_enum_input
-      return if unit != 'enum' || !min_value_gql.blank?
+      return if unit != 'enum'
+      return unless min_value_gql.blank? && min_value.blank?
 
       errors.add(:min_value_gql, 'must not be blank when the unit is "enum"')
     end
