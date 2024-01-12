@@ -1,4 +1,4 @@
-- fever.group = space_heating
+- fever.group = hot_water
 - fever.type = consumer
 
 - number_of_units = 50
