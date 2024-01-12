@@ -21,3 +21,5 @@
 - electricity_output_capacity = 0.0
 - heat_output_capacity = 0.0099
 - groups = [houses, something_else]
+
+~ demand = 100.0

@@ -8,6 +8,8 @@ module Atlas
       include ValueObject
       include ActiveModel::Validations
 
+      attr_accessor :share_in_group
+
       values do
         attribute :type,      Symbol
         attribute :group,     Symbol

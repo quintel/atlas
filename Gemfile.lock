@@ -6,8 +6,8 @@ GIT
 
 GIT
   remote: https://github.com/quintel/refinery.git
-  revision: 72eacf84c980ef797a0b7e63f55a39f5ca98640b
-  ref: 72eacf8
+  revision: de8e83c5ec209976828d369b1064ea168cc288f3
+  ref: de8e83c
   specs:
     refinery (0.0.1)
       ruby-graphviz
@@ -126,8 +126,8 @@ GEM
     sync (0.5.0)
     term-ansicolor (1.7.1)
       tins (~> 1.0)
-    terminal-table (1.8.0)
-      unicode-display_width (~> 1.1, >= 1.1.1)
+    terminal-table (3.0.2)
+      unicode-display_width (>= 1.1.1, < 3)
     thread_safe (0.3.6)
     tins (1.25.0)
       sync

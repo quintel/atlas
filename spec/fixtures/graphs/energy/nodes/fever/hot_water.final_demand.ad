@@ -1,0 +1,6 @@
+- input.coal = 0.5
+- input.corn = 0.5
+- output.loss = elastic
+
+~ demand = 100.0
+- groups = [final_demand_group]

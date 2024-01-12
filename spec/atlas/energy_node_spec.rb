@@ -59,7 +59,7 @@ end
 describe Atlas::EnergyNode do
   describe '#all' do
     it 'returns all the subclasses that have been defined' do
-      expect(described_class.all.length).to eq(7)
+      expect(described_class.all.length).to eq(15)
     end
   end
 

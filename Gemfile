@@ -7,7 +7,7 @@ end
 
 gemspec
 
-gem 'refinery', ref: '72eacf8', github: 'quintel/refinery'
+gem 'refinery', ref: 'de8e83c', github: 'quintel/refinery'
 gem 'rubel',    ref: 'ad3d44e', github: 'quintel/rubel'
 
 group :development do

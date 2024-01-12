@@ -21,7 +21,7 @@ module Atlas
     #
     # Returns the calculated Graph.
     def calculate(with = Refinery::Catalyst::Calculators)
-      refinery_catalysts = [*precursors, with, Refinery::Catalyst::Validation]
+      refinery_catalysts = [*precursors, with, *aftermath, with, Refinery::Catalyst::Validation]
 
       refinery_catalysts.compact.reduce(refinery_graph) do |result, catalyst|
         catalyst.call(result)
@@ -63,9 +63,16 @@ module Atlas
       [
         SetRubelAttributes.with_queryable(->(q) { runtime.execute_checked(q) }),
         SetSlotSharesFromEfficiency.with_queryable(->(q) { runtime.execute_checked(q) }),
+        PauseFeverCalculations.with_queryable(->(q) { runtime.execute_checked(q) }),
         ScaleAttributes.with_dataset(dataset),
         ZeroDisabledSectors.with_dataset(dataset),
         ZeroMoleculeLeaves
+      ]
+    end
+
+    def afermath
+      [
+        FeverCalculation.with_queryable(->(q) { runtime.execute_checked(q) })
       ]
     end
 

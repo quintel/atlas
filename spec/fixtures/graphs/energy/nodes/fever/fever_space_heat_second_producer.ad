@@ -3,4 +3,4 @@
 - groups = [aggregator_producer]
 - use = energetic
 - output.loss = elastic
-- output.coal = 0.9
+- output.coal = 0.8
