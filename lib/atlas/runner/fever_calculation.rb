@@ -9,7 +9,7 @@ module Atlas
       ConsumerCalculator = Struct.new(:consumer, :total_demand, :unfilled_demand)
 
       # TODO: refactor and add comments
-      def self.with_dataset(dataset)
+      def self.with_queryable(query)
         lambda do |refinery|
           groups = refinery.nodes.select { |n| fever_node?(n) }.group_by do |node|
             node.get(:model).fever.group
@@ -40,13 +40,13 @@ module Atlas
               .sort_by { |node| consumer_order.index(node.key.to_s) || consumer_order.length }
               .map do |cons|
                 demand = Rational(
-                  group_demand * (cons.get(:model).fever.present_share_in_demand || 0.0)
+                  group_demand * demand_share_for(cons, query)
                 )
                 ConsumerCalculator.new(cons, demand, demand)
               end
 
             # Calculate the total number of units the producers should supply to
-            total_nou = consumers.sum { |cons| cons.consumer.get(:model).number_of_units || 0.0 }
+            total_nou = consumers.sum { |consumer| number_of_units_for(consumer, query) }
 
             # Set the parent shares for each of the ordered producers towards the ordered consumers
             producers.each do |producer|
@@ -55,17 +55,19 @@ module Atlas
               supplying_nou = 0.0
 
               consumers.each do |consumer|
-                # Continue until the producer has no more energy to divide
-                break unless demand.positive? # nee want wellicht de rest op 0? CHECK!
-                # Check if the consumer still has unfilled demand
-                next unless consumer.unfilled_demand.positive?
-
                 # Check if this consumer is actually connected to the producer
                 edge_to_consumer = producer_for_demand
                   .out_edges
                   .detect { |e| e.to == consumer.consumer }
 
                 next unless edge_to_consumer
+
+                # Check if the consumer still has unfilled demand
+                # and if the producer has energy to divide
+                unless consumer.unfilled_demand.positive? && demand.positive?
+                  edge_to_consumer.set(:parent_share, 0.0)
+                  next
+                end
 
                 # How much energy can the producer supply to the consumer
                 energy = [demand, consumer.unfilled_demand].min
@@ -74,7 +76,7 @@ module Atlas
                 share_from_consumer = Rational(energy / consumer.total_demand)
 
                 # Add the number of units the producer is supplying in this consumer node
-                supplying_nou += share_from_consumer * consumer.consumer.get(:model).number_of_units
+                supplying_nou += share_from_consumer * number_of_units_for(consumer, query)
 
                 consumer.unfilled_demand -= energy
                 demand -= energy
@@ -118,6 +120,23 @@ module Atlas
           descendant.continue!
           descendant.out_edges.each(&:continue!)
         end
+      end
+
+      # TODO: these can be one method
+      def self.number_of_units_for(consumer, query)
+        if consumer.consumer.get(:model).queries.key?(:number_of_units)
+          return query.call(consumer.consumer.get(:model).queries[:number_of_units])
+        end
+
+        consumer.consumer.get(:model).number_of_units || 0.0
+      end
+
+      def self.demand_share_for(consumer_node, query)
+        if consumer_node.get(:model).queries.key?(:'fever.present_share_in_demand')
+          return query.call(consumer_node.get(:model).queries[:'fever.present_share_in_demand'])
+        end
+
+        consumer_node.get(:model).fever.present_share_in_demand || 0.0
       end
     end
   end

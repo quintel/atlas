@@ -24,6 +24,7 @@ module Atlas
             pause_from_node.descendants.each do |descendant|
               descendant.wait!
               descendant.out_edges.each(&:wait!)
+              descendant.in_edges.each(&:wait!)
             end
           end
 

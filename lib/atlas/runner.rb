@@ -72,7 +72,7 @@ module Atlas
 
     def aftermath
       [
-        FeverCalculation.with_dataset(dataset)
+        FeverCalculation.with_queryable(->(q) { runtime.execute_checked(q) })
       ]
     end
 
