@@ -1,4 +1,5 @@
 - fever.group = hot_water
 - fever.type = consumer
+- fever.present_share_in_demand = 1.0
 
 - number_of_units = 50

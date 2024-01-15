@@ -39,8 +39,9 @@ module Atlas
               .select { |node| node.get(:model).fever.type == :consumer }
               .sort_by { |node| consumer_order.index(node.key.to_s) || consumer_order.length }
               .map do |cons|
-                # TODO: this '2' should be the share of consumer from area attribute (dataset)
-                demand = Rational(group_demand / 2)
+                demand = Rational(
+                  group_demand * (cons.get(:model).fever.present_share_in_demand || 0.0)
+                )
                 ConsumerCalculator.new(cons, demand, demand)
               end
 

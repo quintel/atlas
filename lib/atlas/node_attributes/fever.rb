@@ -15,6 +15,7 @@ module Atlas
         attribute :group,     Symbol
         attribute :curve,     Hash[Symbol => Float]
         attribute :share_in_group, Float
+        attribute :present_share_in_demand, Float
 
         # Which of the technology curves to use for producers
         attribute :technology_curve_type, Symbol
