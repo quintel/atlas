@@ -14,7 +14,7 @@ describe Atlas::NodeAttributes::Fever do
     context 'when one curve key is not valid' do
       it 'has an error' do
         mo = described_class.new(type: :consumer, curve: {tech_nope: :households_heating })
-        expect(mo.errors_on(:curve)).to include('keys must be one of [:tech_day_night, :tech_constant]')
+        expect(mo.errors_on(:curve)).to include('keys must be one of [:tech_day_night, :tech_constant, :default]')
       end
     end
 

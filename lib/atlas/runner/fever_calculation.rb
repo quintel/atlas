@@ -46,7 +46,7 @@ module Atlas
               end
 
             # Calculate the total number of units the producers should supply to
-            total_nou = consumers.sum { |cons| cons.consumer.get(:model).number_of_units }
+            total_nou = consumers.sum { |cons| cons.consumer.get(:model).number_of_units || 0.0 }
 
             # Set the parent shares for each of the ordered producers towards the ordered consumers
             producers.each do |producer|
@@ -86,7 +86,8 @@ module Atlas
 
               # Based on the number of units the producer is supplying to, its fever.share_in_group
               # can be calculated. This is needed for the future graph, queries and inputs
-              producer.get(:model).fever.share_in_group = supplying_nou / total_nou
+              producer_share_in_group = total_nou.positive? ? supplying_nou / total_nou : 0.0
+              producer.get(:model).fever.share_in_group = producer_share_in_group
 
               enable_calculations_after(producer)
             end

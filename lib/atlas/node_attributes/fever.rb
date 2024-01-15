@@ -42,16 +42,16 @@ module Atlas
 
       validates :type, inclusion: %i[consumer producer]
 
-      validates_presence_of :share_in_group,
-        if: ->(mod) { mod.type == :producer },
-        message: 'must be set for producers'
-
       validates_presence_of :technology_curve_type,
         if: ->(mod) { mod.type == :producer },
         message: 'must be set for producers'
 
       validates :technology_curve_type,
         inclusion: { in: ->(mod) { mod.class.technology_types } }
+
+      validates_presence_of :present_share_in_demand,
+        if: ->(mod) { mod.type == :consumer },
+        message: 'must be set for consumers'
 
       validates_presence_of :curve,
         if: ->(mod) { mod.type == :consumer },
@@ -67,7 +67,7 @@ module Atlas
       end
 
       def self.technology_types
-        @technology_types ||= %i[tech_day_night tech_constant].freeze
+        @technology_types ||= %i[tech_day_night tech_constant default].freeze
       end
 
       def validate_curve_types

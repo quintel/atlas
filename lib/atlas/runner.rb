@@ -70,9 +70,9 @@ module Atlas
       ]
     end
 
-    def afermath
+    def aftermath
       [
-        FeverCalculation.with_queryable(->(q) { runtime.execute_checked(q) })
+        FeverCalculation.with_dataset(dataset)
       ]
     end
 
