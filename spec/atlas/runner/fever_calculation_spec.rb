@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Atlas
   describe Runner::FeverCalculation, :fixtures do
-    let(:catalyst) { described_class.with_dataset(dataset) }
+    let(:catalyst) { described_class.with_queryable(->(q) { runner.runtime.execute_checked(q) }) }
 
     let(:runner) { Atlas::Runner.new(dataset) }
     let(:dataset) { Dataset.find(:nl) }

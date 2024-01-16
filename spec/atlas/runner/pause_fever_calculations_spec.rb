@@ -2,12 +2,10 @@ require 'spec_helper'
 
 module Atlas
   describe Runner::PauseFeverCalculations, :fixtures do
-    let(:catalyst) { described_class.with_queryable(->(q) { runtime.execute_checked(q) }) }
-
     context 'with a graph' do
       let(:graph) { GraphBuilder.build }
 
-      let(:paused_fever_graph) { catalyst.call(graph) }
+      let(:paused_fever_graph) { described_class.call(graph) }
 
       it 'pauses the consumer node' do
         expect(paused_fever_graph.node(:fever_space_heat_consumer)).to be_wait
