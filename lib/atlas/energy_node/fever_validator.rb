@@ -19,9 +19,7 @@ module Atlas
         illegal_capacity:
           'fever.capacity requires fever.efficiency_based_on to be present',
         capacity_carrier_missing:
-          'fever.capacity.%s must not be blank',
-        missing_number_of_units:
-          'number of units must be set for fever consumers'
+          'fever.capacity.%s must not be blank'
       }.freeze
 
       def validate(record)
@@ -32,7 +30,6 @@ module Atlas
         validate_variable_efficiency(record, fever) if fever.efficiency_based_on
         validate_alias_of(record, fever) if fever.alias_of
         validate_capacity(record, fever)
-        validate_consumer_number_of_units(record, fever)
       end
 
       private
@@ -81,12 +78,6 @@ module Atlas
               fever.efficiency_based_on
             ))
           end
-        end
-      end
-
-      def validate_consumer_number_of_units(record, fever)
-        if fever.type == :consumer && record.number_of_units.nil?
-          record.errors.add(:fever, MESSAGES[:missing_number_of_units])
         end
       end
     end
