@@ -21,7 +21,7 @@ module Atlas
     attribute :heat_network_mt,      NodeAttributes::MeritOrder
     attribute :heat_network_ht,      NodeAttributes::MeritOrder
     attribute :agriculture_heat,     NodeAttributes::MeritOrder
-    attribute :hydrogen,             NodeAttributes::Reconciliation
+    attribute :hydrogen,             NodeAttributes::MeritOrder
     attribute :merit_order,          NodeAttributes::ElectricityMeritOrder
     attribute :network_gas,          NodeAttributes::Reconciliation
     attribute :storage,              NodeAttributes::Storage
