@@ -57,6 +57,7 @@ module Atlas
       :co2_emissions_of_imported_electricity_g_per_kwh,
       :co2_percentage_free,
       :co2_price,
+      :captured_biogenic_co2_price,
       :offshore_ccs_potential_mt_per_year,
       :export_electricity_primary_demand_factor,
       :import_electricity_primary_demand_factor,
