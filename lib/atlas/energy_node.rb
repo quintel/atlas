@@ -21,7 +21,7 @@ module Atlas
     attribute :heat_network_mt,      NodeAttributes::MeritOrder
     attribute :heat_network_ht,      NodeAttributes::MeritOrder
     attribute :agriculture_heat,     NodeAttributes::MeritOrder
-    attribute :hydrogen,             NodeAttributes::Reconciliation
+    attribute :hydrogen,             NodeAttributes::MeritOrder
     attribute :merit_order,          NodeAttributes::ElectricityMeritOrder
     attribute :network_gas,          NodeAttributes::Reconciliation
     attribute :storage,              NodeAttributes::Storage
@@ -34,6 +34,7 @@ module Atlas
       free_co2_factor
       ccs_capture_rate
       heat_output_capacity
+      hydrogen_output_capacity
       households_supplied_per_unit
       land_use_per_unit
       part_load_efficiency_penalty
