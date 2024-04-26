@@ -16,6 +16,8 @@ module Atlas
         attribute :output_capacity_from_demand_of, Symbol
         attribute :output_capacity_from_demand_share, Float
 
+        attribute :subordinate_to,        Symbol
+
         attribute :input_capacity_from_share, Float
       end
 
@@ -39,6 +41,10 @@ module Atlas
         unless: ->(mod) { mod.subtype == :storage || mod.subtype == :heat_storage },
         message: 'must be blank when subtype is not storage'
 
+      validates_absence_of :subordinate_to,
+        unless: ->(mod) { mod.type == :consumer && mod.subtype == :subordinate },
+        message: 'must be blank when subtype is not suboridinate'
+
       def delegate
         super if self.class.attribute_set[:delegate]
       end
@@ -51,7 +57,7 @@ module Atlas
       end
 
       def self.consumer_subtypes
-        @consumer_subtypes ||= %i[generic pseudo consumption_loss backup]
+        @consumer_subtypes ||= %i[generic pseudo consumption_loss backup subordinate]
       end
     end
   end
