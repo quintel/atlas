@@ -53,7 +53,7 @@ module Atlas
       def production_curtailment; end
 
       def self.producer_subtypes
-        @producer_subtypes = %i[dispatchable must_run volatile backup].freeze
+        @producer_subtypes = %i[dispatchable must_run volatile hybrid_offshore backup].freeze
       end
 
       def self.consumer_subtypes
