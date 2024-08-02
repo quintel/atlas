@@ -46,7 +46,7 @@ module Atlas
         props[:type] = :flexible
       elsif edge.circular
         # Exclude from cyclic errors
-        props[:circular] = true
+        props[:type] = :circular
       end
 
       raise DocumentNotFoundError.new(edge.supplier, edge.graph_config.node_class) if parent.nil?
