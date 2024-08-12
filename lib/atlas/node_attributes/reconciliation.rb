@@ -29,7 +29,7 @@ module Atlas
         attribute :subordinate_to_output, Symbol, writer: :public
       end
 
-      validates :type, inclusion: %i[consumer producer storage import export]
+      validates :type, inclusion: %i[consumer producer storage import export transformation]
 
       validates :profile, presence: true, if: -> { type != :storage }
       validates :profile, absence: true,  if: -> { type == :storage }
