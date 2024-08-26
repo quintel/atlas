@@ -25,8 +25,9 @@ module Atlas
     attribute :default_unit,    String
     attribute :dependent_on,    String
 
-    attribute :disabled_by,     Array[Symbol]
-    attribute :coupling_groups, Array[Symbol]
+    attribute :disabled_by,           Array[Symbol]
+    attribute :disabled_by_couplings, Array[Symbol]
+    attribute :coupling_groups,       Array[Symbol]
 
     validates_presence_of :query, if: ->{ share_group.blank? }
 

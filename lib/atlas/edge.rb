@@ -25,6 +25,7 @@ module Atlas
       attribute :child_share,   Float
       attribute :reversed,      Virtus::Attribute::Boolean, default: false
       attribute :priority,      Integer
+      attribute :circular,      Virtus::Attribute::Boolean, default: false
       attribute :groups,        Array[Symbol]
       attribute :graph_methods, Array[String]
 

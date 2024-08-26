@@ -44,6 +44,9 @@ module Atlas
         # Receive energy from the source once all the other input edges have
         # had their demand set.
         props[:type] = :flexible
+      elsif edge.circular
+        # Exclude from cyclic errors
+        props[:type] = :circular
       end
 
       raise DocumentNotFoundError.new(edge.supplier, edge.graph_config.node_class) if parent.nil?
