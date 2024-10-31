@@ -28,7 +28,7 @@ module Atlas
     # Don't use `new` directly, use `find` instead.
     private_class_method :new
 
-    # Internal: Decrypts an energy balance at the given path, returning the CSV contents as string.
+    # Public: Decrypts an energy balance at the given path, returning the CSV contents as string.
     #
     # Returns a string.
     def self.decrypt(path)
@@ -37,8 +37,6 @@ module Atlas
         pinentry_mode: GPGME::PINENTRY_MODE_LOOPBACK
       ).to_s
     end
-
-    private_class_method :decrypt
 
     # Returns the energy balance item as a numeric, or logs a message and returns zero.
     def get(use, carrier)
