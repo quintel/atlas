@@ -8,5 +8,6 @@ module Atlas
     attribute :unit,           String
     attribute :deprecated_key, String
 
+    validates_with VReferencesValidator
   end
 end
