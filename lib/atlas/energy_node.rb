@@ -36,7 +36,6 @@ module Atlas
       heat_output_capacity
       hydrogen_output_capacity
       households_supplied_per_unit
-      land_use_per_unit
       part_load_efficiency_penalty
       part_load_operating_point
       sustainability_share
