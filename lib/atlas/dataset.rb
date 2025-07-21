@@ -180,7 +180,8 @@ module Atlas
       :buildings_ht_heat_delivery_system_costs_eur_per_connection,
       :aquathermal_potential_for_surface_water,
       :aquathermal_potential_for_waste_water,
-      :aquathermal_potential_for_drink_water
+      :aquathermal_potential_for_drink_water,
+      :area_per_building_residence_equivalent
     ].each do |name|
       attribute name, Float
     end
