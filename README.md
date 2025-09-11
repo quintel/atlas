@@ -58,7 +58,6 @@ to use:
 * **Atlas::Input**
 * **Atlas::EnergyNode** – ... and the subclasses Converter, DemandNode, StatNode,
   and FinalDemandNode.
-* **Atlas::Preset**
 * **Atlas::Slot**
 
 These classes behave similarly to records in Rails applications:
