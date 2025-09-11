@@ -129,10 +129,6 @@ module Atlas
       dataset.efficiencies(file_key).get("#{ direction }.#{ carrier }")
     end
 
-    def PARENT_VALUE(node_key, attribute)
-      dataset.parent_values.get(node_key, attribute)
-    end
-
     # Public: Given the key of a node, retrieves the production (energy
     # supplied) of the node from the primary_producers.csv file.
     #

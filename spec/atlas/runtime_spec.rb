@@ -95,20 +95,6 @@ module Atlas
       end
     end
 
-    context 'PARENT_VALUE' do
-      it 'executes PARENT_VALUE function' do
-        expect(runtime.execute(
-          "PARENT_VALUE(a_node, input_for_gas)"
-        )).to eq(1567.9)
-      end
-
-      it 'raises an error if the production data is missing' do
-        expect { runtime.execute('PARENT_VALUE(a_node, nope)') }.to(
-          raise_error { |e| expect(e.original).to be_a(UnknownCSVCellError) }
-        )
-      end
-    end
-
     context 'PRIMARY_PRODUCTION' do
       it 'executes PRIMARY_PRODUCTION functions' do
         expect(runtime.execute(
