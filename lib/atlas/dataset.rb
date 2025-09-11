@@ -429,11 +429,12 @@ module Atlas
       @path_resolver ||= PathResolver.create(*resolve_paths)
     end
 
-    private
-
-    # Internal: Paths used to look for CSV and other dataset-related files.
     def resolve_paths
-      [dataset_dir]
+      if respond_to?(:parent) && parent
+        [dataset_dir] + Array(parent.resolve_paths)
+      else
+        [dataset_dir]
+      end
     end
   end
 end
