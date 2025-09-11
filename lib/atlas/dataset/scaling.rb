@@ -1,5 +1,5 @@
 module Atlas
-  class Preset
+  class Dataset
     # Describes scenarios which are to be scaled down to a smaller region size.
     class Scaling
       include ValueObject
