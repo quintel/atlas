@@ -314,6 +314,35 @@ module Atlas
           .from(true).to(false)
       end
     end
+
+    describe '#resolve_paths' do
+      let(:datasets_dir) { Atlas.data_dir.join('datasets') }
+
+      context 'for a base dataset' do
+        let(:dataset_path) { datasets_dir.join('test_base.yml') }
+        let(:dataset) { Dataset.new(path: dataset_path.to_s) }
+
+        it 'returns an array with the dataset_dir' do
+          expect(dataset.resolve_paths).to eq([dataset.dataset_dir])
+        end
+      end
+
+      context 'for a derived dataset with a parent' do
+        let(:parent_path) { datasets_dir.join('test_parent.yml') }
+        let(:derived_path) { datasets_dir.join('test_derived.yml') }
+        let(:parent) { Dataset.new(path: parent_path.to_s) }
+        let(:derived) do
+          d = Dataset.new(path: derived_path.to_s)
+          allow(d).to receive(:parent).and_return(parent)
+          allow(d).to receive(:respond_to?).with(:parent).and_return(true)
+          d
+        end
+
+        it 'returns an array with its dataset_dir and parent resolve_paths' do
+          expect(derived.resolve_paths).to eq([derived.dataset_dir] + parent.resolve_paths)
+        end
+      end
+    end
   end
 
   describe Dataset::Derived do
