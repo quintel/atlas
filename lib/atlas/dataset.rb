@@ -378,13 +378,6 @@ module Atlas
       @central_producers ||= CSVDocument.read(path_resolver.resolve('central_producers.csv'))
     end
 
-    # Public: A set of demands required for use inside ETlocal
-    #
-    # Returns a CSVDocument
-    def parent_values
-      @parent_values ||= CSVDocument.read(path_resolver.resolve('demands/parent_values.csv'))
-    end
-
     # Public: Retrieves demand and max demand data for the region. Expects to
     # load a file at datasets/AREA/primary_production.csv.
     #

@@ -54,7 +54,7 @@ module Atlas
     private
 
     def precursors
-      return unless precomputed_graph? && !@dataset.uses_deprecated_initializer_inputs
+      return unless precomputed_graph?
 
       [SetAttributesFromGraphValues.with_dataset(@dataset), ZeroMoleculeNodes]
     end
