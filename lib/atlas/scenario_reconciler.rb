@@ -1,6 +1,5 @@
 module Atlas
-  # Given user values from an Atlas::Preset, or an object which behaves like
-  # one (such as an ETEngine scenario), examines the user values and suggests
+  # Given user values from an ETEngine scenario, examines the user values and suggests
   # adjustments to ensure that the input groups all balance (sum to 100).
   class ScenarioReconciler
     # Public: Creates a scenario reconciler.

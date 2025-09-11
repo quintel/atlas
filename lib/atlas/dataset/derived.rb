@@ -6,7 +6,7 @@ module Atlas
     class Derived < Dataset
       attribute :init,         Hash[Symbol => Float]
       attribute :base_dataset, String
-      attribute :scaling,      Preset::Scaling
+      attribute :scaling,      Dataset::Scaling
       attribute :geo_id,       String
 
       # Delegate some methods which might be called in `Runner` to the parent dataset.
