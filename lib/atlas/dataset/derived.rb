@@ -40,14 +40,11 @@ module Atlas
 
       def parent
         Dataset.find(base_dataset)
+      rescue DocumentNotFoundError
+        nil
       end
 
       private
-
-      # Internal: Paths used to look for CSV and other dataset-related files.
-      def resolve_paths
-        [dataset_dir, parent.dataset_dir]
-      end
 
       def validate_presence_of_base_dataset
         return if Dataset.exists?(base_dataset)
@@ -86,6 +83,7 @@ module Atlas
         end
       end
 
+
       def validate_presence_of_full_ancestor
         return if has_full_parent?
 
@@ -94,7 +92,7 @@ module Atlas
 
       # TODO: Add helpful comments here
       def has_full_parent?
-        Dataset::Full.exists?(base_dataset) || parent.has_full_parent?
+        Dataset::Full.exists?(base_dataset) || parent&.has_full_parent? || false
       end
     end
   end
