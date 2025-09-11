@@ -8,7 +8,6 @@ module Atlas
       attribute :base_dataset, String
       attribute :scaling,      Preset::Scaling
       attribute :geo_id,       String
-      attribute :uses_deprecated_initializer_inputs, Boolean, default: false
 
       # Delegate some methods which might be called in `Runner` to the parent dataset.
       delegate :energy_balance, to: :parent
@@ -18,14 +17,10 @@ module Atlas
       validate :validate_presence_of_base_dataset
       validate :validate_scaling
 
-      validate :validate_presence_of_init_keys,
-        if: -> { uses_deprecated_initializer_inputs }
-
-      validate :validate_presence_of_init_values,
-        if: -> { uses_deprecated_initializer_inputs }
-
       validate :validate_graph_values,
-        if: -> { persisted? && !uses_deprecated_initializer_inputs }
+        if: -> { persisted?}
+
+      validate :validate_presence_of_full_ancestor
 
       def self.find_by_geo_id(geo_id)
         all.detect { |item| item.geo_id == geo_id }
@@ -44,7 +39,7 @@ module Atlas
       end
 
       def parent
-        Dataset::Full.find(base_dataset)
+        Dataset.find(base_dataset)
       end
 
       private
@@ -55,7 +50,7 @@ module Atlas
       end
 
       def validate_presence_of_base_dataset
-        return if Dataset::Full.exists?(base_dataset)
+        return if Dataset.exists?(base_dataset)
 
         errors.add(:base_dataset, 'does not exist')
       end
@@ -71,9 +66,7 @@ module Atlas
 
       def validate_presence_of_init_keys
         init.each_key do |key|
-          unless InitializerInput.exists?(key)
-            errors.add(:init, "'#{key}' does not exist as an initializer input")
-          end
+          errors.add(:init, "'#{key}' does not exist as an initializer input")
         end
       end
 
@@ -91,6 +84,17 @@ module Atlas
         graph_values.errors.each do |_, message|
           errors.add(:graph_values, message)
         end
+      end
+
+      def validate_presence_of_full_ancestor
+        return if has_full_parent?
+
+        errors.add(:base_dataset, 'has no Full parent')
+      end
+
+      # TODO: Add helpful comments here
+      def has_full_parent?
+        Dataset::Full.exists?(base_dataset) || parent.has_full_parent?
       end
     end
   end
