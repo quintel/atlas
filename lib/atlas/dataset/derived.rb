@@ -34,6 +34,17 @@ module Atlas
         @load_profile_map = {}
       end
 
+      def [](key)
+        value = super
+        value.nil? && parent ? parent[key] : value
+      end
+
+      # Override the core rails read_attribute_for_validation to read parent attributes recursively
+      def read_attribute_for_validation(key)
+        value = super
+        value.nil? && parent ? parent.read_attribute_for_validation(key) : value
+      end
+
       def graph_values
         @graph_values ||= GraphValues.new(self)
       end
@@ -90,7 +101,6 @@ module Atlas
         errors.add(:base_dataset, 'has no Full parent')
       end
 
-      # TODO: Add helpful comments here
       def has_full_parent?
         Dataset::Full.exists?(base_dataset) || parent&.has_full_parent? || false
       end

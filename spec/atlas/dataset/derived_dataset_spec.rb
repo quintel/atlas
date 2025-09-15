@@ -32,14 +32,28 @@ describe Atlas::Dataset::Derived do
 
   describe 'full ancestor validation' do
     let(:dataset) { described_class.find(:groningen) }
+    let(:grandchild_dataset) { described_class.find(:winschoten) }
 
-    context 'when the dataset has a full ancestor' do
+    context 'when the dataset has a direct full ancestor' do
       before do
         allow(dataset).to receive(:graph_values).and_return(double(valid?: true, errors: {}))
       end
 
       it 'is valid' do
         expect(dataset).to be_valid
+      end
+    end
+
+    context 'when the dataset has a grandparent full ancestor' do
+      before do
+        allow(grandchild_dataset).to receive(:graph_values).and_return(double(valid?: true, errors: {}))
+      end
+
+      it 'is valid' do
+        unless grandchild_dataset.valid?
+          puts "grandchild_dataset is invalid: #{grandchild_dataset.errors.full_messages.inspect}"
+        end
+        expect(grandchild_dataset).to be_valid
       end
     end
 
@@ -67,6 +81,20 @@ describe Atlas::Dataset::Derived do
       it 'is still valid' do
         expect(dataset).to be_valid
       end
+    end
+  end
+
+  describe 'attribute inheritance' do
+    let(:parent)    { described_class.find(:groningen) }
+    let(:grandchild) { described_class.find(:winschoten) }
+
+    it 'inherits attributes from its parent if not set' do
+      # interconnector_capacity is set on parent (groningen)
+      expect(grandchild[(:interconnector_capacity)]).to eq(parent.interconnector_capacity)
+    end
+
+    it 'overrides parent attributes if set' do
+      expect(grandchild[(:number_of_busses)]).to eq(50.0)
     end
   end
 end
