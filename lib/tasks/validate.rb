@@ -102,7 +102,6 @@ namespace :validate do
   task(energy_nodes: :setup) { ValidationRunner.new(Atlas::EnergyNode).run }
   task(gqueries: :setup)     { ValidationRunner.new(Atlas::Gquery).run }
   task(inputs: :setup)       { ValidationRunner.new(Atlas::Input).run }
-  task(presets: :setup)      { ValidationRunner.new(Atlas::Preset).run }
 
   task all: :setup do
     ValidationRunner.new(
@@ -111,8 +110,7 @@ namespace :validate do
       Atlas::EnergyEdge,
       Atlas::EnergyNode,
       Atlas::Gquery,
-      Atlas::Input,
-      Atlas::Preset
+      Atlas::Input
     ).run
   end
 end

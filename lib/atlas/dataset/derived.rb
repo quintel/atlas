@@ -6,9 +6,8 @@ module Atlas
     class Derived < Dataset
       attribute :init,         Hash[Symbol => Float]
       attribute :base_dataset, String
-      attribute :scaling,      Preset::Scaling
+      attribute :scaling,      Dataset::Scaling
       attribute :geo_id,       String
-      attribute :uses_deprecated_initializer_inputs, Boolean, default: false
 
       # Delegate some methods which might be called in `Runner` to the parent dataset.
       delegate :energy_balance, to: :parent
@@ -18,14 +17,10 @@ module Atlas
       validate :validate_presence_of_base_dataset
       validate :validate_scaling
 
-      validate :validate_presence_of_init_keys,
-        if: -> { uses_deprecated_initializer_inputs }
-
-      validate :validate_presence_of_init_values,
-        if: -> { uses_deprecated_initializer_inputs }
-
       validate :validate_graph_values,
-        if: -> { persisted? && !uses_deprecated_initializer_inputs }
+        if: -> { persisted?}
+
+      validate :validate_presence_of_full_ancestor
 
       def self.find_by_geo_id(geo_id)
         all.detect { |item| item.geo_id == geo_id }
@@ -39,23 +34,31 @@ module Atlas
         @load_profile_map = {}
       end
 
+      def [](key)
+        value = super
+        value.nil? && parent ? parent[key] : value
+      end
+
+      # Override the core rails read_attribute_for_validation to read parent attributes recursively
+      def read_attribute_for_validation(key)
+        value = super
+        value.nil? && parent ? parent.read_attribute_for_validation(key) : value
+      end
+
       def graph_values
         @graph_values ||= GraphValues.new(self)
       end
 
       def parent
-        Dataset::Full.find(base_dataset)
+        Dataset.find(base_dataset)
+      rescue DocumentNotFoundError
+        nil
       end
 
       private
 
-      # Internal: Paths used to look for CSV and other dataset-related files.
-      def resolve_paths
-        [dataset_dir, parent.dataset_dir]
-      end
-
       def validate_presence_of_base_dataset
-        return if Dataset::Full.exists?(base_dataset)
+        return if Dataset.exists?(base_dataset)
 
         errors.add(:base_dataset, 'does not exist')
       end
@@ -71,9 +74,7 @@ module Atlas
 
       def validate_presence_of_init_keys
         init.each_key do |key|
-          unless InitializerInput.exists?(key)
-            errors.add(:init, "'#{key}' does not exist as an initializer input")
-          end
+          errors.add(:init, "'#{key}' does not exist as an initializer input")
         end
       end
 
@@ -91,6 +92,17 @@ module Atlas
         graph_values.errors.each do |_, message|
           errors.add(:graph_values, message)
         end
+      end
+
+
+      def validate_presence_of_full_ancestor
+        return if has_full_parent?
+
+        errors.add(:base_dataset, 'has no Full parent')
+      end
+
+      def has_full_parent?
+        Dataset::Full.exists?(base_dataset) || parent&.has_full_parent? || false
       end
     end
   end

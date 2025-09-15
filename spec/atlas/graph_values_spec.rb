@@ -6,7 +6,7 @@ module Atlas; describe GraphValues do
       key: 'lutjebroek',
       base_dataset: 'nl',
       interconnector_capacity: 1.0,
-      scaling: Preset::Scaling.new(
+      scaling: Atlas::Dataset::Scaling.new(
         area_attribute: 'present_number_of_residences',
         value: 1000,
         base_value: 10000

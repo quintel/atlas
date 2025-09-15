@@ -1,0 +1,11 @@
+# This is Meta information about Winschoten.
+
+- geo_id = testing
+- base_dataset = groningen
+- id = 4
+- parent_id = 3
+- area = Winschoten
+- scaling.area_attribute = number_of_residences
+- scaling.value = 1
+- scaling.base_value = 1000
+- number_of_busses = 50

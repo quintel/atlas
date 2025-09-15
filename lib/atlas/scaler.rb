@@ -1,7 +1,7 @@
 module Atlas
   class Scaler
     def initialize(base_dataset_key, derived_dataset_name, number_of_inhabitants, base_value = nil)
-      @base_dataset         = Dataset::Full.find(base_dataset_key)
+      @base_dataset         = Dataset.find(base_dataset_key)
       @derived_dataset_name = derived_dataset_name
       @number_of_inhabitants = number_of_inhabitants
       @base_value           = base_value || @base_dataset.number_of_inhabitants
