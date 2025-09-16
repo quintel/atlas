@@ -47,6 +47,7 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
+    bigdecimal (3.2.3)
     codecov (0.5.2)
       simplecov (>= 0.15, < 0.22)
     coderay (1.1.3)
@@ -67,11 +68,14 @@ GEM
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
+    logger (1.7.0)
     method_source (1.0.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.9)
     minitest (5.25.5)
     multi_xml (0.6.0)
+    mutex_m (0.3.0)
+    ostruct (0.6.3)
     parallel (1.19.2)
     parser (2.7.1.4)
       ast (~> 2.4.1)
@@ -146,9 +150,13 @@ PLATFORMS
 
 DEPENDENCIES
   atlas!
+  bigdecimal (~> 3.2)
   codecov
   httparty
+  logger (~> 1.7)
+  mutex_m (~> 0.3.0)
   osmosis!
+  ostruct (~> 0.6.3)
   pry (>= 0.9.12)
   rake (>= 10.0.3)
   refinery!
@@ -164,4 +172,4 @@ DEPENDENCIES
   term-ansicolor (>= 1.2.0)
 
 BUNDLED WITH
-   2.1.4
+   2.7.2
