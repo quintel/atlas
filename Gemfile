@@ -10,6 +10,11 @@ gemspec
 gem 'refinery', ref: 'c39c9b1', github: 'quintel/refinery'
 gem 'rubel',    ref: 'ad3d44e', github: 'quintel/rubel'
 
+gem "logger", "~> 1.7"
+gem "mutex_m", "~> 0.3.0"
+gem "bigdecimal", "~> 3.2"
+gem "ostruct", "~> 0.6.3"
+
 group :development do
   gem 'httparty'
   gem 'osmosis', github: 'quintel/osmosis', require: false
