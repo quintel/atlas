@@ -7,5 +7,5 @@
 - area = Winschoten
 - scaling.area_attribute = number_of_residences
 - scaling.value = 1
-- scaling.base_value = 1000
+- scaling.base_value = 100
 - number_of_busses = 50
