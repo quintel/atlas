@@ -429,11 +429,7 @@ module Atlas
     end
 
     def resolve_paths
-      if respond_to?(:parent) && parent
-        [dataset_dir] + Array(parent.resolve_paths)
-      else
-        [dataset_dir]
-      end
+      [dataset_dir]
     end
   end
 end

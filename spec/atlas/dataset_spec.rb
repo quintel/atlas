@@ -339,25 +339,25 @@ module Atlas
         end
 
         it 'returns an array with its dataset_dir and parent resolve_paths' do
-          expect(derived.resolve_paths).to eq([derived.dataset_dir] + parent.resolve_paths)
+          expect(derived.resolve_paths).to eq(([derived.dataset_dir] + parent.resolve_paths).uniq)
         end
       end
     end
   end
 
-  describe Dataset::Derived do
-    describe "#valid?" do
-      it "validates the existence of the base_dataset" do
-        dataset = Dataset::Derived.new(key: :ameland, base_dataset: :fantasia)
-        dataset.valid?
-        expect(dataset.errors[:base_dataset]).to include('does not exist')
-      end
+    describe Dataset::Derived do
+      describe "#valid?" do
+        it "validates the existence of the base_dataset" do
+          dataset = Dataset::Derived.new(key: :ameland, base_dataset: :fantasia)
+          dataset.valid?
+          expect(dataset.errors[:base_dataset]).to include('does not exist')
+        end
 
-      it "validates the existence of the scaling" do
-        dataset = Dataset::Derived.new(key: :ameland, base_dataset: :fantasia)
-        dataset.valid?
-        expect(dataset.errors[:scaling]).to include("can't be blank")
+        it "validates the existence of the scaling" do
+          dataset = Dataset::Derived.new(key: :ameland, base_dataset: :fantasia)
+          dataset.valid?
+          expect(dataset.errors[:scaling]).to include("can't be blank")
+        end
       end
     end
-  end
 end

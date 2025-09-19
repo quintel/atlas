@@ -9,3 +9,4 @@
 - scaling.value = 1
 - scaling.base_value = 100
 - number_of_busses = 50
+- interconnector_capacity = 58
