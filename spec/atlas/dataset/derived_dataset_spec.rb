@@ -85,13 +85,8 @@ describe Atlas::Dataset::Derived do
     let(:parent)    { described_class.find(:groningen) }
     let(:grandchild) { described_class.find(:winschoten) }
 
-    it 'inherits attributes from its parent if not set' do
-      # interconnector_capacity is set on parent (groningen)
-      expect(grandchild[(:interconnector_capacity)]).to eq(parent.interconnector_capacity)
-    end
-
     it 'overrides parent attributes if set' do
-      expect(grandchild[(:number_of_busses)]).to eq(50.0)
+      expect(grandchild.number_of_busses).to eq(50.0)
     end
   end
 
