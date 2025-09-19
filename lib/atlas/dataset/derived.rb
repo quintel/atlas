@@ -20,8 +20,6 @@ module Atlas
       validate :validate_graph_values,
         if: -> { persisted?}
 
-      validate :validate_presence_of_full_ancestor
-
       def self.find_by_geo_id(geo_id)
         all.detect { |item| item.geo_id == geo_id }
       end
@@ -34,33 +32,25 @@ module Atlas
         @load_profile_map = {}
       end
 
-      def [](key)
-        value = super
-        value.nil? && parent ? parent[key] : value
-      end
-
-      # Override the core rails read_attribute_for_validation to read parent attributes recursively
-      def read_attribute_for_validation(key)
-        value = super
-        value.nil? && parent ? parent.read_attribute_for_validation(key) : value
-      end
-
       def graph_values
         @graph_values ||= GraphValues.new(self)
       end
 
       def parent
         Dataset.find(base_dataset)
-      rescue DocumentNotFoundError
-        nil
       end
 
       private
 
       def validate_presence_of_base_dataset
-        return if Dataset.exists?(base_dataset)
+        unless Dataset.exists?(base_dataset)
+          errors.add(:base_dataset, 'does not exist')
+          return
+        end
 
-        errors.add(:base_dataset, 'does not exist')
+        unless has_full_parent?
+          errors.add(:base_dataset, 'has no Full parent')
+        end
       end
 
       def validate_scaling
@@ -72,20 +62,6 @@ module Atlas
         end
       end
 
-      def validate_presence_of_init_keys
-        init.each_key do |key|
-          errors.add(:init, "'#{key}' does not exist as an initializer input")
-        end
-      end
-
-      def validate_presence_of_init_values
-        init.each_pair do |key, value|
-          unless value.present?
-            errors.add(:init, "value for initializer input '#{key}' can't be blank")
-          end
-        end
-      end
-
       def validate_graph_values
         return if graph_values.valid?
 
@@ -94,15 +70,13 @@ module Atlas
         end
       end
 
-
-      def validate_presence_of_full_ancestor
-        return if has_full_parent?
-
-        errors.add(:base_dataset, 'has no Full parent')
+      def has_full_parent?
+        return false unless Dataset.exists?(base_dataset)
+        Dataset::Full.exists?(base_dataset) || parent&.has_full_parent?
       end
 
-      def has_full_parent?
-        Dataset::Full.exists?(base_dataset) || parent&.has_full_parent? || false
+      def resolve_paths
+        ([dataset_dir] + Array(parent&.resolve_paths)).uniq
       end
     end
   end
