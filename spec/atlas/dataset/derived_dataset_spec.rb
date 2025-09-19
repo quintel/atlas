@@ -50,9 +50,6 @@ describe Atlas::Dataset::Derived do
       end
 
       it 'is valid' do
-        unless grandchild_dataset.valid?
-          puts "grandchild_dataset is invalid: #{grandchild_dataset.errors.full_messages.inspect}"
-        end
         expect(grandchild_dataset).to be_valid
       end
     end
@@ -95,6 +92,18 @@ describe Atlas::Dataset::Derived do
 
     it 'overrides parent attributes if set' do
       expect(grandchild[(:number_of_busses)]).to eq(50.0)
+    end
+  end
+
+  describe 'scaling inheritance' do
+    let(:parent) { described_class.find(:groningen) }
+    let(:child)  { described_class.find(:winschoten) }
+
+    it 'uses its own scaling, not the parent scaling' do
+      expect(child.scaling.area_attribute).to eq('number_of_residences')
+      expect(child.scaling.value).to eq(1)
+      expect(child.scaling.base_value).to eq(100)
+      expect(child.scaling).not_to equal(parent.scaling)
     end
   end
 end

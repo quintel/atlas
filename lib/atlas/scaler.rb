@@ -9,8 +9,14 @@ module Atlas
 
     def create_scaled_dataset
       @derived_dataset = Dataset::Derived.new(attributes)
-      @derived_dataset.attributes =
-        AreaAttributesScaler.call(@base_dataset, @derived_dataset.scaling.factor)
+
+      unless @derived_dataset.scaling && @derived_dataset.scaling.valid?
+        @derived_dataset.valid?
+        raise InvalidDocumentError.new(@derived_dataset)
+      end
+      scaled_attrs = AreaAttributesScaler.call(@base_dataset, @derived_dataset.scaling.factor)
+      # Overwrite proportional attributes with their scaled values.
+      scaled_attrs.each { |k, v| @derived_dataset[k] = v }
       @derived_dataset.save!
 
       create_empty_graph_values_file
