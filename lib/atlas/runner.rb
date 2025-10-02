@@ -64,7 +64,6 @@ module Atlas
         SetRubelAttributes.with_queryable(->(q) { runtime.execute_checked(q) }),
         SetSlotSharesFromEfficiency.with_queryable(->(q) { runtime.execute_checked(q) }),
         ScaleAttributes.with_dataset(dataset),
-        ZeroDisabledSectors.with_dataset(dataset),
         ZeroMoleculeLeaves,
         PauseFeverCalculations
       ]
