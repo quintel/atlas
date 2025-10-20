@@ -41,6 +41,9 @@ module Atlas
         # capacity. i.e. if the output capacity is 10 MW and the limit is set
         # to 50, then the load shifting limit will be 500 MWh.
         attribute :load_shifting_hours, Float
+
+        # Use to determine the temperature cutoff of the power-to-heat technologies
+        attribute :temperature_cutoff, Float
       end
 
       validates :level, inclusion: %i[lv mv hv omit]
@@ -79,6 +82,11 @@ module Atlas
         },
         allow_nil: true,
         if: ->(mo) { mo.type == :flex && mo.subtype == :load_shifting }
+
+      validates :temperature_cutoff, absence: true, if: (lambda do |mo|
+        mo.type != :flex || !%i[temperature_based_p2h].include?(mo.subtype)
+      end)
+
 
       validate :validate_load_shifting_config
 

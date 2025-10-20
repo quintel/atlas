@@ -265,4 +265,39 @@ describe Atlas::NodeAttributes::ElectricityMeritOrder do
       end
     end
   end
+
+  describe '#temperature_cutoff' do
+    context 'when type=:flex and subtype=:temperature_based_p2h' do
+      it 'may be nil' do
+        mo = described_class.new(type: :flex, subtype: :temperature_based_p2h, temperature_cutoff: nil)
+        expect(mo.errors_on(:temperature_cutoff)).to be_empty
+      end
+
+      it 'may have a numeric value' do
+        mo = described_class.new(type: :flex, subtype: :temperature_based_p2h, temperature_cutoff: 15.0)
+        expect(mo.errors_on(:temperature_cutoff)).to be_empty
+      end
+    end
+
+    context 'when type is not :flex' do
+      it 'must be blank' do
+        mo = described_class.new(type: :consumer, temperature_cutoff: 15.0)
+        expect(mo.errors_on(:temperature_cutoff)).to include('must be blank')
+      end
+    end
+
+    context 'when type=:flex but subtype is not :temperature_based_p2h' do
+      it 'must be blank' do
+        mo = described_class.new(type: :flex, subtype: :storage, temperature_cutoff: 15.0)
+        expect(mo.errors_on(:temperature_cutoff)).to include('must be blank')
+      end
+    end
+
+    context 'when type=:flex and subtype=:temperature_based_p2h is nil' do
+      it 'has no errors when temperature_cutoff is nil' do
+        mo = described_class.new(type: :flex, subtype: :temperature_based_p2h, temperature_cutoff: nil)
+        expect(mo.errors_on(:temperature_cutoff)).to be_empty
+      end
+    end
+  end
 end
