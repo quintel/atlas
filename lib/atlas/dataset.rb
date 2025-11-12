@@ -75,7 +75,6 @@ module Atlas
       :mv_hv_trafo_capacity_per_step,
       :interconnection_net_costs_present,
       :offshore_net_costs_present,
-      :flh_solar_pv_solar_radiation_max,
       :hydrogen_electrolysis_solar_pv_capacity_ratio,
       :present_share_of_apartments_before_1945_in_useful_demand_for_space_heating,
       :present_share_of_apartments_1945_1964_in_useful_demand_for_space_heating,
