@@ -75,7 +75,6 @@ module Atlas
       :mv_hv_trafo_capacity_per_step,
       :interconnection_net_costs_present,
       :offshore_net_costs_present,
-      :flh_solar_pv_solar_radiation_max,
       :hydrogen_electrolysis_solar_pv_capacity_ratio,
       :present_share_of_apartments_before_1945_in_useful_demand_for_space_heating,
       :present_share_of_apartments_1945_1964_in_useful_demand_for_space_heating,
@@ -179,9 +178,6 @@ module Atlas
     attribute :electric_vehicle_profile_3_share, Float, default: 0.0
     attribute :electric_vehicle_profile_4_share, Float, default: 0.0
     attribute :electric_vehicle_profile_5_share, Float, default: 0.0
-
-    attribute :solar_pv_profile_1_share, Float, default: 1.0
-    attribute :solar_pv_profile_2_share, Float, default: 0.0
 
     # These attributes are relative to the size of the region. If we simulate a
     # sub-region (say, 5% of the "full" region size), these attributes can be
