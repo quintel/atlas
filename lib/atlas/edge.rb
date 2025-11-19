@@ -26,6 +26,7 @@ module Atlas
       attribute :reversed,      Virtus::Attribute::Boolean, default: false
       attribute :priority,      Integer
       attribute :circular,      Virtus::Attribute::Boolean, default: false
+      attribute :treat_as_loss, Virtus::Attribute::Boolean
       attribute :groups,        Array[Symbol]
       attribute :graph_methods, Array[String]
 
