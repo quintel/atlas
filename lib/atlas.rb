@@ -87,7 +87,6 @@ require_relative 'atlas/dataset/curve_set_collection'
 require_relative 'atlas/dataset/scaling'
 require_relative 'atlas/dataset/derived'
 require_relative 'atlas/dataset/full'
-require_relative 'atlas/dataset/insulation_cost_csv'
 
 require_relative 'atlas/scaler'
 require_relative 'atlas/scaler/area_attributes_scaler'
