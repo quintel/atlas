@@ -25,7 +25,6 @@ group :development do
 end
 
 group :test do
-  gem 'codecov', require: false
   gem 'rspec'
   gem 'shoulda-matchers'
   gem 'simplecov'

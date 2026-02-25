@@ -48,9 +48,6 @@ GEM
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
     bigdecimal (3.2.3)
-    codecov (0.2.12)
-      json
-      simplecov
     coderay (1.1.3)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -59,7 +56,7 @@ GEM
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.4.4)
-    docile (1.4.0)
+    docile (1.4.1)
     drb (2.2.3)
     equalizer (0.0.11)
     gpgme (2.0.25)
@@ -70,7 +67,6 @@ GEM
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
-    json (2.18.1)
     logger (1.7.0)
     method_source (1.0.0)
     mini_mime (1.1.2)
@@ -105,8 +101,6 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
     rspec-support (3.9.3)
-    rspec_junit_formatter (0.5.1)
-      rspec-core (>= 2, < 4, != 2.12.0)
     rubocop (0.85.1)
       parallel (~> 1.10)
       parser (>= 2.7.0.1)
@@ -127,12 +121,12 @@ GEM
     ruby-progressbar (1.10.1)
     shoulda-matchers (4.3.0)
       activesupport (>= 4.2.0)
-    simplecov (0.21.2)
+    simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
-    simplecov-html (0.12.3)
-    simplecov_json_formatter (0.1.3)
+    simplecov-html (0.13.2)
+    simplecov_json_formatter (0.1.4)
     sync (0.5.0)
     term-ansicolor (1.7.1)
       tins (~> 1.0)
@@ -157,7 +151,6 @@ PLATFORMS
 DEPENDENCIES
   atlas!
   bigdecimal (~> 3.2)
-  codecov
   httparty
   logger (~> 1.7)
   mutex_m (~> 0.3.0)
@@ -167,7 +160,6 @@ DEPENDENCIES
   rake (>= 10.0.3)
   refinery!
   rspec
-  rspec_junit_formatter
   rubel!
   rubocop (~> 0.85.0)
   rubocop-performance
