@@ -7,8 +7,8 @@ end
 
 gemspec
 
-gem 'refinery', ref: 'c39c9b1', github: 'quintel/refinery'
-gem 'rubel',    ref: 'ad3d44e', github: 'quintel/rubel'
+gem 'refinery', ref: 'c308c6d', github: 'quintel/refinery' #TODO: update once merged to master
+gem 'rubel',    ref: '32ae1ea', github: 'quintel/rubel' #TODO: update once merged to master
 
 gem "logger", "~> 1.7"
 gem "mutex_m", "~> 0.3.0"
@@ -17,7 +17,7 @@ gem "ostruct", "~> 0.6.3"
 
 group :development do
   gem 'httparty'
-  gem 'osmosis', github: 'quintel/osmosis', require: false
+  gem 'osmosis', ref: '853a6e8', github: 'quintel/osmosis', require: false #TODO: update once merged to master
 
   gem 'rubocop', '~> 0.85.0', require: false
   gem 'rubocop-performance',  require: false
