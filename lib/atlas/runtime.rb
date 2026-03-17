@@ -129,6 +129,20 @@ module Atlas
       dataset.efficiencies(file_key).get("#{ direction }.#{ carrier }")
     end
 
+    # Public: Given the key of a node, retrieves the emission data
+    # for a sector and subsector for the dataset for 1990, and for
+    # the start year
+    #
+    # node_key - The key of the node whose production is to be fetched.
+    #
+    # Returns a Float.
+    def EMISSIONS(sector_key, type = :co2, date = :start_year)
+      keys = sector_key.to_s.split('.').map(&:to_sym)
+      keys << type
+
+      dataset.emissions.get(keys, date)
+    end
+
     # Public: Given the key of a node, retrieves the production (energy
     # supplied) of the node from the primary_producers.csv file.
     #
