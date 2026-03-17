@@ -7,8 +7,8 @@ end
 
 gemspec
 
-gem 'refinery', ref: 'c39c9b1', github: 'quintel/refinery'
-gem 'rubel',    ref: 'ad3d44e', github: 'quintel/rubel'
+gem 'refinery', ref: '36b8e34', github: 'quintel/refinery'
+gem 'rubel',    ref: '9fe7010', github: 'quintel/rubel'
 
 gem "logger", "~> 1.7"
 gem "mutex_m", "~> 0.3.0"
@@ -17,7 +17,7 @@ gem "ostruct", "~> 0.6.3"
 
 group :development do
   gem 'httparty'
-  gem 'osmosis', github: 'quintel/osmosis', require: false
+  gem 'osmosis', ref: '16fac7c', github: 'quintel/osmosis', require: false
 
   gem 'rubocop', '~> 0.85.0', require: false
   gem 'rubocop-performance',  require: false
@@ -25,9 +25,7 @@ group :development do
 end
 
 group :test do
-  gem 'codecov', require: false
   gem 'rspec'
-  gem 'rspec_junit_formatter'
   gem 'shoulda-matchers'
   gem 'simplecov'
 end

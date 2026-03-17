@@ -1,13 +1,15 @@
 GIT
   remote: https://github.com/quintel/osmosis.git
-  revision: 863794858f1638e786d20d6616631519da7d6277
+  revision: 16fac7cc0e853a7366f5626aec76eb08502f8f1e
+  ref: 16fac7c
   specs:
     osmosis (1.0.0)
+      bigdecimal
 
 GIT
   remote: https://github.com/quintel/refinery.git
-  revision: c39c9b10628aed07e40aab07534f94d984d763ee
-  ref: c39c9b1
+  revision: 36b8e3457e930a0079262871e352b90b4c6c3eb9
+  ref: 36b8e34
   specs:
     refinery (0.0.1)
       ruby-graphviz
@@ -16,10 +18,10 @@ GIT
 
 GIT
   remote: https://github.com/quintel/rubel.git
-  revision: ad3d44ef4304da6a98db3ec42747a7af9e7e64c7
-  ref: ad3d44e
+  revision: 9fe7010549222bd02d705ce915e31e3f9c271f11
+  ref: 9fe7010
   specs:
-    rubel (0.1.0)
+    rubel (0.1.1)
 
 PATH
   remote: .
@@ -29,6 +31,7 @@ PATH
       activesupport (>= 7)
       csv (>= 3)
       gpgme (~> 2.0)
+      ostruct
       turbine-graph (>= 0.1)
       virtus (~> 1.0)
 
@@ -48,8 +51,6 @@ GEM
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
     bigdecimal (3.2.3)
-    codecov (0.5.2)
-      simplecov (>= 0.15, < 0.22)
     coderay (1.1.3)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -58,7 +59,8 @@ GEM
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     diff-lcs (1.4.4)
-    docile (1.4.0)
+    docile (1.4.1)
+    drb (2.2.3)
     equalizer (0.0.11)
     gpgme (2.0.25)
       mini_portile2 (~> 2.7)
@@ -72,13 +74,16 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.2)
     mini_portile2 (2.8.9)
-    minitest (5.25.5)
+    minitest (6.0.2)
+      drb (~> 2.0)
+      prism (~> 1.5)
     multi_xml (0.6.0)
     mutex_m (0.3.0)
     ostruct (0.6.3)
     parallel (1.19.2)
     parser (2.7.1.4)
       ast (~> 2.4.1)
+    prism (1.9.0)
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -99,8 +104,6 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
     rspec-support (3.9.3)
-    rspec_junit_formatter (0.5.1)
-      rspec-core (>= 2, < 4, != 2.12.0)
     rubocop (0.85.1)
       parallel (~> 1.10)
       parser (>= 2.7.0.1)
@@ -121,12 +124,12 @@ GEM
     ruby-progressbar (1.10.1)
     shoulda-matchers (4.3.0)
       activesupport (>= 4.2.0)
-    simplecov (0.21.2)
+    simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
-    simplecov-html (0.12.3)
-    simplecov_json_formatter (0.1.3)
+    simplecov-html (0.13.2)
+    simplecov_json_formatter (0.1.4)
     sync (0.5.0)
     term-ansicolor (1.7.1)
       tins (~> 1.0)
@@ -135,7 +138,7 @@ GEM
     thread_safe (0.3.6)
     tins (1.25.0)
       sync
-    turbine-graph (0.1.3)
+    turbine-graph (0.1.4)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (1.7.0)
@@ -151,7 +154,6 @@ PLATFORMS
 DEPENDENCIES
   atlas!
   bigdecimal (~> 3.2)
-  codecov
   httparty
   logger (~> 1.7)
   mutex_m (~> 0.3.0)
@@ -161,7 +163,6 @@ DEPENDENCIES
   rake (>= 10.0.3)
   refinery!
   rspec
-  rspec_junit_formatter
   rubel!
   rubocop (~> 0.85.0)
   rubocop-performance
