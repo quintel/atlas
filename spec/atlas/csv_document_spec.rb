@@ -313,4 +313,82 @@ module Atlas
       end
     end
   end
+
+  describe CSVDocument::MultiIndex do
+    let(:doc) do
+      path = Atlas.data_dir.join('emissions.csv')
+
+      path.open('w') do |f|
+        f.puts(<<-EOF.lines.map(&:strip).join("\n"))
+          sector,sub_sector,type,1990,start_year
+          energy,electricity_and_heat_production,other_ghg,20.0,18.0
+          energy,electricity_and_heat_production,co2,20.0,18.0
+          households,,other_ghg,5.0,7.0
+          households,,co2,10.0,
+        EOF
+      end
+
+      described_class.read(path.to_s, index_size: 3)
+    end
+
+    describe '#get' do
+      it 'returns the value of a valid row key with all indeces present' do
+        expect(doc.get(
+          [:energy, :electricity_and_heat_production,:other_ghg],
+          :start_year
+        )).to be(18.0)
+      end
+
+      it 'returns the value of a valid row key with only one index present' do
+        expect(doc.get(
+          [:households,:other_ghg],
+          :start_year
+        )).to be(7.0)
+      end
+
+      it 'returns nil when the cell was blank' do
+        expect(doc.get(
+          [:households,:co2],
+          :start_year
+        )).to be_nil
+      end
+    end
+    # test stuff for save as well!
+    #
+    describe '#save!' do
+      it 'saves the CSVDocument content to disk' do
+        doc.set([:households,:co2], :start_year, 42.0)
+        doc.save!
+
+        expect(File.readlines(doc.path).map(&:strip)).to eq(
+          <<-EOF.lines.map(&:strip))
+            sector,sub_sector,type,1990,start_year
+            energy,electricity_and_heat_production,other_ghg,20.0,18.0
+            energy,electricity_and_heat_production,co2,20.0,18.0
+            households,,other_ghg,5.0,7.0
+            households,,co2,10.0,42.0
+          EOF
+      end
+
+      context 'when the file did not exist before' do
+        let(:doc) do
+          described_class.empty(
+            ['yes', 'no', 'maybe baby'],
+            Atlas.data_dir.join('doesnotexistbefore.csv'),
+            index_size: 2
+          )
+        end
+
+        it 'creates a new csv file' do
+          doc.save!
+          expect(File.file?(doc.path)).to be(true)
+        end
+
+        it 'creates a normalized header row in the csv file' do
+          doc.save!
+          expect(File.readlines(doc.path).first.strip).to eq('yes,no,maybe_baby')
+        end
+      end
+    end
+  end
 end

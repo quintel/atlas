@@ -18,23 +18,23 @@ module Atlas
       end
 
       # Public: Reads a CSV at the given path.
-      def read(path)
-        new(CSV.read(path, **table_opts), path)
+      def read(path, **opts)
+        new(CSV.read(path, **table_opts), path, **opts)
       end
 
       # Public: Reads a CSV from a string.
-      def from_string(str, path = nil)
-        new(CSV.parse(str, **table_opts), path)
+      def from_string(str, path = nil, **opts)
+        new(CSV.parse(str, **table_opts), path, **opts)
       end
 
       # Public: Creates a new CSVDocument with the given headers.
-      def empty(headers, path)
+      def empty(headers, path, **opts)
         path = Pathname(path) unless path.nil?
 
         raise(ExistingCSVHeaderError, path) if path&.file?
 
         headers = headers.map { |header| normalize_key(header) }
-        new(CSV::Table.new([CSV::Row.new(headers, headers, true)]), path)
+        new(CSV::Table.new([CSV::Row.new(headers, headers, true)]), path, **opts)
       end
 
       # Internal: Converts the given key to a format which removes all special
@@ -241,6 +241,38 @@ module Atlas
     # Returns the cell contents as a number if possible, a string otherwise.
     def get(row)
       cell(normalize_key(row), 1)
+    end
+  end
+
+  # A special case of CSVDocument where the file contains multiple index columns;
+  # for instance sector, subsector and key
+  class CSVDocument::MultiIndex < CSVDocument
+    # Internal: Sets the multi-index size
+    #
+    # Returns a CSVDocument.
+    def initialize(table, path = nil, index_size: 3)
+      super(table, path = path)
+
+      @index_size = index_size
+    end
+
+    private
+
+    # Internal: Precomputes the normalized key of each row for faster lookups.
+    #
+    # Returns a Hash of CSV::Row.
+    def keyed_table
+      @keyed_table ||= table.each_with_object({}) do |row, hash|
+        hash[normalize_key(*row[0...@index_size].reject(&:blank?))] = row
+      end
+    end
+
+    # Internal: Converts the given key(s) to a format which removes all special
+    # characters. And joins them in multi-index style
+    #
+    # Returns a Symbol.
+    def normalize_key(*keys)
+      keys.map{ |key| self.class.normalize_key(key)}.join('_').to_sym
     end
   end
 end
