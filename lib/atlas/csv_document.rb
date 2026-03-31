@@ -256,6 +256,17 @@ module Atlas
       @index_size = index_size
     end
 
+    # Public: flattens the table into a hash (Symbol, Float)
+    # Start_year is cut of from the hash keys as it will serve as the default
+    def to_hash
+      keyed_table.each_with_object({}) do |(key, row), result|
+        row.headers[@index_size..].each do |col|
+          year = col == :start_year ? '' : col
+          result[normalize_key(row[0...@index_size].reject(&:blank?),year)] = row[col]
+        end
+      end
+    end
+
     private
 
     # Internal: Precomputes the normalized key of each row for faster lookups.
@@ -272,7 +283,7 @@ module Atlas
     #
     # Returns a Symbol.
     def normalize_key(*keys)
-      keys.map{ |key| self.class.normalize_key(key)}.join('_').to_sym
+      keys.map{ |key| self.class.normalize_key(key)}.reject(&:blank?).join('_').to_sym
     end
   end
 end

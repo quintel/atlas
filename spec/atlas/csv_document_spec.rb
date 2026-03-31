@@ -353,8 +353,25 @@ module Atlas
         )).to be_nil
       end
     end
-    # test stuff for save as well!
-    #
+
+    describe '#to_hash' do
+      it 'contains 1990 keys' do
+        expect(doc.to_hash.keys).to include(:energy_electricity_and_heat_production_other_ghg_1990)
+      end
+
+      it 'contains keys without subsector' do
+        expect(doc.to_hash.keys).to include(:households_other_ghg)
+      end
+
+      it 'contains start year keys' do
+        expect(doc.to_hash.keys).to include(:energy_electricity_and_heat_production_other_ghg)
+      end
+
+      it 'removes start_year' do
+        expect(doc.to_hash.keys).not_to include(:energy_electricity_and_heat_production_other_ghg_start_year)
+      end
+    end
+
     describe '#save!' do
       it 'saves the CSVDocument content to disk' do
         doc.set([:households,:co2], :start_year, 42.0)
