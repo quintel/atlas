@@ -254,6 +254,12 @@ module Atlas
       "#{base_path.to_s.inspect}"
     end
 
+  MissingEmissionsYearError =
+    error_class do |year, available_years|
+      "No emissions data for year #{year.inspect}. " \
+      "Available years: #{available_years.map(&:inspect).join(', ')}"
+    end
+
   # Parser Errors ------------------------------------------------------------
 
   CannotIdentifyError = error_class(ParserError) do |string|

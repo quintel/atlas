@@ -286,4 +286,33 @@ module Atlas
       keys.map{ |key| self.class.normalize_key(key)}.reject(&:blank?).join('_').to_sym
     end
   end
+
+  # A specialized MultiIndex for emissions data where the value is in a single column
+  # rather than spread across multiple year columns.
+  #
+  # CSV structure: sector, sub_sector, type, ghg, value, unit
+  class CSVDocument::EmissionsDocument < CSVDocument::MultiIndex
+    # Public: Retrieves an emissions value by its composite key.
+    #
+    # key - Symbol representing the emission (e.g., :households_energetic_co2)
+    #
+    # Returns the emission value (Float) or nil if the cell is empty.
+    # Raises UnknownCSVRowError if the row doesn't exist.
+    def get(key)
+      normalized = normalize_key(key)
+      row = keyed_table[normalized]
+
+      fail(UnknownCSVRowError.new(self, key)) unless row
+
+      row[:value]
+    end
+
+    # Public: Converts the emissions table to a hash.
+    # Returns a Hash of emission keys to values.
+    def to_hash
+      keyed_table.each_with_object({}) do |(key, row), result|
+        result[key] = row[:value]
+      end
+    end
+  end
 end
