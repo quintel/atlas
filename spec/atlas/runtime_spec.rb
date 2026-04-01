@@ -81,6 +81,31 @@ module Atlas
       end
     end
 
+    context 'EMISSIONS' do
+      it 'executes EMISSIONS functions with sector and subsector' do
+        result = runtime.execute(
+          "EMISSIONS('energy.electricity_and_heat_production', energetic, other_ghg)"
+        )
+        expect(result).to eq(18.0)
+      end
+
+      it 'executes EMISSIONS functions with sector and historical year' do
+        result = runtime.execute("EMISSIONS(households, energetic, co2, 1990)")
+        expect(result).to eq(12.0)
+      end
+
+      it 'returns nil when EMISSIONS data cell was empty' do
+        result = runtime.execute('EMISSIONS(industry, energetic, other_ghg)')
+        expect(result).to be_nil
+      end
+
+      it 'raises an error if the EMISSIONS data is missing' do
+        expect { runtime.execute('EMISSIONS(outer_space, energetic, co2)') }.to(
+          raise_error { |e| expect(e.original).to be_a(UnknownCSVRowError) }
+        )
+      end
+    end
+
     context 'CENTRAL_PRODUCTION' do
       it 'executes CENTRAL_PRODUCTION functions' do
         expect(runtime.execute(

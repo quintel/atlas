@@ -351,6 +351,24 @@ module Atlas
       @central_producers ||= CSVDocument.read(path_resolver.resolve('central_producers.csv'))
     end
 
+    # Public: A collection containing all emissions data for the dataset.
+    # Expects to load files from datasets/AREA/emissions/ directory.
+    #
+    # The emissions CSV structure has columns: sector, sub_sector, type, ghg, value, unit
+    # Keys are generated from [sector, sub_sector, type, ghg] columns.
+    #
+    # For example:
+    #   dataset.emissions.get(:default).to_hash
+    #   # => { households_energetic_co2: 12.0, ... }
+    #
+    #   dataset.emissions.get(1990).to_hash
+    #   # => { households_energetic_co2: 10.0, ... }
+    #
+    # Returns an EmissionsCollection.
+    def emissions
+      @emissions ||= EmissionsCollection.at_path(path_resolver.join('emissions'))
+    end
+
     # Public: Retrieves demand and max demand data for the region. Expects to
     # load a file at datasets/AREA/primary_production.csv.
     #
@@ -405,5 +423,6 @@ module Atlas
     def resolve_paths
       [dataset_dir]
     end
+
   end
 end

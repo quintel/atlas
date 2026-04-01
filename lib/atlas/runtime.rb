@@ -129,6 +129,23 @@ module Atlas
       dataset.efficiencies(file_key).get("#{ direction }.#{ carrier }")
     end
 
+    # Public: Retrieves emission data for a sector.
+    #
+    # sector_key - Sector name (e.g., 'households', 'energy.electricity_and_heat_production')
+    # type       - Emission type (:energetic or :non_energetic)
+    # ghg        - GHG type (:co2 or :other_ghg)
+    # year       - Optional year (e.g., 1990, or :start_year for default)
+    #
+    # Returns a Float or nil if the cell is empty.
+    # Raises UnknownCSVRowError if the emissions data doesn't exist.
+    def EMISSIONS(sector_key, type, ghg, year = nil)
+      emissions_year = convert_year_to_symbol(year)
+      emissions_doc = dataset.emissions.get(emissions_year)
+      key = build_emissions_key(sector_key, type, ghg)
+
+      emissions_doc.get(key)
+    end
+
     # Public: Given the key of a node, retrieves the production (energy
     # supplied) of the node from the primary_producers.csv file.
     #
@@ -165,6 +182,18 @@ module Atlas
     # Returns an EnergyBalance.
     def energy_balance
       dataset.energy_balance
+    end
+
+    # Internal: Converts year parameter to symbol for emissions lookup.
+    def convert_year_to_symbol(year)
+      return :default if year.nil? || year == :start_year
+      year.to_s.to_sym
+    end
+
+    # Internal: Builds emissions key from sector, type, and ghg.
+    def build_emissions_key(sector_key, type, ghg)
+      sector_parts = sector_key.to_s.tr('.', '_')
+      [sector_parts, type, ghg].compact.join('_').to_sym
     end
   end
 end

@@ -18,23 +18,23 @@ module Atlas
       end
 
       # Public: Reads a CSV at the given path.
-      def read(path)
-        new(CSV.read(path, **table_opts), path)
+      def read(path, **opts)
+        new(CSV.read(path, **table_opts), path, **opts)
       end
 
       # Public: Reads a CSV from a string.
-      def from_string(str, path = nil)
-        new(CSV.parse(str, **table_opts), path)
+      def from_string(str, path = nil, **opts)
+        new(CSV.parse(str, **table_opts), path, **opts)
       end
 
       # Public: Creates a new CSVDocument with the given headers.
-      def empty(headers, path)
+      def empty(headers, path, **opts)
         path = Pathname(path) unless path.nil?
 
         raise(ExistingCSVHeaderError, path) if path&.file?
 
         headers = headers.map { |header| normalize_key(header) }
-        new(CSV::Table.new([CSV::Row.new(headers, headers, true)]), path)
+        new(CSV::Table.new([CSV::Row.new(headers, headers, true)]), path, **opts)
       end
 
       # Internal: Converts the given key to a format which removes all special
@@ -241,6 +241,78 @@ module Atlas
     # Returns the cell contents as a number if possible, a string otherwise.
     def get(row)
       cell(normalize_key(row), 1)
+    end
+  end
+
+  # A special case of CSVDocument where the file contains multiple index columns;
+  # for instance sector, subsector and key
+  class CSVDocument::MultiIndex < CSVDocument
+    # Internal: Sets the multi-index size
+    #
+    # Returns a CSVDocument.
+    def initialize(table, path = nil, index_size: 3)
+      super(table, path = path)
+
+      @index_size = index_size
+    end
+
+    # Public: flattens the table into a hash (Symbol, Float)
+    # Start_year is cut of from the hash keys as it will serve as the default
+    def to_hash
+      keyed_table.each_with_object({}) do |(key, row), result|
+        row.headers[@index_size..].each do |col|
+          year = col == :start_year ? '' : col
+          result[normalize_key(row[0...@index_size].reject(&:blank?),year)] = row[col]
+        end
+      end
+    end
+
+    private
+
+    # Internal: Precomputes the normalized key of each row for faster lookups.
+    #
+    # Returns a Hash of CSV::Row.
+    def keyed_table
+      @keyed_table ||= table.each_with_object({}) do |row, hash|
+        hash[normalize_key(*row[0...@index_size].reject(&:blank?))] = row
+      end
+    end
+
+    # Internal: Converts the given key(s) to a format which removes all special
+    # characters. And joins them in multi-index style
+    #
+    # Returns a Symbol.
+    def normalize_key(*keys)
+      keys.map{ |key| self.class.normalize_key(key)}.reject(&:blank?).join('_').to_sym
+    end
+  end
+
+  # A specialized MultiIndex for emissions data where the value is in a single column
+  # rather than spread across multiple year columns.
+  #
+  # CSV structure: sector, sub_sector, type, ghg, value, unit
+  class CSVDocument::EmissionsDocument < CSVDocument::MultiIndex
+    # Public: Retrieves an emissions value by its composite key.
+    #
+    # key - Symbol representing the emission (e.g., :households_energetic_co2)
+    #
+    # Returns the emission value (Float) or nil if the cell is empty.
+    # Raises UnknownCSVRowError if the row doesn't exist.
+    def get(key)
+      normalized = normalize_key(key)
+      row = keyed_table[normalized]
+
+      fail(UnknownCSVRowError.new(self, key)) unless row
+
+      row[:value]
+    end
+
+    # Public: Converts the emissions table to a hash.
+    # Returns a Hash of emission keys to values.
+    def to_hash
+      keyed_table.each_with_object({}) do |(key, row), result|
+        result[key] = row[:value]
+      end
     end
   end
 end
