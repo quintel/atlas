@@ -48,11 +48,17 @@ module Atlas
         get(:default)
       end
 
-      # Public: Returns all emissions data as a hash grouped by year.
+      # Public: Returns all emissions data as a flat hash.
+      # Merges all years, adding year suffix for non-default years.
       #
-      # Returns Hash like {default: {...}, 1990: {...}}
+      # Returns Hash like {households_energetic_co2: 12.0, households_energetic_co2_1990: 10.0}
       def to_hash
-        @emissions_by_year.transform_values(&:to_hash)
+        @emissions_by_year.each_with_object({}) do |(year, doc), result|
+          doc.to_hash.each do |key, value|
+            suffix = year == :default ? '' : "_#{year}"
+            result[:"#{key}#{suffix}"] = value
+          end
+        end
       end
 
       # Public: Returns array of available years as symbols.

@@ -37,19 +37,23 @@ RSpec.describe Atlas::Dataset::EmissionsCollection do
     describe '#to_hash' do
       let(:hash) { collection.to_hash }
 
-      it 'returns a hash grouped by year' do
+      it 'returns a flat hash' do
         expect(hash).to be_a(Hash)
-        expect(hash.keys).to include(:default, :'1990')
+        expect(hash.keys).to all(be_a(Symbol))
       end
 
-      it 'contains emissions data for default year' do
-        expect(hash[:default]).to be_a(Hash)
-        expect(hash[:default][:households_energetic_co2]).to eq(12.0)
+      it 'contains emissions data for default year without suffix' do
+        expect(hash[:households_energetic_co2]).to eq(12.0)
       end
 
-      it 'contains emissions data for 1990' do
-        expect(hash[:'1990']).to be_a(Hash)
-        expect(hash[:'1990'][:energy_electricity_and_heat_production_energetic_co2]).to eq(18.0)
+      it 'contains emissions data for 1990 with year suffix' do
+        expect(hash[:energy_electricity_and_heat_production_energetic_co2_1990]).to eq(18.0)
+      end
+
+      it 'merges all years into single hash' do
+        # Should have both default and 1990 keys
+        expect(hash).to have_key(:households_energetic_co2)
+        expect(hash).to have_key(:households_energetic_co2_1990)
       end
     end
 
