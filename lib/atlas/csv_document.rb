@@ -257,12 +257,20 @@ module Atlas
     end
 
     # Public: flattens the table into a hash (Symbol, Float)
-    # Start_year is cut of from the hash keys as it will serve as the default
+    # If the CSV has a :value column, only that column is included (emissions format).
+    # Otherwise, all columns after the index are included with year suffixes (old format).
     def to_hash
       keyed_table.each_with_object({}) do |(key, row), result|
-        row.headers[@index_size..].each do |col|
-          year = col == :start_year ? '' : col
-          result[normalize_key(row[0...@index_size].reject(&:blank?),year)] = row[col]
+        if row.headers.include?(:value)
+          # New emissions format: only include the :value column
+          result[key] = row[:value]
+        else
+          # TODO: Determine if you keep the
+          # old format: include all columns after index with year suffixes
+          row.headers[@index_size..].each do |col|
+            year = col == :start_year ? '' : col
+            result[normalize_key(row[0...@index_size].reject(&:blank?), year)] = row[col]
+          end
         end
       end
     end

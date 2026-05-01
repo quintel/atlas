@@ -129,18 +129,28 @@ module Atlas
       dataset.efficiencies(file_key).get("#{ direction }.#{ carrier }")
     end
 
-    # Public: Given the key of a node, retrieves the emission data
-    # for a sector and subsector for the dataset for 1990, and for
-    # the start year
+    # Public: Retrieves emission data for a sector from the emissions.csv file.
     #
-    # node_key - The key of the node whose production is to be fetched.
+    # The emissions.csv has columns: etm_sector, etm_subsector, use, ghg, unit, value
+    # This function constructs a key from the arguments and looks it up in the hash.
+    #
+    # sector_key - A string or symbol with dot-notation (e.g., 'buildings.non_specified')
+    # use        - The use type (e.g., :energetic or :non_energetic)
+    # ghg        - The GHG type (e.g., :other_ghg or :co2)
+    #
+    # Examples:
+    #   EMISSIONS(buildings_non_specified, energetic, other_ghg)
+    #   # => 2796620.0
     #
     # Returns a Float.
-    def EMISSIONS(sector_key, type = :co2, date = :start_year)
-      keys = sector_key.to_s.split('.').map(&:to_sym)
-      keys << type
+    def EMISSIONS(*keys)
+      # Convert dashes to underscores
+      keys[0] = keys.first.to_s.tr('-', '_').to_sym if keys.any?
 
-      dataset.emissions.get(keys, date)
+      # Build the full key by joining all parts
+      full_key = keys.join('_').to_sym
+
+      dataset.emissions.to_hash[full_key]
     end
 
     # Public: Given the key of a node, retrieves the production (energy

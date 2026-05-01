@@ -356,13 +356,13 @@ module Atlas
     #
     # For example:
     #   dataset.emissions.
-    #     get(:energy_production_algae_diesel :full_load_hours)
-    #   # => 4194.5
+    #     get(:buildings, :non_specified, :energetic, :other_ghg, :value)
+    #   # => 2796620.0
     #
     # Returns a CSVDocument.
     def emissions
       @emissions ||= CSVDocument::MultiIndex.read(
-        path_resolver.resolve('emissions.csv'), index_size: 3
+        path_resolver.resolve('emissions.csv'), index_size: 4
       )
     end
 
