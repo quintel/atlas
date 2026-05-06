@@ -26,7 +26,7 @@ require_relative 'atlas/parser/text_to_hash/line_grouper'
 require_relative 'atlas/parser/text_to_hash/block'
 require_relative 'atlas/parser/text_to_hash/block/comment_block'
 require_relative 'atlas/parser/text_to_hash/block/multi_line_block'
-require_relative 'atlas/parser/text_to_hash/block/single_line_block'
+require_relative 'atlas/parser/text_to_hash/block/simple_attribute_block'
 require_relative 'atlas/parser/text_to_hash/base'
 require_relative 'atlas/parser/identifier'
 
