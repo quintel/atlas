@@ -33,6 +33,7 @@ module Atlas
       forecasting_error
       free_co2_factor
       ccs_capture_rate
+      co2_utilisation_per_mj
       heat_output_capacity
       hydrogen_output_capacity
       households_supplied_per_unit
