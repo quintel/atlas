@@ -320,11 +320,11 @@ module Atlas
 
       path.open('w') do |f|
         f.puts(<<-EOF.lines.map(&:strip).join("\n"))
-          sector,sub_sector,type,1990,start_year
-          energy,electricity_and_heat_production,other_ghg,20.0,18.0
-          energy,electricity_and_heat_production,co2,20.0,18.0
-          households,,other_ghg,5.0,7.0
-          households,,co2,10.0,
+          sector,sub_sector,type,unit,value
+          energy,electricity_and_heat_production,other_ghg,kg,18.0
+          energy,electricity_and_heat_production,co2,kg,20.0
+          households,,other_ghg,kg,7.0
+          households,,co2,kg,
         EOF
       end
 
@@ -335,55 +335,52 @@ module Atlas
       it 'returns the value of a valid row key with all indeces present' do
         expect(doc.get(
           [:energy, :electricity_and_heat_production,:other_ghg],
-          :start_year
+          :value
         )).to be(18.0)
       end
 
       it 'returns the value of a valid row key with only one index present' do
         expect(doc.get(
           [:households,:other_ghg],
-          :start_year
+          :value
         )).to be(7.0)
       end
 
       it 'returns nil when the cell was blank' do
         expect(doc.get(
           [:households,:co2],
-          :start_year
+          :value
         )).to be_nil
       end
     end
 
     describe '#to_hash' do
-      it 'contains 1990 keys' do
-        expect(doc.to_hash.keys).to include(:energy_electricity_and_heat_production_other_ghg_1990)
-      end
-
-      it 'contains keys without subsector' do
-        expect(doc.to_hash.keys).to include(:households_other_ghg)
-      end
-
-      it 'contains start year keys' do
+      it 'contains keys with all index columns' do
         expect(doc.to_hash.keys).to include(:energy_electricity_and_heat_production_other_ghg)
       end
 
-      it 'removes start_year' do
-        expect(doc.to_hash.keys).not_to include(:energy_electricity_and_heat_production_other_ghg_start_year)
+      it 'contains keys without subsector (when subsector is blank)' do
+        expect(doc.to_hash.keys).to include(:households_other_ghg)
+      end
+
+      it 'maps keys to values from the :value column' do
+        expect(doc.to_hash[:energy_electricity_and_heat_production_other_ghg]).to eq(18.0)
+        expect(doc.to_hash[:households_other_ghg]).to eq(7.0)
       end
     end
 
     describe '#save!' do
       it 'saves the CSVDocument content to disk' do
-        doc.set([:households,:co2], :start_year, 42.0)
+        doc.set([:households,:co2], :value, 42.0)
         doc.save!
 
         expect(File.readlines(doc.path).map(&:strip)).to eq(
           <<-EOF.lines.map(&:strip))
-            sector,sub_sector,type,1990,start_year
-            energy,electricity_and_heat_production,other_ghg,20.0,18.0
-            energy,electricity_and_heat_production,co2,20.0,18.0
-            households,,other_ghg,5.0,7.0
-            households,,co2,10.0,42.0
+            sector,sub_sector,type,unit,value
+            energy,electricity_and_heat_production,other_ghg,kg,18.0
+            energy,electricity_and_heat_production,co2,kg,20.0
+            households,,other_ghg,kg,7.0
+            households,,co2,kg,42.0
           EOF
       end
 

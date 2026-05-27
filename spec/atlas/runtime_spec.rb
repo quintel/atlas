@@ -89,7 +89,7 @@ module Atlas
         expect(result).to eq(18.0)
       end
 
-      it 'executes EMISSIONS functions with sector and subsector' do
+      it 'executes EMISSIONS functions with different sector and ghg' do
         result = runtime.execute("EMISSIONS(households_non_specified, energetic, co2)")
         expect(result).to eq(10.0)
       end

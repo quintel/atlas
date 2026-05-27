@@ -54,7 +54,7 @@ module Atlas
             end
 
             if lines[index + 1] && lines[index + 1].type == :inner_block
-              # Check if this is a multi-line array (starts with '= [' but no closing ']')
+              # Multi-line arrays use SimpleAttributeBlock; other multi-line content uses MultiLineBlock
               if multi_line_array_start?(line)
                 @blocks << SimpleAttributeBlock.new([line])
               else

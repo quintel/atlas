@@ -352,7 +352,8 @@ module Atlas
     end
 
     # Public: Retrieves emission data for the region.
-    # Expects to load a file at datasets/AREA/emissions.csv.
+    # Expects to load a file at datasets/AREA/emissions.csv with 4 index columns:
+    # etm_sector, etm_subsector, use, ghg.
     #
     # For example:
     #   dataset.emissions.

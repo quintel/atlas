@@ -247,31 +247,24 @@ module Atlas
   # A special case of CSVDocument where the file contains multiple index columns;
   # for instance sector, subsector and key
   class CSVDocument::MultiIndex < CSVDocument
-    # Internal: Sets the multi-index size
+    # Public: Sets the multi-index size
     #
     # Returns a CSVDocument.
     def initialize(table, path = nil, index_size: 3)
-      super(table, path = path)
+      super(table, path)
 
       @index_size = index_size
     end
 
-    # Public: flattens the table into a hash (Symbol, Float)
-    # If the CSV has a :value column, only that column is included (emissions format).
-    # Otherwise, all columns after the index are included with year suffixes (old format).
+    # Public: Flattens the table into a hash keyed by the normalized index columns.
+    #
+    # The CSV must have a :value column containing the data. The keys are formed by
+    # joining the index columns (e.g., for emissions: sector_subsector_use_ghg).
+    #
+    # Returns a Hash with Symbol keys and Float values.
     def to_hash
       keyed_table.each_with_object({}) do |(key, row), result|
-        if row.headers.include?(:value)
-          # New emissions format: only include the :value column
-          result[key] = row[:value]
-        else
-          # TODO: Determine if you keep the
-          # old format: include all columns after index with year suffixes
-          row.headers[@index_size..].each do |col|
-            year = col == :start_year ? '' : col
-            result[normalize_key(row[0...@index_size].reject(&:blank?), year)] = row[col]
-          end
-        end
+        result[key] = row[:value]
       end
     end
 
@@ -287,7 +280,7 @@ module Atlas
     end
 
     # Internal: Converts the given key(s) to a format which removes all special
-    # characters. And joins them in multi-index style
+    # characters and joins them in multi-index style.
     #
     # Returns a Symbol.
     def normalize_key(*keys)

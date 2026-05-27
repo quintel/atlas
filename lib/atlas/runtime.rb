@@ -134,20 +134,24 @@ module Atlas
     # The emissions.csv has columns: etm_sector, etm_subsector, use, ghg, unit, value
     # This function constructs a key from the arguments and looks it up in the hash.
     #
-    # sector_key - A string or symbol with dot-notation (e.g., 'buildings.non_specified')
-    # use        - The use type (e.g., :energetic or :non_energetic)
-    # ghg        - The GHG type (e.g., :other_ghg or :co2)
+    # sector_subsector - The combined sector-subsector key (e.g., :agriculture_non_specified)
+    # use              - The use type (e.g., :energetic or :non_energetic)
+    # ghg              - The GHG type (e.g., :other_ghg or :co2)
     #
     # Examples:
-    #   EMISSIONS(buildings_non_specified, energetic, other_ghg)
-    #   # => 2796620.0
+    #   EMISSIONS(agriculture_non_specified, non_energetic, co2)
+    #   # => 123.0
     #
-    # Returns a Float.
+    #   EMISSIONS(energy_hydrogen_production, non_energetic, other_ghg)
+    #   # => 456.0
+    #
+    # Returns a Float or nil if not found.
     def EMISSIONS(*keys)
-      # Convert dashes to underscores
+      # Convert dashes to underscores in the sector key for compatibility
+      # (allows both 'energy-hydrogen' and 'energy_hydrogen' formats)
       keys[0] = keys.first.to_s.tr('-', '_').to_sym if keys.any?
 
-      # Build the full key by joining all parts
+      # Build the full key by joining all parts (e.g., sector_use_ghg)
       full_key = keys.join('_').to_sym
 
       dataset.emissions.to_hash[full_key]
