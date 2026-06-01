@@ -4,7 +4,6 @@ module Atlas
 
       class SimpleAttributeBlock < Block
 
-        # TODO: Integrate with Regex from Line?
         LINE = /^[-~]\s([a-z0-9_.]*)\s+=(?:\s*(.*))$/
 
         ARR_START = '['.freeze
