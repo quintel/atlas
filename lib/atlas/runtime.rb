@@ -147,10 +147,6 @@ module Atlas
     #
     # Returns a Float or nil if not found.
     def EMISSIONS(*keys)
-      # Convert dashes to underscores in the sector key for compatibility
-      # (allows both 'energy-hydrogen' and 'energy_hydrogen' formats)
-      keys[0] = keys.first.to_s.tr('-', '_').to_sym if keys.any?
-
       # Build the full key by joining all parts (e.g., sector_use_ghg)
       full_key = keys.join('_').to_sym
 

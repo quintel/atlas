@@ -24,7 +24,7 @@ module Atlas
         def multi_line_array?
           return false if lines.size == 1
 
-          first_value = lines.first.to_s.match(LINE)&.captures&.last&.strip
+          first_value = first_raw_value
           first_value && first_value.start_with?(ARR_START) && !first_value.end_with?(ARR_END)
         end
 
@@ -45,39 +45,39 @@ module Atlas
 
         private
 
+        def first_raw_value
+          lines.first.to_s.match(LINE)&.captures&.last&.strip
+        end
+
         def parse_single_line_value
-          value = lines.first.to_s.match(LINE).captures.last.strip
+          value = first_raw_value
 
           if value[0] == ARR_START && value[-1] == ARR_END
-            # [arrays, of, values]
-            value[1..-2].split(',').map { |el| cast_scalar(el.strip) }
+            parse_array_elements(value[1..-2])
           else
             cast_scalar(value)
           end
         end
 
         def parse_multi_line_array
-          # Collect all content from all lines
-          all_content = []
+          content = collect_array_content
+          parse_array_elements(content)
+        end
 
-          # First line: extract everything after '= ['
-          first_value = lines.first.to_s.match(LINE).captures.last.strip
-          all_content << first_value[1..-1] # Remove opening '['
+        def collect_array_content
+          content = [first_raw_value[1..-1]]
 
-          # Subsequent lines: collect until we find ']'
           lines[1..-1].each do |line|
             line_str = line.to_s.strip
-            if line_str.end_with?(ARR_END)
-              # Remove closing ']' and add final content
-              all_content << line_str[0..-2]
-              break
-            else
-              all_content << line_str
-            end
+            content << (line_str.end_with?(ARR_END) ? line_str[0..-2] : line_str)
+            break if line_str.end_with?(ARR_END)
           end
 
-          # Join all content, split by commas, and parse each element
-          all_content.join(' ').split(',').map { |el| cast_scalar(el.strip) }
+          content.join(' ')
+        end
+
+        def parse_array_elements(content)
+          content.split(',').map { |el| cast_scalar(el.strip) }
         end
 
         def validate!
