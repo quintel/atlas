@@ -149,12 +149,8 @@ module Atlas
     #   # => 456.0
     #
     # Returns a Float or nil if not found.
-    def EMISSIONS(*keys)
-      # If year is not provided (3 args), default to dataset analysis_year
-      year = keys.length == 4 ? keys[3] : dataset.analysis_year
-
-      # Build the full key by joining all parts (e.g., sector_use_ghg_year)
-      full_key = [keys[0], keys[1], keys[2], year].join('_').to_sym
+    def EMISSIONS(sector, use, ghg, year = dataset.analysis_year)
+      full_key = "#{sector}_#{use}_#{ghg}_#{year}".to_sym
 
       dataset.emissions.to_hash[full_key]
     end
