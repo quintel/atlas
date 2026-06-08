@@ -367,6 +367,36 @@ module Atlas
       )
     end
 
+    # Public: Retrieves the universal CRT (Common Reporting Table) to ETM sector mapping.
+    # This is a universal mapping file shared across all datasets, loaded from the etsource root.
+    #
+    # The mapping file contains CRT codes and their corresponding ETM sector, subsector, and use.
+    # CRT codes are normalized (lowercased, dots/hyphens converted to underscores) for lookup.
+    #
+    # For example:
+    #   dataset.crt_mapping[:1_a_1]
+    #   # => { crt_code: "1.A.1", etm_sector: "energy",
+    #   #      etm_subsector: "electricity_and_heat_production", use: "energetic" }
+    #
+    # Returns a Hash where keys are normalized CRT codes (symbols) and values are hashes
+    # with :crt_code, :etm_sector, :etm_subsector, and :use keys.
+    def crt_mapping
+      # Use class variable since this is universal across all datasets
+      @@crt_mapping ||= begin
+        csv_path = Atlas.data_dir.join('crt_etm_mapping.csv')
+
+        # Return empty hash if file doesn't exist (allows datasets without CRT mapping)
+        return {} unless csv_path.exist?
+
+        doc = CSVDocument.read(csv_path)
+        doc.table.each_with_object({}) do |row, hash|
+          # Normalize CRT code: lowercase, convert dots/hyphens to underscores
+          normalized_code = row[:crt_code].to_s.downcase.tr('-.', '_').to_sym
+          hash[normalized_code] = row
+        end
+      end
+    end
+
     # Public: Retrieves demand and max demand data for the region. Expects to
     # load a file at datasets/AREA/primary_production.csv.
     #
