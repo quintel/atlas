@@ -352,18 +352,18 @@ module Atlas
     end
 
     # Public: Retrieves emission data for the region.
-    # Expects to load a file at datasets/AREA/emissions.csv with 4 index columns:
-    # etm_sector, etm_subsector, use, ghg.
+    # Expects to load a file at datasets/AREA/emissions.csv with 5 index columns:
+    # etm_sector, etm_subsector, use, ghg, year.
     #
     # For example:
     #   dataset.emissions.
-    #     get(:buildings, :non_specified, :energetic, :other_ghg, :value)
+    #     get(:buildings, :non_specified, :energetic, :other_ghg, 2023, :value)
     #   # => 2796620.0
     #
     # Returns a CSVDocument.
     def emissions
       @emissions ||= CSVDocument::MultiIndex.read(
-        path_resolver.resolve('emissions.csv'), index_size: 4
+        path_resolver.resolve('emissions.csv'), index_size: 5
       )
     end
 
