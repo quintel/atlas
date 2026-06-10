@@ -268,6 +268,24 @@ module Atlas
       end
     end
 
+    # Public: Like to_hash, but each value is the array of normalized
+    # index-column components, preserving the column boundaries which are
+    # lost when the components are joined into a single key.
+    #
+    # For example:
+    #   { energy_fugitive_emissions_non_energetic_co2_2023 =>
+    #       [:energy, :fugitive_emissions, :non_energetic, :co2, :"2023"] }
+    #
+    # Returns a Hash with Symbol keys and Array of Symbol values.
+    def component_keys
+      table.each_with_object({}) do |row, hash|
+        components = row[0...@index_size].reject(&:blank?)
+
+        hash[normalize_key(*components)] =
+          components.map { |part| self.class.normalize_key(part) }
+      end
+    end
+
     private
 
     # Internal: Precomputes the normalized key of each row for faster lookups.

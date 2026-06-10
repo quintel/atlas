@@ -369,6 +369,21 @@ module Atlas
       end
     end
 
+    describe '#component_keys' do
+      it 'maps each joined key to its normalized index components' do
+        expect(doc.component_keys[:energy_electricity_and_heat_production_other_ghg])
+          .to eq([:energy, :electricity_and_heat_production, :other_ghg])
+      end
+
+      it 'omits blank index columns' do
+        expect(doc.component_keys[:households_other_ghg]).to eq([:households, :other_ghg])
+      end
+
+      it 'has the same keys as to_hash' do
+        expect(doc.component_keys.keys).to match_array(doc.to_hash.keys)
+      end
+    end
+
     describe '#save!' do
       it 'saves the CSVDocument content to disk' do
         doc.set([:households,:co2], :value, 42.0)
