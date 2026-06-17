@@ -56,7 +56,7 @@ module Atlas
     def precursors
       return unless precomputed_graph?
 
-      [SetAttributesFromGraphValues.with_dataset(@dataset)]
+      [SetAttributesFromGraphValues.with_dataset(@dataset), ZeroMoleculeNodes]
     end
 
     def catalysts
