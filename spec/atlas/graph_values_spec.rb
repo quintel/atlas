@@ -172,6 +172,17 @@ module Atlas; describe GraphValues do
             .to include("node 'baz' is not allowed to be edited by 'input'")
         end
       end
+
+      describe "targeting a molecule node" do
+        let(:values) {
+          { 'm_left' => { 'demand' => 100.0 } }
+        }
+
+        it "does not raise an error" do
+          expect(graph_values)
+            .to be_valid
+        end
+      end
     end
   end
 end; end
