@@ -59,6 +59,14 @@ module Atlas
             expect(query).to be_valid
           end
         end
+
+        describe 'molecule node' do
+          let(:attributes) { { key: 'm_left+demand' } }
+
+          it 'is valid' do
+            expect(query).to be_valid
+          end
+        end
       end
     end
   end
