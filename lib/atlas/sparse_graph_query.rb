@@ -24,7 +24,8 @@ module Atlas
     end
 
     def graph_part?
-      EnergyNode.exists?(part) || EnergyEdge.exists?(part)
+      EnergyNode.exists?(part) || EnergyEdge.exists?(part) ||
+      MoleculeNode.exists?(part) || MoleculeEdge.exists?(part)
     end
 
     private
