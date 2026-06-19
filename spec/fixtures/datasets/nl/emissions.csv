@@ -1,0 +1,5 @@
+etm_sector,etm_subsector,use,ghg,unit,value
+Energy,Electricity and heat production,energetic,other_ghg,kg CO2eq,18.0
+Energy,Electricity and heat production,energetic,co2,kg CO2eq,18.0
+Households,Non-specified,energetic,other_ghg,kg CO2eq,7.0
+Households,Non-specified,energetic,co2,kg CO2eq,10.0

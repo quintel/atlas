@@ -313,4 +313,96 @@ module Atlas
       end
     end
   end
+
+  describe CSVDocument::MultiIndex do
+    let(:doc) do
+      path = Atlas.data_dir.join('emissions.csv')
+
+      path.open('w') do |f|
+        f.puts(<<-EOF.lines.map(&:strip).join("\n"))
+          sector,sub_sector,type,unit,value
+          energy,electricity_and_heat_production,other_ghg,kg,18.0
+          energy,electricity_and_heat_production,co2,kg,20.0
+          households,,other_ghg,kg,7.0
+          households,,co2,kg,
+        EOF
+      end
+
+      described_class.read(path.to_s, index_size: 3)
+    end
+
+    describe '#get' do
+      it 'returns the value of a valid row key with all indeces present' do
+        expect(doc.get(
+          [:energy, :electricity_and_heat_production,:other_ghg],
+          :value
+        )).to be(18.0)
+      end
+
+      it 'returns the value of a valid row key with only one index present' do
+        expect(doc.get(
+          [:households,:other_ghg],
+          :value
+        )).to be(7.0)
+      end
+
+      it 'returns nil when the cell was blank' do
+        expect(doc.get(
+          [:households,:co2],
+          :value
+        )).to be_nil
+      end
+    end
+
+    describe '#to_hash' do
+      it 'contains keys with all index columns' do
+        expect(doc.to_hash.keys).to include(:energy_electricity_and_heat_production_other_ghg)
+      end
+
+      it 'contains keys without subsector (when subsector is blank)' do
+        expect(doc.to_hash.keys).to include(:households_other_ghg)
+      end
+
+      it 'maps keys to values from the :value column' do
+        expect(doc.to_hash[:energy_electricity_and_heat_production_other_ghg]).to eq(18.0)
+        expect(doc.to_hash[:households_other_ghg]).to eq(7.0)
+      end
+    end
+
+    describe '#save!' do
+      it 'saves the CSVDocument content to disk' do
+        doc.set([:households,:co2], :value, 42.0)
+        doc.save!
+
+        expect(File.readlines(doc.path).map(&:strip)).to eq(
+          <<-EOF.lines.map(&:strip))
+            sector,sub_sector,type,unit,value
+            energy,electricity_and_heat_production,other_ghg,kg,18.0
+            energy,electricity_and_heat_production,co2,kg,20.0
+            households,,other_ghg,kg,7.0
+            households,,co2,kg,42.0
+          EOF
+      end
+
+      context 'when the file did not exist before' do
+        let(:doc) do
+          described_class.empty(
+            ['yes', 'no', 'maybe baby'],
+            Atlas.data_dir.join('doesnotexistbefore.csv'),
+            index_size: 2
+          )
+        end
+
+        it 'creates a new csv file' do
+          doc.save!
+          expect(File.file?(doc.path)).to be(true)
+        end
+
+        it 'creates a normalized header row in the csv file' do
+          doc.save!
+          expect(File.readlines(doc.path).first.strip).to eq('yes,no,maybe_baby')
+        end
+      end
+    end
+  end
 end

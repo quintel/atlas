@@ -81,6 +81,25 @@ module Atlas
       end
     end
 
+    context 'EMISSIONS' do
+      it 'executes EMISSIONS functions with sector and subsector' do
+        result = runtime.execute(
+          "EMISSIONS(energy_electricity_and_heat_production, energetic, other_ghg)"
+        )
+        expect(result).to eq(18.0)
+      end
+
+      it 'executes EMISSIONS functions with different sector and ghg' do
+        result = runtime.execute("EMISSIONS(households_non_specified, energetic, co2)")
+        expect(result).to eq(10.0)
+      end
+
+      it 'returns nil for missing emissions data' do
+        result = runtime.execute('EMISSIONS(outer_space_station, energetic, co2)')
+        expect(result).to be_nil
+      end
+    end
+
     context 'CENTRAL_PRODUCTION' do
       it 'executes CENTRAL_PRODUCTION functions' do
         expect(runtime.execute(

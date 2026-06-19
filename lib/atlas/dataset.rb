@@ -351,6 +351,22 @@ module Atlas
       @central_producers ||= CSVDocument.read(path_resolver.resolve('central_producers.csv'))
     end
 
+    # Public: Retrieves emission data for the region.
+    # Expects to load a file at datasets/AREA/emissions.csv with 4 index columns:
+    # etm_sector, etm_subsector, use, ghg.
+    #
+    # For example:
+    #   dataset.emissions.
+    #     get(:buildings, :non_specified, :energetic, :other_ghg, :value)
+    #   # => 2796620.0
+    #
+    # Returns a CSVDocument.
+    def emissions
+      @emissions ||= CSVDocument::MultiIndex.read(
+        path_resolver.resolve('emissions.csv'), index_size: 4
+      )
+    end
+
     # Public: Retrieves demand and max demand data for the region. Expects to
     # load a file at datasets/AREA/primary_production.csv.
     #

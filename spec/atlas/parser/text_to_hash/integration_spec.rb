@@ -182,4 +182,34 @@ module Atlas::Parser::TextToHash; describe '(integration)' do
     end
   end
 
+  # --------------------------------------------------------------------------
+
+  context 'with a document containing a multi-line array' do
+    let(:content) do
+      <<-EOF
+        - before = start
+        - groups = [
+            emissions, emissions_buildings,
+            demand_driven, heat_production
+          ]
+        - after = end
+      EOF
+    end
+
+    it 'parses the attribute before the array' do
+      expect(hash).to include(before: 'start')
+    end
+
+    it 'parses the attribute after the array' do
+      expect(hash).to include(after: 'end')
+    end
+
+    it 'parses the multi-line array' do
+      expect(hash).to include(groups: %w(
+        emissions emissions_buildings
+        demand_driven heat_production
+      ))
+    end
+  end
+
 end ; end

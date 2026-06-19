@@ -26,10 +26,22 @@ module Atlas
       #
       def find_element_and_type(graph_key)
         if graph_key =~ /-.+@/
-          [:edge, EnergyEdge.find(graph_key)]
+          [:edge, find_edge(graph_key)]
         else
-          [:node, EnergyNode.find(graph_key)]
+          [:node, find_node(graph_key)]
         end
+      end
+
+      def find_edge(graph_key)
+        EnergyEdge.find(graph_key)
+      rescue Atlas::DocumentNotFoundError
+        MoleculeEdge.find(graph_key)
+      end
+
+      def find_node(graph_key)
+        EnergyNode.find(graph_key)
+      rescue Atlas::DocumentNotFoundError
+        MoleculeNode.find(graph_key)
       end
     end
   end

@@ -129,6 +129,30 @@ module Atlas
       dataset.efficiencies(file_key).get("#{ direction }.#{ carrier }")
     end
 
+    # Public: Retrieves emission data for a sector from the emissions.csv file.
+    #
+    # The emissions.csv has columns: etm_sector, etm_subsector, use, ghg, unit, value
+    # This function constructs a key from the arguments and looks it up in the hash.
+    #
+    # sector_subsector - The combined sector-subsector key (e.g., :agriculture_non_specified)
+    # use              - The use type (e.g., :energetic or :non_energetic)
+    # ghg              - The GHG type (e.g., :other_ghg or :co2)
+    #
+    # Examples:
+    #   EMISSIONS(agriculture_non_specified, non_energetic, co2)
+    #   # => 123.0
+    #
+    #   EMISSIONS(energy_hydrogen_production, non_energetic, other_ghg)
+    #   # => 456.0
+    #
+    # Returns a Float or nil if not found.
+    def EMISSIONS(*keys)
+      # Build the full key by joining all parts (e.g., sector_use_ghg)
+      full_key = keys.join('_').to_sym
+
+      dataset.emissions.to_hash[full_key]
+    end
+
     # Public: Given the key of a node, retrieves the production (energy
     # supplied) of the node from the primary_producers.csv file.
     #
