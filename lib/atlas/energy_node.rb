@@ -14,7 +14,6 @@ module Atlas
     end
 
     attribute :has_loss,             Boolean
-    attribute :energy_balance_group, String
 
     attribute :fever,                NodeAttributes::Fever
     attribute :heat_network_lt,      NodeAttributes::MeritOrder
@@ -30,7 +29,6 @@ module Atlas
     # Numeric attributes.
     %i[
       electricity_output_capacity
-      forecasting_error
       free_co2_factor
       ccs_capture_rate
       co2_utilisation_per_mj
@@ -38,8 +36,6 @@ module Atlas
       hydrogen_output_capacity
       households_supplied_per_unit
       land_use_per_unit
-      part_load_efficiency_penalty
-      part_load_operating_point
       sustainability_share
       takes_part_in_ets
       max_consumption_price

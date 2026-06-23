@@ -2,7 +2,6 @@
 
 - sector = agriculture
 - use = energetic
-- energy_balance_group = technologies
 - has_loss = true
 - in_slots = crude_oil
 - out_slots = useable_heat_heat

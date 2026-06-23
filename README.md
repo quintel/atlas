@@ -76,7 +76,7 @@ You can also edit all the attributes on the documents:
 input = Atlas::Node.find(:households_collective_chp_biogas)
 # => #<Atlas::ConverterNode :households_collective_chp_biogas>
 
-input.energy_balance_group = 'household CHPs'
+input.households_supplied_per_unit = 0.5
 input.save
 # => true
 ```
