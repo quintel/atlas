@@ -145,10 +145,12 @@ module Atlas
     #   EMISSIONS(energy_hydrogen_production, non_energetic, other_ghg)
     #   # => 456.0
     #
+    #   EMISSIONS(energy_hydrogen_production, non_energetic, other_ghg, 2015)
+    #   # => 456.0
+    #
     # Returns a Float or nil if not found.
-    def EMISSIONS(*keys)
-      # Build the full key by joining all parts (e.g., sector_use_ghg)
-      full_key = keys.join('_').to_sym
+    def EMISSIONS(sector, use, ghg, year = dataset.analysis_year)
+      full_key = "#{sector}_#{use}_#{ghg}_#{year}".to_sym
 
       dataset.emissions.to_hash[full_key]
     end
