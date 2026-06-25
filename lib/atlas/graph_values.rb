@@ -43,6 +43,8 @@ module Atlas
       @derived_dataset = derived_dataset
     end
 
+    PRECISION = 14
+
     def values
       @values ||= YAML.load_file(graph_values_path)
     end
@@ -59,7 +61,7 @@ module Atlas
 
     def set(element_key, attribute, value)
       values[element_key.to_s] ||= {}
-      values[element_key.to_s].deep_merge!(Hash[attribute.to_s, value])
+      values[element_key.to_s].deep_merge!(Hash[attribute.to_s, round_all_floats(value)])
     end
 
     alias_method :to_h, :values
@@ -69,11 +71,26 @@ module Atlas
       save("--- {}")
     end
 
-    def save(yaml = values.to_yaml)
+    def save(yaml = nil)
+      yaml ||= round_all_floats(values).to_yaml
       File.write(graph_values_path, yaml)
     end
 
     private
+
+    # Internal: Recursively rounds all Float values to PRECISION decimal places.
+    def round_all_floats(value)
+      case value
+      when Float
+        value.round(PRECISION)
+      when Hash
+        value.transform_values { |v| round_all_floats(v) }
+      when Array
+        value.map { |v| round_all_floats(v) }
+      else
+        value
+      end
+    end
 
     def validate_presence_of_init_keys
       values.each_pair do |_, values|
