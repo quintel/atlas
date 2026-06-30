@@ -147,31 +147,106 @@ region code (such as "nl"), performing the queries in each document using data
 from the chosen region, then handing the partially-calculated graph to
 [Refinery][refinery] to fill in the remaining demands and edge shares.
 
-#### Testing a Subgraph
+#### Testing a (part of the) graph
 
-It is possible to test a subgraph already; this selects nodes which match a
-chosen sector, sets their demands and shares, and performs the Refinery
-calculation step. The results are shown in your terminal, with "before" and
-"after" images output to the ./atlas/tmp directory.
+The `rake debug` task selects nodes which match a chosen sector or key, sets
+their demands and shares, and performs the [Refinery][refinery] calculation
+step. Progress is shown in your terminal, and "before" and "after" diagrams –
+plus a `_trace.txt` graph dump – are written to a fresh
+`./atlas/tmp/debug-<timestamp>` directory.
 
 ```sh
 $ cd ~/code/atlas
-$ rake debug:graph
+$ rake debug
 ```
 
-If your ETSource directory is not at the same location as your Atlas
-directory, you need to specify the pato the ETSource:
+With no options, a diagram is drawn for each of the nine sectors. The task is
+configured entirely through **environment variables** (it takes no bracket
+arguments):
+
+| Variable  | Default | Behaviour                                                                                                    |
+|-----------|---------|--------------------------------------------------------------------------------------------------------------|
+| `DATASET` | `nl`    | The dataset (region) code to calculate, e.g. `nl2019`, `nl2023`, `de`.                                               |
+| `FAST`    | unset   | When set, no diagrams are drawn – Atlas only runs the calculation and writes `_trace.txt`. The quickest way to check that the graph calculates. |
+| `FILTER`  | unset   | Chooses which subgraphs to draw (see below). When neither `FAST` nor `FILTER` is set, all nine sectors are drawn. |
+| `CONSOLE` | unset   | When set, drops you into a [Pry][pry] session after the run so you can inspect the calculated graph.          |
 
 ```sh
-$ rake debug:graph[../somewhere/else/etsource/data]
+$ FAST=true rake debug              # calculate only, no diagrams
+$ DATASET=nl2023 rake debug         # use the nl2023 dataset
+$ CONSOLE=true rake debug           # inspect the graph in Pry afterwards
 ```
 
-Like the "console" task, there must be absoluely no spaces unless you surround
-the rake command in quotes:
+##### Choosing what to draw with `FILTER`
+
+`FILTER` is a comma-separated list of targets; **each comma-separated entry
+produces its own diagram**. Within a single entry you can combine several
+targets with `+`, and they are drawn together in **one** diagram.
+
+Each target is matched in one of two ways:
+
+* **All uppercase** is treated as a **sector** (namespace). The nine available
+  sectors are `AGRICULTURE`, `HOUSEHOLDS`, `BUILDINGS`, `TRANSPORT`,
+  `INDUSTRY`, `OTHER`, `BUNKERS`, `ENERGY`, and `ENVIRONMENT`.
+* **Anything else** is treated as a **node key** and matched exactly, e.g.
+  `households_collective_chp_biogas`.
 
 ```sh
-$ rake "debug:graph[/tmp/the gothic castle]"
+$ FILTER=HOUSEHOLDS rake debug                       # one sector
+$ FILTER=HOUSEHOLDS,TRANSPORT rake debug             # two separate diagrams
+$ FILTER=HOUSEHOLDS+TRANSPORT rake debug             # both sectors in one diagram
+$ FILTER=households_collective_chp_biogas rake debug # a single node by key
 ```
+
+`FILTER` and `DATASET` combine, so you can target a sector or node in a specific
+region:
+
+```sh
+$ DATASET=nl2023 FILTER=HOUSEHOLDS rake debug                       # households, nl2023
+$ DATASET=nl2023 FILTER=households_collective_chp_biogas rake debug     # one node, nl2023 dataset
+```
+
+Diagrams are drawn from the graph's **edges**: a node only appears if it is the
+`from` or `to` of an edge that matches your filter. A filter that matches only
+nodes with no edges produces an empty diagram (see molecules, below).
+
+##### Reading the output
+
+Files are written to `./atlas/tmp/debug-<timestamp>/`, with each diagram named
+`<target>.<stage>.png`:
+
+* `initial` – the values before calculation (always drawn).
+* `finished` – the result of a successful calculation.
+* `calculable` and `incalculable` – drawn instead of `finished` when the
+  calculation fails, showing how far Refinery got and which part of the graph
+  it could not solve.
+
+`_trace.txt` is always written and contains a textual dump of the graph.
+
+##### Debugging molecules
+
+Atlas loads the energy nodes and the molecule nodes into a **single** graph, so
+every `rake debug` run already builds and calculates the molecule graph. The
+molecule nodes that are connected by edges are the CO₂/CCUS flows, which live in
+the `molecules`, `energy`, and `industry` namespaces. The `molecules` namespace
+is molecule-only, so it gives a clean molecule diagram:
+
+```sh
+$ FILTER=MOLECULES rake debug                          # the molecule (CO₂) graph
+$ FILTER=molecules_distribution_before_transport_co2 rake debug  # a single molecule node
+```
+
+Because the diagram is built from edges, **a sector whose molecule nodes have no
+edges produces an empty diagram.** Many molecule sectors – `LULUCF`, `WASTE`,
+and most of the shared sectors – contain only isolated emission "leaf" nodes
+(a preset `demand` with no connecting edges), so filtering on them (e.g.
+`FILTER=LULUCF`) draws nothing. This is expected, not a bug.
+
+Note also that the sector names shared with the energy graph – `AGRICULTURE`,
+`HOUSEHOLDS`, `INDUSTRY`, `TRANSPORT`, `BUILDINGS`, `BUNKERS`, `ENERGY`, and
+`OTHER` – match nodes in **both** graphs, and `FILTER` cannot currently separate
+them: a filter such as `ENERGY` draws the energy *and* molecule nodes in that
+sector together. To inspect a specific molecule flow, filter by its node key.
 
 #### Production Mode
 
@@ -212,3 +287,4 @@ After running an import, you should change to the ETSource directory to
 commit the updated files and remove those which have been deleted.
 
 [refinery]: https://github.com/quintel/refinery
+[pry]: https://github.com/pry/pry
