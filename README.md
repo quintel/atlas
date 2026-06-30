@@ -147,7 +147,7 @@ region code (such as "nl"), performing the queries in each document using data
 from the chosen region, then handing the partially-calculated graph to
 [Refinery][refinery] to fill in the remaining demands and edge shares.
 
-#### Testing a Subgraph
+#### Testing a (part of the) graph
 
 The `rake debug` task selects nodes which match a chosen sector or key, sets
 their demands and shares, and performs the [Refinery][refinery] calculation
