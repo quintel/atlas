@@ -198,6 +198,18 @@ $ FILTER=HOUSEHOLDS+TRANSPORT rake debug             # both sectors in one diagr
 $ FILTER=households_collective_chp_biogas rake debug # a single node by key
 ```
 
+`FILTER` and `DATASET` combine, so you can target a sector or node in a specific
+region:
+
+```sh
+$ DATASET=nl2023 FILTER=HOUSEHOLDS rake debug                       # households, nl2023
+$ DATASET=nl2023 FILTER=households_collective_chp_biogas rake debug     # one node, nl2023 dataset
+```
+
+Diagrams are drawn from the graph's **edges**: a node only appears if it is the
+`from` or `to` of an edge that matches your filter. A filter that matches only
+nodes with no edges produces an empty diagram (see molecules, below).
+
 ##### Reading the output
 
 Files are written to `./atlas/tmp/debug-<timestamp>/`, with each diagram named
@@ -214,25 +226,27 @@ Files are written to `./atlas/tmp/debug-<timestamp>/`, with each diagram named
 ##### Debugging molecules
 
 Atlas loads the energy nodes and the molecule nodes into a **single** graph, so
-every `rake debug` run already builds and calculates the molecule graph. You can
-draw molecule subgraphs with the same `FILTER` mechanism:
-
-* `FILTER=<molecule_node_key> rake debug` – a single molecule node by its key.
-* `FILTER=LULUCF rake debug` – a molecule-only sector. `LULUCF`, `WASTE`, and
-  `MOLECULES` exist only in the molecule graph, so they are **not** part of a
-  bare `rake debug` (which draws the nine energy sectors) and must be named
-  explicitly.
+every `rake debug` run already builds and calculates the molecule graph. The
+molecule nodes that are connected by edges are the CO₂/CCUS flows, which live in
+the `molecules`, `energy`, and `industry` namespaces. The `molecules` namespace
+is molecule-only, so it gives a clean molecule diagram:
 
 ```sh
-$ FILTER=LULUCF rake debug          # the lulucf molecule sector
-$ FILTER=LULUCF,WASTE rake debug    # two molecule-only sectors, separate diagrams
+$ FILTER=MOLECULES rake debug                          # the molecule (CO₂) graph
+$ FILTER=molecules_distribution_before_transport_co2 rake debug  # a single molecule node
 ```
 
-Note that the sector names shared with the energy graph – `AGRICULTURE`,
+Because the diagram is built from edges, **a sector whose molecule nodes have no
+edges produces an empty diagram.** Many molecule sectors – `LULUCF`, `WASTE`,
+and most of the shared sectors – contain only isolated emission "leaf" nodes
+(a preset `demand` with no connecting edges), so filtering on them (e.g.
+`FILTER=LULUCF`) draws nothing. This is expected, not a bug.
+
+Note also that the sector names shared with the energy graph – `AGRICULTURE`,
 `HOUSEHOLDS`, `INDUSTRY`, `TRANSPORT`, `BUILDINGS`, `BUNKERS`, `ENERGY`, and
 `OTHER` – match nodes in **both** graphs, and `FILTER` cannot currently separate
-them: a filter such as `AGRICULTURE` draws the energy *and* molecule nodes in
-that sector together.
+them: a filter such as `ENERGY` draws the energy *and* molecule nodes in that
+sector together. To inspect a specific molecule flow, filter by its node key.
 
 #### Production Mode
 
