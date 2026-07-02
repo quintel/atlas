@@ -355,16 +355,18 @@ module Atlas
     # Expects to load a file at datasets/AREA/emissions.csv with 5 index columns:
     # etm_sector, etm_subsector, use, ghg, year.
     #
+    # Only the historic 1990 baseline keeps its year in the key; present year is implicit
+    #
     # For example:
     #   dataset.emissions.
-    #     get(:buildings, :non_specified, :energetic, :other_ghg, 2023, :value)
+    #     get(:buildings, :non_specified, :energetic, :other_ghg, :value)
     #   # => 2796620.0
     #
     # Returns a CSVDocument.
     def emissions
-      @emissions ||= CSVDocument::MultiIndex.read(
-        path_resolver.resolve('emissions.csv'), index_size: 5
-      )
+      @emissions ||= CSVDocument::MultiIndex
+        .read(path_resolver.resolve('emissions.csv'), index_size: 5)
+        .tap { |doc| doc.table.each { |row| row[:year] = nil unless row[:year] == 1990 } }
     end
 
     # Public: Retrieves demand and max demand data for the region. Expects to

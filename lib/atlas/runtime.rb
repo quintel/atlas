@@ -145,14 +145,17 @@ module Atlas
     #   EMISSIONS(energy_hydrogen_production, non_energetic, other_ghg)
     #   # => 456.0
     #
-    #   EMISSIONS(energy_hydrogen_production, non_energetic, other_ghg, 2015)
+    #   EMISSIONS(energy_hydrogen_production, non_energetic, other_ghg, 1990)
     #   # => 456.0
     #
+    # The present year is implicit; only the 1990 baseline is suffixed with a
+    # year in the key.
+    #
     # Returns a Float or nil if not found.
-    def EMISSIONS(sector, use, ghg, year = dataset.analysis_year)
-      full_key = "#{sector}_#{use}_#{ghg}_#{year}".to_sym
-
-      dataset.emissions.to_hash[full_key]
+    def EMISSIONS(sector, use, ghg, year = nil)
+      dataset.emissions.to_hash[
+        [sector, use, ghg, (1990 if year.to_i == 1990)].compact.join('_').to_sym
+      ]
     end
 
     # Public: Given the key of a node, retrieves the production (energy
