@@ -90,11 +90,25 @@ module Atlas
     def lines_from_hash(hash, prefix = nil)
       hash.map do |key, value|
         if value.is_a?(Array) || value.is_a?(Set)
-          value = "[#{ value.to_a.join(', ') }]"
+          "- #{ key } = #{ format_array(value.to_a) }"
+        else
+          "- #{ format_attribute(key, value) }"
         end
-
-        "- #{ format_attribute(key, value) }"
       end
+    end
+
+    # Internal: Formats an array of values, wrapping it onto multiple lines
+    # (three items per line) once it has more than three items.
+    #
+    # array - The array to be formatted.
+    #
+    # Returns a string.
+    def format_array(array)
+      return "[#{ array.join(', ') }]" if array.length <= 3
+
+      lines = array.each_slice(3).map { |chunk| chunk.join(', ') }
+
+      "[\n    #{ lines.join(",\n    ") }\n    ]"
     end
 
     # Internal: Converts embedded and value objects into hashes, which are
