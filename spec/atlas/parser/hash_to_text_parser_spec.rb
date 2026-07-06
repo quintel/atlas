@@ -33,6 +33,31 @@ module Atlas
         expect(p.to_text).to eql "- array = [a, b]"
       end
 
+      it 'parses attributes as an Array with exactly three items on one line' do
+        p = HashToTextParser.new({array: ["a", "b", "c"]})
+        expect(p.to_text).to eql "- array = [a, b, c]"
+      end
+
+      it 'parses attributes as an empty Array' do
+        p = HashToTextParser.new({array: []})
+        expect(p.to_text).to eql "- array = []"
+      end
+
+      it 'wraps attributes as an Array with more than three items' do
+        p = HashToTextParser.new({array: ["a", "b", "c", "d"]})
+        expect(p.to_text).to eql "- array = [\n    a, b, c,\n    d\n    ]"
+      end
+
+      it 'wraps attributes as an Array with a multiple of three items' do
+        p = HashToTextParser.new({array: ["a", "b", "c", "d", "e", "f"]})
+        expect(p.to_text).to eql "- array = [\n    a, b, c,\n    d, e, f\n    ]"
+      end
+
+      it 'wraps attributes as an Array with a remainder on the last line' do
+        p = HashToTextParser.new({array: ["a", "b", "c", "d", "e", "f", "g"]})
+        expect(p.to_text).to eql "- array = [\n    a, b, c,\n    d, e, f,\n    g\n    ]"
+      end
+
       it 'parses attributes as a Hash' do
         p = HashToTextParser.new({hash: {one: 1, two: 2}})
         expect(p.to_text).to eql "- hash.one = 1\n- hash.two = 2"
