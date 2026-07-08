@@ -254,6 +254,21 @@ module Atlas
       "#{base_path.to_s.inspect}"
     end
 
+  # Sector Mapping Errors ----------------------------------------------------
+
+  # Raised when two different cells in the same column of the sector mapping
+  # normalize to the same value, making the value namespace ambiguous.
+  SectorMappingSlugCollisionError = error_class do |scheme, slug, first, second|
+    "Sector mapping column #{scheme.inspect} has two values which normalize " \
+    "to #{slug.inspect}: #{first.inspect} and #{second.inspect}. " \
+    'Values within a column must normalize uniquely.'
+  end
+
+  DuplicateSectorMappingRowError = error_class do |label, use|
+    "Sector mapping has a duplicate row for (sector_label, use) pair " \
+    "(#{label.inspect}, #{use.inspect}). Each pair may appear only once."
+  end
+
   # Parser Errors ------------------------------------------------------------
 
   CannotIdentifyError = error_class(ParserError) do |string|
