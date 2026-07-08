@@ -35,6 +35,7 @@ require_relative 'atlas/energy_unit'
 require_relative 'atlas/util'
 
 require_relative 'atlas/csv_document'
+require_relative 'atlas/sector_mapping'
 
 require_relative 'atlas/active_document/persistence'
 require_relative 'atlas/active_document/finders'

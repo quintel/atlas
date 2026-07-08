@@ -12,6 +12,7 @@ module Atlas
       attribute :output,                 Hash[Symbol => Object]
       attribute :groups,                 Array[Symbol]
       attribute :use,                    String
+      attribute :sector_label,           Symbol
       attribute :presentation_group,     Symbol
       attribute :graph_methods,          Array[String]
       attribute :waste_outputs,          Array[Symbol]
