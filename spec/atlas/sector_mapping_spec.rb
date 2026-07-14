@@ -118,6 +118,46 @@ module Atlas
       end
     end
 
+    describe '#raw_rows' do
+      it 'preserves file order' do
+        expect(mapping.raw_rows.map(&:pair)).to eq(
+          [
+            %i[energy_electricity_and_heat_production energetic],
+            %i[industry_refineries energetic],
+            %i[industry_refineries non_energetic],
+            %i[industry_steel energetic],
+            %i[waste_non_specified non_energetic],
+            %i[energy_ccus non_energetic]
+          ]
+        )
+      end
+
+      it 'retains raw display values, including punctuation, rather than slugs' do
+        row = mapping.raw_rows.find { |r| r.pair == %i[energy_electricity_and_heat_production energetic] }
+
+        expect(row.cells[:ipcc_crt_code_agg]).to eq('1.A.1')
+        expect(row.cells[:klimaattafel]).to eq('Elektriciteit')
+      end
+
+      it 'attaches the (label, use) pair to each row' do
+        expect(mapping.raw_rows.map(&:pair)).to include(
+          %i[industry_refineries energetic],
+          %i[industry_refineries non_energetic]
+        )
+      end
+
+      it 'renders a "-" cell as nil' do
+        row = mapping.raw_rows.find { |r| r.pair == %i[waste_non_specified non_energetic] }
+        expect(row.cells[:ipcc_crt_code_agg]).to be_nil
+      end
+
+      it 'renders a genuinely blank cell as nil' do
+        row = mapping.raw_rows.find { |r| r.pair == %i[energy_ccus non_energetic] }
+        expect(row.cells[:klimaattafel]).to eq('CCUS')
+        expect(row.cells[:ipcc_crt_code_agg]).to be_nil
+      end
+    end
+
     describe 'load-time validation' do
       it 'rejects two values in one column that normalize identically' do
         csv = <<~CSV

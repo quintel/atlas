@@ -22,6 +22,13 @@ module Atlas
     USE_COLUMN   = :use
     BLANK_CELL = '-'
 
+    # Public: One mapping row, exposing the raw display value of each scheme
+    # cell (never a normalized slug) alongside the row's (label, use) pair.
+    #
+    # `cells` is a Hash of {scheme => String}; blank/"-" cells are omitted (so
+    # `cells[scheme]` is nil), matching {.normalize}'s notion of "no value".
+    RawRow = Struct.new(:pair, :cells)
+
     class << self
       # Public: The single normalizer, shared by import and query. Reuses the CSV document
       # key-normalizer.
@@ -116,6 +123,14 @@ module Atlas
       @rows
     end
 
+    # Public: Each mapping row in file order, as a {RawRow}: the (label, use)
+    # pair plus the raw display value of every scheme cell (never a normalized
+    # slug). Retained alongside {#rows} so display rendering and lookup
+    # normalization read from the same parse and can never disagree.
+    def raw_rows
+      @raw_rows
+    end
+
     # Public: A plain, serializable copy of the inverted index, shaped
     # {scheme => {value => [[label, use], ...]}}. Consumed by ETEngine.
     def to_h
@@ -132,9 +147,10 @@ module Atlas
     private
 
     def build_indices(table)
-      @index = @scheme_names.each_with_object({}) { |scheme, hash| hash[scheme] = {} }
-      @pairs = Set.new
-      @rows  = []
+      @index    = @scheme_names.each_with_object({}) { |scheme, hash| hash[scheme] = {} }
+      @pairs    = Set.new
+      @rows     = []
+      @raw_rows = []
 
       # Per-scheme record of {normalized => original} to detect slug collisions.
       seen_values = @scheme_names.each_with_object({}) { |scheme, hash| hash[scheme] = {} }
@@ -144,13 +160,22 @@ module Atlas
         raise DuplicateSectorMappingRowError.new(*pair) unless @pairs.add?(pair)
 
         normalized = {}
+        raw = {}
         @scheme_names.each do |scheme|
-          value = self.class.normalize(row[scheme])
-          normalized[scheme] = value
+          normalized[scheme] = self.class.normalize(row[scheme])
+          raw[scheme] = raw_cell(row[scheme])
           index_cell(scheme, row[scheme], pair, seen_values[scheme])
         end
         @rows << normalized
+        @raw_rows << RawRow.new(pair, raw)
       end
+    end
+
+    # Internal: The raw display value of a cell, or nil for a blank / "-" cell.
+    # Shares blank-detection with {.normalize} but skips slugification.
+    def raw_cell(value)
+      string = value.to_s.strip
+      string.empty? || string == BLANK_CELL ? nil : string
     end
 
     def row_pair(row)
