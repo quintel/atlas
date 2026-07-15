@@ -25,33 +25,34 @@ module Atlas
     # Public: One mapping row, exposing the raw display value of each scheme
     # cell (never a normalized slug) alongside the row's (label, use) pair.
     #
-    # `cells` is a Hash of {scheme => String}; blank/"-" cells are omitted (so
-    # `cells[scheme]` is nil), matching {.normalize}'s notion of "no value".
+    # `cells` is a Hash of {scheme => String}; blank/"-" cells are nil,
+    # matching {.normalize}'s notion of "no value".
     RawRow = Struct.new(:pair, :cells)
 
     class << self
+      # Public: The raw display value of a cell: a stripped String, or nil for
+      # a blank / "-" cell. The single place "no value" is defined.
+      def raw_value(value)
+        string = value.to_s.strip
+        string.empty? || string == BLANK_CELL ? nil : string
+      end
+
       # Public: The single normalizer, shared by import and query. Reuses the CSV document
       # key-normalizer.
       #
       # Returns a Symbol, or nil for blank / "-" cells.
       def normalize(value)
-        string = value.to_s.strip
-        return nil if string.empty? || string == BLANK_CELL
-
-        CSVDocument.normalize_key(string)
+        raw = raw_value(value)
+        raw && CSVDocument.normalize_key(raw)
       end
 
-      # Public: The mapping loaded from the ETSource config directory, memoized
-      # for the current Atlas data dir.
+      # Public: The mapping loaded from the ETSource config directory.
+      #
+      # Deliberately not memoized: ETSource is re-imported in place (the path
+      # never changes), so a memo here would survive cache expiry in consumers.
+      # Callers cache at their own layer (ETEngine's NastyCache).
       def load
-        path = default_path
-
-        if @loaded_from != path
-          @loaded   = from_path(path)
-          @loaded_from = path
-        end
-
-        @loaded
+        from_path(default_path)
       end
 
       # Public: Path to the mapping CSV within the active ETSource data dir.
@@ -85,6 +86,15 @@ module Atlas
 
     attr_reader :path, :scheme_names
 
+    # Public: Every (sector_label, use) pair in the mapping, as a Set. Used by
+    # the ETSource validation.
+    attr_reader :pairs
+
+    # Public: Each mapping row in file order, as a {RawRow}: the (label, use)
+    # pair plus the raw display value of every scheme cell (never a normalized
+    # slug).
+    attr_reader :raw_rows
+
     # Internal: Use {.load}, {.from_path} or {.from_string}.
     def initialize(table, path = nil)
       @path         = path && Pathname(path)
@@ -111,24 +121,13 @@ module Atlas
       @scheme_names.include?(CSVDocument.normalize_key(scheme.to_s))
     end
 
-    # Public: Every (sector_label, use) pair in the mapping. Used by the
-    # ETSource validation.
-    def pairs
-      @pairs
-    end
-
     # Public: Each mapping row as a Hash of {scheme => normalized value}, in file
-    # order. Blank / "-" cells are nil.
+    # order. Blank / "-" cells are nil. Derived from {#raw_rows} so display
+    # rendering and lookup normalization can never disagree.
     def rows
-      @rows
-    end
-
-    # Public: Each mapping row in file order, as a {RawRow}: the (label, use)
-    # pair plus the raw display value of every scheme cell (never a normalized
-    # slug). Retained alongside {#rows} so display rendering and lookup
-    # normalization read from the same parse and can never disagree.
-    def raw_rows
-      @raw_rows
+      @rows ||= @raw_rows.map do |raw_row|
+        raw_row.cells.transform_values { |cell| self.class.normalize(cell) }
+      end
     end
 
     # Public: A plain, serializable copy of the inverted index, shaped
@@ -149,7 +148,6 @@ module Atlas
     def build_indices(table)
       @index    = @scheme_names.each_with_object({}) { |scheme, hash| hash[scheme] = {} }
       @pairs    = Set.new
-      @rows     = []
       @raw_rows = []
 
       # Per-scheme record of {normalized => original} to detect slug collisions.
@@ -159,38 +157,25 @@ module Atlas
         pair = row_pair(row)
         raise DuplicateSectorMappingRowError.new(*pair) unless @pairs.add?(pair)
 
-        normalized = {}
-        raw = {}
-        @scheme_names.each do |scheme|
-          normalized[scheme] = self.class.normalize(row[scheme])
-          raw[scheme] = raw_cell(row[scheme])
-          index_cell(scheme, row[scheme], pair, seen_values[scheme])
-        end
-        @rows << normalized
-        @raw_rows << RawRow.new(pair, raw)
+        cells = @scheme_names.to_h { |scheme| [scheme, self.class.raw_value(row[scheme])] }
+        cells.each { |scheme, raw| index_cell(scheme, raw, pair, seen_values[scheme]) }
+        @raw_rows << RawRow.new(pair, cells)
       end
-    end
-
-    # Internal: The raw display value of a cell, or nil for a blank / "-" cell.
-    # Shares blank-detection with {.normalize} but skips slugification.
-    def raw_cell(value)
-      string = value.to_s.strip
-      string.empty? || string == BLANK_CELL ? nil : string
     end
 
     def row_pair(row)
       [self.class.normalize(row[LABEL_COLUMN]), self.class.normalize(row[USE_COLUMN])]
     end
 
+    # Internal: `raw` is a stripped cell value from {.raw_value}, or nil.
     def index_cell(scheme, raw, pair, seen)
-      value_key = self.class.normalize(raw)
-      return if value_key.nil?
+      return if raw.nil?
 
-      original = raw.to_s.strip
-      if seen.key?(value_key) && seen[value_key] != original
-        raise SectorMappingSlugCollisionError.new(scheme, value_key, seen[value_key], original)
+      value_key = self.class.normalize(raw)
+      if seen.key?(value_key) && seen[value_key] != raw
+        raise SectorMappingSlugCollisionError.new(scheme, value_key, seen[value_key], raw)
       end
-      seen[value_key] = original
+      seen[value_key] = raw
 
       (@index[scheme][value_key] ||= Set.new) << pair
     end
