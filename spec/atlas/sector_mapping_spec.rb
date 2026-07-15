@@ -10,8 +10,9 @@ module Atlas
           .to eq(%i[sector_label use ipcc_crt_code_agg klimaattafel])
       end
 
-      it 'memoizes per data dir' do
-        expect(described_class.load).to be(described_class.load)
+      it 'is not memoized, so in-place ETSource updates are picked up' do
+        # ETSource is re-imported to the same path; caching is the caller's job.
+        expect(described_class.load).not_to be(described_class.load)
       end
     end
 
