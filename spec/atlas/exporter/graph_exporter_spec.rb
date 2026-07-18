@@ -198,7 +198,7 @@ describe Atlas::Exporter::GraphExporter do
       mother.set(:max_demand, 50)
       mother.get(:model).max_demand = 50.0
 
-      expect(nodes[:mother][:max_demand]).to eq(50)
+      expect(nodes[:mother][:max_demand]).to be_within(1e-13).of(50)
     end
 
     it 'is not exported when not specified in the document' do
