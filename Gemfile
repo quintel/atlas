@@ -19,7 +19,7 @@ group :development do
   gem 'httparty'
   gem 'osmosis', ref: '16fac7c', github: 'quintel/osmosis', require: false
 
-  gem 'rubocop', '~> 0.85.0', require: false
+  gem 'rubocop', '~> 1.92.2', require: false
   gem 'rubocop-performance',  require: false
   gem 'rubocop-rspec',        require: false
 end
