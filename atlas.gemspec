@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'activesupport', '>= 7'
   gem.add_dependency 'gpgme',         '~> 2.0'
   gem.add_dependency 'turbine-graph', '>= 0.1'
-  gem.add_dependency 'virtus',        '~> 1.0'
+  gem.add_dependency 'virtus',        '>= 1', '< 3'
   gem.add_dependency 'csv',           '>= 3'
   gem.add_dependency 'ostruct'
 
