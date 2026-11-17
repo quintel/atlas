@@ -45,6 +45,22 @@ module Atlas
 
       private
 
+      PRECISION = 14
+
+      # Internal: Recursively rounds all Float values in a hash to PRECISION decimal places.
+      def round_floats(value)
+        case value
+        when Float
+          value.round(PRECISION)
+        when Hash
+          value.transform_values { |v| round_floats(v) }
+        when Array
+          value.map { |v| round_floats(v) }
+        else
+          value
+        end
+      end
+
       # Internal: Given an array of +nodes+, creates a hash containing all
       # of the node demands and attributes.
       #
@@ -73,7 +89,7 @@ module Atlas
 
           attributes.delete(:queries)
 
-          hash[node.key] = attributes
+          hash[node.key] = round_floats(attributes)
         end
       end
 
@@ -96,14 +112,14 @@ module Atlas
 
           attributes.delete(:queries)
 
-          hash[model.key] = attributes
+          hash[model.key] = round_floats(attributes)
         end
 
         # Yay coupling carrier special cases!
         EnergyEdge.all.each do |edge|
           if edge.carrier == :coupling_carrier
-            data[edge.key] = edge.to_hash
-            data[edge.key][:share] = edge.child_share
+            data[edge.key] = round_floats(edge.to_hash)
+            data[edge.key][:share] = edge.child_share.to_f.round(PRECISION)
           end
         end
 
@@ -122,7 +138,7 @@ module Atlas
           if slot.get(:model).is_a?(Atlas::Slot::Elastic)
             hash[slot.carrier] = :elastic
           else
-            hash[slot.carrier] = slot.share.to_f
+            hash[slot.carrier] = slot.share.to_f.round(PRECISION)
           end
         end
 

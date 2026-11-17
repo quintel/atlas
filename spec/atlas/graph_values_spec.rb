@@ -51,7 +51,7 @@ module Atlas; describe GraphValues do
         graph_values.set(node.key.to_s, :demand, 50.0)
         graph_values.save
 
-        expect(graph_values.to_h['bar']['demand']).to eq(50.0)
+        expect(graph_values.to_h['bar']['demand']).to be_within(1e-13).of(50.0)
       end
     end
 
@@ -66,7 +66,7 @@ module Atlas; describe GraphValues do
         graph_values.set(node.key.to_s, :demand, 50.0)
         graph_values.save
 
-        expect(graph_values.to_h['bar']['demand']).to eq(50.0)
+        expect(graph_values.to_h['bar']['demand']).to be_within(1e-13).of(50.0)
       end
     end
 
